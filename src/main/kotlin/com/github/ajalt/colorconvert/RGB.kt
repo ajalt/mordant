@@ -18,14 +18,14 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
 
         h = minOf(h * 60, 360.0)
         if (h < 0) h += 360
-        val l = (min + max) / 2
+        val l = (min + max) / 2.0
         val s = when {
             max == min -> 0.0
             l <= 0.5 -> delta / (max + min)
             else -> delta / (2 - max - min)
         }
 
-        return HSL(h.toInt(), (s * 100).toInt(), (l * 100).toInt())
+        return HSL(h.roundToInt(), (s * 100).roundToInt(), (l * 100).roundToInt())
     }
 
     fun toHSV(): HSV {
@@ -57,7 +57,7 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
 
         val v = ((max / 255) * 1000) / 10
 
-        return HSV(h.toInt(), s.toInt(), v.toInt())
+        return HSV(h.roundToInt(), s.roundToInt(), v.roundToInt())
     }
 }
 

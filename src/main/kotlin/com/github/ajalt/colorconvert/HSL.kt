@@ -19,21 +19,21 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
 
         val rgb = arrayOf(0.0, 0.0, 0.0)
         for (i in 0..2) {
-            var t3 = h + 1 / 3 * -(i - 1)
-            if (t3 < 0) t3 += 1
-            if (t3 > 1) t3 -= 1
+            var t3: Double = h + 1.0 / 3.0 * -(i - 1.0)
+            if (t3 < 0) t3 += 1.0
+            if (t3 > 1) t3 -= 1.0
 
-            val v = when {
+            val v: Double = when {
                 6 * t3 < 1 -> t1 + (t2 - t1) * 6 * t3
                 2 * t3 < 1 -> t2
-                3 * t3 < 2 -> t1 + (t2 - t1) * (2 / 3 - t3) * 6
+                3 * t3 < 2 -> t1 + (t2 - t1) * (2.0 / 3.0 - t3) * 6
                 else -> t1
             }
 
-            rgb[i] = v * 255
+            rgb[i] = v * 255.0
         }
 
-        return RGB(rgb[0].toInt(), rgb[1].toInt(), rgb[2].toInt())
+        return RGB(rgb[0].roundToInt(), rgb[1].roundToInt(), rgb[2].roundToInt())
     }
 
     fun toHSV(): HSV {
@@ -49,6 +49,6 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
         val v = (l + s) / 2
         val sv = if (l == 0.0) (2 * smin) / (lmin + smin) else (2 * s) / (l + s)
 
-        return HSV(h.toInt(), (sv * 100).toInt(), (v * 100).toInt())
+        return HSV(h.roundToInt(), (sv * 100).roundToInt(), (v * 100).roundToInt())
     }
 }
