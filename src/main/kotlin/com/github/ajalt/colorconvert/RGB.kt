@@ -1,10 +1,35 @@
 package com.github.ajalt.colorconvert
 
+private fun String.parseHex(range: IntRange) = trimStart('#').slice(range).toInt(16)
+private fun Int.renderHex() = toString(16).padStart(2, '0')
+
 data class RGB(val r: Int, val g: Int, val b: Int) {
     init {
         require(r in 0..255) { "r must be in range [0, 255]" }
         require(g in 0..255) { "g must be in range [0, 255]" }
         require(b in 0..255) { "b must be in range [0, 255]" }
+    }
+
+    /**
+     * Construct an RGB instance from a hex string.
+     *
+     * @param hex An rgb hex string in the form "#ffffff" or "ffffff"
+     */
+    constructor(hex: String) :
+            this(hex.parseHex(0..1), hex.parseHex(2..3), hex.parseHex(4..5)) {
+        require(hex[0] == '#' && hex.length == 7 || hex.length == 6) {
+            "Hex string must be in the format \"#ffffff\" or \"ffffff\""
+        }
+    }
+
+    /**
+     * Return this value as a hex string
+     * @return A string in the form `"#ffffff"` if [withNumberSign] is true,
+     *     or in the form `"ffffff"` otherwise.
+     */
+    fun toHex(withNumberSign: Boolean = false): String = buildString(7) {
+        if (withNumberSign) append('#')
+        append(r.renderHex()).append(g.renderHex()).append(b.renderHex())
     }
 
     fun toHSL(): HSL {
