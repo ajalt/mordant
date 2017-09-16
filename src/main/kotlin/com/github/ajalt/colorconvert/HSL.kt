@@ -1,6 +1,12 @@
 package com.github.ajalt.colorconvert
 
 data class HSL(val h: Int, val s: Int, val l: Int) {
+    init {
+        require(h in 0..360) { "h must be in range [0, 360]" }
+        require(s in 0..100) { "s must be in range [0, 100]" }
+        require(l in 0..100) { "l must be in range [0, 100]" }
+    }
+
     fun toRGB(): RGB {
         val h = this.h / 360.0
         val s = this.s / 100.0
