@@ -28,6 +28,7 @@ class HSVTest {
     fun `HSV indirect conversions`() {
         softly {
             assertThat(HSV(240, 100, 100).toAnsi16()).isEqualTo(Ansi16(94))
+            assertThat(HSV(240, 100, 100).toAnsi256()).isEqualTo(Ansi256(21))
         }
     }
 }

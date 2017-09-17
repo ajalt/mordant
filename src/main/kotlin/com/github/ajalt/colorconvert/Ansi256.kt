@@ -20,4 +20,8 @@ data class Ansi256(val code: Int) {
         val b = (rem % 6) / 5.0 * 255
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
+
+    fun toAnsi16() = toRGB().toAnsi16()
+    fun toHSL() = toRGB().toHSL()
+    fun toHSV() = toRGB().toHSV()
 }

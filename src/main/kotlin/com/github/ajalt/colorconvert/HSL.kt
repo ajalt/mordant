@@ -59,4 +59,5 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
     }
 
     fun toAnsi16() = toRGB().toAnsi16()
+    fun toAnsi256() = toRGB().toAnsi256()
 }

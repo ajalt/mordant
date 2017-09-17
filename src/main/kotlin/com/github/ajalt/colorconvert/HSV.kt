@@ -44,4 +44,5 @@ data class HSV(val h: Int, val s: Int, val v: Int) {
     }
 
     fun toAnsi16() = toRGB().toAnsi16(v)
+    fun toAnsi256() = toRGB().toAnsi256()
 }

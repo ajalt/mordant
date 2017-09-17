@@ -51,6 +51,7 @@ data class Ansi16(val code: Int) {
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
 
-    fun toHSV() = toRGB().toHSV()
+    fun toAnsi16() = toRGB().toAnsi16()
     fun toHSL() = toRGB().toHSL()
+    fun toHSV() = toRGB().toHSV()
 }
