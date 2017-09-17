@@ -23,4 +23,11 @@ class HSVTest {
             assertThat(HSV(0, 0, 100).toHSL()).isEqualTo(HSL(0, 0, 100))
         }
     }
+
+    @Test
+    fun `HSV indirect conversions`() {
+        softly {
+            assertThat(HSV(240, 100, 100).toAnsi16()).isEqualTo(Ansi16(94))
+        }
+    }
 }

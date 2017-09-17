@@ -43,4 +43,25 @@ class RGBTest {
             assertThat(RGB("ffffff")).isEqualTo(RGB(255, 255, 255))
         }
     }
+
+    @Test
+    fun `RGB to Ansi16`() {
+        softly {
+            assertThat(RGB(0, 0, 0).toAnsi16()).isEqualTo(Ansi16(30))
+            assertThat(RGB(128, 0, 0).toAnsi16()).isEqualTo(Ansi16(31))
+            assertThat(RGB(0, 128, 0).toAnsi16()).isEqualTo(Ansi16(32))
+            assertThat(RGB(128, 128, 0).toAnsi16()).isEqualTo(Ansi16(33))
+            assertThat(RGB(0, 0, 128).toAnsi16()).isEqualTo(Ansi16(34))
+            assertThat(RGB(128, 0, 128).toAnsi16()).isEqualTo(Ansi16(35))
+            assertThat(RGB(0, 128, 128).toAnsi16()).isEqualTo(Ansi16(36))
+            assertThat(RGB(170, 170, 170).toAnsi16()).isEqualTo(Ansi16(37))
+            assertThat(RGB(255, 0, 0).toAnsi16()).isEqualTo(Ansi16(91))
+            assertThat(RGB(0, 255, 0).toAnsi16()).isEqualTo(Ansi16(92))
+            assertThat(RGB(255, 255, 0).toAnsi16()).isEqualTo(Ansi16(93))
+            assertThat(RGB(0, 0, 255).toAnsi16()).isEqualTo(Ansi16(94))
+            assertThat(RGB(255, 0, 255).toAnsi16()).isEqualTo(Ansi16(95))
+            assertThat(RGB(0, 255, 255).toAnsi16()).isEqualTo(Ansi16(96))
+            assertThat(RGB(255, 255, 255).toAnsi16()).isEqualTo(Ansi16(97))
+        }
+    }
 }

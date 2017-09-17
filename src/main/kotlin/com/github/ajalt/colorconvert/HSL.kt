@@ -57,4 +57,6 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
 
         return HSV(h.roundToInt(), (sv * 100).roundToInt(), (v * 100).roundToInt())
     }
+
+    fun toAnsi16() = toRGB().toAnsi16()
 }

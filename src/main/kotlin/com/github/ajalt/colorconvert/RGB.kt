@@ -5,9 +5,9 @@ private fun Int.renderHex() = toString(16).padStart(2, '0')
 
 data class RGB(val r: Int, val g: Int, val b: Int) {
     init {
-        require(r in 0..255) { "r must be in range [0, 255]" }
-        require(g in 0..255) { "g must be in range [0, 255]" }
-        require(b in 0..255) { "b must be in range [0, 255]" }
+        require(r in 0..255) { "r must be in range [0, 255] in $this" }
+        require(g in 0..255) { "g must be in range [0, 255] in $this" }
+        require(b in 0..255) { "b must be in range [0, 255] in $this" }
     }
 
     /**
@@ -89,6 +89,19 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
         val v = ((max / 255) * 1000) / 10
 
         return HSV(h.roundToInt(), s.roundToInt(), v.roundToInt())
+    }
+
+    fun toAnsi16(): Ansi16 = toAnsi16(toHSV().v)
+
+    internal fun toAnsi16(value: Int): Ansi16 {
+        if (value == 30) return Ansi16(30)
+        val v = Math.round(value / 50.0).toInt()
+
+        val ansi = 30 +
+                ((b / 255.0).roundToInt() * 4
+                        or ((g / 255.0).roundToInt() * 2)
+                        or (r / 255.0).roundToInt())
+        return Ansi16(if (v == 2) ansi + 60 else ansi)
     }
 }
 
