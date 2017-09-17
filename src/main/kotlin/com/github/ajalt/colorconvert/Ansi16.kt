@@ -17,12 +17,21 @@ data class Ansi16(val code: Int) {
         val purple: Ansi16 get() = Ansi16(35)
         val cyan: Ansi16 get() = Ansi16(36)
         val white: Ansi16 get() = Ansi16(37)
+
+        val brightBlack: Ansi16 get() = Ansi16(90)
+        val brightRed: Ansi16 get() = Ansi16(91)
+        val brightGreen: Ansi16 get() = Ansi16(92)
+        val brightYellow: Ansi16 get() = Ansi16(93)
+        val brightBlue: Ansi16 get() = Ansi16(94)
+        val brightPurple: Ansi16 get() = Ansi16(95)
+        val brightCyan: Ansi16 get() = Ansi16(96)
+        val brightWhite: Ansi16 get() = Ansi16(97)
     }
 
     fun toRGB(): RGB {
         val color = code % 10
 
-        // greyscale codes
+        // grayscale
         if (color == 0 || color == 7) {
             val c: Double =
                     if (code > 50) color + 3.5
@@ -33,6 +42,7 @@ data class Ansi16(val code: Int) {
             return RGB(v, v, v)
         }
 
+        // color
         val mul = if (code > 50) 1.0 else 0.5
         val r = ((color % 2) * mul) * 255
         val g = (((color / 2) % 2) * mul) * 255

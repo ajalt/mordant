@@ -64,4 +64,16 @@ class RGBTest {
             assertThat(RGB(255, 255, 255).toAnsi16()).isEqualTo(Ansi16(97))
         }
     }
+
+    @Test
+    fun `RGB to Ansi256`() {
+        softly {
+            assertThat(RGB(0, 0, 0).toAnsi256()).isEqualTo(Ansi256(16))
+            assertThat(RGB(51, 102, 0).toAnsi256()).isEqualTo(Ansi256(64))
+            assertThat(RGB(92, 191, 84).toAnsi256()).isEqualTo(Ansi256(114))
+            assertThat(RGB(255, 255, 255).toAnsi256()).isEqualTo(Ansi256(231))
+            assertThat(RGB(100, 100, 100).toAnsi256()).isEqualTo(Ansi256(241))
+            assertThat(RGB(238, 238, 238).toAnsi256()).isEqualTo(Ansi256(254))
+        }
+    }
 }

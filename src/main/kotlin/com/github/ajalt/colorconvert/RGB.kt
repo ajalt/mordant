@@ -103,5 +103,21 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
                         or (r / 255.0).roundToInt())
         return Ansi16(if (v == 2) ansi + 60 else ansi)
     }
+
+    fun toAnsi256(): Ansi256 {
+        // grayscale
+        val code = if (r == g && g == b) {
+            when {
+                r < 8 -> 16
+                r > 248 -> 231
+                else -> (((r - 8) / 247.0) * 24.0).roundToInt() + 232
+            }
+        } else {
+            16 + (36 * (r / 255.0 * 5).roundToInt()) +
+                    (6 * (g / 255.0 * 5).roundToInt()) +
+                    (b / 255.0 * 5).roundToInt()
+        }
+        return Ansi256(code)
+    }
 }
 
