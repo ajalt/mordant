@@ -1,13 +1,13 @@
 package com.github.ajalt.colorconvert
 
-data class HSL(val h: Int, val s: Int, val l: Int) {
+data class HSL(val h: Int, val s: Int, val l: Int) : ConvertableColor {
     init {
         require(h in 0..360) { "h must be in range [0, 360]" }
         require(s in 0..100) { "s must be in range [0, 100]" }
         require(l in 0..100) { "l must be in range [0, 100]" }
     }
 
-    fun toRGB(): RGB {
+    override fun toRGB(): RGB {
         val h = this.h / 360.0
         val s = this.s / 100.0
         val l = this.l / 100.0
@@ -42,7 +42,7 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
         return RGB(rgb[0].roundToInt(), rgb[1].roundToInt(), rgb[2].roundToInt())
     }
 
-    fun toHSV(): HSV {
+    override fun toHSV(): HSV {
         val h = this.h.toDouble()
         var s = this.s.toDouble() / 100
         var l = this.l.toDouble() / 100
@@ -58,6 +58,8 @@ data class HSL(val h: Int, val s: Int, val l: Int) {
         return HSV(h.roundToInt(), (sv * 100).roundToInt(), (v * 100).roundToInt())
     }
 
-    fun toAnsi16() = toRGB().toAnsi16()
-    fun toAnsi256() = toRGB().toAnsi256()
+    override fun toAnsi16() = toRGB().toAnsi16()
+    override fun toAnsi256() = toRGB().toAnsi256()
+    override fun toHex(withNumberSign: Boolean) = toRGB().toHex(withNumberSign)
+    override fun toHSL() = this
 }

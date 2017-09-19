@@ -1,11 +1,11 @@
 package com.github.ajalt.colorconvert
 
-data class Ansi256(val code: Int) {
+data class Ansi256(val code: Int) : ConvertableColor {
     init {
         check(code in 16..255) { "code must be in range 0..255: $code" }
     }
 
-    fun toRGB(): RGB {
+    override fun toRGB(): RGB {
         // 232 - 255 is grayscale
         if (code >= 232) {
             val c = (code - 232) * 10 + 8
@@ -21,7 +21,9 @@ data class Ansi256(val code: Int) {
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
 
-    fun toAnsi16() = toRGB().toAnsi16()
-    fun toHSL() = toRGB().toHSL()
-    fun toHSV() = toRGB().toHSV()
+    override fun toAnsi16() = toRGB().toAnsi16()
+    override fun toAnsi256() = this
+    override fun toHSL() = toRGB().toHSL()
+    override fun toHSV() = toRGB().toHSV()
+    override fun toHex(withNumberSign: Boolean) = toRGB().toHex(withNumberSign)
 }

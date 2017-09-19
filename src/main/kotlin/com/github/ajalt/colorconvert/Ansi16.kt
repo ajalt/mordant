@@ -1,6 +1,6 @@
 package com.github.ajalt.colorconvert
 
-data class Ansi16(val code: Int) {
+data class Ansi16(val code: Int) : ConvertableColor {
     init {
         require(code in 30..37 || code in 40..47 ||
                 code in 90..97 || code in 100..107) {
@@ -28,7 +28,7 @@ data class Ansi16(val code: Int) {
         val brightWhite: Ansi16 get() = Ansi16(97)
     }
 
-    fun toRGB(): RGB {
+    override fun toRGB(): RGB {
         val color = code % 10
 
         // grayscale
@@ -51,7 +51,9 @@ data class Ansi16(val code: Int) {
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
 
-    fun toAnsi16() = toRGB().toAnsi16()
-    fun toHSL() = toRGB().toHSL()
-    fun toHSV() = toRGB().toHSV()
+    override fun toAnsi16() = toRGB().toAnsi16()
+    override fun toHSL() = toRGB().toHSL()
+    override fun toHSV() = toRGB().toHSV()
+    override fun toHex(withNumberSign: Boolean) = toRGB().toHex(withNumberSign)
+    override fun toAnsi256() = toRGB().toAnsi256()
 }

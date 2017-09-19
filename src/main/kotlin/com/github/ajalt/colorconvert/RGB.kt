@@ -3,7 +3,7 @@ package com.github.ajalt.colorconvert
 private fun String.parseHex(range: IntRange) = trimStart('#').slice(range).toInt(16)
 private fun Int.renderHex() = toString(16).padStart(2, '0')
 
-data class RGB(val r: Int, val g: Int, val b: Int) {
+data class RGB(val r: Int, val g: Int, val b: Int) : ConvertableColor {
     init {
         require(r in 0..255) { "r must be in range [0, 255] in $this" }
         require(g in 0..255) { "g must be in range [0, 255] in $this" }
@@ -27,12 +27,12 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
      * @return A string in the form `"#ffffff"` if [withNumberSign] is true,
      *     or in the form `"ffffff"` otherwise.
      */
-    fun toHex(withNumberSign: Boolean = false): String = buildString(7) {
+    override fun toHex(withNumberSign: Boolean): String = buildString(7) {
         if (withNumberSign) append('#')
         append(r.renderHex()).append(g.renderHex()).append(b.renderHex())
     }
 
-    fun toHSL(): HSL {
+    override fun toHSL(): HSL {
         val r = this.r / 255.0
         val g = this.g / 255.0
         val b = this.b / 255.0
@@ -59,7 +59,7 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
         return HSL(h.roundToInt(), (s * 100).roundToInt(), (l * 100).roundToInt())
     }
 
-    fun toHSV(): HSV {
+    override fun toHSV(): HSV {
         val r = this.r.toDouble()
         val g = this.g.toDouble()
         val b = this.b.toDouble()
@@ -91,7 +91,7 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
         return HSV(h.roundToInt(), s.roundToInt(), v.roundToInt())
     }
 
-    fun toAnsi16(): Ansi16 = toAnsi16(toHSV().v)
+    override fun toAnsi16(): Ansi16 = toAnsi16(toHSV().v)
 
     internal fun toAnsi16(value: Int): Ansi16 {
         if (value == 30) return Ansi16(30)
@@ -104,7 +104,7 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
         return Ansi16(if (v == 2) ansi + 60 else ansi)
     }
 
-    fun toAnsi256(): Ansi256 {
+    override fun toAnsi256(): Ansi256 {
         // grayscale
         val code = if (r == g && g == b) {
             when {
@@ -119,5 +119,7 @@ data class RGB(val r: Int, val g: Int, val b: Int) {
         }
         return Ansi256(code)
     }
+
+    override fun toRGB() = this
 }
 
