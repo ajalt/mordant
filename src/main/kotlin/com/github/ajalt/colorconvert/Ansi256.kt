@@ -1,6 +1,6 @@
 package com.github.ajalt.colorconvert
 
-data class Ansi256(val code: Int) : ConvertableColor {
+data class Ansi256(val code: Int) : ConvertibleColor {
     init {
         check(code in 16..255) { "code must be in range 0..255: $code" }
     }

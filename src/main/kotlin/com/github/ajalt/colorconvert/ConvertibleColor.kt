@@ -10,7 +10,7 @@ package com.github.ajalt.colorconvert
  * the values may be converted through one or more intermediate representations. This may cause a
  * loss of precision.
  */
-interface ConvertableColor {
+interface ConvertibleColor {
     /** Convert this color to Red-Green-Blue */
     fun toRGB(): RGB
 
