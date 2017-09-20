@@ -50,14 +50,20 @@ abstract class AnsiColorCode(openCodes: IntArray, closeCodes: IntArray) :
         AnsiCode(openCodes, closeCodes) {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
 
-    val bg: AnsiCode = AnsiCode(bgOpenCodes, bgCloseCodes)
-
-    protected abstract val bgOpenCodes: IntArray
-    protected abstract val bgCloseCodes: IntArray
+    /**
+     * Get a color for background only.
+     *
+     * Note that if you want to specify both a background and foreground color, use [on] instead of
+     * this property.
+     */
+    val bg: AnsiCode get() = AnsiCode(bgOpenCodes, bgCloseCodes)
 
     open infix fun on(bg: AnsiColorCode): AnsiCode {
         return AnsiCode(openCodes + bg.bgOpenCodes, closeCodes + bg.bgCloseCodes)
     }
+
+    protected abstract val bgOpenCodes: IntArray
+    protected abstract val bgCloseCodes: IntArray
 }
 
 private object DisabledAnsiColorCode : AnsiColorCode(intArrayOf(), intArrayOf()) {
@@ -103,13 +109,53 @@ class TermColors(val level: Level = Level.TRUECOLOR) {
     val brightCyan: AnsiColorCode get() = ansi16(96)
     val brightWhite: AnsiColorCode get() = ansi16(97)
 
-    val reset get() = ansi(0, 0)
+    /** Clear all active styles */
+    val reset
+        get() = if (level == Level.NONE) DisabledAnsiCode else AnsiCode(intArrayOf(0), intArrayOf())
+
+    /**
+     * Render text as bold or increased intensity.
+     *
+     * Might be rendered as a different color instead of a different font weight.
+     */
     val bold get() = ansi(1, 22)
+
+    /**
+     * Render text as faint or decreased intensity.
+     *
+     * Not widely supported.
+     */
     val dim get() = ansi(2, 22)
+
+    /**
+     * Render text as italic.
+     *
+     * Not widely supported, might be rendered as inverse instead of italic.
+     */
     val italic get() = ansi(3, 23)
+
+    /**
+     * Underline text.
+     *
+     * Might be rendered with different colors instead of underline.
+     */
     val underline get() = ansi(4, 24)
+
+    /** Render text with background and foreground colors switched. */
     val inverse get() = ansi(7, 27)
+
+    /**
+     * Conceal text.
+     *
+     * Not widely supported.
+     */
     val hidden get() = ansi(8, 28)
+
+    /**
+     * Render text with a strikethrough.
+     *
+     * NOt widely supported.
+     */
     val strikethrough get() = ansi(9, 29)
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
@@ -151,7 +197,7 @@ class TermColors(val level: Level = Level.TRUECOLOR) {
 
 
 fun main(args: Array<String>) {
-    val t = TermColors(TermColors.Level.ANSI16)
+    val t = TermColors()
     with(t) {
         println("${red("wow")}, ${(green on blue)("that's")} pretty ${rgb("#916262")("cool")}")
         for (i in 0..100) {
