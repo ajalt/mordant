@@ -4,24 +4,31 @@ import com.github.ajalt.colorconvert.*
 import java.util.*
 
 private const val ESC = (0x1b).toChar()
+private val ansiCloseRe = Regex("$ESC\\[((?:39|49|22|23|24|27|28|29))+m")
 
 open class AnsiCode(protected val openCodes: IntArray,
                     protected val closeCodes: IntArray) : (String) -> String {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
 
-    open val open: String
-        get() =
-            if (openCodes.isEmpty()) "" else "$ESC[${openCodes.joinToString(";")}m"
-    open val close: String
-        get() =
-            if (closeCodes.isEmpty()) "" else "$ESC[${closeCodes.joinToString(";")}m"
+    val open: String get() = tag(openCodes)
+    val close: String get() = tag(closeCodes)
 
     override fun toString() = open
-    override fun invoke(text: String) = open + text + close
+    override fun invoke(text: String) = if (text.isEmpty()) "" else open + nest(text) + close
 
     operator open fun plus(other: AnsiCode): AnsiCode {
         return AnsiCode(openCodes + other.openCodes, closeCodes + other.closeCodes)
     }
+
+    private fun nest(text: String) = ansiCloseRe.replace(text) {
+        val codes = it.groupValues[1].splitToSequence(';').map { it.toInt() }
+                .filter { it !in closeCodes }.toList().toIntArray()
+        val atEnd = it.range.endInclusive == text.lastIndex
+        if (atEnd && codes.isEmpty()) ""
+        else AnsiCode(if (atEnd) codes else codes + openCodes, intArrayOf()).open
+    }
+
+    private fun tag(c: IntArray) = if (c.isEmpty()) "" else "$ESC[${c.joinToString(";")}m"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -199,9 +206,11 @@ class TermColors(val level: Level = Level.TRUECOLOR) {
 fun main(args: Array<String>) {
     val t = TermColors()
     with(t) {
-        println("${red("wow")}, ${(green on blue)("that's")} pretty ${rgb("#916262")("cool")}")
-        for (i in 0..100) {
-            print(gray(i * 0.01).bg(" "))
-        }
+        //        println("${red("wow")}, ${(green on blue)("that's")} pretty ${rgb("#916262")("cool")}")
+//        for (i in 0..100) {
+//            print(gray(i * 0.01).bg(" "))
+//        }
+//        println()
+        println((white on green)("outer with ${(black on gray)("some inner text")}") + "that is nested")
     }
 }
