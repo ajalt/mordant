@@ -9,8 +9,12 @@ open class AnsiCode(protected val openCodes: IntArray,
                     protected val closeCodes: IntArray) : (String) -> String {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
 
-    open val open: String get() = "$ESC[${openCodes.joinToString(";")}m"
-    open val close: String get() = "$ESC[${closeCodes.joinToString(";")}m"
+    open val open: String
+        get() =
+            if (openCodes.isEmpty()) "" else "$ESC[${openCodes.joinToString(";")}m"
+    open val close: String
+        get() =
+            if (closeCodes.isEmpty()) "" else "$ESC[${closeCodes.joinToString(";")}m"
 
     override fun toString() = open
     override fun invoke(text: String) = open + text + close
@@ -39,14 +43,14 @@ open class AnsiCode(protected val openCodes: IntArray,
 }
 
 private object DisabledAnsiCode : AnsiCode(intArrayOf(), intArrayOf()) {
-    override val open: String = ""
-    override val close: String = ""
     override fun plus(other: AnsiCode): AnsiCode = this
 }
 
 abstract class AnsiColorCode(openCodes: IntArray, closeCodes: IntArray) :
         AnsiCode(openCodes, closeCodes) {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
+
+    val bg: AnsiCode = AnsiCode(bgOpenCodes, bgCloseCodes)
 
     protected abstract val bgOpenCodes: IntArray
     protected abstract val bgCloseCodes: IntArray
@@ -59,8 +63,6 @@ abstract class AnsiColorCode(openCodes: IntArray, closeCodes: IntArray) :
 private object DisabledAnsiColorCode : AnsiColorCode(intArrayOf(), intArrayOf()) {
     override val bgOpenCodes: IntArray get() = intArrayOf()
     override val bgCloseCodes: IntArray get() = intArrayOf()
-    override val open: String = ""
-    override val close: String = ""
     override fun plus(other: AnsiCode): AnsiCode = this
     override fun on(bg: AnsiColorCode): AnsiCode = DisabledAnsiCode
 }
@@ -153,7 +155,7 @@ fun main(args: Array<String>) {
     with(t) {
         println("${red("wow")}, ${(green on blue)("that's")} pretty ${rgb("#916262")("cool")}")
         for (i in 0..100) {
-            print(gray(i * 0.01)(" "))
+            print(gray(i * 0.01).bg(" "))
         }
     }
 }
