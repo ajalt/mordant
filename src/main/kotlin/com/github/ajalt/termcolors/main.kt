@@ -1,18 +1,23 @@
 package com.github.ajalt.termcolors
 
+import com.github.ajalt.colorconvert.*
 import java.util.*
 
+private const val ESC = (0x1b).toChar()
 
-//https://github.com/Qix-/color-convert
-// https://github.com/chalk/chalk
-open class AnsiCode(val openCodes: IntArray, val closeCodes: IntArray) : (String) -> String {
+open class AnsiCode(protected val openCodes: IntArray,
+                    protected val closeCodes: IntArray) : (String) -> String {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
 
-    val open: String get() = "${ESC}[${openCodes.joinToString(";")}m"
-    val close: String get() = "${ESC}[${closeCodes.joinToString(";")}m"
+    open val open: String get() = "$ESC[${openCodes.joinToString(";")}m"
+    open val close: String get() = "$ESC[${closeCodes.joinToString(";")}m"
 
     override fun toString() = open
     override fun invoke(text: String) = open + text + close
+
+    operator open fun plus(other: AnsiCode): AnsiCode {
+        return AnsiCode(openCodes + other.openCodes, closeCodes + other.closeCodes)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -33,12 +38,31 @@ open class AnsiCode(val openCodes: IntArray, val closeCodes: IntArray) : (String
     }
 }
 
+private object DisabledAnsiCode : AnsiCode(intArrayOf(), intArrayOf()) {
+    override val open: String = ""
+    override val close: String = ""
+    override fun plus(other: AnsiCode): AnsiCode = this
+}
+
 abstract class AnsiColorCode(openCodes: IntArray, closeCodes: IntArray) :
         AnsiCode(openCodes, closeCodes) {
     constructor(openCode: Int, closeCode: Int) : this(intArrayOf(openCode), intArrayOf(closeCode))
 
-    abstract val bgOpenCodes: IntArray
-    abstract val bgCloseCodes: IntArray
+    protected abstract val bgOpenCodes: IntArray
+    protected abstract val bgCloseCodes: IntArray
+
+    open infix fun on(bg: AnsiColorCode): AnsiCode {
+        return AnsiCode(openCodes + bg.bgOpenCodes, closeCodes + bg.bgCloseCodes)
+    }
+}
+
+private object DisabledAnsiColorCode : AnsiColorCode(intArrayOf(), intArrayOf()) {
+    override val bgOpenCodes: IntArray get() = intArrayOf()
+    override val bgCloseCodes: IntArray get() = intArrayOf()
+    override val open: String = ""
+    override val close: String = ""
+    override fun plus(other: AnsiCode): AnsiCode = this
+    override fun on(bg: AnsiColorCode): AnsiCode = DisabledAnsiCode
 }
 
 class Ansi16ColorCode(code: Int) : AnsiColorCode(code, 39) {
@@ -51,99 +75,85 @@ class Ansi256ColorCode(code: Int) : AnsiColorCode(intArrayOf(38, 5, code), intAr
     override val bgCloseCodes get() = intArrayOf(49)
 }
 
-infix fun AnsiColorCode.on(bg: AnsiColorCode): AnsiCode {
-    return AnsiCode(openCodes + bg.bgOpenCodes, closeCodes + bg.bgCloseCodes)
+class AnsiRGBColorCode(r: Int, g: Int, b: Int) : AnsiColorCode(intArrayOf(38, 2, r, g, b), intArrayOf(39)) {
+    override val bgOpenCodes get() = intArrayOf(48, 2, openCodes[2], openCodes[3], openCodes[4])
+    override val bgCloseCodes get() = intArrayOf(49)
 }
-
-operator fun AnsiCode.plus(other: AnsiCode): AnsiCode {
-    return AnsiCode(openCodes + other.openCodes, closeCodes + other.closeCodes)
-}
-
-private val ESC = (0x1b).toChar()
-val reset = "${ESC}[0m"
-val underline = AnsiCode(4, 24)
-
-val black = Ansi16ColorCode(30)
-val red = Ansi16ColorCode(31)
-val green = Ansi16ColorCode(32)
-val yellow = Ansi16ColorCode(33)
-val blue = Ansi16ColorCode(34)
-val purple = Ansi16ColorCode(35)
-val cyan = Ansi16ColorCode(36)
-val white = Ansi16ColorCode(37)
-
-val brightBlack = Ansi16ColorCode(90)
-val brightRed = Ansi16ColorCode(91)
-val brightGreen = Ansi16ColorCode(92)
-val brightYellow = Ansi16ColorCode(93)
-val brightBlue = Ansi16ColorCode(94)
-val brightPurple = Ansi16ColorCode(95)
-val brightCyan = Ansi16ColorCode(96)
-val brightWhite = Ansi16ColorCode(97)
-
-/*
-modifier: {
-    reset: [0, 0],
-    // 21 isn't widely supported and 22 does the same thing
-    bold: [1, 22],
-    dim: [2, 22],
-    italic: [3, 23],
-    underline: [4, 24],
-    inverse: [7, 27],
-    hidden: [8, 28],
-    strikethrough: [9, 29]
-},
-color: {
-    black: [30, 39],
-    red: [31, 39],
-    green: [32, 39],
-    yellow: [33, 39],
-    blue: [34, 39],
-    magenta: [35, 39],
-    cyan: [36, 39],
-    white: [37, 39],
-    gray: [90, 39],
-
-    // Bright color
-    redBright: [91, 39],
-    greenBright: [92, 39],
-    yellowBright: [93, 39],
-    blueBright: [94, 39],
-    magentaBright: [95, 39],
-    cyanBright: [96, 39],
-    whiteBright: [97, 39]
-},
-bgColor: {
-    bgBlack: [40, 49],
-    bgRed: [41, 49],
-    bgGreen: [42, 49],
-    bgYellow: [43, 49],
-    bgBlue: [44, 49],
-    bgMagenta: [45, 49],
-    bgCyan: [46, 49],
-    bgWhite: [47, 49],
-
-    // Bright color
-    bgBlackBright: [100, 49],
-    bgRedBright: [101, 49],
-    bgGreenBright: [102, 49],
-    bgYellowBright: [103, 49],
-    bgBlueBright: [104, 49],
-    bgMagentaBright: [105, 49],
-    bgCyanBright: [106, 49],
-bgWhiteBright: [107, 49]
- */
 
 class TermColors(val level: Level = Level.TRUECOLOR) {
-    companion object {
-        enum class Level {NONE, ANSI16, ANSI256, TRUECOLOR }
+    enum class Level {NONE, ANSI16, ANSI256, TRUECOLOR }
+
+    val black: AnsiColorCode get() = ansi16(30)
+    val red: AnsiColorCode get() = ansi16(31)
+    val green: AnsiColorCode get() = ansi16(32)
+    val yellow: AnsiColorCode get() = ansi16(33)
+    val blue: AnsiColorCode get() = ansi16(34)
+    val magenta: AnsiColorCode get() = ansi16(35)
+    val cyan: AnsiColorCode get() = ansi16(36)
+    val white: AnsiColorCode get() = ansi16(37)
+    val gray: AnsiColorCode get() = ansi16(90)
+
+    val brightRed: AnsiColorCode get() = ansi16(91)
+    val brightGreen: AnsiColorCode get() = ansi16(92)
+    val brightYellow: AnsiColorCode get() = ansi16(93)
+    val brightBlue: AnsiColorCode get() = ansi16(94)
+    val brightMagenta: AnsiColorCode get() = ansi16(95)
+    val brightCyan: AnsiColorCode get() = ansi16(96)
+    val brightWhite: AnsiColorCode get() = ansi16(97)
+
+    val reset get() = ansi(0, 0)
+    val bold get() = ansi(1, 22)
+    val dim get() = ansi(2, 22)
+    val italic get() = ansi(3, 23)
+    val underline get() = ansi(4, 24)
+    val inverse get() = ansi(7, 27)
+    val hidden get() = ansi(8, 28)
+    val strikethrough get() = ansi(9, 29)
+
+    /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
+    fun rgb(hex: String): AnsiColorCode = downsample(RGB(hex))
+
+    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = downsample(RGB(r, g, b))
+    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = downsample(HSL(h, s, l))
+    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = downsample(HSV(h, s, v))
+
+    /**
+     * Return a grayscale color.
+     *
+     * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
+     */
+    fun gray(fraction: Double): AnsiColorCode {
+        require(fraction in 0.0..1.0) { "fraction must be in the range [0, 1]" }
+        return Math.round(255 * fraction).toInt().let { rgb(it, it, it) }
     }
 
+    private fun ansi16(code: Int) =
+            if (level == Level.NONE) DisabledAnsiColorCode else Ansi16ColorCode(code)
 
+    private fun ansi(open: Int, close: Int) =
+            if (level == Level.NONE) DisabledAnsiCode else AnsiCode(open, close)
+
+    private fun downsample(color: ConvertibleColor): AnsiColorCode = when (level) {
+        Level.NONE -> DisabledAnsiColorCode
+        Level.ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
+        Level.ANSI256 ->
+            if (color is Ansi16) Ansi16ColorCode(color.code)
+            else Ansi256ColorCode(color.toAnsi256().code)
+        Level.TRUECOLOR -> when (color) {
+            is Ansi16 -> Ansi16ColorCode(color.code)
+            is Ansi256 -> Ansi256ColorCode(color.code)
+            else -> color.toRGB().run { AnsiRGBColorCode(r, g, b) }
+        }
+    }
 }
 
 
 fun main(args: Array<String>) {
-    println("${red("wow")}, ${(green on blue)("that's")}, pretty, ${brightPurple("cool")}")
-
+    val t = TermColors(TermColors.Level.ANSI16)
+    with(t) {
+        println("${red("wow")}, ${(green on blue)("that's")} pretty ${rgb("#916262")("cool")}")
+        for (i in 0..100) {
+            print(gray(i * 0.01)(" "))
+        }
+    }
 }
