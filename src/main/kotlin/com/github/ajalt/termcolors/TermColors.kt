@@ -26,7 +26,7 @@ class TermColors(val level: Level = Level.TRUECOLOR) {
 
     /** Clear all active styles */
     val reset
-        get() = if (level == Level.NONE) DisabledAnsiCode else AnsiCode(intArrayOf(0), intArrayOf())
+        get() = if (level == Level.NONE) DisabledAnsiCode else AnsiCode(0, 0)
 
     /**
      * Render text as bold or increased intensity.
