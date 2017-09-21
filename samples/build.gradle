@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = 'com.github.ajalt.termcolors.samples.MainKt'
+
+dependencies {
+    compile project(':termcolors')
+}

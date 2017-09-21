@@ -1,4 +1,6 @@
-package com.github.ajalt.termcolors
+package com.github.ajalt.termcolors.samples
+
+import com.github.ajalt.termcolors.TermColors
 
 
 fun main(args: Array<String>) {

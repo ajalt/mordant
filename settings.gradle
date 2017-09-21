@@ -1,1 +1,4 @@
-rootProject.name = 'termcolors'
+include 'termcolors'
+include 'samples'
+include 'colorconvert'
+

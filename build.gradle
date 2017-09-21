@@ -10,29 +10,30 @@ buildscript {
     }
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'application'
 apply plugin: 'idea'
 
-group 'com.github.ajalt'
-version '0.1'
-mainClassName = 'com.github.ajalt.termcolors.MainKt'
+subprojects {
+    apply plugin: 'kotlin'
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
+    group = GROUP
+    version = VERSION_NAME
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.8.0'
-}
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.6"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.6"
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.assertj:assertj-core:3.8.0'
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.6"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.6"
+    }
 }

@@ -1,8 +1,6 @@
 package com.github.ajalt.colorconvert
 
 import com.github.ajalt.testing.softly
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class RGBTest {
