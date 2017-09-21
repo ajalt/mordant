@@ -73,7 +73,7 @@ class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else L
     /**
      * Render text with a strikethrough.
      *
-     * NOt widely supported.
+     * Not widely supported.
      */
     val strikethrough get() = ansi(9, 29)
 
