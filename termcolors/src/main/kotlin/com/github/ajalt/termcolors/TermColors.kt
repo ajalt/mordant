@@ -7,7 +7,7 @@ class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else L
     enum class Level {NONE, ANSI16, ANSI256, TRUECOLOR }
 
     companion object {
-        val consoleAvailable: Boolean = System.console() != null
+        val consoleAvailable: Boolean get() = System.console() != null
     }
 
     val black: AnsiColorCode get() = ansi16(30)
@@ -80,8 +80,31 @@ class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else L
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
     fun rgb(hex: String): AnsiColorCode = downsample(RGB(hex))
 
+    /**
+     * Create a color code from an RGB color.
+     *
+     * @param r The red amount, in the range [0, 255]
+     * @param g The green amount, in the range [0, 255]
+     * @param b The blue amount, in the range [0, 255]
+     */
     fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = downsample(RGB(r, g, b))
+
+    /**
+     * Create a color code from an HSL color.
+     *
+     * @param h The hue, in the range [0, 360]
+     * @param s The saturation, in the range [0, 100]
+     * @param l The lightness, in the range [0, 100]
+     */
     fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = downsample(HSL(h, s, l))
+
+    /**
+     * Create a color code from an HSV color.
+     *
+     * @param h The hue, in the range [0, 360]
+     * @param s The saturation, in the range [0,100]
+     * @param v The value, in the range [0,100]
+     */
     fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = downsample(HSV(h, s, v))
 
     /**
