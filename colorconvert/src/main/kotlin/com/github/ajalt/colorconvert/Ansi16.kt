@@ -51,9 +51,5 @@ data class Ansi16(val code: Int) : ConvertibleColor {
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
 
-    override fun toAnsi16() = toRGB().toAnsi16()
-    override fun toHSL() = toRGB().toHSL()
-    override fun toHSV() = toRGB().toHSV()
-    override fun toHex(withNumberSign: Boolean) = toRGB().toHex(withNumberSign)
-    override fun toAnsi256() = toRGB().toAnsi256()
+    override fun toAnsi16() = this
 }

@@ -20,19 +20,19 @@ interface ConvertibleColor {
      * @return A string in the form `"#ffffff"` if [withNumberSign] is true,
      *     or in the form `"ffffff"` otherwise.
      */
-    fun toHex(withNumberSign: Boolean = false): String
+    fun toHex(withNumberSign: Boolean = false): String = toRGB().toHex(withNumberSign)
 
     /** Convert this color to Hue-Saturation-Luminosity */
-    fun toHSL(): HSL
+    fun toHSL(): HSL = toRGB().toHSL()
 
     /** Convert this color to Hue-Saturation-Value */
-    fun toHSV(): HSV
+    fun toHSV(): HSV = toRGB().toHSV()
 
     /** Convert this color to a 16-color ANSI code */
-    fun toAnsi16(): Ansi16
+    fun toAnsi16(): Ansi16 = toRGB().toAnsi16()
 
     /** Convert this color to a 256-color ANSI code */
-    fun toAnsi256(): Ansi256
+    fun toAnsi256(): Ansi256 = toRGB().toAnsi256()
 
     /** Convert this color to Cyan-Magenta-Yellow-Key */
     fun toCMYK(): CMYK = toRGB().toCMYK()

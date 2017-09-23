@@ -1,6 +1,13 @@
 package com.github.ajalt.colorconvert
 
 data class CMYK(val c: Int, val m: Int, val y: Int, val k: Int) : ConvertibleColor {
+    init {
+        require(c in 0..100) { "c must be in range [0, 100] in $this" }
+        require(m in 0..100) { "m must be in range [0, 100] in $this" }
+        require(y in 0..100) { "y must be in range [0, 100] in $this" }
+        require(k in 0..100) { "k must be in range [0, 100] in $this" }
+    }
+
     override fun toRGB(): RGB {
         val c = this.c / 100.0
         val m = this.m / 100.0
@@ -11,16 +18,6 @@ data class CMYK(val c: Int, val m: Int, val y: Int, val k: Int) : ConvertibleCol
         val b = 255 * (1 - y) * (1 - k)
         return RGB(r.roundToInt(), g.roundToInt(), b.roundToInt())
     }
-
-    override fun toHex(withNumberSign: Boolean)= toRGB().toHex(withNumberSign)
-
-    override fun toHSL() = toRGB().toHSL()
-
-    override fun toHSV()= toRGB().toHSV()
-
-    override fun toAnsi16()= toRGB().toAnsi16()
-
-    override fun toAnsi256()= toRGB().toAnsi256()
 
     override fun toCMYK() = this
 }

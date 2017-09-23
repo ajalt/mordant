@@ -58,8 +58,5 @@ data class HSL(val h: Int, val s: Int, val l: Int) : ConvertibleColor {
         return HSV(h.roundToInt(), (sv * 100).roundToInt(), (v * 100).roundToInt())
     }
 
-    override fun toAnsi16() = toRGB().toAnsi16()
-    override fun toAnsi256() = toRGB().toAnsi256()
-    override fun toHex(withNumberSign: Boolean) = toRGB().toHex(withNumberSign)
     override fun toHSL() = this
 }
