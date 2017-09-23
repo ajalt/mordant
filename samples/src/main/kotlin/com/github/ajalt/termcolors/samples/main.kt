@@ -10,27 +10,27 @@ fun demo() = TermColors(TermColors.Level.TRUECOLOR).run {
     val colors16 = ((30..37).toList() + (90..97)).map { Ansi16ColorCode(it) }
     for (fg in colors16) {
         for (bg in colors16) {
-            print("${(fg on bg)(" ABC ")} ")
+            print("${(fg on bg)(" ::: ")} ")
         }
         println()
     }
 
     println(title("\n\n256 color mode\n"))
 
-    fun printRow(row: Int, space: Boolean) {
-        for (i in 0..35) {
-            if (i % 6 == 0) print(" ")
-            val col = row + i + ((i / 6) * 30)
-            val v = if (space) "   " else String.format("%03d", col)
-            print((Ansi256ColorCode(242) on Ansi256ColorCode(col))(" $v "))
+    for (row in (16..46 step 6)+(124..154 step 6)) {
+        for (space in arrayOf(true, false, true)) {
+            for (block in (row..(row + 72) step 36)) {
+                for (cell in (block..(block + 5))) {
+                    val v = if (space) "   " else String.format("%03d", cell)
+                    print((Ansi256ColorCode(242) on Ansi256ColorCode(cell))(" $v "))
+                }
+                print("  ")
+            }
+            println()
         }
+        if (row == 46) println()
     }
-    for (row in 16..46 step 6) {
-        printRow(row, true)
-        printRow(row, false)
-        printRow(row, true)
-        println()
-    }
+    println()
 
     println(title("\n\n256 color mode grayscale\n"))
     for (i in 232..255) {
@@ -40,24 +40,27 @@ fun demo() = TermColors(TermColors.Level.TRUECOLOR).run {
 
     println(title("\n\n${red("R")}${green("G")}${blue("B")} true color 24-bit mode\n"))
 
-    for (g in 0..255 step (255 / 18)) {
-        for (r in 0..255 step (255 / 6)) {
-            print(" ")
-            for (b in 0..255 step (255 / 31)) {
-                print(rgb(r,g,b).bg(" "))
+    for (ri in (0..255 step 128)) {
+        for (g in 0..255 step (255 / 18)) {
+            for (r in ri..(ri + 128) step (255 / 6)) {
+                print("  ")
+                for (b in 0..255 step (255 / 31)) {
+                    print(rgb(r, g, b).bg(" "))
+                }
             }
+            println()
         }
         println()
     }
 
     println(title("\n\ntrue color 24-bit mode grayscale\n"))
 
-    for(i in 0..255 step 2) {
-        print(rgb(i,i,i).bg(" "))
+    for (i in 1..136) {
+        print(gray(i / 136.0).bg(" "))
     }
     println()
-
 }
+
 
 
 fun main(args: Array<String>) {
