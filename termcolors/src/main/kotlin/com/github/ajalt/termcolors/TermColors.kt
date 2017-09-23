@@ -4,7 +4,7 @@ import com.github.ajalt.colorconvert.*
 
 
 class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else Level.NONE) {
-    enum class Level {NONE, ANSI16, ANSI256, TRUECOLOR }
+    enum class Level { NONE, ANSI16, ANSI256, TRUECOLOR }
 
     companion object {
         val consoleAvailable: Boolean get() = System.console() != null
@@ -106,6 +106,16 @@ class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else L
      * @param v The value, in the range [0,100]
      */
     fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = downsample(HSV(h, s, v))
+
+    /**
+     * Create a color code from a CMYK color.
+     *
+     * @param c The cyan amount, in the range [0, 100]
+     * @param m The magenta amount, in the range [0,100]
+     * @param y The yellow amount, in the range [0,100]
+     * @param k The black amount, in the range [0,100]
+     */
+    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = downsample(CMYK(c, m, y, k))
 
     /**
      * Return a grayscale color.

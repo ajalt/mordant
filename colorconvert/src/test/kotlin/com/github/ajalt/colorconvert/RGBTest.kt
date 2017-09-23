@@ -43,6 +43,21 @@ class RGBTest {
     }
 
     @Test
+    fun `RGB to CMYK`() {
+        softly {
+            assertThat(RGB(0, 0, 0).toCMYK()).isEqualTo(CMYK(0, 0, 0, 100))
+            assertThat(RGB(255, 255, 255).toCMYK()).isEqualTo(CMYK(0, 0, 0, 0))
+            assertThat(RGB(255, 0, 0).toCMYK()).isEqualTo(CMYK(0, 100, 100, 0))
+            assertThat(RGB(0, 255, 0).toCMYK()).isEqualTo(CMYK(100, 0, 100, 0))
+            assertThat(RGB(0, 0, 255).toCMYK()).isEqualTo(CMYK(100, 100, 0, 0))
+            assertThat(RGB(255, 255, 0).toCMYK()).isEqualTo(CMYK(0, 0, 100, 0))
+            assertThat(RGB(0, 255, 255).toCMYK()).isEqualTo(CMYK(100, 0, 0, 0))
+            assertThat(RGB(255, 0, 255).toCMYK()).isEqualTo(CMYK(0, 100, 0, 0))
+            assertThat(RGB(140, 200, 100).toCMYK()).isEqualTo(CMYK(30, 0, 50, 22))
+        }
+    }
+
+    @Test
     fun `RGB to Ansi16`() {
         softly {
             assertThat(RGB(0, 0, 0).toAnsi16()).isEqualTo(Ansi16(30))

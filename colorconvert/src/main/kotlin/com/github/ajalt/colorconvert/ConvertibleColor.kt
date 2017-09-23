@@ -33,4 +33,7 @@ interface ConvertibleColor {
 
     /** Convert this color to a 256-color ANSI code */
     fun toAnsi256(): Ansi256
+
+    /** Convert this color to Cyan-Magenta-Yellow-Key */
+    fun toCMYK(): CMYK = toRGB().toCMYK()
 }

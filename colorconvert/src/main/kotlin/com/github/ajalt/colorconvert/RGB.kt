@@ -96,6 +96,17 @@ data class RGB(val r: Int, val g: Int, val b: Int) : ConvertibleColor {
         return HSV(h.roundToInt(), s.roundToInt(), v.roundToInt())
     }
 
+    override fun toCMYK(): CMYK {
+        val r = this.r / 255.0
+        val b = this.b / 255.0
+        val g = this.g / 255.0
+        val k = 1 - maxOf(r, b, g)
+        val c = (1 - r - k) / (1.0 - k)
+        val m = (1 - g - k) / (1 - k)
+        val y = (1 - b - k) / (1 - k)
+        return CMYK(c.percentToInt(), m.percentToInt(), y.percentToInt(), k.percentToInt())
+    }
+
     override fun toAnsi16(): Ansi16 = toAnsi16(toHSV().v)
 
     internal fun toAnsi16(value: Int): Ansi16 {
