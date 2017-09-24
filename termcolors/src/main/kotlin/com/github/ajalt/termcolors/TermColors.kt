@@ -3,12 +3,8 @@ package com.github.ajalt.termcolors
 import com.github.ajalt.colorconvert.*
 
 
-class TermColors(val level: Level = if (consoleAvailable) Level.TRUECOLOR else Level.NONE) {
+class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     enum class Level { NONE, ANSI16, ANSI256, TRUECOLOR }
-
-    companion object {
-        val consoleAvailable: Boolean get() = System.console() != null
-    }
 
     val black: AnsiColorCode get() = ansi16(30)
     val red: AnsiColorCode get() = ansi16(31)
