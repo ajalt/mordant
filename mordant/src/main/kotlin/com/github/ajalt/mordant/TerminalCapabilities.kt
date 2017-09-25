@@ -1,6 +1,6 @@
-package com.github.ajalt.termcolors
+package com.github.ajalt.mordant
 
-import com.github.ajalt.termcolors.TermColors.Level.*
+import com.github.ajalt.mordant.TermColors.Level.*
 
 object TerminalCapabilities {
     /**

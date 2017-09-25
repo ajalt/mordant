@@ -1,8 +1,8 @@
-package com.github.ajalt.termcolors.samples
+package com.github.ajalt.mordant.samples
 
-import com.github.ajalt.termcolors.Ansi16ColorCode
-import com.github.ajalt.termcolors.Ansi256ColorCode
-import com.github.ajalt.termcolors.TermColors
+import com.github.ajalt.mordant.Ansi16ColorCode
+import com.github.ajalt.mordant.Ansi256ColorCode
+import com.github.ajalt.mordant.TermColors
 
 fun demo() = TermColors(TermColors.Level.TRUECOLOR).run {
     val title = (bold + underline)

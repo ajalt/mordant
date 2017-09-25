@@ -1,4 +1,4 @@
-package com.github.ajalt.termcolors
+package com.github.ajalt.mordant
 
 
 private const val ESC = (0x1b).toChar()

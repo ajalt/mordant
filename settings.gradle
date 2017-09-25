@@ -1,4 +1,4 @@
-include 'termcolors'
+include 'mordant'
 include 'samples'
 include 'colorconvert'
 

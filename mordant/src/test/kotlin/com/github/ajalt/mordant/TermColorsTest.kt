@@ -1,4 +1,4 @@
-package com.github.ajalt.termcolors
+package com.github.ajalt.mordant
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

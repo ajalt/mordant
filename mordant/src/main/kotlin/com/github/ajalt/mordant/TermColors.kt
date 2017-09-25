@@ -1,4 +1,4 @@
-package com.github.ajalt.termcolors
+package com.github.ajalt.mordant
 
 import com.github.ajalt.colorconvert.*
 
