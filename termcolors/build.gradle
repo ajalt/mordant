@@ -1,3 +1,5 @@
 dependencies {
     compile project(':colorconvert')
 }
+
+apply from: '../maven.gradle'

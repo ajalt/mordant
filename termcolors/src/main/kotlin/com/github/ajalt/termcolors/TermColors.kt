@@ -79,42 +79,42 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     /**
      * Create a color code from an RGB color.
      *
-     * @param r The red amount, in the range [0, 255]
-     * @param g The green amount, in the range [0, 255]
-     * @param b The blue amount, in the range [0, 255]
+     * @param r The red amount, in the range \[0, 255]
+     * @param g The green amount, in the range \[0, 255]
+     * @param b The blue amount, in the range \[0, 255]
      */
     fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = downsample(RGB(r, g, b))
 
     /**
      * Create a color code from an HSL color.
      *
-     * @param h The hue, in the range [0, 360]
-     * @param s The saturation, in the range [0, 100]
-     * @param l The lightness, in the range [0, 100]
+     * @param h The hue, in the range \[0, 360]
+     * @param s The saturation, in the range \[0, 100]
+     * @param l The lightness, in the range \[0, 100]
      */
     fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = downsample(HSL(h, s, l))
 
     /**
      * Create a color code from an HSV color.
      *
-     * @param h The hue, in the range [0, 360]
-     * @param s The saturation, in the range [0,100]
-     * @param v The value, in the range [0,100]
+     * @param h The hue, in the range \[0, 360]
+     * @param s The saturation, in the range \[0,100]
+     * @param v The value, in the range \[0,100]
      */
     fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = downsample(HSV(h, s, v))
 
     /**
      * Create a color code from a CMYK color.
      *
-     * @param c The cyan amount, in the range [0, 100]
-     * @param m The magenta amount, in the range [0,100]
-     * @param y The yellow amount, in the range [0,100]
-     * @param k The black amount, in the range [0,100]
+     * @param c The cyan amount, in the range \[0, 100]
+     * @param m The magenta amount, in the range \[0,100]
+     * @param y The yellow amount, in the range \[0,100]
+     * @param k The black amount, in the range \[0,100]
      */
     fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = downsample(CMYK(c, m, y, k))
 
     /**
-     * Return a grayscale color.
+     * Create a grayscale color code from a fraction in the range \[0, 1].
      *
      * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
      */
