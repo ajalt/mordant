@@ -249,4 +249,26 @@ class Ansi256Test {
             assertThat(Ansi256(255).toRGB()).isEqualTo(RGB(238, 238, 238))
         }
     }
+
+    @Test
+    fun `Ansi256 to Ansi16 standard colors`() {
+        softly {
+            assertThat(Ansi256(0).toAnsi16()).isEqualTo(Ansi16(30))
+            assertThat(Ansi256(1).toAnsi16()).isEqualTo(Ansi16(31))
+            assertThat(Ansi256(2).toAnsi16()).isEqualTo(Ansi16(32))
+            assertThat(Ansi256(3).toAnsi16()).isEqualTo(Ansi16(33))
+            assertThat(Ansi256(4).toAnsi16()).isEqualTo(Ansi16(34))
+            assertThat(Ansi256(5).toAnsi16()).isEqualTo(Ansi16(35))
+            assertThat(Ansi256(6).toAnsi16()).isEqualTo(Ansi16(36))
+            assertThat(Ansi256(7).toAnsi16()).isEqualTo(Ansi16(37))
+            assertThat(Ansi256(8).toAnsi16()).isEqualTo(Ansi16(90))
+            assertThat(Ansi256(9).toAnsi16()).isEqualTo(Ansi16(91))
+            assertThat(Ansi256(10).toAnsi16()).isEqualTo(Ansi16(92))
+            assertThat(Ansi256(11).toAnsi16()).isEqualTo(Ansi16(93))
+            assertThat(Ansi256(12).toAnsi16()).isEqualTo(Ansi16(94))
+            assertThat(Ansi256(13).toAnsi16()).isEqualTo(Ansi16(95))
+            assertThat(Ansi256(14).toAnsi16()).isEqualTo(Ansi16(96))
+            assertThat(Ansi256(15).toAnsi16()).isEqualTo(Ansi16(97))
+        }
+    }
 }

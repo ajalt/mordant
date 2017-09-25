@@ -52,4 +52,8 @@ data class Ansi16(val code: Int) : ConvertibleColor {
     }
 
     override fun toAnsi16() = this
+    override fun toAnsi256() = when {
+        code >= 90 -> Ansi256(code - 90 + 8)
+        else -> Ansi256(code - 30)
+    }
 }
