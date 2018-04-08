@@ -112,7 +112,7 @@ Then add the dependency on mordant.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.mordant:mordant:1.0.0'
+   compile 'com.github.ajalt.mordant:mordant:1.0.1'
 }
 ```
 
