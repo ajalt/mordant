@@ -99,21 +99,13 @@ with(TermColors()) {
 
 ## Installation
 
-Mordant is distributed with [jitpack](https://jitpack.io/#ajalt/mordant).
-
-First, add Jitpack to your gradle repositories.
-
-```groovy
-repositories {
-    maven { url "https://jitpack.io" }
-}
-```
-
-Then add the dependency on mordant.
+Mordant is distributed through Maven Central,
+[Jcenter](https://bintray.com/ajalt/maven/mordant) and
+[Jitpack](https://jitpack.io/#ajalt/mordant).
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.mordant:mordant:1.0.1'
+   implementation 'com.github.ajalt.mordant:mordant:1.1.0'
 }
 ```
 
