@@ -9,6 +9,7 @@ Mordant has:
 * Support for nesting styles and colors
 * Automatic detection of terminal color support
 * Support for 256 and 24-bit colors, with automatic downsampling
+* Support for specifying colors in every color space supported by [colormath](https://github.com/ajalt/colormath)
 
 <div align="center"><img src=".github/rainbow.gif"></div>
 
@@ -116,16 +117,9 @@ dependencies {
 }
 ```
 
-## Related projects
-
-* [Chalk: a JS library that inspired Mordant](https://github.com/chalk)
-* [Apache Commons Imaging: which contains color conversion among other functionality](https://commons.apache.org/proper/commons-imaging/index.html)
-* [Jansi: a Java library to output ANSI codes](https://github.com/fusesource/jansi)
-* [JLine: a Java library to handle console input](https://github.com/jline)
-
 ## License
 
-    Copyright 2017 AJ Alt
+    Copyright 2018 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

@@ -6,7 +6,9 @@ import com.github.ajalt.colormath.CMYK
 import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.colormath.HSL
 import com.github.ajalt.colormath.HSV
+import com.github.ajalt.colormath.LAB
 import com.github.ajalt.colormath.RGB
+import com.github.ajalt.colormath.XYZ
 
 
 class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
@@ -128,6 +130,26 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
         require(fraction in 0.0..1.0) { "fraction must be in the range [0, 1]" }
         return Math.round(255 * fraction).toInt().let { rgb(it, it, it) }
     }
+
+    /**
+     * Create a color code from a CIE XYZ color.
+     *
+     * Conversions use D65 reference white, and sRGB profile.
+     *
+     * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
+     */
+    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = downsample(XYZ(x, y, z))
+
+
+    /**
+     * Create a color code from a CIE LAB color.
+     *
+     * Conversions use D65 reference white, and sRGB profile.
+     *
+     * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
+     * but are generally in [-100, 100]
+     */
+    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = downsample(LAB(l, a, b))
 
     private fun ansi16(code: Int) =
             if (level == Level.NONE) DisabledAnsiColorCode else Ansi16ColorCode(code)
