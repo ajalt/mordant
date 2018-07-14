@@ -15,7 +15,11 @@ artifacts {
     archives javadocJar
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    compile project(':colorconvert')
+    compile 'com.github.ajalt:colormath:1.1.0'
 }
 

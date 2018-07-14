@@ -1,6 +1,12 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.colorconvert.*
+import com.github.ajalt.colormath.Ansi16
+import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.colormath.CMYK
+import com.github.ajalt.colormath.ConvertibleColor
+import com.github.ajalt.colormath.HSL
+import com.github.ajalt.colormath.HSV
+import com.github.ajalt.colormath.RGB
 
 
 class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
