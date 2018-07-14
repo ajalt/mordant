@@ -14,7 +14,7 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
     override fun toString() = open
     override fun invoke(text: String) = if (text.isEmpty()) "" else open + nest(text) + close
 
-    operator open fun plus(other: AnsiCode) = AnsiCode(codes + other.codes)
+    open operator fun plus(other: AnsiCode) = AnsiCode(codes + other.codes)
 
     private fun nest(text: String) = ansiCloseRe.replace(text) {
         // Replace instances of our close codes with their corresponding opening codes. If the close
