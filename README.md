@@ -1,5 +1,5 @@
 <h1 align="center">Mordant</h1>
-<h4 align="center">Dead simple text styling for command-line applications</h3>
+<h4 align="center">Dead simple text styling for command-line applications</h4>
 
 > /mɔː(ɹ)dənt/ A substance used to set (i.e. bind) colored dyes on fabrics <sup>[1](https://wikipedia.org/wiki/Mordant)</sup>
 
