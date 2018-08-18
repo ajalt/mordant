@@ -11,6 +11,45 @@ import com.github.ajalt.colormath.RGB
 import com.github.ajalt.colormath.XYZ
 
 
+/**
+ * The main entry point into mordant. Used to generate ANSI codes.
+ *
+ * You typically want to use this in a `with` block. Colors and types can be nested, and will automatically be
+ * reset.
+ *
+ * This will print the text "red white and blue", with foreground colors matching the text:
+ *
+ * ```kotlin
+ * with(TermColors()) {
+ *     println("${red("red")} ${white("white")} and ${blue("blue")}")
+ * }
+ * ```
+ *
+ *
+ * This will set the background color while leaving the foreground unchanged:
+ *
+ * ```kotlin
+ * with(TermColors()) {
+ *     println("The foreground ${brightBlue.bg("color will stay the")} same")
+ * }
+ * ```
+ *
+ * This will set foreground and background:
+ *
+ * ```kotlin
+ * with(TermColors()) {
+ *     println((yellow on brightGreen)("this is easy to read, right?"))
+ * }
+ * ```
+ *
+ * You can also mix text styles with colors:
+ *
+ * ```kotlin
+ * with(TermColors()) {
+ *     println((bold + white + underline)("Listen!"))
+ * }
+ * ```
+ */
 class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     enum class Level { NONE, ANSI16, ANSI256, TRUECOLOR }
 
