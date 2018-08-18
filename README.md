@@ -105,7 +105,7 @@ Mordant is distributed through Maven Central,
 
 ```groovy
 dependencies {
-   implementation 'com.github.ajalt.mordant:mordant:1.1.0'
+   implementation 'com.github.ajalt:mordant:1.1.0'
 }
 ```
 
