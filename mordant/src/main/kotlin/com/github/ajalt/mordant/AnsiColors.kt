@@ -2,6 +2,7 @@ package com.github.ajalt.mordant
 
 
 private const val ESC = (0x1b).toChar()
+internal const val CSI = "$ESC["
 private val ansiCloseRe = Regex("$ESC\\[((?:\\d{1,3};?)+)m")
 
 open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) -> String {
@@ -33,7 +34,7 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
         tag(codes.toList())
     }
 
-    private fun tag(c: List<Int>) = if (c.isEmpty()) "" else "$ESC[${c.joinToString(";")}m"
+    private fun tag(c: List<Int>) = if (c.isEmpty()) "" else "$CSI${c.joinToString(";")}m"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

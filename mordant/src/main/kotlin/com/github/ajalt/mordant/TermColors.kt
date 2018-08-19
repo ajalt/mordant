@@ -9,6 +9,7 @@ import com.github.ajalt.colormath.HSV
 import com.github.ajalt.colormath.LAB
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.colormath.XYZ
+import kotlin.math.abs
 
 
 /**
@@ -189,6 +190,57 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * but are generally in [-100, 100]
      */
     fun lab(l: Double, a: Double, b: Double): AnsiColorCode = downsample(LAB(l, a, b))
+
+    /**
+     * Create an ANSI code to move the cursor up [count] cells.
+     *
+     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+     * If [count] is negative, the cursor will be moved down instead.
+     */
+    fun cursorUp(count: Int): String = moveCursor(if (count < 0) "B" else "A", abs(count))
+
+    /**
+     * Create an ANSI code to move the cursor down [count] cells.
+     *
+     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+     * If [count] is negative, the cursor will be moved up instead.
+     */
+    fun cursorDown(count: Int): String = moveCursor(if (count < 0) "A" else "B", abs(count))
+
+    /**
+     * Create an ANSI code to move the cursor left [count] cells.
+     *
+     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+     * If [count] is negative, the cursor will be moved right instead.
+     */
+    fun cursorLeft(count: Int): String = moveCursor(if (count < 0) "C" else "D", abs(count))
+
+    /**
+     * Create an ANSI code to move the cursor right [count] cells.
+     *
+     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+     * If [count] is negative, the cursor will be moved left instead.
+     */
+    fun cursorRight(count: Int): String = moveCursor(if (count < 0) "D" else "C", abs(count))
+
+    /**
+     * Create an ANSI code to hide the cursor.
+     *
+     * If ANSI codes are not supported, an empty string is returned.
+     */
+    val hideCursor: String get() = if (level == Level.NONE) "" else "\u001b[?25l"
+
+    /**
+     * Create an ANSI code to show the cursor.
+     *
+     * If ANSI codes are not supported, an empty string is returned.
+     */
+    val showCursor: String get() = if (level == Level.NONE) "" else "\u001b[?25h"
+
+    private fun moveCursor(dir: String, count: Int): String {
+        return if (count == 0 || level == Level.NONE) ""
+        else "$CSI$count$dir"
+    }
 
     private fun ansi16(code: Int) =
             if (level == Level.NONE) DisabledAnsiColorCode else Ansi16ColorCode(code)
