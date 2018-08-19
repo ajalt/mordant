@@ -129,14 +129,16 @@ fun rainbow() = TermColors(TermColors.Level.TRUECOLOR).run {
     val seconds = 6
     print("\u001b[?25l") // hide cursor
     for (tick in 0..(ticksPerSecond * seconds)) {
-        if (tick != 0) print("\u001b[${lines.size}A") // move cursor up
-        for ((lineno, line) in lines.withIndex()) {
-            for ((i, c) in line.iterator().withIndex()) {
-                print(hsv((tick * -10 + lineno * -10 + (i * 5)) positiveMod 360, 100, 100)(c.toString()))
+        print(buildString {
+            if (tick != 0) append("\u001b[${lines.size}A") // move cursor up
+            for ((lineno, line) in lines.withIndex()) {
+                for ((i, c) in line.iterator().withIndex()) {
+                    append(hsv((tick * -10 + lineno * -10 + (i * 5)) positiveMod 360, 100, 100)(c.toString()))
+                }
+                append("\n\u001b[${line.length + 1}D") // move cursor to start of line
             }
-            println()
-            print("\u001b[${line.length + 1}D") // move cursor to start of line
-        }
+        })
+
         System.out.flush()
         Thread.sleep((1000.0 / ticksPerSecond).toLong())
     }
