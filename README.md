@@ -97,6 +97,10 @@ with(TermColors()) {
 
 <img src=".github/example_hsv.png">
 
+## API Documentation
+
+API docs are [hosted on JitPack](https://jitpack.io/com/github/ajalt/mordant/1.2.0/javadoc/com/github/ajalt/mordant/TermColors.html).
+
 ## Installation
 
 Mordant is distributed through Maven Central,
@@ -105,7 +109,7 @@ Mordant is distributed through Maven Central,
 
 ```groovy
 dependencies {
-   implementation 'com.github.ajalt:mordant:1.1.0'
+   implementation 'com.github.ajalt:mordant:1.2.0'
 }
 ```
 
