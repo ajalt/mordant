@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.ajalt:colormath:1.1.0'
+    compile 'com.github.ajalt:colormath:1.2.0'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -45,7 +45,7 @@ artifacts {
 
 ext {
     pkgName = 'mordant'
-    pkgDesc = 'Full-featured text styling for Kotlin command-line applications '
+    pkgDesc = 'Full-featured text styling for Kotlin command-line applications'
     githubRepo = 'github.com/ajalt/mordant'
     pkgLicense = 'Apache-2.0'
     pkgLicenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'

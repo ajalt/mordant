@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.51'
+    ext.kotlin_version = '1.2.60'
 
     repositories {
         mavenCentral()
@@ -29,7 +29,7 @@ subprojects {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
         testCompile 'junit:junit:4.12'
-        testCompile 'io.kotlintest:kotlintest-assertions:3.1.8'
+        testCompile 'io.kotlintest:kotlintest-assertions:3.1.9'
     }
 
     compileKotlin {
