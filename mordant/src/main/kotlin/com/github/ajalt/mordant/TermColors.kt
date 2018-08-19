@@ -122,7 +122,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     val strikethrough get() = ansi(9, 29)
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
-    fun rgb(hex: String): AnsiColorCode = downsample(RGB(hex))
+    fun rgb(hex: String): AnsiColorCode = color(RGB(hex))
 
     /**
      * Create a color code from an RGB color.
@@ -131,7 +131,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param g The green amount, in the range \[0, 255]
      * @param b The blue amount, in the range \[0, 255]
      */
-    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = downsample(RGB(r, g, b))
+    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = color(RGB(r, g, b))
 
     /**
      * Create a color code from an HSL color.
@@ -140,7 +140,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param s The saturation, in the range \[0, 100]
      * @param l The lightness, in the range \[0, 100]
      */
-    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = downsample(HSL(h, s, l))
+    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = color(HSL(h, s, l))
 
     /**
      * Create a color code from an HSV color.
@@ -149,7 +149,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param s The saturation, in the range \[0,100]
      * @param v The value, in the range \[0,100]
      */
-    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = downsample(HSV(h, s, v))
+    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = color(HSV(h, s, v))
 
     /**
      * Create a color code from a CMYK color.
@@ -159,7 +159,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param y The yellow amount, in the range \[0,100]
      * @param k The black amount, in the range \[0,100]
      */
-    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = downsample(CMYK(c, m, y, k))
+    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = color(CMYK(c, m, y, k))
 
     /**
      * Create a grayscale color code from a fraction in the range \[0, 1].
@@ -178,7 +178,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      *
      * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
      */
-    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = downsample(XYZ(x, y, z))
+    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = color(XYZ(x, y, z))
 
 
     /**
@@ -189,7 +189,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
      * but are generally in [-100, 100]
      */
-    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = downsample(LAB(l, a, b))
+    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = color(LAB(l, a, b))
 
     /**
      * Create an ANSI code to move the cursor up [count] cells.
@@ -228,14 +228,14 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      *
      * If ANSI codes are not supported, an empty string is returned.
      */
-    val hideCursor: String get() = if (level == Level.NONE) "" else "\u001b[?25l"
+    val hideCursor: String get() = if (level == Level.NONE) "" else "$CSI?25l"
 
     /**
      * Create an ANSI code to show the cursor.
      *
      * If ANSI codes are not supported, an empty string is returned.
      */
-    val showCursor: String get() = if (level == Level.NONE) "" else "\u001b[?25h"
+    val showCursor: String get() = if (level == Level.NONE) "" else "$CSI?25h"
 
     private fun moveCursor(dir: String, count: Int): String {
         return if (count == 0 || level == Level.NONE) ""
@@ -248,7 +248,12 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     private fun ansi(open: Int, close: Int) =
             if (level == Level.NONE) DisabledAnsiCode else AnsiCode(open, close)
 
-    private fun downsample(color: ConvertibleColor): AnsiColorCode = when (level) {
+    /**
+     * Create a color from an existing [ConvertibleColor].
+     *
+     * It's usually easier to use a function like [rgb] or [hsl] instead.
+     */
+    fun color(color: ConvertibleColor): AnsiColorCode = when (level) {
         Level.NONE -> DisabledAnsiColorCode
         Level.ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
         Level.ANSI256 ->

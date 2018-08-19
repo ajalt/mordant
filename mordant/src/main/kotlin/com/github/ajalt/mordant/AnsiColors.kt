@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant
 
 
-private const val ESC = (0x1b).toChar()
+private const val ESC = "\u001B"
 internal const val CSI = "$ESC["
-private val ansiCloseRe = Regex("$ESC\\[((?:\\d{1,3};?)+)m")
+private val ansiCloseRe = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
 
 open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) -> String {
     constructor(openCodes: List<Int>, closeCode: Int) : this(listOf(openCodes to closeCode))
