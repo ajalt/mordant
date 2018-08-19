@@ -5,6 +5,11 @@ private const val ESC = "\u001B"
 internal const val CSI = "$ESC["
 private val ansiCloseRe = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
 
+/**
+ * A class representing one or more numeric ANSI codes.
+ *
+ * @property codes A list of pairs, with each pair being the list of opening codes and a closing code.
+ */
 open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) -> String {
     constructor(openCodes: List<Int>, closeCode: Int) : this(listOf(openCodes to closeCode))
     constructor(openCode: Int, closeCode: Int) : this(listOf(openCode), closeCode)
@@ -50,6 +55,11 @@ internal object DisabledAnsiCode : AnsiCode(emptyList()) {
     override fun plus(other: AnsiCode): AnsiCode = this
 }
 
+/**
+ * A class representing one or more ANSI color codes.
+ *
+ * @property codes A list of pairs, with each pair being the list of opening codes and a closing code.
+ */
 abstract class AnsiColorCode(codes: List<Pair<List<Int>, Int>>) : AnsiCode(codes) {
     constructor(openCodes: List<Int>, closeCode: Int) : this(listOf(openCodes to closeCode))
     constructor(openCode: Int, closeCode: Int) : this(listOf(openCode), closeCode)
