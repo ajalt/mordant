@@ -97,6 +97,18 @@ with(TermColors()) {
 
 <img src=".github/example_hsv.png">
 
+### Terminal color support detection
+
+By default, `TermColors()` will try to detect ANSI support in the current stdout stream. If you'd
+like to override the detection, you can pass a specific value to the `TermColors` constructor.
+
+For example, to always output ANSI RGB color codes, even if stdout is currently directed to a file,
+you can do this:
+
+```kotlin
+TermColors(TermColors.Level.TRUECOLOR)
+```
+
 ## API Documentation
 
 API docs are [hosted on JitPack](https://jitpack.io/com/github/ajalt/mordant/1.2.0/javadoc/com/github/ajalt/mordant/TermColors.html).
