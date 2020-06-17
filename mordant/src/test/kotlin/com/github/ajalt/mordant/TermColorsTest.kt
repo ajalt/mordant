@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant
 
-import io.kotlintest.data.forall
-import io.kotlintest.shouldBe
-import io.kotlintest.tables.row
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
+import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class TermColorsTest {
@@ -58,7 +58,7 @@ class TermColorsTest {
     @Test
     fun `cursor commands disabled`() {
         val t = TermColors(TermColors.Level.NONE)
-        forall(
+        forAll(
                 row(t.cursorUp(1)),
                 row(t.cursorDown(1)),
                 row(t.cursorLeft(1)),
@@ -73,7 +73,7 @@ class TermColorsTest {
     @Test
     fun `cursor directions 0 count`() {
         val t = TermColors(TermColors.Level.TRUECOLOR)
-        forall(
+        forAll(
                 row(t.cursorUp(0)),
                 row(t.cursorDown(0)),
                 row(t.cursorRight(0)),
@@ -86,7 +86,7 @@ class TermColorsTest {
     @Test
     fun `cursor commands enabled`() {
         val t = TermColors(TermColors.Level.TRUECOLOR)
-        forall(
+        forAll(
                 row(t.cursorUp(2), "${CSI}2A"),
                 row(t.cursorDown(3), "${CSI}3B"),
                 row(t.cursorRight(4), "${CSI}4C"),
@@ -101,7 +101,7 @@ class TermColorsTest {
     @Test
     fun `cursor commands negative count`() {
         val t = TermColors(TermColors.Level.TRUECOLOR)
-        forall(
+        forAll(
                 row(t.cursorUp(-2), "${CSI}2B"),
                 row(t.cursorDown(-3), "${CSI}3A"),
                 row(t.cursorRight(-4), "${CSI}4D"),
