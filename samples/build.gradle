@@ -1,7 +1,0 @@
-apply plugin: 'application'
-
-mainClassName = 'com.github.ajalt.mordant.samples.MainKt'
-
-dependencies {
-    compile project(':mordant')
-}
