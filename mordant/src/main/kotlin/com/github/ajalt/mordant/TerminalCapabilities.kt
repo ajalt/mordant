@@ -45,7 +45,7 @@ object TerminalCapabilities {
                 System.getProperty("os.name") == "Windows 10" -> TRUECOLOR
                 else -> ANSI256
             }
-            "xterm", "vt100", "screen", "ansi" -> ANSI16
+            "xterm", "vt100", "screen", "ansi", "rxvt" -> ANSI16
             "dumb" -> NONE
             else -> default
         }
