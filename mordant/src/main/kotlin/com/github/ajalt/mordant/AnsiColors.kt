@@ -11,6 +11,9 @@ private val ansiCloseRe = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
  * @property codes A list of pairs, with each pair being the list of opening codes and a closing code.
  */
 open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) -> String {
+    companion object {
+        val BLANK = AnsiCode(emptyList())
+    }
     constructor(openCodes: List<Int>, closeCode: Int) : this(listOf(openCodes to closeCode))
     constructor(openCode: Int, closeCode: Int) : this(listOf(openCode), closeCode)
 

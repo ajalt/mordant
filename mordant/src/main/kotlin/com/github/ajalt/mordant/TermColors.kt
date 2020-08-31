@@ -1,19 +1,11 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.colormath.Ansi16
-import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.colormath.CMYK
-import com.github.ajalt.colormath.ConvertibleColor
-import com.github.ajalt.colormath.HSL
-import com.github.ajalt.colormath.HSV
-import com.github.ajalt.colormath.LAB
-import com.github.ajalt.colormath.RGB
-import com.github.ajalt.colormath.XYZ
+import com.github.ajalt.colormath.*
 import kotlin.math.abs
 
 
 /**
- * The main entry point into mordant. Used to generate ANSI codes.
+ * The com.github.ajalt.mordant.rendering.main entry point into mordant. Used to generate ANSI codes.
  *
  * You typically want to use this in a `with` block. Colors and types can be nested, and will automatically be
  * reset.
@@ -81,45 +73,50 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      *
      * Might be rendered as a different color instead of a different font weight.
      */
-    val bold get() = ansi(1, 22)
+    val bold: AnsiCode get() = ansi(1, 22)
 
     /**
      * Render text as faint or decreased intensity.
      *
      * Not widely supported.
      */
-    val dim get() = ansi(2, 22)
+    val dim: AnsiCode get() = ansi(2, 22)
 
     /**
      * Render text as italic.
      *
      * Not widely supported, might be rendered as inverse instead of italic.
      */
-    val italic get() = ansi(3, 23)
+    val italic: AnsiCode get() = ansi(3, 23)
 
     /**
      * Underline text.
      *
      * Might be rendered with different colors instead of underline.
      */
-    val underline get() = ansi(4, 24)
+    val underline: AnsiCode get() = ansi(4, 24)
 
     /** Render text with background and foreground colors switched. */
-    val inverse get() = ansi(7, 27)
+    val inverse: AnsiCode get() = ansi(7, 27)
 
     /**
      * Conceal text.
      *
      * Not widely supported.
      */
-    val hidden get() = ansi(8, 28)
+    val hidden: AnsiCode get() = ansi(8, 28)
 
     /**
      * Render text with a strikethrough.
      *
      * Not widely supported.
      */
-    val strikethrough get() = ansi(9, 29)
+    val strikethrough: AnsiCode get() = ansi(9, 29)
+
+    /**
+     * No style.
+     */
+    val plain: AnsiCode get() = AnsiCode.BLANK
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
     fun rgb(hex: String): AnsiColorCode = color(RGB(hex))
