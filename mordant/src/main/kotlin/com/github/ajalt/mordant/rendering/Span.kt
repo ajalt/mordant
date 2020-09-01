@@ -1,12 +1,15 @@
 package com.github.ajalt.mordant.rendering
 
-data class Span(val text: String, val styles: Set<TextStyle> = emptySet()) {
+data class Span(val text: String, val style: TextStyle = TextStyle()) {
     companion object {
         fun line() = Span("\n")
     }
 
-    fun withStyle(vararg styles: TextStyle) = copy(styles = this.styles + styles)
-    fun withStyle(styles: Iterable<TextStyle>) = copy(styles = this.styles + styles)
+    val cellWidth: Int = text.length // TODO: calculate cell width
+
+
+    fun withStyle(style: TextStyle) = copy(style = style + this.style)
+
 
     /** Split span into words, spaces, and newlines*/
     internal fun split(collapseNewlines: Boolean): Sequence<Span> {

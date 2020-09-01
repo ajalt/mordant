@@ -101,10 +101,10 @@ private class ASTWalker(
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
             MarkdownElementTypes.EMPH -> {
-                innerInlines(node).map { it.withStyle(TextStyle.ITALIC) }
+                innerInlines(node).map { it.withStyle(terminal.theme.markdownEmph) }
             }
             MarkdownElementTypes.STRONG -> {
-                innerInlines(node, drop = 2).map { it.withStyle(TextStyle.BOLD) }
+                innerInlines(node, drop = 2).map { it.withStyle(terminal.theme.markdownStrong) }
             }
             MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
             MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")

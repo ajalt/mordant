@@ -1,12 +1,10 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.mordant.rendering.Renderable
-import com.github.ajalt.mordant.rendering.Span
-import com.github.ajalt.mordant.rendering.Text
-import com.github.ajalt.mordant.rendering.toAnsi
+import com.github.ajalt.mordant.rendering.*
 
 class Terminal(
         val colors: TermColors,
+        val theme: Theme = DEFAULT_THEME,
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
 
@@ -30,7 +28,7 @@ class Terminal(
 
     fun render(text: List<Span>): String = buildString {
         for (t in text) {
-            val ansi = t.styles.map { it.toAnsi(this@Terminal) }.fold(AnsiCode.BLANK, AnsiCode::plus)
+            val ansi = t.style.toAnsi(this@Terminal)
             append(ansi.invoke(t.text))
         }
     }

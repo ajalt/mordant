@@ -63,7 +63,9 @@ internal object DisabledAnsiCode : AnsiCode(emptyList()) {
  *
  * @property codes A list of pairs, with each pair being the list of opening codes and a closing code.
  */
-abstract class AnsiColorCode(codes: List<Pair<List<Int>, Int>>) : AnsiCode(codes) {
+abstract class AnsiColorCode internal constructor(
+        codes: List<Pair<List<Int>, Int>>
+) : AnsiCode(codes) {
     constructor(openCodes: List<Int>, closeCode: Int) : this(listOf(openCodes to closeCode))
     constructor(openCode: Int, closeCode: Int) : this(listOf(openCode), closeCode)
 
