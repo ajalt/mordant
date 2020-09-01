@@ -24,7 +24,9 @@ fun main() {
     val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
     val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(src)
     println(parsedTree.children.joinToString("\n"))
+    println("---")
     println(ASTWalker(src).render())
+    println("---")
 }
 
 private class ASTWalker(
@@ -51,10 +53,11 @@ private class ASTWalker(
             MarkdownElementTypes.LIST_ITEM -> TODO("LIST_ITEM")
             MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
             MarkdownElementTypes.CODE_FENCE -> {
+                // TODO better start/end linebreak handling
                 var spans = innerInlines(node)
                 if (spans.firstOrNull()?.text == "\n") spans = spans.drop(1)
                 if (spans.lastOrNull()?.text == "\n") spans = spans.dropLast(1)
-                Text(spans, whitespace = Whitespace.PRE)
+                Text(listOf(Span.line()) + spans, whitespace = Whitespace.PRE)
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
