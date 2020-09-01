@@ -2,6 +2,7 @@ package com.github.ajalt.mordant
 
 import com.github.ajalt.colormath.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 
 /**
@@ -65,58 +66,57 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
     val brightWhite: AnsiColorCode get() = ansi16(97)
 
     /** Clear all active styles */
-    val reset
-        get() = if (level == Level.NONE) DisabledAnsiCode else AnsiCode(0, 0)
+    val reset: AnsiCode get() = ansi(AnsiCodes.reset, AnsiCodes.reset)
 
     /**
      * Render text as bold or increased intensity.
      *
      * Might be rendered as a different color instead of a different font weight.
      */
-    val bold: AnsiCode get() = ansi(1, 22)
+    val bold: AnsiCode get() = ansi(AnsiCodes.boldOpen, AnsiCodes.boldClose)
 
     /**
      * Render text as faint or decreased intensity.
      *
      * Not widely supported.
      */
-    val dim: AnsiCode get() = ansi(2, 22)
+    val dim: AnsiCode get() = ansi(AnsiCodes.dimOpen, AnsiCodes.dimClose)
 
     /**
      * Render text as italic.
      *
      * Not widely supported, might be rendered as inverse instead of italic.
      */
-    val italic: AnsiCode get() = ansi(3, 23)
+    val italic: AnsiCode get() = ansi(AnsiCodes.italicOpen, AnsiCodes.italicClose)
 
     /**
      * Underline text.
      *
      * Might be rendered with different colors instead of underline.
      */
-    val underline: AnsiCode get() = ansi(4, 24)
+    val underline: AnsiCode get() = ansi(AnsiCodes.underlineOpen, AnsiCodes.underlineClose)
 
     /** Render text with background and foreground colors switched. */
-    val inverse: AnsiCode get() = ansi(7, 27)
+    val inverse: AnsiCode get() = ansi(AnsiCodes.inverseOpen, AnsiCodes.inverseClose)
 
     /**
      * Conceal text.
      *
      * Not widely supported.
      */
-    val hidden: AnsiCode get() = ansi(8, 28)
+    val hidden: AnsiCode get() = ansi(AnsiCodes.hiddenOpen, AnsiCodes.hiddenClose)
 
     /**
      * Render text with a strikethrough.
      *
      * Not widely supported.
      */
-    val strikethrough: AnsiCode get() = ansi(9, 29)
+    val strikethrough: AnsiCode get() = ansi(AnsiCodes.strikethroughOpen, AnsiCodes.strikethroughClose)
 
     /**
      * No style.
      */
-    val plain: AnsiCode get() = AnsiCode.BLANK
+    val plain: AnsiCode get() = AnsiCode(emptyList())
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
     fun rgb(hex: String): AnsiColorCode = color(RGB(hex))
@@ -165,7 +165,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      */
     fun gray(fraction: Double): AnsiColorCode {
         require(fraction in 0.0..1.0) { "fraction must be in the range [0, 1]" }
-        return Math.round(255 * fraction).toInt().let { rgb(it, it, it) }
+        return (255 * fraction).roundToInt().let { rgb(it, it, it) }
     }
 
     /**

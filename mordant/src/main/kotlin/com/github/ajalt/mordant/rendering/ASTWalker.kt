@@ -172,6 +172,7 @@ private class ASTWalker(
     }
 
     private fun innerInlines(node: ASTNode, drop: Int = 1): List<Span> {
-        return node.children.drop(drop).dropLast(drop).flatMap { parseInlines(it) }
+        return node.children.subList(drop, node.children.size - drop)
+                .flatMap { parseInlines(it) }
     }
 }

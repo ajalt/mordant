@@ -18,6 +18,7 @@ class Text(
     }
 
     override fun render(t: Terminal, width: Int): List<Span> {
+        // TODO: align
         return wrap(width).flatten().map { it.withStyle(style) }
     }
 
