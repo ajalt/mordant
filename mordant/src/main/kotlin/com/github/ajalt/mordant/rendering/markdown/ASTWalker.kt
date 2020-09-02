@@ -1,7 +1,11 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.rendering.markdown
 
 import com.github.ajalt.mordant.TermColors
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.Span
+import com.github.ajalt.mordant.rendering.Text
+import com.github.ajalt.mordant.rendering.Whitespace
 import vendor.org.intellij.markdown.MarkdownElementTypes
 import vendor.org.intellij.markdown.MarkdownTokenTypes
 import vendor.org.intellij.markdown.ast.ASTNode
@@ -165,7 +169,7 @@ private class ASTWalker(
             MarkdownTokenTypes.BACKTICK,
             MarkdownTokenTypes.CODE_FENCE_CONTENT,
             MarkdownTokenTypes.WHITE_SPACE -> {
-                listOf(Span(input.substring(node.startOffset, node.endOffset)))
+                Span.parse(input.substring(node.startOffset, node.endOffset), collapseNewlines = true)
             }
             else -> error("Unexpected token when parsing inlines: $node")
         }

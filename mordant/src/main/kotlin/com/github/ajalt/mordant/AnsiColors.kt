@@ -10,26 +10,26 @@ import com.github.ajalt.mordant.AnsiCodes.selectorRgb
 
 
 internal const val ESC = "\u001B"
+/** Control Sequence Introducer */
 internal const val CSI = "$ESC["
-private val ansiCloseRe = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
+private val ANSI_CSI_RE = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
 
 internal object AnsiCodes {
-    val reset = 0
-    val boldOpen = 1
-    val boldClose = 22
-    val dimOpen = 2
-    val dimClose = 22
-    val italicOpen = 3
-    val italicClose = 23
-    val underlineOpen = 4
-    val underlineClose = 24
-    val inverseOpen = 7
-    val inverseClose = 27
-    val hiddenOpen = 8
-    val hiddenClose = 28
-    val strikethroughOpen = 9
-    val strikethroughClose = 29
-    val plain = AnsiCode(emptyList())
+    const val reset = 0
+    const val boldOpen = 1
+    const val boldClose = 22
+    const val dimOpen = 2
+    const val dimClose = 22
+    const val italicOpen = 3
+    const val italicClose = 23
+    const val underlineOpen = 4
+    const val underlineClose = 24
+    const val inverseOpen = 7
+    const val inverseClose = 27
+    const val hiddenOpen = 8
+    const val hiddenClose = 28
+    const val strikethroughOpen = 9
+    const val strikethroughClose = 29
 
     val fg16Range = 30..37
     val fg16BrightRange = 90..97
@@ -66,7 +66,7 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
 
     open operator fun plus(other: AnsiCode) = AnsiCode(codes + other.codes)
 
-    private fun nest(text: String) = ansiCloseRe.replace(text) { match ->
+    private fun nest(text: String) = ANSI_CSI_RE.replace(text) { match ->
         // Replace instances of our close codes with their corresponding opening codes. If the close
         // code is at the end of the text, omit it instead so that we don't open and immediately
         // close a command.

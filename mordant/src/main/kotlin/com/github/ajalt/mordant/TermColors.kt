@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 
 
 /**
- * The com.github.ajalt.mordant.rendering.main entry point into mordant. Used to generate ANSI codes.
+ * The com.github.ajalt.mordant.rendering.markdown.main entry point into mordant. Used to generate ANSI codes.
  *
  * You typically want to use this in a `with` block. Colors and types can be nested, and will automatically be
  * reset.

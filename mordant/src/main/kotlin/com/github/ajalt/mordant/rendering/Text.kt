@@ -1,14 +1,20 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.internal.parseText
 
-class Text(
+class Text internal constructor(
         private val spans: List<Span>,
         private val style: TextStyle = TextStyle(),
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = TextAlign.LEFT
 ) : Renderable {
-    constructor(text: String) : this(listOf(Span(text)))
+    constructor(
+            text: String,
+            style: TextStyle = TextStyle(),
+            whitespace: Whitespace = Whitespace.NORMAL,
+            align: TextAlign = TextAlign.LEFT
+    ) : this(parseText(text, whitespace.collapseNewlines), style, whitespace, align)
 
     override fun measure(t: Terminal, width: Int): IntRange {
         val lines = wrap(width)
@@ -24,12 +30,12 @@ class Text(
 
     /** Wrap spans to a list of lines. The last span in every line will be blank and end with `\n` */
     private fun wrap(width: Int): MutableList<MutableList<Span>> {
-        val pieces = spans.asSequence().flatMap { it.split(whitespace.collapseNewlines) }
+        // TODO: hard break on NEL
         val lines = mutableListOf<MutableList<Span>>()
         var line = mutableListOf<Span>()
         var w = 0
 
-        for (piece in pieces) {
+        for (piece in spans) {
             assert(piece.text.isNotEmpty())
 
             val span = when {
