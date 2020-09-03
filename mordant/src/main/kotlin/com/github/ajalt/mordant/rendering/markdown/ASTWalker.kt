@@ -2,10 +2,7 @@ package com.github.ajalt.mordant.rendering.markdown
 
 import com.github.ajalt.mordant.TermColors
 import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.Renderable
-import com.github.ajalt.mordant.rendering.Span
-import com.github.ajalt.mordant.rendering.Text
-import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.*
 import vendor.org.intellij.markdown.MarkdownElementTypes
 import vendor.org.intellij.markdown.MarkdownTokenTypes
 import vendor.org.intellij.markdown.ast.ASTNode
@@ -33,6 +30,21 @@ fun main() {
     println("---")
 }
 
+internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
+    override fun measure(t: Terminal, width: Int): IntRange {
+        val m = parts.map { it.measure(t, width) }
+        return m.maxOf { it.first }..m.maxOf { it.last }
+    }
+
+    override fun render(t: Terminal, width: Int): Lines {
+        return parts.fold(Lines(emptyList())) { l, r -> l + r.render(t, width) }
+    }
+}
+
+private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
+private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
+
+
 private class ASTWalker(
         private val input: String,
         private val terminal: Terminal = Terminal(TermColors(TermColors.Level.TRUECOLOR))
@@ -41,12 +53,12 @@ private class ASTWalker(
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
         val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(input)
         val renderables = parseFile(parsedTree)
-        return renderables.joinToString("") { terminal.render(it) }
+        return terminal.render(renderables)
     }
 
-    private fun parseFile(node: ASTNode): List<Renderable> {
+    private fun parseFile(node: ASTNode): MarkdownDocument {
         require(node.type == MarkdownElementTypes.MARKDOWN_FILE)
-        return node.children.map { parseStructure(it) }
+        return MarkdownDocument(node.children.map { parseStructure(it) })
     }
 
     private fun parseStructure(node: ASTNode): Renderable {
@@ -58,16 +70,14 @@ private class ASTWalker(
             MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
-                var spans = innerInlines(node)
-                if (spans.firstOrNull()?.text == "\n") spans = spans.drop(1)
-                if (spans.lastOrNull()?.text == "\n") spans = spans.dropLast(1)
-                Text(listOf(Span.line()) + spans, whitespace = Whitespace.PRE)
+                val lines = innerInlines(node)
+                Text(lines, whitespace = Whitespace.PRE)
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
             MarkdownElementTypes.PARAGRAPH -> {
-                Text(node.children.flatMap { parseInlines(it) })
+                Text(innerInlines(node, drop = 0))
             }
             MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
             MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")
@@ -87,14 +97,12 @@ private class ASTWalker(
             MarkdownElementTypes.ATX_4 -> TODO("ATX_4")
             MarkdownElementTypes.ATX_5 -> TODO("ATX_5")
             MarkdownElementTypes.ATX_6 -> TODO("ATX_6")
-            MarkdownTokenTypes.EOL -> {
-                Text(listOf(Span.line()))
-            }
+            MarkdownTokenTypes.EOL -> EOL_TEXT
             else -> error("Unexpected token when parsing structure: $node")
         }
     }
 
-    private fun parseInlines(node: ASTNode): List<Span> {
+    private fun parseInlines(node: ASTNode): Lines {
         return when (node.type) {
             // ElementTypes
             MarkdownElementTypes.UNORDERED_LIST -> TODO("UNORDERED_LIST")
@@ -105,10 +113,10 @@ private class ASTWalker(
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
             MarkdownElementTypes.EMPH -> {
-                innerInlines(node).map { it.withStyle(terminal.theme.markdownEmph) }
+                innerInlines(node).withStyle(terminal.theme.markdownEmph)
             }
             MarkdownElementTypes.STRONG -> {
-                innerInlines(node, drop = 2).map { it.withStyle(terminal.theme.markdownStrong) }
+                innerInlines(node, drop = 2).withStyle(terminal.theme.markdownStrong)
             }
             MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
             MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")
@@ -156,7 +164,6 @@ private class ASTWalker(
             MarkdownTokenTypes.HTML_TAG -> TODO("HTML_TAG")
             MarkdownTokenTypes.BAD_CHARACTER -> TODO("BAD_CHARACTER")
             MarkdownTokenTypes.TEXT,
-            MarkdownTokenTypes.EOL,
             MarkdownTokenTypes.LPAREN,
             MarkdownTokenTypes.RPAREN,
             MarkdownTokenTypes.LBRACKET,
@@ -169,14 +176,15 @@ private class ASTWalker(
             MarkdownTokenTypes.BACKTICK,
             MarkdownTokenTypes.CODE_FENCE_CONTENT,
             MarkdownTokenTypes.WHITE_SPACE -> {
-                Span.parse(input.substring(node.startOffset, node.endOffset), collapseNewlines = true)
+                Span.parse(input.substring(node.startOffset, node.endOffset))
             }
+            MarkdownTokenTypes.EOL -> EOL_LINES
             else -> error("Unexpected token when parsing inlines: $node")
         }
     }
 
-    private fun innerInlines(node: ASTNode, drop: Int = 1): List<Span> {
+    private fun innerInlines(node: ASTNode, drop: Int = 1): Lines {
         return node.children.subList(drop, node.children.size - drop)
-                .flatMap { parseInlines(it) }
+                .fold(Lines(emptyList())) { l, r -> l + parseInlines(r) }
     }
 }

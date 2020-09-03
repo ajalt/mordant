@@ -10,7 +10,7 @@ class Terminal(
 
 
     fun print(text: String) {
-        print(render(text))
+        kotlin.io.print(render(text))
     }
 
     fun print(renderable: Renderable) {
@@ -18,7 +18,7 @@ class Terminal(
     }
 
     fun render(text: String): String {
-        return render(Text(text))
+        return render(Text(text, whitespace = Whitespace.PRE_WRAP))
     }
 
 
@@ -26,10 +26,26 @@ class Terminal(
         return render(renderable.render(this))
     }
 
-    fun render(text: List<Span>): String = buildString {
-        for (t in text) {
-            val ansi = t.style.toAnsi(this@Terminal)
-            append(ansi.invoke(t.text))
+   private fun render(lines: Lines): String = buildString {
+        for ((i, line) in lines.lines.withIndex()) {
+            if (i > 0) append("\n") // TODO: line separator
+
+            for (span in line) {
+                val ansi = span.style.toAnsi(this@Terminal)
+                append(ansi.invoke(span.text))
+            }
         }
     }
+}
+
+fun main() {
+    val t = Terminal(TermColors(TermColors.Level.TRUECOLOR))
+    t.print(Text("""
+    line 1
+
+
+
+    line 2
+    """.trimIndent(), whitespace = Whitespace.NORMAL))
+
 }

@@ -6,39 +6,70 @@ import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.AnsiCodes
 import com.github.ajalt.mordant.ESC
+import com.github.ajalt.mordant.rendering.Line
+import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.Span
 import com.github.ajalt.mordant.rendering.TextStyle
 
 
 private val SPLIT_REGEX = Regex("""\r?\n|\s+|\S+""")
-private val SPLIT_REGEX_COLLAPSE_NL = Regex("""\s+|\S+""")
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
+
+/** Like a Span, but with arbitrary [text] */
+private data class Chunk(val text: String, val style: TextStyle = TextStyle())
 
 /**
  * Split [text] into [Span]s, stripping ANSI codes and converting them to [TextStyle]s.
  *
  * Unknown ANSI codes are discarded.
  */
-internal fun parseText(text: String, collapseNewlines: Boolean): List<Span> {
-    val re = if (collapseNewlines) SPLIT_REGEX_COLLAPSE_NL else SPLIT_REGEX
-    return re.findAll(text).flatMap { parseAnsi(it.value) }.toList()
+internal fun parseText(text: String): Lines {
+    val parseAnsi = parseAnsi(text)
+    val words = parseAnsi.flatMap { splitWords(it) }.toList()
+    val splitLines = splitLines(words)
+    return Lines(splitLines)
 }
 
-private fun parseAnsi(text: String): List<Span> {
+private fun parseAnsi(text: String): List<Chunk> {
     val commands = ANSI_RE.findAll(text).toList()
-    if (commands.isEmpty()) return listOf(Span.word(text))
+    if (commands.isEmpty()) return listOf(Chunk(text))
 
-    val parts = mutableListOf<Span>()
+    val parts = mutableListOf<Chunk>()
     var i = 0
     var style = TextStyle()
     for (command in commands) {
-        if (i > 0) {
-            parts += Span.word(text = text.substring(i, command.range.first), style = style)
+        if (command.range.first > i) {
+            parts += Chunk(text = text.substring(i, command.range.first), style = style)
         }
         i = command.range.last + 1
         style = if (command.value.endsWith("m")) styleFromAnsi(command.value) else TextStyle()
     }
+    if (i < text.length) {
+        parts += Chunk(text = text.substring(i), style = style)
+    }
     return parts
+}
+
+private fun splitWords(chunk: Chunk): Sequence<Chunk> {
+    return SPLIT_REGEX.findAll(chunk.text).map { Chunk(it.value, chunk.style) }
+}
+
+private fun splitLines(words: Iterable<Chunk>): List<Line> {
+    val lines = mutableListOf<Line>()
+    var line = mutableListOf<Span>()
+
+    for (word in words) {
+        if (word.text.endsWith("\n")) {
+            lines += line
+            line = mutableListOf()
+        } else {
+            line.add(Span.word(word.text, word.style))
+        }
+    }
+
+    if (line.isNotEmpty()) lines += line
+
+    return lines
 }
 
 private fun styleFromAnsi(string: String): TextStyle {

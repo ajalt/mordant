@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.internal.parseText
 
 class Text internal constructor(
-        private val spans: List<Span>,
+        private val lines: Lines,
         private val style: TextStyle = TextStyle(),
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = TextAlign.LEFT
@@ -14,66 +14,82 @@ class Text internal constructor(
             style: TextStyle = TextStyle(),
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = TextAlign.LEFT
-    ) : this(parseText(text, whitespace.collapseNewlines), style, whitespace, align)
+    ) : this(parseText(text), style, whitespace, align)
 
     override fun measure(t: Terminal, width: Int): IntRange {
         val lines = wrap(width)
-        val max = lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
-        val min = lines.maxOfOrNull { l -> l.maxOf { it.cellWidth } } ?: 0
+        val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
+        val min = lines.lines.maxOfOrNull { l -> l.maxOf { it.cellWidth } } ?: 0
         return min..max
     }
 
-    override fun render(t: Terminal, width: Int): List<Span> {
+    override fun render(t: Terminal, width: Int): Lines {
         // TODO: align
-        return wrap(width).flatten().map { it.withStyle(style) }
+        return wrap(width)
     }
 
     /** Wrap spans to a list of lines. The last span in every line will be blank and end with `\n` */
-    private fun wrap(width: Int): MutableList<MutableList<Span>> {
+    private fun wrap(wrapWidth: Int): Lines {
         // TODO: hard break on NEL
-        val lines = mutableListOf<MutableList<Span>>()
+        val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
-        var w = 0
+        var width = 0
+        var lastPieceWasWhitespace = false
 
-        for (piece in spans) {
-            assert(piece.text.isNotEmpty())
-
-            val span = when {
-                piece.text.isBlank() && whitespace.collapseSpaces -> piece.copy(text = " ")
-                else -> piece
+        fun breakLine() {
+            // TODO truncate whitespace
+            if (whitespace.trimEol) {
+                val lastNonWhitespace = line.indexOfLast { !it.isWhitespace() }
+                repeat(line.lastIndex - lastNonWhitespace) { line.removeLast() }
             }
 
-            // Don't add spaces to start of line
-            if (w == 0 && span.text != "\n" && span.text.isBlank()) continue
+            lines += line
+            line = mutableListOf()
+            width = 0
+        }
 
-            w += span.cellWidth
-            line.add(span)
+        for (oldLine in this.lines.lines) {
+            for (piece in oldLine) {
+                val pieceIsWhitespace = piece.isWhitespace()
 
-            if (whitespace.wrap && w >= width) {
-                lines += line
-                line = mutableListOf()
-                w = 0
+                if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
+
+                // Collapse whitespace
+                val span = when {
+                    pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
+                    else -> piece
+                }
+
+                // Don't add spaces to start of line
+                if (whitespace.collapseSpaces && width == 0 && span.text.isBlank()) continue
+
+                width += span.cellWidth
+                line.add(span.withStyle(style))
+
+                // Break line if necessary
+                // TODO break before word if width == wrapWidth
+                if (whitespace.wrap && width >= wrapWidth) {
+                    breakLine()
+                }
+
+                lastPieceWasWhitespace = pieceIsWhitespace
+            }
+
+            if (!whitespace.collapseNewlines) {
+                breakLine()
+            } else if (!lastPieceWasWhitespace) {
+                line.add(Span.word(text = " ", style = line.lastOrNull()?.style ?: style))
+                lastPieceWasWhitespace = true
             }
         }
 
         if (line.isNotEmpty()) lines += line
 
-        // Trim trailing whitespace if necessary, and ensure all lines end with a line break
-        for (l in lines) {
-            val last = l.last()
-            if (!last.text.endsWith("\n")) l.add(last.copy(text = "\n"))
-            else if (whitespace.trimEol) {
-                l[l.lastIndex] = last.copy(text = "\n")
-            }
-        }
-
-        return lines
+        return Lines(lines)
     }
 
-    private fun plain(): String = spans.joinToString("") { it.text }
-
     override fun toString(): String {
-        val plain = plain()
+        val plain = lines.lines.flatten().joinToString("") { it.text }
         return "Text(${plain.take(25)}${if (plain.length > 25) "…" else ""})"
     }
 }
