@@ -95,8 +95,6 @@ internal class MarkdownRenderer(
                 Text(innerInlines(node, drop = 0))
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
-            MarkdownElementTypes.IMAGE -> TODO("IMAGE")
-            MarkdownElementTypes.AUTOLINK -> TODO("AUTOLINK")
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownElementTypes.ATX_1 -> TODO("ATX_1")
@@ -111,6 +109,7 @@ internal class MarkdownRenderer(
             GFMElementTypes.HEADER -> TODO("HEADER")
             GFMElementTypes.ROW -> TODO("ROW")
 
+            MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule()
             MarkdownTokenTypes.EOL -> EOL_TEXT
             else -> error("Unexpected token when parsing structure: $node")
         }
@@ -167,7 +166,6 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownTokenTypes.SETEXT_CONTENT -> TODO("SETEXT_CONTENT")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> TODO("ESCAPED_BACKTICKS")
-            MarkdownTokenTypes.HORIZONTAL_RULE -> TODO("HORIZONTAL_RULE")
             MarkdownTokenTypes.LIST_NUMBER -> TODO("LIST_NUMBER")
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.CODE_FENCE_START -> TODO("CODE_FENCE_START")

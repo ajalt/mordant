@@ -147,6 +147,15 @@ www.example.com/url
 """)
 
 
+    @Test
+    fun `horizontal rule`() = doTest("""
+---
+""", """
+──────────
+""", width=10)
+
+
+
 
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
         val terminal = Terminal(width = width)

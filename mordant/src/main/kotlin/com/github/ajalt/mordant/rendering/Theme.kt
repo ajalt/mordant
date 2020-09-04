@@ -5,6 +5,8 @@ interface Theme  {
     val listBullet get() = TextStyle()
     val listBulletText get() = " • "
     val blockQuote get() = TextStyle()
+    val horizontalRule get() = TextStyle()
+    val horizontalRuleTitle get() = TextStyle()
 
     val markdownText get() = TextStyle()
     val markdownEmph get() = TextStyle(italic = true)

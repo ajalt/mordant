@@ -30,10 +30,10 @@ class Terminal(
     }
 
     fun render(renderable: Renderable): String {
-        return render(renderable.render(this))
+        return renderLines(renderable.render(this))
     }
 
-   private fun render(lines: Lines): String = buildString {
+   private fun renderLines(lines: Lines): String = buildString {
         for ((i, line) in lines.lines.withIndex()) {
             if (i > 0) append("\n") // TODO: line separator
 
