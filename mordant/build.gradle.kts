@@ -17,8 +17,8 @@ dependencies {
     api("com.github.ajalt:colormath:1.4.1")
     implementation("org.jetbrains:markdown:0.1.45")
 
-    testImplementation("junit:junit:4.12")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.2.0")
+    testImplementation(kotlin("test-junit"))
+    testImplementation("io.kotest:kotest-assertions-core-jvm:4.2.3")
 }
 
 val emptyJavadocJar by tasks.registering(Jar::class) {

@@ -1,15 +1,14 @@
 package com.github.ajalt.mordant.rendering.markdown
 
-import com.github.ajalt.mordant.TermColors
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.parseText
-import vendor.org.intellij.markdown.MarkdownElementTypes
-import vendor.org.intellij.markdown.MarkdownTokenTypes
-import vendor.org.intellij.markdown.ast.ASTNode
-import vendor.org.intellij.markdown.flavours.MarkdownFlavourDescriptor
-import vendor.org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
-import vendor.org.intellij.markdown.parser.MarkdownParser
+import org.intellij.markdown.MarkdownElementTypes
+import org.intellij.markdown.MarkdownTokenTypes
+import org.intellij.markdown.ast.ASTNode
+import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.parser.MarkdownParser
 
 
 fun main() {
@@ -27,7 +26,7 @@ fun main() {
     val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(src)
     println(parsedTree.children.joinToString("\n"))
     println("---")
-    println(ASTWalker(src).render())
+    println(MarkdownRenderer(src, DEFAULT_THEME).render())
     println("---")
 }
 
@@ -46,15 +45,15 @@ private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 
 
-private class ASTWalker(
+internal class MarkdownRenderer(
         private val input: String,
-        private val terminal: Terminal = Terminal(TermColors(TermColors.Level.TRUECOLOR))
+        private val theme: Theme
 ) {
-    fun render(): String {
+    fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
         val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(input)
-        val renderables = parseFile(parsedTree)
-        return terminal.render(renderables)
+        println(parsedTree.children.joinToString("\n"))
+        return parseFile(parsedTree)
     }
 
     private fun parseFile(node: ASTNode): MarkdownDocument {
@@ -65,9 +64,19 @@ private class ASTWalker(
     private fun parseStructure(node: ASTNode): Renderable {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.UNORDERED_LIST -> TODO("UNORDERED_LIST")
-            MarkdownElementTypes.ORDERED_LIST -> TODO("ORDERED_LIST")
-            MarkdownElementTypes.LIST_ITEM -> TODO("LIST_ITEM")
+            MarkdownElementTypes.UNORDERED_LIST -> {
+                UnorderedList(node.children
+                        .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+                        .map { parseStructure(it.children[1]) }
+                )
+            }
+            MarkdownElementTypes.ORDERED_LIST -> {
+                OrderedList(node.children
+                        .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+                        .map { parseStructure(it.children[1]) }
+                )
+            }
+            MarkdownElementTypes.LIST_ITEM -> error("should not parse LIST_ITEM directly")
             MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
@@ -114,10 +123,10 @@ private class ASTWalker(
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
             MarkdownElementTypes.EMPH -> {
-                innerInlines(node).withStyle(terminal.theme.markdownEmph)
+                innerInlines(node).withStyle(theme.markdownEmph)
             }
             MarkdownElementTypes.STRONG -> {
-                innerInlines(node, drop = 2).withStyle(terminal.theme.markdownStrong)
+                innerInlines(node, drop = 2).withStyle(theme.markdownStrong)
             }
             MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
             MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")

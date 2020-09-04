@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 
 class Terminal(
         val colors: TermColors=TermColors(),
@@ -8,6 +9,13 @@ class Terminal(
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
 
+    fun printMarkdown(markdown: String) {
+        return kotlin.io.print(renderMarkdown(markdown))
+    }
+
+    fun renderMarkdown(markdown: String): String {
+        return render(MarkdownRenderer(markdown, theme).render())
+    }
 
     fun print(text: String) {
         kotlin.io.print(render(text))
@@ -20,7 +28,6 @@ class Terminal(
     fun render(text: String): String {
         return render(Text(text, whitespace = Whitespace.PRE_WRAP))
     }
-
 
     fun render(renderable: Renderable): String {
         return render(renderable.render(this))

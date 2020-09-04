@@ -3,7 +3,7 @@ package com.github.ajalt.mordant
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
-import org.junit.Test
+import kotlin.test.Test
 
 class TermColorsTest {
     @Test

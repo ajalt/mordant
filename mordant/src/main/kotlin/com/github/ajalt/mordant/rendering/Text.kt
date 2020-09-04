@@ -34,7 +34,7 @@ class Text internal constructor(
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
         var width = 0
-        var lastPieceWasWhitespace = false
+        var lastPieceWasWhitespace = true
 
         fun breakLine() {
             // TODO truncate whitespace
@@ -46,9 +46,16 @@ class Text internal constructor(
             lines += line
             line = mutableListOf()
             width = 0
+            lastPieceWasWhitespace = true
         }
 
         for (oldLine in this.lines.lines) {
+            // Add a space if this line was collapsed
+            if (!lastPieceWasWhitespace) {
+                line.add(Span.word(text = " ", style = line.lastOrNull()?.style ?: style))
+                lastPieceWasWhitespace = true
+            }
+
             for (piece in oldLine) {
                 val pieceIsWhitespace = piece.isWhitespace()
 
@@ -70,16 +77,13 @@ class Text internal constructor(
                 // TODO break before word if width == wrapWidth
                 if (whitespace.wrap && width >= wrapWidth) {
                     breakLine()
+                } else {
+                    lastPieceWasWhitespace = pieceIsWhitespace
                 }
-
-                lastPieceWasWhitespace = pieceIsWhitespace
             }
 
             if (!whitespace.collapseNewlines) {
                 breakLine()
-            } else if (!lastPieceWasWhitespace) {
-                line.add(Span.word(text = " ", style = line.lastOrNull()?.style ?: style))
-                lastPieceWasWhitespace = true
             }
         }
 
