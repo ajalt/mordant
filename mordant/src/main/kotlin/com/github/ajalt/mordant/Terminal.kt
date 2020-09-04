@@ -3,7 +3,7 @@ package com.github.ajalt.mordant
 import com.github.ajalt.mordant.rendering.*
 
 class Terminal(
-        val colors: TermColors,
+        val colors: TermColors=TermColors(),
         val theme: Theme = DEFAULT_THEME,
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
@@ -14,7 +14,7 @@ class Terminal(
     }
 
     fun print(renderable: Renderable) {
-        print(render(renderable))
+        kotlin.io.print(render(renderable))
     }
 
     fun render(text: String): String {
