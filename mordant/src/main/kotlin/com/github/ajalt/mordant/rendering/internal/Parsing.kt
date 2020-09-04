@@ -23,26 +23,26 @@ private data class Chunk(val text: String, val style: TextStyle = TextStyle())
  *
  * Unknown ANSI codes are discarded.
  */
-internal fun parseText(text: String): Lines {
-    val parseAnsi = parseAnsi(text)
+internal fun parseText(text: String, style: TextStyle): Lines {
+    val parseAnsi = parseAnsi(text, style)
     val words = parseAnsi.flatMap { splitWords(it) }.toList()
     val splitLines = splitLines(words)
     return Lines(splitLines)
 }
 
-private fun parseAnsi(text: String): List<Chunk> {
+private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
     val commands = ANSI_RE.findAll(text).toList()
     if (commands.isEmpty()) return listOf(Chunk(text))
 
     val parts = mutableListOf<Chunk>()
     var i = 0
-    var style = TextStyle()
+    var style = defaultStyle
     for (command in commands) {
         if (command.range.first > i) {
             parts += Chunk(text = text.substring(i, command.range.first), style = style)
         }
         i = command.range.last + 1
-        style = if (command.value.endsWith("m")) styleFromAnsi(command.value) else TextStyle()
+        style = if (command.value.endsWith("m")) defaultStyle + styleFromAnsi(command.value) else defaultStyle
     }
     if (i < text.length) {
         parts += Chunk(text = text.substring(i), style = style)

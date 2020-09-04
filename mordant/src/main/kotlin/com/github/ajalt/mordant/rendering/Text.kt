@@ -14,7 +14,7 @@ class Text internal constructor(
             style: TextStyle = TextStyle(),
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = TextAlign.LEFT
-    ) : this(parseText(text), style, whitespace, align)
+    ) : this(parseText(text, style), style, whitespace, align)
 
     override fun measure(t: Terminal, width: Int): IntRange {
         val lines = wrap(width)
@@ -64,7 +64,7 @@ class Text internal constructor(
                 if (whitespace.collapseSpaces && width == 0 && span.text.isBlank()) continue
 
                 width += span.cellWidth
-                line.add(span.withStyle(style))
+                line.add(span)
 
                 // Break line if necessary
                 // TODO break before word if width == wrapWidth

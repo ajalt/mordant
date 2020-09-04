@@ -15,13 +15,8 @@ data class Span private constructor(val text: String, val style: TextStyle = Tex
     }
 
     internal companion object {
-        fun parse(text: String): Lines = parseText(text)
-
         // TODO: maybe just inline this
         fun word(text: String, style: TextStyle = TextStyle()) = Span(text, style)
-
-        @Deprecated("lines")// TODO
-        fun line() = Span("\n")
     }
 
 
