@@ -98,6 +98,41 @@ line.
 ▎ line 2
 """)
 
+    @Test
+    fun `various links`() = doTest("""
+[a reference link][a link]
+
+[a link]
+
+[an inline link](example.com "with a title")
+
+![an image](example.com "with a title")
+
+<https://example.com/autolink>
+
+www.example.com/url
+
+<autolink@example.com>
+
+[a link]: example.com
+""", """
+a reference link
+
+a link
+
+an inline link
+
+an image
+
+https://example.com/autolink
+
+www.example.com/url
+
+<autolink@example.com>
+
+
+""")
+
 
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
         val terminal = Terminal(width = width)

@@ -7,7 +7,9 @@ import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
 
@@ -82,7 +84,7 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
-                Text(innerInlines(node), whitespace = Whitespace.PRE)
+                Text(innerInlines(node, drop = 1), whitespace = Whitespace.PRE)
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
@@ -90,14 +92,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.PARAGRAPH -> {
                 Text(innerInlines(node, drop = 0))
             }
-            MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
-            MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")
-            MarkdownElementTypes.LINK_DESTINATION -> TODO("LINK_DESTINATION")
-            MarkdownElementTypes.LINK_TITLE -> TODO("LINK_TITLE")
-            MarkdownElementTypes.LINK_TEXT -> TODO("LINK_TEXT")
-            MarkdownElementTypes.INLINE_LINK -> TODO("INLINE_LINK")
-            MarkdownElementTypes.FULL_REFERENCE_LINK -> TODO("FULL_REFERENCE_LINK")
-            MarkdownElementTypes.SHORT_REFERENCE_LINK -> TODO("SHORT_REFERENCE_LINK")
+            MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
             MarkdownElementTypes.IMAGE -> TODO("IMAGE")
             MarkdownElementTypes.AUTOLINK -> TODO("AUTOLINK")
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
@@ -108,6 +103,12 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_4 -> TODO("ATX_4")
             MarkdownElementTypes.ATX_5 -> TODO("ATX_5")
             MarkdownElementTypes.ATX_6 -> TODO("ATX_6")
+
+            GFMElementTypes.STRIKETHROUGH -> TODO("STRIKETHROUGH")
+            GFMElementTypes.TABLE -> TODO("TABLE")
+            GFMElementTypes.HEADER -> TODO("HEADER")
+            GFMElementTypes.ROW -> TODO("ROW")
+
             MarkdownTokenTypes.EOL -> EOL_TEXT
             else -> error("Unexpected token when parsing structure: $node")
         }
@@ -116,29 +117,26 @@ internal class MarkdownRenderer(
     private fun parseInlines(node: ASTNode): Lines {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.UNORDERED_LIST -> TODO("UNORDERED_LIST")
-            MarkdownElementTypes.ORDERED_LIST -> TODO("ORDERED_LIST")
-            MarkdownElementTypes.LIST_ITEM -> TODO("LIST_ITEM")
-            MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
             MarkdownElementTypes.EMPH -> {
-                innerInlines(node).withStyle(theme.markdownEmph)
+                innerInlines(node, drop = 1).withStyle(theme.markdownEmph)
             }
             MarkdownElementTypes.STRONG -> {
                 innerInlines(node, drop = 2).withStyle(theme.markdownStrong)
             }
-            MarkdownElementTypes.LINK_DEFINITION -> TODO("LINK_DEFINITION")
-            MarkdownElementTypes.LINK_LABEL -> TODO("LINK_LABEL")
-            MarkdownElementTypes.LINK_DESTINATION -> TODO("LINK_DESTINATION")
-            MarkdownElementTypes.LINK_TITLE -> TODO("LINK_TITLE")
-            MarkdownElementTypes.LINK_TEXT -> TODO("LINK_TEXT")
-            MarkdownElementTypes.INLINE_LINK -> TODO("INLINE_LINK")
-            MarkdownElementTypes.FULL_REFERENCE_LINK -> TODO("FULL_REFERENCE_LINK")
-            MarkdownElementTypes.SHORT_REFERENCE_LINK -> TODO("SHORT_REFERENCE_LINK")
-            MarkdownElementTypes.IMAGE -> TODO("IMAGE")
-            MarkdownElementTypes.AUTOLINK -> TODO("AUTOLINK")
+            MarkdownElementTypes.INLINE_LINK ,
+            MarkdownElementTypes.FULL_REFERENCE_LINK,
+            MarkdownElementTypes.SHORT_REFERENCE_LINK-> {
+                // first child is LINK_TEXT, second is LINK_LABEL. Ignore the label and brackets.
+                innerInlines(node.children[0], drop=1)
+            }
+            MarkdownElementTypes.IMAGE -> {
+                // for images, just render the alt text if there is any
+                parseInlines(node.children[1])
+            }
+            MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownElementTypes.ATX_1 -> TODO("ATX_1")
@@ -147,6 +145,12 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_4 -> TODO("ATX_4")
             MarkdownElementTypes.ATX_5 -> TODO("ATX_5")
             MarkdownElementTypes.ATX_6 -> TODO("ATX_6")
+
+            // GFMTokenTypes
+            GFMTokenTypes.TILDE -> TODO("TILDE")
+            GFMTokenTypes.TABLE_SEPARATOR -> TODO("TABLE_SEPARATOR")
+            GFMTokenTypes.CHECK_BOX -> TODO("CHECK_BOX")
+            GFMTokenTypes.CELL -> TODO("CELL")
 
             // TokenTypes
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
@@ -162,18 +166,16 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownTokenTypes.SETEXT_CONTENT -> TODO("SETEXT_CONTENT")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> TODO("ESCAPED_BACKTICKS")
-            MarkdownTokenTypes.LIST_BULLET -> TODO("LIST_BULLET")
-            MarkdownTokenTypes.URL -> TODO("URL")
             MarkdownTokenTypes.HORIZONTAL_RULE -> TODO("HORIZONTAL_RULE")
             MarkdownTokenTypes.LIST_NUMBER -> TODO("LIST_NUMBER")
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.CODE_FENCE_START -> TODO("CODE_FENCE_START")
             MarkdownTokenTypes.CODE_FENCE_END -> TODO("CODE_FENCE_END")
             MarkdownTokenTypes.LINK_TITLE -> TODO("LINK_TITLE")
-            MarkdownTokenTypes.AUTOLINK -> TODO("AUTOLINK")
-            MarkdownTokenTypes.EMAIL_AUTOLINK -> TODO("EMAIL_AUTOLINK")
             MarkdownTokenTypes.HTML_TAG -> TODO("HTML_TAG")
-            MarkdownTokenTypes.BAD_CHARACTER -> TODO("BAD_CHARACTER")
+            MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", TextStyle())
+            MarkdownTokenTypes.AUTOLINK,
+            MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.LPAREN,
             MarkdownTokenTypes.RPAREN,
@@ -186,7 +188,9 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.EMPH,
             MarkdownTokenTypes.BACKTICK,
             MarkdownTokenTypes.CODE_FENCE_CONTENT,
-            MarkdownTokenTypes.WHITE_SPACE -> {
+            MarkdownTokenTypes.URL,
+            MarkdownTokenTypes.WHITE_SPACE,
+            GFMTokenTypes.GFM_AUTOLINK -> {
                 parseText(input.substring(node.startOffset, node.endOffset), TextStyle())
             }
             MarkdownTokenTypes.EOL -> EOL_LINES
@@ -194,8 +198,12 @@ internal class MarkdownRenderer(
         }
     }
 
-    private fun innerInlines(node: ASTNode, drop: Int = 1): Lines {
-        return node.children.subList(drop, node.children.size - drop)
-                .fold(Lines(emptyList())) { l, r -> l + parseInlines(r) }
+    private fun innerInlines(node: ASTNode, drop: Int): Lines {
+        try {
+            return node.children.subList(drop, node.children.size - drop)
+                    .fold(Lines(emptyList())) { l, r -> l + parseInlines(r) }
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }
