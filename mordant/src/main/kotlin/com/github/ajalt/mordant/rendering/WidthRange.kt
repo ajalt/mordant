@@ -11,8 +11,8 @@ internal fun List<Renderable>.maxWidthRange(
         width: Int,
         paddingWidth: Int = 0
 ): WidthRange {
-    var max = Int.MIN_VALUE
-    var min = Int.MIN_VALUE
+    var max = 0
+    var min = 0
     forEach {
         val range = it.measure(t, width - paddingWidth)
         max = maxOf(max, range.max)

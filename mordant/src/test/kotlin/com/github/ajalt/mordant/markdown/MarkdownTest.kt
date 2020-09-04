@@ -87,6 +87,18 @@ line.
  3. line 3
 """, width = 10)
 
+    @Test
+    fun `block quote`() = doTest("""
+> line 1
+>
+> line 2
+""", """
+▎ line 1
+▎
+▎ line 2
+""")
+
+
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
         val terminal = Terminal(width = width)
         val actual = terminal.renderMarkdown(markdown)

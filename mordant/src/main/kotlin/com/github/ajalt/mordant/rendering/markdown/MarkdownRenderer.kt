@@ -75,11 +75,14 @@ internal class MarkdownRenderer(
                         .map { parseStructure(it.children[1]) }
                 )
             }
-            MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
+            MarkdownElementTypes.BLOCK_QUOTE -> {
+                BlockQuote(MarkdownDocument(node.children.drop(1)
+                        .filter { it.type != MarkdownTokenTypes.WHITE_SPACE }
+                        .map { parseStructure(it) }))
+            }
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
-                val lines = innerInlines(node)
-                Text(lines, whitespace = Whitespace.PRE)
+                Text(innerInlines(node), whitespace = Whitespace.PRE)
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
