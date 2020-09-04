@@ -18,10 +18,9 @@ class UnorderedList(
         return parseText(text, bulletStyle ?: t.listBullet).lines.singleOrNull() ?: emptyList()
     }
 
-    override fun measure(t: Terminal, width: Int): IntRange {
+    override fun measure(t: Terminal, width: Int): WidthRange {
         val bulletWidth = bullet(t.theme).sumOf { it.cellWidth }
-        val measurements = listEntries.map { it.measure(t, width) }
-        return (measurements.maxOf { it.first } + bulletWidth)..(measurements.maxOf { it.last } + bulletWidth)
+        return listEntries.maxWidthRange(t, width, bulletWidth)
     }
 
     override fun render(t: Terminal, width: Int): Lines {

@@ -16,11 +16,11 @@ class Text internal constructor(
             align: TextAlign = TextAlign.LEFT
     ) : this(parseText(text, style), style, whitespace, align)
 
-    override fun measure(t: Terminal, width: Int): IntRange {
+    override fun measure(t: Terminal, width: Int): WidthRange {
         val lines = wrap(width)
-        val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         val min = lines.lines.maxOfOrNull { l -> l.maxOf { it.cellWidth } } ?: 0
-        return min..max
+        val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
+        return WidthRange(min, max)
     }
 
     override fun render(t: Terminal, width: Int): Lines {

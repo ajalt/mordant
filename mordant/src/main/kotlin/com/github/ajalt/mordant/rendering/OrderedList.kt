@@ -31,9 +31,8 @@ class OrderedList(
 
     private val maxBulletWidth = bulletWidth(listEntries.size)
 
-    override fun measure(t: Terminal, width: Int): IntRange {
-        val measurements = listEntries.map { it.measure(t, width) }
-        return (measurements.maxOf { it.first } + maxBulletWidth)..(measurements.maxOf { it.last } + maxBulletWidth)
+    override fun measure(t: Terminal, width: Int): WidthRange {
+        return listEntries.maxWidthRange(t, width, maxBulletWidth)
     }
 
     override fun render(t: Terminal, width: Int): Lines {

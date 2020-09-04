@@ -11,13 +11,13 @@ class Panel(
 ) : Renderable {
     private val content: Renderable = Padded.get(content, padding)
 
-    override fun measure(t: Terminal, width: Int): IntRange {
+    override fun measure(t: Terminal, width: Int): WidthRange {
         val measurement = content.measure(t, width - 2)
 
         return if (expand) {
-            (measurement.last + 1)..(measurement.last + 1)
+            WidthRange(measurement.max + 2, measurement.max + 2)
         } else {
-            (measurement.first + 1)..(measurement.last + 1)
+            measurement + 2
         }
     }
 
@@ -29,7 +29,7 @@ class Panel(
 
         val contentWidth = when {
             expand -> maxContentWidth
-            else -> measurement.last.coerceAtMost(maxContentWidth)
+            else -> measurement.max.coerceAtMost(maxContentWidth)
         }
 
         lines.add(listOf(borders.renderTop(listOf(contentWidth))))

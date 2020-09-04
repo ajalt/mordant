@@ -42,9 +42,8 @@ internal class Padded(private val content: Renderable, private val padding: Padd
         return Lines(output)
     }
 
-    override fun measure(t: Terminal, width: Int): IntRange {
+    override fun measure(t: Terminal, width: Int): WidthRange {
         val paddingWidth = padding.left + padding.right
-        val measurement = content.measure(t, width - paddingWidth)
-        return (measurement.first + paddingWidth)..(measurement.last + paddingWidth)
+        return content.measure(t, width - paddingWidth) + paddingWidth
     }
 }

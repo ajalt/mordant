@@ -31,9 +31,8 @@ fun main() {
 }
 
 internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
-    override fun measure(t: Terminal, width: Int): IntRange {
-        val m = parts.map { it.measure(t, width) }
-        return m.maxOf { it.first }..m.maxOf { it.last }
+    override fun measure(t: Terminal, width: Int): WidthRange {
+        return parts.maxWidthRange(t, width)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
@@ -76,7 +75,6 @@ internal class MarkdownRenderer(
                         .map { parseStructure(it.children[1]) }
                 )
             }
-            MarkdownElementTypes.LIST_ITEM -> error("should not parse LIST_ITEM directly")
             MarkdownElementTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
