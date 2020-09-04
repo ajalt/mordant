@@ -133,6 +133,20 @@ www.example.com/url
 
 """)
 
+    @Test
+    fun `raw html`() = doTest("""
+<h1 align="center">
+    <img src="example.svg">
+    <p>text in html</p>
+</h1>
+""", """
+<h1 align="center">
+    <img src="example.svg">
+    <p>text in html</p>
+</h1>
+""")
+
+
 
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
         val terminal = Terminal(width = width)

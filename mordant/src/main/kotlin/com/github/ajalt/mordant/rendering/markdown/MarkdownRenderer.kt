@@ -88,7 +88,9 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
-            MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
+            MarkdownElementTypes.HTML_BLOCK -> {
+                Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
+            }
             MarkdownElementTypes.PARAGRAPH -> {
                 Text(innerInlines(node, drop = 0))
             }
@@ -155,7 +157,6 @@ internal class MarkdownRenderer(
             // TokenTypes
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
             MarkdownTokenTypes.BLOCK_QUOTE -> TODO("BLOCK_QUOTE")
-            MarkdownTokenTypes.HTML_BLOCK_CONTENT -> TODO("HTML_BLOCK_CONTENT")
             MarkdownTokenTypes.SINGLE_QUOTE -> TODO("SINGLE_QUOTE")
             MarkdownTokenTypes.DOUBLE_QUOTE -> TODO("DOUBLE_QUOTE")
             MarkdownTokenTypes.HARD_LINE_BREAK -> TODO("HARD_LINE_BREAK")
@@ -177,6 +178,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
             MarkdownTokenTypes.TEXT,
+            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
             MarkdownTokenTypes.LPAREN,
             MarkdownTokenTypes.RPAREN,
             MarkdownTokenTypes.LBRACKET,
