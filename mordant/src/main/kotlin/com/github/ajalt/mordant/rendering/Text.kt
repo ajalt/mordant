@@ -4,11 +4,13 @@ import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.internal.parseText
 
 class Text internal constructor(
-        private val lines: Lines,
+        lines: Lines,
         private val style: TextStyle = TextStyle(),
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = TextAlign.LEFT
 ) : Renderable {
+    private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
+
     constructor(
             text: String,
             style: TextStyle = TextStyle(),

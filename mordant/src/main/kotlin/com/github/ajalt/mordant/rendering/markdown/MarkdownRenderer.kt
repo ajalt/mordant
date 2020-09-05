@@ -97,23 +97,24 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
-            MarkdownElementTypes.ATX_1 -> TODO("ATX_1")
-            MarkdownElementTypes.ATX_2 -> TODO("ATX_2")
-            MarkdownElementTypes.ATX_3 -> TODO("ATX_3")
-            MarkdownElementTypes.ATX_4 -> TODO("ATX_4")
-            MarkdownElementTypes.ATX_5 -> TODO("ATX_5")
-            MarkdownElementTypes.ATX_6 -> TODO("ATX_6")
+            MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node)
+            MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node)
+            MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node)
+            MarkdownElementTypes.ATX_4 -> atxText(theme.markdownH4, node)
+            MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node)
+            MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node)
 
             GFMElementTypes.STRIKETHROUGH -> TODO("STRIKETHROUGH")
             GFMElementTypes.TABLE -> TODO("TABLE")
             GFMElementTypes.HEADER -> TODO("HEADER")
             GFMElementTypes.ROW -> TODO("ROW")
 
-            MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule()
+            MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule(title = "")
             MarkdownTokenTypes.EOL -> EOL_TEXT
             else -> error("Unexpected token when parsing structure: $node")
         }
     }
+
 
     private fun parseInlines(node: ASTNode): Lines {
         return when (node.type) {
@@ -140,12 +141,6 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
-            MarkdownElementTypes.ATX_1 -> TODO("ATX_1")
-            MarkdownElementTypes.ATX_2 -> TODO("ATX_2")
-            MarkdownElementTypes.ATX_3 -> TODO("ATX_3")
-            MarkdownElementTypes.ATX_4 -> TODO("ATX_4")
-            MarkdownElementTypes.ATX_5 -> TODO("ATX_5")
-            MarkdownElementTypes.ATX_6 -> TODO("ATX_6")
 
             // GFMTokenTypes
             GFMTokenTypes.TILDE -> TODO("TILDE")
@@ -198,12 +193,35 @@ internal class MarkdownRenderer(
         }
     }
 
-    private fun innerInlines(node: ASTNode, drop: Int): Lines {
+    private fun innerInlines(node: ASTNode, drop: Int, dropLast: Int = drop): Lines {
         try {
-            return node.children.subList(drop, node.children.size - drop)
+            return node.children.subList(drop, node.children.size - dropLast)
                     .fold(Lines(emptyList())) { l, r -> l + parseInlines(r) }
         } catch (e: Exception) {
             throw e
         }
     }
+
+    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode): Renderable {
+        return when {
+            node.children.size <= 1 -> EOL_TEXT
+            else -> HorizontalRule(bar, atxContent(node).lines[0], style)
+        }
+    }
+
+    private fun atxText(style: TextStyle, node: ASTNode): Renderable {
+        return Text(when {
+            node.children.size <= 1 -> EOL_LINES
+            else -> atxContent(node)
+        }, style = style)
+    }
+
+    private fun atxContent(node: ASTNode): Lines {
+        val drop = when (node.children[1].children.firstOrNull()?.type) {
+            MarkdownTokenTypes.WHITE_SPACE -> 1
+            else -> 0
+        }
+        return innerInlines(node.children[1], drop = drop, dropLast = 0)
+    }
+
 }

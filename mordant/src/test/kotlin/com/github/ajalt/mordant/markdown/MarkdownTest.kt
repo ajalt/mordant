@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.markdown
 
+import com.github.ajalt.mordant.TermColors
 import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import kotlin.test.Test
@@ -152,13 +152,60 @@ www.example.com/url
 ---
 """, """
 ──────────
-""", width=10)
+""", width = 10)
+
+    @Test
+    fun `header 1 empty`() = doTest("""
+#
+""", """
 
 
+""", width = 19)
 
+    @Test
+    fun `header 1`() = doTest("""
+# Header Text
+""", """
+═══ Header Text ═══
+""", width = 19)
+
+    @Test
+    fun `header 2`() = doTest("""
+## Header Text
+""", """
+─── Header Text ───
+""", width = 19)
+
+    @Test
+    fun `header 3`() = doTest("""
+### Header Text
+""", """
+    Header Text    
+""", width = 19)
+
+    @Test
+    fun `header 4`() = doTest("""
+#### Header Text
+""", """
+Header Text
+""", width = 19)
+
+    @Test
+    fun `header 5`() = doTest("""
+##### Header Text
+""", """
+Header Text
+""", width = 19)
+
+    @Test
+    fun `header 6`() = doTest("""
+###### Header Text
+""", """
+Header Text
+""", width = 19)
 
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
-        val terminal = Terminal(width = width)
+        val terminal = Terminal(colors = TermColors(TermColors.Level.TRUECOLOR), width = width)
         val actual = terminal.renderMarkdown(markdown)
         actual shouldBe expected
     }
