@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.colormath.*
+import com.github.ajalt.colormath.ConvertibleColor
+import com.github.ajalt.colormath.RGB
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 
 /**
@@ -14,7 +14,7 @@ import kotlin.math.roundToInt
  * This will print the text "red white and blue", with foreground colors matching the text:
  *
  * ```kotlin
- * with(TermColors()) {
+ * with(TerminalColors()) {
  *     println("${red("red")} ${white("white")} and ${blue("blue")}")
  * }
  * ```
@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
  * This will set the background color while leaving the foreground unchanged:
  *
  * ```kotlin
- * with(TermColors()) {
+ * with(TerminalColors()) {
  *     println("The foreground ${brightBlue.bg("color will stay the")} same")
  * }
  * ```
@@ -31,7 +31,7 @@ import kotlin.math.roundToInt
  * This will set foreground and background:
  *
  * ```kotlin
- * with(TermColors()) {
+ * with(TerminalColors()) {
  *     println((yellow on brightGreen)("this is easy to read, right?"))
  * }
  * ```
@@ -39,79 +39,78 @@ import kotlin.math.roundToInt
  * You can also mix text styles with colors:
  *
  * ```kotlin
- * with(TermColors()) {
+ * with(TerminalColors()) {
  *     println((bold + white + underline)("Listen!"))
  * }
  * ```
  */
-class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
-    enum class Level { NONE, ANSI16, ANSI256, TRUECOLOR }
+class TerminalColors(private val level: AnsiLevel = TerminalCapabilities.detectANSISupport()) {
+    val black: AnsiColorCode get() = ansi16(AnsiColor.black)
+    val red: AnsiColorCode get() = ansi16(AnsiColor.red)
+    val green: AnsiColorCode get() = ansi16(AnsiColor.green)
+    val yellow: AnsiColorCode get() = ansi16(AnsiColor.yellow)
+    val blue: AnsiColorCode get() = ansi16(AnsiColor.blue)
+    val magenta: AnsiColorCode get() = ansi16(AnsiColor.magenta)
+    val cyan: AnsiColorCode get() = ansi16(AnsiColor.cyan)
+    val white: AnsiColorCode get() = ansi16(AnsiColor.white)
+    val gray: AnsiColorCode get() = ansi16(AnsiColor.gray)
 
-    val black: AnsiColorCode get() = ansi16(30)
-    val red: AnsiColorCode get() = ansi16(31)
-    val green: AnsiColorCode get() = ansi16(32)
-    val yellow: AnsiColorCode get() = ansi16(33)
-    val blue: AnsiColorCode get() = ansi16(34)
-    val magenta: AnsiColorCode get() = ansi16(35)
-    val cyan: AnsiColorCode get() = ansi16(36)
-    val white: AnsiColorCode get() = ansi16(37)
-    val gray: AnsiColorCode get() = ansi16(90)
+    val brightRed: AnsiColorCode get() = ansi16(AnsiColor.brightRed)
+    val brightGreen: AnsiColorCode get() = ansi16(AnsiColor.brightGreen)
+    val brightYellow: AnsiColorCode get() = ansi16(AnsiColor.brightYellow)
+    val brightBlue: AnsiColorCode get() = ansi16(AnsiColor.brightBlue)
+    val brightMagenta: AnsiColorCode get() = ansi16(AnsiColor.brightMagenta)
+    val brightCyan: AnsiColorCode get() = ansi16(AnsiColor.brightCyan)
+    val brightWhite: AnsiColorCode get() = ansi16(AnsiColor.brightWhite)
 
-    val brightRed: AnsiColorCode get() = ansi16(91)
-    val brightGreen: AnsiColorCode get() = ansi16(92)
-    val brightYellow: AnsiColorCode get() = ansi16(93)
-    val brightBlue: AnsiColorCode get() = ansi16(94)
-    val brightMagenta: AnsiColorCode get() = ansi16(95)
-    val brightCyan: AnsiColorCode get() = ansi16(96)
-    val brightWhite: AnsiColorCode get() = ansi16(97)
-
+    // TODO: test parsing of single codes
     /** Clear all active styles */
-    val reset: AnsiCode get() = ansi(AnsiCodes.reset, AnsiCodes.reset)
+    val reset: AnsiCode get() = style(AnsiStyle.reset)
 
     /**
      * Render text as bold or increased intensity.
      *
      * Might be rendered as a different color instead of a different font weight.
      */
-    val bold: AnsiCode get() = ansi(AnsiCodes.boldOpen, AnsiCodes.boldClose)
+    val bold: AnsiCode get() = style(AnsiStyle.bold)
 
     /**
      * Render text as faint or decreased intensity.
      *
      * Not widely supported.
      */
-    val dim: AnsiCode get() = ansi(AnsiCodes.dimOpen, AnsiCodes.dimClose)
+    val dim: AnsiCode get() = style(AnsiStyle.dim)
 
     /**
      * Render text as italic.
      *
      * Not widely supported, might be rendered as inverse instead of italic.
      */
-    val italic: AnsiCode get() = ansi(AnsiCodes.italicOpen, AnsiCodes.italicClose)
+    val italic: AnsiCode get() = style(AnsiStyle.italic)
 
     /**
      * Underline text.
      *
      * Might be rendered with different colors instead of underline.
      */
-    val underline: AnsiCode get() = ansi(AnsiCodes.underlineOpen, AnsiCodes.underlineClose)
+    val underline: AnsiCode get() = style(AnsiStyle.underline)
 
     /** Render text with background and foreground colors switched. */
-    val inverse: AnsiCode get() = ansi(AnsiCodes.inverseOpen, AnsiCodes.inverseClose)
+    val inverse: AnsiCode get() = style(AnsiStyle.inverse)
 
     /**
      * Conceal text.
      *
      * Not widely supported.
      */
-    val hidden: AnsiCode get() = ansi(AnsiCodes.hiddenOpen, AnsiCodes.hiddenClose)
+    val hidden: AnsiCode get() = style(AnsiStyle.hidden)
 
     /**
      * Render text with a strikethrough.
      *
      * Not widely supported.
      */
-    val strikethrough: AnsiCode get() = ansi(AnsiCodes.strikethroughOpen, AnsiCodes.strikethroughClose)
+    val strikethrough: AnsiCode get() = style(AnsiStyle.strikethrough)
 
     /**
      * No style.
@@ -128,7 +127,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param g The green amount, in the range \[0, 255]
      * @param b The blue amount, in the range \[0, 255]
      */
-    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = color(RGB(r, g, b))
+    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = AnsiColor.rgb(r, g, b, level)
 
     /**
      * Create a color code from an HSL color.
@@ -137,7 +136,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param s The saturation, in the range \[0, 100]
      * @param l The lightness, in the range \[0, 100]
      */
-    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = color(HSL(h, s, l))
+    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = AnsiColor.hsl(h, s, l, level)
 
     /**
      * Create a color code from an HSV color.
@@ -146,7 +145,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param s The saturation, in the range \[0,100]
      * @param v The value, in the range \[0,100]
      */
-    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = color(HSV(h, s, v))
+    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = AnsiColor.hsv(h, s, v, level)
 
     /**
      * Create a color code from a CMYK color.
@@ -156,17 +155,14 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * @param y The yellow amount, in the range \[0,100]
      * @param k The black amount, in the range \[0,100]
      */
-    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = color(CMYK(c, m, y, k))
+    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = AnsiColor.cmyk(c, m, y, k, level)
 
     /**
      * Create a grayscale color code from a fraction in the range \[0, 1].
      *
      * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
      */
-    fun gray(fraction: Double): AnsiColorCode {
-        require(fraction in 0.0..1.0) { "fraction must be in the range [0, 1]" }
-        return (255 * fraction).roundToInt().let { rgb(it, it, it) }
-    }
+    fun gray(fraction: Double): AnsiColorCode = AnsiColor.gray(fraction, level)
 
     /**
      * Create a color code from a CIE XYZ color.
@@ -175,7 +171,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      *
      * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
      */
-    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = color(XYZ(x, y, z))
+    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = AnsiColor.xyz(x, y, z, level)
 
 
     /**
@@ -186,7 +182,7 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
      * but are generally in [-100, 100]
      */
-    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = color(LAB(l, a, b))
+    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = AnsiColor.lab(l, a, b, level)
 
     /**
      * Create an ANSI code to move the cursor up [count] cells.
@@ -225,41 +221,30 @@ class TermColors(val level: Level = TerminalCapabilities.detectANSISupport()) {
      *
      * If ANSI codes are not supported, an empty string is returned.
      */
-    val hideCursor: String get() = if (level == Level.NONE) "" else "$CSI?25l"
+    val hideCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25l"
 
     /**
      * Create an ANSI code to show the cursor.
      *
      * If ANSI codes are not supported, an empty string is returned.
      */
-    val showCursor: String get() = if (level == Level.NONE) "" else "$CSI?25h"
+    val showCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25h"
 
     private fun moveCursor(dir: String, count: Int): String {
-        return if (count == 0 || level == Level.NONE) ""
+        return if (count == 0 || level == AnsiLevel.NONE) ""
         else "$CSI$count$dir"
     }
 
-    private fun ansi16(code: Int) =
-            if (level == Level.NONE) DisabledAnsiColorCode else Ansi16ColorCode(code)
+    private fun ansi16(color: AnsiColor) =
+            if (level == AnsiLevel.NONE) DisabledAnsiColorCode else color.code
 
-    private fun ansi(open: Int, close: Int) =
-            if (level == Level.NONE) DisabledAnsiCode else AnsiCode(open, close)
+    private fun style(style: AnsiStyle) =
+            if (level == AnsiLevel.NONE) DisabledAnsiCode else style.code
 
     /**
      * Create a color from an existing [ConvertibleColor].
      *
      * It's usually easier to use a function like [rgb] or [hsl] instead.
      */
-    fun color(color: ConvertibleColor): AnsiColorCode = when (level) {
-        Level.NONE -> DisabledAnsiColorCode
-        Level.ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
-        Level.ANSI256 ->
-            if (color is Ansi16) Ansi16ColorCode(color.code)
-            else Ansi256ColorCode(color.toAnsi256().code)
-        Level.TRUECOLOR -> when (color) {
-            is Ansi16 -> Ansi16ColorCode(color.code)
-            is Ansi256 -> Ansi256ColorCode(color.code)
-            else -> color.toRGB().run { AnsiRGBColorCode(r, g, b) }
-        }
-    }
+    fun color(color: ConvertibleColor): AnsiColorCode = AnsiColor.color(color, level)
 }

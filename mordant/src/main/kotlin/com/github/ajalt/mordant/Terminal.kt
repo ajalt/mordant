@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 
 class Terminal(
-        val colors: TermColors=TermColors(),
+        val colors: TerminalColors = TerminalColors(),
         val theme: Theme = DEFAULT_THEME,
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
@@ -37,22 +37,18 @@ class Terminal(
         for ((i, line) in lines.lines.withIndex()) {
             if (i > 0) append("\n") // TODO: line separator
 
+            // Concat equal ansi codes to avoid closing and reopening them on every span
+            var activeCode: AnsiCode? = null
             for (span in line) {
-                val ansi = span.style.toAnsi(this@Terminal)
-                append(ansi.invoke(span.text))
+                val code = span.style.toAnsi(this@Terminal)
+                if (code != activeCode) {
+                    if (activeCode != null) append(activeCode.close)
+                    activeCode = code
+                    append(code.open)
+                }
+                append(span.text)
             }
+            activeCode?.let { append(it.close) }
         }
     }
-}
-
-fun main() {
-    val t = Terminal(TermColors(TermColors.Level.TRUECOLOR))
-    t.print(Text("""
-    line 1
-
-
-
-    line 2
-    """.trimIndent(), whitespace = Whitespace.NORMAL))
-
 }

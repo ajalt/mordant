@@ -2,9 +2,10 @@ package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.mordant.Ansi16ColorCode
 import com.github.ajalt.mordant.Ansi256ColorCode
-import com.github.ajalt.mordant.TermColors
+import com.github.ajalt.mordant.AnsiLevel
+import com.github.ajalt.mordant.TerminalColors
 
-fun demo() = TermColors(TermColors.Level.TRUECOLOR).run {
+fun demo() = TerminalColors(AnsiLevel.TRUECOLOR).run {
     val title = (bold + underline)
 
     println(title("text styles\n"))
@@ -68,7 +69,7 @@ infix fun Int.positiveMod(mod: Int): Int {
     return x % mod
 }
 
-fun rainbow() = TermColors(TermColors.Level.TRUECOLOR).run {
+fun rainbow() = TerminalColors(AnsiLevel.TRUECOLOR).run {
     val lines = """
                                   :M              MM
                                 O?                    MM

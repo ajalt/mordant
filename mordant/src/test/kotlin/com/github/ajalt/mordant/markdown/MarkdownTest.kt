@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.TermColors
+import com.github.ajalt.mordant.AnsiStyle.*
+import com.github.ajalt.mordant.AnsiLevel
+import com.github.ajalt.mordant.TerminalColors
 import com.github.ajalt.mordant.Terminal
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
@@ -187,25 +189,25 @@ www.example.com/url
     fun `header 4`() = doTest("""
 #### Header Text
 """, """
-Header Text
+${italic("Header Text")}
 """, width = 19)
 
     @Test
     fun `header 5`() = doTest("""
 ##### Header Text
 """, """
-Header Text
+${italic("Header Text")}
 """, width = 19)
 
     @Test
     fun `header 6`() = doTest("""
 ###### Header Text
 """, """
-Header Text
+${(italic + dim)("Header Text")}
 """, width = 19)
 
     private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
-        val terminal = Terminal(colors = TermColors(TermColors.Level.TRUECOLOR), width = width)
+        val terminal = Terminal(colors = TerminalColors(AnsiLevel.TRUECOLOR), width = width)
         val actual = terminal.renderMarkdown(markdown)
         actual shouldBe expected
     }

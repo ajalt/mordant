@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.TermColors
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.internal.parseText
 

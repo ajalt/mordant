@@ -5,6 +5,7 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.AnsiCodes
+import com.github.ajalt.mordant.AnsiStyle
 import com.github.ajalt.mordant.ESC
 import com.github.ajalt.mordant.rendering.Line
 import com.github.ajalt.mordant.rendering.Lines
@@ -101,12 +102,12 @@ private fun styleFromAnsi(string: String): TextStyle {
                 style = style.copy(bgColor = color)
                 i += consumed
             }
-            AnsiCodes.boldOpen -> style = style.copy(bold = true)
-            AnsiCodes.italicOpen -> style = style.copy(italic = true)
-            AnsiCodes.underlineOpen -> style = style.copy(underline = true)
-            AnsiCodes.dimOpen -> style = style.copy(dim = true)
-            AnsiCodes.inverseOpen -> style = style.copy(inverse = true)
-            AnsiCodes.strikethroughOpen -> style = style.copy(strikethrough = true)
+            AnsiStyle.bold.openCode -> style = style.copy(bold = true)
+            AnsiStyle.italic.openCode -> style = style.copy(italic = true)
+            AnsiStyle.underline.openCode -> style = style.copy(underline = true)
+            AnsiStyle.dim.openCode -> style = style.copy(dim = true)
+            AnsiStyle.inverse.openCode -> style = style.copy(inverse = true)
+            AnsiStyle.strikethrough.openCode -> style = style.copy(strikethrough = true)
             AnsiCodes.underlineColorSelector -> {
                 // Not supported, skip its arguments
                 i += when {

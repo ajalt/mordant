@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant
 
+import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.AnsiCodes.bgColorSelector
 import com.github.ajalt.mordant.AnsiCodes.fgBgOffset
@@ -7,30 +8,10 @@ import com.github.ajalt.mordant.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.AnsiCodes.selector256
 import com.github.ajalt.mordant.AnsiCodes.selectorRgb
-
-
-internal const val ESC = "\u001B"
-/** Control Sequence Introducer */
-internal const val CSI = "$ESC["
-private val ANSI_CSI_RE = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
+import com.github.ajalt.mordant.AnsiLevel.*
+import kotlin.math.roundToInt
 
 internal object AnsiCodes {
-    const val reset = 0
-    const val boldOpen = 1
-    const val boldClose = 22
-    const val dimOpen = 2
-    const val dimClose = 22
-    const val italicOpen = 3
-    const val italicClose = 23
-    const val underlineOpen = 4
-    const val underlineClose = 24
-    const val inverseOpen = 7
-    const val inverseClose = 27
-    const val hiddenOpen = 8
-    const val hiddenClose = 28
-    const val strikethroughOpen = 9
-    const val strikethroughClose = 29
-
     val fg16Range = 30..37
     val fg16BrightRange = 90..97
     const val fgColorSelector = 38
@@ -47,6 +28,167 @@ internal object AnsiCodes {
     const val selectorRgb = 2
 
     const val underlineColorSelector = 58
+}
+
+
+internal const val ESC = "\u001B"
+
+/** Control Sequence Introducer */
+internal const val CSI = "$ESC["
+
+private val ANSI_CSI_RE = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
+
+enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
+
+@Suppress("EnumEntryName")
+enum class AnsiStyle(val code: SingleAnsiCode) {
+    reset(SingleAnsiCode(0, 0)),
+    bold(SingleAnsiCode(1, 22)),
+    dim(SingleAnsiCode(2, 22)),
+    italic(SingleAnsiCode(3, 23)),
+    underline(SingleAnsiCode(4, 24)),
+    inverse(SingleAnsiCode(7, 27)),
+    hidden(SingleAnsiCode(8, 28)),
+    strikethrough(SingleAnsiCode(9, 29));
+
+    val openCode: Int = code.openCode
+    val closeCode: Int = code.closeCode
+
+    override fun toString() = code.toString()
+    operator fun invoke(text: String) = code.invoke(text)
+    operator fun plus(other: AnsiCode) = code + other
+    operator fun plus(other: AnsiStyle) = code + other.code
+    operator fun plus(other: AnsiColor) = code + other.code
+}
+
+@Suppress("EnumEntryName")
+enum class AnsiColor(val code: Ansi16ColorCode) {
+    black(Ansi16ColorCode(30)),
+    red(Ansi16ColorCode(31)),
+    green(Ansi16ColorCode(32)),
+    yellow(Ansi16ColorCode(33)),
+    blue(Ansi16ColorCode(34)),
+    magenta(Ansi16ColorCode(35)),
+    cyan(Ansi16ColorCode(36)),
+    white(Ansi16ColorCode(37)),
+    gray(Ansi16ColorCode(90)),
+    brightRed(Ansi16ColorCode(91)),
+    brightGreen(Ansi16ColorCode(92)),
+    brightYellow(Ansi16ColorCode(93)),
+    brightBlue(Ansi16ColorCode(94)),
+    brightMagenta(Ansi16ColorCode(95)),
+    brightCyan(Ansi16ColorCode(96)),
+    brightWhite(Ansi16ColorCode(97)),
+    ;
+
+
+    /**
+     * Get a color for background only.
+     *
+     * Note that if you want to specify both a background and foreground color, use [on] instead of
+     * this property.
+     */
+    val bg: AnsiCode get() = code.bg
+
+    open infix fun on(bg: AnsiColorCode): AnsiCode = code on bg
+
+    operator fun invoke(text: String) = code.invoke(text)
+    operator fun plus(other: AnsiCode) = code + other
+    operator fun plus(other: AnsiStyle) = code + other.code
+    operator fun plus(other: AnsiColor) = code + other.code
+    override fun toString() = code.toString()
+
+    // TODO: add level params
+    companion object {
+        /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
+        fun rgb(hex: String, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(RGB(hex), level)
+
+        /**
+         * Create a color code from an RGB color.
+         *
+         * @param r The red amount, in the range \[0, 255]
+         * @param g The green amount, in the range \[0, 255]
+         * @param b The blue amount, in the range \[0, 255]
+         */
+        fun rgb(r: Int, g: Int, b: Int, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(RGB(r, g, b), level)
+
+        /**
+         * Create a color code from an HSL color.
+         *
+         * @param h The hue, in the range \[0, 360]
+         * @param s The saturation, in the range \[0, 100]
+         * @param l The lightness, in the range \[0, 100]
+         */
+        fun hsl(h: Int, s: Int, l: Int, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(HSL(h, s, l), level)
+
+        /**
+         * Create a color code from an HSV color.
+         *
+         * @param h The hue, in the range \[0, 360]
+         * @param s The saturation, in the range \[0,100]
+         * @param v The value, in the range \[0,100]
+         */
+        fun hsv(h: Int, s: Int, v: Int, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(HSV(h, s, v), level)
+
+        /**
+         * Create a color code from a CMYK color.
+         *
+         * @param c The cyan amount, in the range \[0, 100]
+         * @param m The magenta amount, in the range \[0,100]
+         * @param y The yellow amount, in the range \[0,100]
+         * @param k The black amount, in the range \[0,100]
+         */
+        fun cmyk(c: Int, m: Int, y: Int, k: Int, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(CMYK(c, m, y, k), level)
+
+        /**
+         * Create a grayscale color code from a fraction in the range \[0, 1].
+         *
+         * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
+         */
+        fun gray(fraction: Double, level: AnsiLevel = TRUECOLOR): AnsiColorCode {
+            require(fraction in 0.0..1.0) { "fraction must be in the range [0, 1]" }
+            return (255 * fraction).roundToInt().let { rgb(it, it, it, level) }
+        }
+
+        /**
+         * Create a color code from a CIE XYZ color.
+         *
+         * Conversions use D65 reference white, and sRGB profile.
+         *
+         * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
+         */
+        fun xyz(x: Double, y: Double, z: Double, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(XYZ(x, y, z), level)
+
+
+        /**
+         * Create a color code from a CIE LAB color.
+         *
+         * Conversions use D65 reference white, and sRGB profile.
+         *
+         * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
+         * but are generally in [-100, 100]
+         */
+        fun lab(l: Double, a: Double, b: Double, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(LAB(l, a, b), level)
+
+
+        /**
+         * Create a color from an existing [ConvertibleColor].
+         *
+         * It's usually easier to use a function like [rgb] or [hsl] instead.
+         */
+        fun color(color: ConvertibleColor, level: AnsiLevel = TRUECOLOR): AnsiColorCode = when (level) {
+            NONE -> DisabledAnsiColorCode
+            ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
+            ANSI256 ->
+                if (color is Ansi16) Ansi16ColorCode(color.code)
+                else Ansi256ColorCode(color.toAnsi256().code)
+            TRUECOLOR -> when (color) {
+                is Ansi16 -> Ansi16ColorCode(color.code)
+                is Ansi256 -> Ansi256ColorCode(color.code)
+                else -> color.toRGB().run { AnsiRGBColorCode(r, g, b) }
+            }
+        }
+    }
 }
 
 /**
@@ -94,6 +236,8 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
 
     override fun hashCode() = codes.hashCode()
 }
+
+class SingleAnsiCode(val openCode: Int, val closeCode: Int) : AnsiCode(listOf(openCode), closeCode)
 
 internal object DisabledAnsiCode : AnsiCode(emptyList()) {
     override fun plus(other: AnsiCode): AnsiCode = this

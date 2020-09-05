@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.mordant.TermColors.Level.*
+import com.github.ajalt.mordant.AnsiLevel.*
 import java.lang.management.ManagementFactory
 
 object TerminalCapabilities {
@@ -11,11 +11,11 @@ object TerminalCapabilities {
      *
      * @param default The value to return if support can't be detected.
      */
-    fun detectANSISupport(default: TermColors.Level = NONE): TermColors.Level {
+    fun detectANSISupport(default: AnsiLevel = NONE): AnsiLevel {
         // Consoles built in to some IDEs/Editors support color, but always cause System.console() to return null
-        if (isIntellijConsole()) return TermColors.Level.ANSI16
+        if (isIntellijConsole()) return AnsiLevel.ANSI16
         if (System.getenv("TERM_PROGRAM")?.toLowerCase() == "vscode") {
-            return TermColors.Level.ANSI256 // github.com/Microsoft/vscode/pull/30346
+            return AnsiLevel.ANSI256 // github.com/Microsoft/vscode/pull/30346
         }
 
         if (!consoleAvailable()) return NONE
