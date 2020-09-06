@@ -136,7 +136,16 @@ www.example.com/url
 """)
 
     @Test
-    fun `raw html`() = doTest("""
+    fun `default html`() = doTest("""
+<h1 align="center">
+    <img src="example.svg">
+    <p>text in html</p>
+</h1>
+""", """
+""")
+
+    @Test
+    fun `show html`() = doTest("""
 <h1 align="center">
     <img src="example.svg">
     <p>text in html</p>
@@ -146,8 +155,7 @@ www.example.com/url
     <img src="example.svg">
     <p>text in html</p>
 </h1>
-""")
-
+""", showHtml = true)
 
     @Test
     fun `horizontal rule`() = doTest("""
@@ -206,9 +214,14 @@ ${italic("Header Text")}
 ${(italic + dim)("Header Text")}
 """, width = 19)
 
-    private fun doTest(@Language("markdown") markdown: String, expected: String, width: Int = 79) {
+    private fun doTest(
+            @Language("markdown") markdown: String,
+            expected: String,
+            width: Int = 79,
+            showHtml: Boolean = false
+    ) {
         val terminal = Terminal(colors = TerminalColors(AnsiLevel.TRUECOLOR), width = width)
-        val actual = terminal.renderMarkdown(markdown)
+        val actual = terminal.renderMarkdown(markdown, showHtml)
         actual shouldBe expected
     }
 }

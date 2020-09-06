@@ -13,25 +13,6 @@ import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
 
-fun main() {
-    val src = """
-    For *example*, to **always** output ANSI RGB color codes, even if stdout is currently directed to a file,
-    you can do this:
-    
-    ```
-    pre {
-        *format*
-    }
-    ```
-    """.trimIndent()
-    val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
-    val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(src)
-    println(parsedTree.children.joinToString("\n"))
-    println("---")
-    println(MarkdownRenderer(src, DEFAULT_THEME).render())
-    println("---")
-}
-
 internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
     override fun measure(t: Terminal, width: Int): WidthRange {
         return parts.maxWidthRange(t, width)
@@ -42,18 +23,20 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
     }
 }
 
+private val EMPTY_LINES = Lines(emptyList())
 private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 
 
 internal class MarkdownRenderer(
         private val input: String,
-        private val theme: Theme
+        private val theme: Theme,
+        private val showHtml: Boolean
 ) {
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
         val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(input)
-        println(parsedTree.children.joinToString("\n"))
+        println(parsedTree.children.joinToString("\n")) // TODO: remove
         return parseFile(parsedTree)
     }
 
@@ -88,8 +71,9 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
             MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
-            MarkdownElementTypes.HTML_BLOCK -> {
-                Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
+            MarkdownElementTypes.HTML_BLOCK -> when {
+                showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
+                else -> Text(EMPTY_LINES)
             }
             MarkdownElementTypes.PARAGRAPH -> {
                 Text(innerInlines(node, drop = 0))

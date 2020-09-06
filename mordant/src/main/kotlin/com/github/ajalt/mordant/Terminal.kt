@@ -9,12 +9,12 @@ class Terminal(
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
 
-    fun printMarkdown(markdown: String) {
-        return kotlin.io.print(renderMarkdown(markdown))
+    fun printMarkdown(markdown: String, showHtml: Boolean=false) {
+        return kotlin.io.print(renderMarkdown(markdown, showHtml))
     }
 
-    fun renderMarkdown(markdown: String): String {
-        return render(MarkdownRenderer(markdown, theme).render())
+    fun renderMarkdown(markdown: String, showHtml: Boolean=false): String {
+        return render(MarkdownRenderer(markdown, theme, showHtml).render())
     }
 
     fun print(text: String) {
