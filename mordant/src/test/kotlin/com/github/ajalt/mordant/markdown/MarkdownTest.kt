@@ -1,11 +1,18 @@
 package com.github.ajalt.mordant.markdown
 
+import com.github.ajalt.mordant.AnsiColor
+import com.github.ajalt.mordant.AnsiColor.*
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.TerminalColors
 import com.github.ajalt.mordant.Terminal
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.intellij.markdown.ast.ASTNode
+import org.intellij.markdown.ast.CompositeASTNode
+import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.parser.MarkdownParser
 import kotlin.test.Test
 
 class MarkdownTest {
@@ -14,8 +21,10 @@ class MarkdownTest {
 Paragraph one
 wrapped line.
 
-Paragraph two
-wrapped line.
+Paragraph 
+two
+wrapped
+line.
 """, """
 Paragraph one wrapped line.
 
@@ -214,14 +223,38 @@ ${italic("Header Text")}
 ${(italic + dim)("Header Text")}
 """, width = 19)
 
+    @Test
+    fun `empty code span`() = doTest("""
+An `` empty code span.
+""", """
+An `` empty code span.
+""")
+
+    @Test
+    fun `code span`() = doTest("""
+This is a `code    <br/>`   span.
+So `is  this`
+span.
+""", """
+This is a ${(brightWhite on black)("code    <br/>")} span. So ${(brightWhite on black)("is  this")} span.
+""")
+
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
             width: Int = 79,
             showHtml: Boolean = false
     ) {
-        val terminal = Terminal(colors = TerminalColors(AnsiLevel.TRUECOLOR), width = width)
-        val actual = terminal.renderMarkdown(markdown, showHtml)
-        actual shouldBe expected
+        try {
+            val terminal = Terminal(colors = TerminalColors(AnsiLevel.TRUECOLOR), width = width)
+            val actual = terminal.renderMarkdown(markdown, showHtml)
+            actual shouldBe expected
+        } catch (e: Throwable) {
+            // Print parse tree on test failure
+            val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
+            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(markdown)
+            println(parsedTree.children.joinToString("\n"))
+            throw e
+        }
     }
 }

@@ -1,10 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.CSI
-import com.github.ajalt.mordant.rendering.internal.parseText
 
 @Suppress("DataClassPrivateConstructor")
-data class Span private constructor(val text: String, val style: TextStyle = TextStyle()) {
+data class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
     init {
         require(text.isNotEmpty()) { "Span text cannot be empty" }
         require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
@@ -16,7 +15,7 @@ data class Span private constructor(val text: String, val style: TextStyle = Tex
 
     internal companion object {
         // TODO: maybe just inline this
-        fun word(text: String, style: TextStyle = TextStyle()) = Span(text, style)
+        fun word(text: String, style: TextStyle = DEFAULT_STYLE) = Span(text, style)
     }
 
 

@@ -7,17 +7,14 @@ import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.AnsiCodes
 import com.github.ajalt.mordant.AnsiStyle
 import com.github.ajalt.mordant.ESC
-import com.github.ajalt.mordant.rendering.Line
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Span
-import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.*
 
 
 private val SPLIT_REGEX = Regex("""\r?\n|\s+|\S+""")
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 
-/** Like a Span, but with arbitrary [text] */
-private data class Chunk(val text: String, val style: TextStyle = TextStyle())
+/** Like a Span, but with no restrictions on [text] */
+private data class Chunk(val text: String, val style: TextStyle)
 
 /**
  * Split [text] into [Span]s, stripping ANSI codes and converting them to [TextStyle]s.
@@ -33,7 +30,7 @@ internal fun parseText(text: String, style: TextStyle): Lines {
 
 private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
     val commands = ANSI_RE.findAll(text).toList()
-    if (commands.isEmpty()) return listOf(Chunk(text))
+    if (commands.isEmpty()) return listOf(Chunk(text, defaultStyle))
 
     val parts = mutableListOf<Chunk>()
     var i = 0
@@ -77,9 +74,9 @@ private fun styleFromAnsi(string: String): TextStyle {
     val codes = string.subSequence(2, string.length - 1)
             .split(";").map { if (it.isEmpty()) 0 else it.toInt() }
 
-    if (codes.isEmpty()) return TextStyle()
+    if (codes.isEmpty()) return DEFAULT_STYLE
 
-    var style = TextStyle()
+    var style = DEFAULT_STYLE
     var i = 0
 
     while (i <= codes.lastIndex) {

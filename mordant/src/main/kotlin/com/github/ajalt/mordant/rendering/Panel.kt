@@ -6,7 +6,7 @@ class Panel(
         content: Renderable,
         private val borders: Borders = Borders.SQUARE,
         private val expand: Boolean = false,
-        private val borderStyle: TextStyle = TextStyle(),
+        private val borderStyle: TextStyle = DEFAULT_STYLE,
         padding: Padding = Padding()
 ) : Renderable {
     private val content: Renderable = Padded.get(content, padding)

@@ -19,11 +19,11 @@ class Borders(
         val foot: BorderRow,
         val bottom: BorderRow
 ) {
-    fun renderTop(widths: List<Int>, style: TextStyle = TextStyle()): Span = row(top, widths, style)
-    fun renderHead(widths: List<Int>, style: TextStyle = TextStyle()): Span = row(headDivider, widths, style)
-    fun renderBody(widths: List<Int>, style: TextStyle = TextStyle()): Span = row(bodyDivider, widths, style)
-    fun renderFoot(widths: List<Int>, style: TextStyle = TextStyle()): Span = row(footDivider, widths, style)
-    fun renderBottom(widths: List<Int>, style: TextStyle = TextStyle()): Span = row(bottom, widths, style)
+    fun renderTop(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(top, widths, style)
+    fun renderHead(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(headDivider, widths, style)
+    fun renderBody(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(bodyDivider, widths, style)
+    fun renderFoot(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(footDivider, widths, style)
+    fun renderBottom(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(bottom, widths, style)
 
     private fun row(border: BorderRow, widths: List<Int>, style: TextStyle): Span {
         require(widths.isNotEmpty()) { "Must provide at least one width" }

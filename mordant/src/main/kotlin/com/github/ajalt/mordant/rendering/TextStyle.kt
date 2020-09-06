@@ -39,3 +39,5 @@ internal fun TextStyle.toAnsi(t: Terminal): AnsiCode {
 
     return code
 }
+
+internal val DEFAULT_STYLE = TextStyle()

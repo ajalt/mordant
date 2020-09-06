@@ -16,7 +16,7 @@ class HorizontalRule internal constructor(
             titleStyle: TextStyle? = null
     ) : this(
             ruleCharacter = ruleCharacter,
-            title = parseText(title, TextStyle()).lines.firstOrNull() ?: emptyList(),
+            title = parseText(title, DEFAULT_STYLE).lines.firstOrNull() ?: emptyList(),
             ruleStyle = ruleStyle,
             titleStyle = titleStyle
     )

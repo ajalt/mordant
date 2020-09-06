@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.internal.parseText
 
 class Text internal constructor(
         lines: Lines,
-        private val style: TextStyle = TextStyle(),
+        private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = TextAlign.LEFT
 ) : Renderable {
@@ -13,7 +13,7 @@ class Text internal constructor(
 
     constructor(
             text: String,
-            style: TextStyle = TextStyle(),
+            style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = TextAlign.LEFT
     ) : this(parseText(text, style), style, whitespace, align)

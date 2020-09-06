@@ -40,8 +40,31 @@ private val ANSI_CSI_RE = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
 
+interface AnsiCodeContainer {
+    val code: AnsiCode
+
+    operator fun invoke(text: String) = code.invoke(text)
+    operator fun plus(other: AnsiCode) = code + other
+    operator fun plus(other: AnsiCodeContainer) = code + other.code
+}
+
+interface AnsiColorCodeContainer : AnsiCodeContainer {
+    override val code: Ansi16ColorCode
+
+    /**
+     * Get a color for background only.
+     *
+     * Note that if you want to specify both a background and foreground color, use [on] instead of
+     * this property.
+     */
+    val bg: AnsiCode get() = code.bg
+
+    infix fun on(bg: AnsiColorCode): AnsiCode = code on bg
+    infix fun on(bg: AnsiColorCodeContainer): AnsiCode = code on bg.code
+}
+
 @Suppress("EnumEntryName")
-enum class AnsiStyle(val code: SingleAnsiCode) {
+enum class AnsiStyle(override val code: SingleAnsiCode) : AnsiCodeContainer {
     reset(SingleAnsiCode(0, 0)),
     bold(SingleAnsiCode(1, 22)),
     dim(SingleAnsiCode(2, 22)),
@@ -55,14 +78,11 @@ enum class AnsiStyle(val code: SingleAnsiCode) {
     val closeCode: Int = code.closeCode
 
     override fun toString() = code.toString()
-    operator fun invoke(text: String) = code.invoke(text)
-    operator fun plus(other: AnsiCode) = code + other
-    operator fun plus(other: AnsiStyle) = code + other.code
-    operator fun plus(other: AnsiColor) = code + other.code
 }
 
+// TODO: interface for enums
 @Suppress("EnumEntryName")
-enum class AnsiColor(val code: Ansi16ColorCode) {
+enum class AnsiColor(override val code: Ansi16ColorCode) : AnsiColorCodeContainer, ConvertibleColor by code.color {
     black(Ansi16ColorCode(30)),
     red(Ansi16ColorCode(31)),
     green(Ansi16ColorCode(32)),
@@ -72,30 +92,17 @@ enum class AnsiColor(val code: Ansi16ColorCode) {
     cyan(Ansi16ColorCode(36)),
     white(Ansi16ColorCode(37)),
     gray(Ansi16ColorCode(90)),
+
     brightRed(Ansi16ColorCode(91)),
     brightGreen(Ansi16ColorCode(92)),
     brightYellow(Ansi16ColorCode(93)),
     brightBlue(Ansi16ColorCode(94)),
     brightMagenta(Ansi16ColorCode(95)),
     brightCyan(Ansi16ColorCode(96)),
-    brightWhite(Ansi16ColorCode(97)),
-    ;
+    brightWhite(Ansi16ColorCode(97));
 
+    val color: Ansi16 get() = code.color
 
-    /**
-     * Get a color for background only.
-     *
-     * Note that if you want to specify both a background and foreground color, use [on] instead of
-     * this property.
-     */
-    val bg: AnsiCode get() = code.bg
-
-    open infix fun on(bg: AnsiColorCode): AnsiCode = code on bg
-
-    operator fun invoke(text: String) = code.invoke(text)
-    operator fun plus(other: AnsiCode) = code + other
-    operator fun plus(other: AnsiStyle) = code + other.code
-    operator fun plus(other: AnsiColor) = code + other.code
     override fun toString() = code.toString()
 
     // TODO: add level params
@@ -176,16 +183,19 @@ enum class AnsiColor(val code: Ansi16ColorCode) {
          *
          * It's usually easier to use a function like [rgb] or [hsl] instead.
          */
-        fun color(color: ConvertibleColor, level: AnsiLevel = TRUECOLOR): AnsiColorCode = when (level) {
-            NONE -> DisabledAnsiColorCode
-            ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
-            ANSI256 ->
-                if (color is Ansi16) Ansi16ColorCode(color.code)
-                else Ansi256ColorCode(color.toAnsi256().code)
-            TRUECOLOR -> when (color) {
-                is Ansi16 -> Ansi16ColorCode(color.code)
-                is Ansi256 -> Ansi256ColorCode(color.code)
-                else -> color.toRGB().run { AnsiRGBColorCode(r, g, b) }
+        fun color(color: ConvertibleColor, level: AnsiLevel = TRUECOLOR): AnsiColorCode {
+            val c = if (color is AnsiColorCodeContainer) color.code.color else color
+            return when (level) {
+                NONE -> DisabledAnsiColorCode
+                ANSI16 -> Ansi16ColorCode(color.toAnsi16().code)
+                ANSI256 ->
+                    if (c is Ansi16) Ansi16ColorCode(c.code)
+                    else Ansi256ColorCode(c.toAnsi256().code)
+                TRUECOLOR -> when (c) {
+                    is Ansi16 -> Ansi16ColorCode(c.code)
+                    is Ansi256 -> Ansi256ColorCode(c.code)
+                    else -> c.toRGB().run { AnsiRGBColorCode(r, g, b) }
+                }
             }
         }
     }
@@ -203,10 +213,10 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
     val open: String get() = tag(codes.flatMap { it.first })
     val close: String get() = tag(codes.map { it.second })
 
-    override fun toString() = open
     override fun invoke(text: String) = if (text.isEmpty()) "" else open + nest(text) + close
 
     open operator fun plus(other: AnsiCode) = AnsiCode(codes + other.codes)
+    open operator fun plus(other: AnsiCodeContainer) = AnsiCode(codes + other.code.codes)
 
     private fun nest(text: String) = ANSI_CSI_RE.replace(text) { match ->
         // Replace instances of our close codes with their corresponding opening codes. If the close
@@ -226,6 +236,8 @@ open class AnsiCode(protected val codes: List<Pair<List<Int>, Int>>) : (String) 
     }
 
     private fun tag(c: List<Int>) = if (c.isEmpty()) "" else "$CSI${c.joinToString(";")}m"
+
+    override fun toString() = open
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -260,8 +272,18 @@ abstract class AnsiColorCode internal constructor(
      */
     val bg: AnsiCode get() = AnsiCode(bgCodes)
 
+    /**
+     * Create a new Ansi code that sets this color as the foreground and [bg] as the background.
+     */
     open infix fun on(bg: AnsiColorCode): AnsiCode {
         return AnsiCode(codes + bg.bgCodes)
+    }
+
+    /**
+     * Create a new Ansi code that sets this color as the foreground and [bg] as the background.
+     */
+    infix fun on(bg: AnsiColorCodeContainer): AnsiCode {
+        return AnsiCode(codes + (bg.code as AnsiColorCode).bgCodes)
     }
 
     protected abstract val bgCodes: List<Pair<List<Int>, Int>>
@@ -273,14 +295,17 @@ internal object DisabledAnsiColorCode : AnsiColorCode(emptyList()) {
     override fun on(bg: AnsiColorCode): AnsiCode = DisabledAnsiCode
 }
 
-class Ansi16ColorCode(code: Int) : AnsiColorCode(code, fgColorReset) {
+class Ansi16ColorCode(private val code: Int) : AnsiColorCode(code, fgColorReset) {
+    val color get() = Ansi16(code)
     override val bgCodes get() = codes.map { listOf(it.first[0] + fgBgOffset) to bgColorReset }
 }
 
-class Ansi256ColorCode(code: Int) : AnsiColorCode(listOf(fgColorSelector, selector256, code), fgColorReset) {
+class Ansi256ColorCode(private val code: Int) : AnsiColorCode(listOf(fgColorSelector, selector256, code), fgColorReset) {
+    val color get() = Ansi256(code)
     override val bgCodes get() = codes.map { listOf(bgColorSelector, selector256, it.first[2]) to bgColorReset }
 }
 
-class AnsiRGBColorCode(r: Int, g: Int, b: Int) : AnsiColorCode(listOf(fgColorSelector, selectorRgb, r, g, b), fgColorReset) {
+class AnsiRGBColorCode(private val r: Int, private val g: Int, private val b: Int) : AnsiColorCode(listOf(fgColorSelector, selectorRgb, r, g, b), fgColorReset) {
+    val color get() = RGB(r, g, b)
     override val bgCodes get() = codes.map { (o, _) -> listOf(bgColorSelector, selectorRgb, o[2], o[3], o[4]) to bgColorReset }
 }

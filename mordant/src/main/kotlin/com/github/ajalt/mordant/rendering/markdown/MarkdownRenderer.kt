@@ -19,7 +19,7 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return parts.fold(Lines(emptyList())) { l, r -> l + r.render(t, width) }
+     return parts.foldLines { it.render(t, width) }
     }
 }
 
@@ -27,6 +27,9 @@ private val EMPTY_LINES = Lines(emptyList())
 private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 
+private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
+    return fold(EMPTY_LINES) { l, r -> l + transform(r) }
+}
 
 internal class MarkdownRenderer(
         private val input: String,
@@ -36,7 +39,6 @@ internal class MarkdownRenderer(
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
         val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(input)
-        println(parsedTree.children.joinToString("\n")) // TODO: remove
         return parseFile(parsedTree)
     }
 
@@ -67,16 +69,19 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.CODE_FENCE -> {
                 // TODO better start/end linebreak handling
-                Text(innerInlines(node, drop = 1), whitespace = Whitespace.PRE)
+                Text(innerInlines(node, drop = 1), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
             }
             MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
-            MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
             MarkdownElementTypes.HTML_BLOCK -> when {
                 showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
                 else -> Text(EMPTY_LINES)
             }
             MarkdownElementTypes.PARAGRAPH -> {
-                Text(innerInlines(node, drop = 0))
+                if (node.children.any { it.type == MarkdownElementTypes.CODE_SPAN }) {
+                    paragraphWithCodeSpan(node)
+                } else {
+                    Text(innerInlines(node, drop = 0))
+                }
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
@@ -99,24 +104,24 @@ internal class MarkdownRenderer(
         }
     }
 
-
     private fun parseInlines(node: ASTNode): Lines {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
-            MarkdownElementTypes.CODE_SPAN -> TODO("CODE_SPAN")
-            MarkdownElementTypes.HTML_BLOCK -> TODO("HTML_BLOCK")
+            MarkdownElementTypes.CODE_SPAN -> {
+                parseText(input.substring(node.children[1].startOffset,
+                        node.children.last().startOffset), theme.markdownCodeSpan)
+            }
             MarkdownElementTypes.EMPH -> {
                 innerInlines(node, drop = 1).withStyle(theme.markdownEmph)
             }
             MarkdownElementTypes.STRONG -> {
                 innerInlines(node, drop = 2).withStyle(theme.markdownStrong)
             }
-            MarkdownElementTypes.INLINE_LINK ,
+            MarkdownElementTypes.INLINE_LINK,
             MarkdownElementTypes.FULL_REFERENCE_LINK,
-            MarkdownElementTypes.SHORT_REFERENCE_LINK-> {
+            MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
                 // first child is LINK_TEXT, second is LINK_LABEL. Ignore the label and brackets.
-                innerInlines(node.children[0], drop=1)
+                innerInlines(node.children[0], drop = 1)
             }
             MarkdownElementTypes.IMAGE -> {
                 // for images, just render the alt text if there is any
@@ -151,7 +156,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.CODE_FENCE_END -> TODO("CODE_FENCE_END")
             MarkdownTokenTypes.LINK_TITLE -> TODO("LINK_TITLE")
             MarkdownTokenTypes.HTML_TAG -> TODO("HTML_TAG")
-            MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", TextStyle())
+            MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", DEFAULT_STYLE)
             MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
             MarkdownTokenTypes.TEXT,
@@ -170,7 +175,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE,
             GFMTokenTypes.GFM_AUTOLINK -> {
-                parseText(input.substring(node.startOffset, node.endOffset), TextStyle())
+                parseText(input.substring(node.startOffset, node.endOffset), DEFAULT_STYLE)
             }
             MarkdownTokenTypes.EOL -> EOL_LINES
             else -> error("Unexpected token when parsing inlines: $node")
@@ -178,12 +183,8 @@ internal class MarkdownRenderer(
     }
 
     private fun innerInlines(node: ASTNode, drop: Int, dropLast: Int = drop): Lines {
-        try {
             return node.children.subList(drop, node.children.size - dropLast)
-                    .fold(Lines(emptyList())) { l, r -> l + parseInlines(r) }
-        } catch (e: Exception) {
-            throw e
-        }
+                    .foldLines { parseInlines(it) }
     }
 
     private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode): Renderable {
@@ -208,4 +209,41 @@ internal class MarkdownRenderer(
         return innerInlines(node.children[1], drop = drop, dropLast = 0)
     }
 
+    // Since code spans are inline elements that affect wrapping, we generate several text elements
+    // and concat them.
+    private fun paragraphWithCodeSpan(paragraph: ASTNode): MarkdownDocument {
+        val parts = mutableListOf<Text>()
+        var start = 0
+        var i = 0
+        while (i <= paragraph.children.lastIndex) {
+            val node = paragraph.children[i]
+            if (node.type != MarkdownElementTypes.CODE_SPAN) {
+                i += 1
+                continue
+            }
+            if (i > start) {
+                parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) })
+            }
+            val text = input.substring(node.children[1].startOffset, node.children.last().startOffset)
+            val parsed = parseText(text, theme.markdownCodeSpan)
+
+            // Since normal wrapping will trim leading whitespace, we need to manually add a
+            // preformatted space to the end of code spans.
+            val lines = when (paragraph.children.getOrNull(i + 1)?.type) {
+                MarkdownTokenTypes.WHITE_SPACE, MarkdownTokenTypes.EOL -> {
+                    Lines(listOf(parsed.lines.single() + Span.word(" ")))
+                }
+                else -> parsed
+            }
+            parts += Text(lines, whitespace = Whitespace.PRE)
+            start = i + 1
+            i += 1
+        }
+
+        if (i > start) {
+            parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) })
+        }
+
+        return MarkdownDocument(parts)
+    }
 }
