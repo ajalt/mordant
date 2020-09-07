@@ -246,10 +246,20 @@ An `` empty code span.
     @Test
     fun `code span`() = doTest("""
 This is a `code    <br/>`   span.
+
 So `is  this`
 span.
+
+A `span
+with
+a
+line break`.
 """, """
-This is a ${(brightWhite on black)("code    <br/>")} span. So ${(brightWhite on black)("is  this")} span.
+This is a ${(brightWhite on black)("code <br/>")} span.
+
+So ${(brightWhite on black)("is this")} span.
+
+A ${(brightWhite on black)("span with a line break")}.
 """)
 
     private fun doTest(

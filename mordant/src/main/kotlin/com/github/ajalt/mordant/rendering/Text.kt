@@ -54,7 +54,11 @@ class Text internal constructor(
         for (oldLine in this.lines.lines) {
             // Add a space if this line was collapsed
             if (!lastPieceWasWhitespace) {
-                line.add(Span.word(text = " ", style = line.lastOrNull()?.style ?: style))
+                val style = when (line.last().style) {
+                    oldLine.firstOrNull()?.style -> line.last().style
+                    else -> style
+                }
+                line.add(Span.word(text = " ", style = style))
                 lastPieceWasWhitespace = true
                 width += 1
             }
