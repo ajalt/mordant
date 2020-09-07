@@ -1,11 +1,12 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiColor
-import com.github.ajalt.mordant.AnsiColor.*
-import com.github.ajalt.mordant.AnsiStyle.*
+import com.github.ajalt.mordant.AnsiColor.black
+import com.github.ajalt.mordant.AnsiColor.brightWhite
 import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.TerminalColors
+import com.github.ajalt.mordant.AnsiStyle.dim
+import com.github.ajalt.mordant.AnsiStyle.italic
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.TerminalColors
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode
@@ -46,7 +47,7 @@ line.
 Paragraph
 two wrapped
 line.
-""", width = 10)
+""", width = 11)
 
     @Test
     fun `test unordered list`() = doTest("""

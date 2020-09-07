@@ -56,17 +56,22 @@ class Text internal constructor(
             if (!lastPieceWasWhitespace) {
                 line.add(Span.word(text = " ", style = line.lastOrNull()?.style ?: style))
                 lastPieceWasWhitespace = true
+                width += 1
             }
 
             for (piece in oldLine) {
                 val pieceIsWhitespace = piece.isWhitespace()
 
-                if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
-
                 // Collapse whitespace
+                if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
                 val span = when {
                     pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
                     else -> piece
+                }
+
+                // Break line if necessary
+                if (whitespace.wrap && width > 0 && width + span.cellWidth > wrapWidth) {
+                    breakLine()
                 }
 
                 // Don't add spaces to start of line
@@ -75,13 +80,7 @@ class Text internal constructor(
                 width += span.cellWidth
                 line.add(span)
 
-                // Break line if necessary
-                // TODO break before word if width == wrapWidth
-                if (whitespace.wrap && width >= wrapWidth) {
-                    breakLine()
-                } else {
-                    lastPieceWasWhitespace = pieceIsWhitespace
-                }
+                lastPieceWasWhitespace = pieceIsWhitespace
             }
 
             if (!whitespace.collapseNewlines) {
