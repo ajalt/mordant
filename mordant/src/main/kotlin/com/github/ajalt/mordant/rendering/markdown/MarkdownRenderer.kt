@@ -133,28 +133,28 @@ internal class MarkdownRenderer(
 
             // TokenTypes
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
-            MarkdownTokenTypes.SINGLE_QUOTE -> TODO("SINGLE_QUOTE")
-            MarkdownTokenTypes.DOUBLE_QUOTE -> TODO("DOUBLE_QUOTE")
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.LINK_ID -> TODO("LINK_ID")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
             MarkdownTokenTypes.AUTOLINK,
-            MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
-            MarkdownTokenTypes.TEXT,
-            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
-            MarkdownTokenTypes.LPAREN,
-            MarkdownTokenTypes.RPAREN,
-            MarkdownTokenTypes.LBRACKET,
-            MarkdownTokenTypes.RBRACKET,
-            MarkdownTokenTypes.LT,
-            MarkdownTokenTypes.GT,
-            MarkdownTokenTypes.COLON,
-            MarkdownTokenTypes.EXCLAMATION_MARK,
-            MarkdownTokenTypes.EMPH,
             MarkdownTokenTypes.BACKTICK,
             MarkdownTokenTypes.CODE_FENCE_CONTENT,
+            MarkdownTokenTypes.COLON,
+            MarkdownTokenTypes.DOUBLE_QUOTE,
+            MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
+            MarkdownTokenTypes.EMPH,
+            MarkdownTokenTypes.EXCLAMATION_MARK,
+            MarkdownTokenTypes.GT,
+            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
+            MarkdownTokenTypes.LBRACKET,
+            MarkdownTokenTypes.LPAREN,
+            MarkdownTokenTypes.LT,
+            MarkdownTokenTypes.RBRACKET,
+            MarkdownTokenTypes.RPAREN,
+            MarkdownTokenTypes.SINGLE_QUOTE,
+            MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE,
             GFMTokenTypes.GFM_AUTOLINK -> {

@@ -50,6 +50,15 @@ line.
 """, width = 11)
 
     @Test
+    fun `test quotes`() = doTest("""
+This paragraph
+has some "double quotes"
+and some 'single quotes'.
+""", """
+This paragraph has some "double quotes" and some 'single quotes'.
+""")
+
+    @Test
     fun `test unordered list`() = doTest("""
 - line 1
 - line 2a
