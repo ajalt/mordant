@@ -97,7 +97,7 @@ line.
  2. line 2a
     line 2b
  3. line 3
-""", width = 10)
+""", width = 11)
 
     @Test
     fun `block quote`() = doTest("""
@@ -186,42 +186,54 @@ www.example.com/url
     fun `header 1`() = doTest("""
 # Header Text
 """, """
+
 ═══ Header Text ═══
+
 """, width = 19)
 
     @Test
     fun `header 2`() = doTest("""
 ## Header Text
 """, """
+
 ─── Header Text ───
+
 """, width = 19)
 
     @Test
     fun `header 3`() = doTest("""
 ### Header Text
 """, """
+
     Header Text    
+
 """, width = 19)
 
     @Test
     fun `header 4`() = doTest("""
 #### Header Text
 """, """
+
 ${italic("Header Text")}
+
 """, width = 19)
 
     @Test
     fun `header 5`() = doTest("""
 ##### Header Text
 """, """
+
 ${italic("Header Text")}
+
 """, width = 19)
 
     @Test
     fun `header 6`() = doTest("""
 ###### Header Text
 """, """
+
 ${(italic + dim)("Header Text")}
+
 """, width = 19)
 
     @Test

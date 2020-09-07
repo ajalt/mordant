@@ -15,6 +15,7 @@ interface Theme  {
     val markdownStrong: TextStyle get() = TextStyle(bold = true)
     val markdownCodeBlock: TextStyle get() = TextStyle(brightWhite, black)
     val markdownCodeSpan: TextStyle get() = TextStyle(brightWhite, black)
+    val markdownHeaderPadding: Int get() = 1
     val markdownH1: TextStyle get() = DEFAULT_STYLE
     val markdownH2: TextStyle get() = DEFAULT_STYLE
     val markdownH3: TextStyle get() = DEFAULT_STYLE

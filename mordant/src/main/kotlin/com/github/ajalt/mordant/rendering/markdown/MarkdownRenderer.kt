@@ -78,20 +78,20 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.PARAGRAPH -> {
                 if (node.children.any { it.type == MarkdownElementTypes.CODE_SPAN }) {
-                    paragraphWithCodeSpan(node)
+                    paragraphWithCodeSpan(node, theme)
                 } else {
-                    Text(innerInlines(node, drop = 0))
+                    Text(innerInlines(node, drop = 0), theme.markdownText)
                 }
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
             MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
-            MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node)
-            MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node)
-            MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node)
-            MarkdownElementTypes.ATX_4 -> atxText(theme.markdownH4, node)
-            MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node)
-            MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node)
+            MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node, theme)
+            MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node, theme)
+            MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node, theme)
+            MarkdownElementTypes.ATX_4 -> atxText(theme.markdownH4, node, theme)
+            MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
+            MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
 
             GFMElementTypes.STRIKETHROUGH -> TODO("STRIKETHROUGH")
             GFMElementTypes.TABLE -> TODO("TABLE")
@@ -187,18 +187,18 @@ internal class MarkdownRenderer(
                     .foldLines { parseInlines(it) }
     }
 
-    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode): Renderable {
+    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> HorizontalRule(bar, atxContent(node).lines[0], style)
+            else -> Padded(HorizontalRule(bar, atxContent(node).lines[0], style), Padding.vertical(theme.markdownHeaderPadding))
         }
     }
 
-    private fun atxText(style: TextStyle, node: ASTNode): Renderable {
-        return Text(when {
+    private fun atxText(style: TextStyle, node: ASTNode, theme: Theme): Renderable {
+        return Padded(Text(when {
             node.children.size <= 1 -> EOL_LINES
             else -> atxContent(node)
-        }, style = style)
+        }, style = style), Padding.vertical(theme.markdownHeaderPadding))
     }
 
     private fun atxContent(node: ASTNode): Lines {
@@ -211,7 +211,7 @@ internal class MarkdownRenderer(
 
     // Since code spans are inline elements that affect wrapping, we generate several text elements
     // and concat them.
-    private fun paragraphWithCodeSpan(paragraph: ASTNode): MarkdownDocument {
+    private fun paragraphWithCodeSpan(paragraph: ASTNode, theme: Theme): MarkdownDocument {
         val parts = mutableListOf<Text>()
         var start = 0
         var i = 0
@@ -222,16 +222,16 @@ internal class MarkdownRenderer(
                 continue
             }
             if (i > start) {
-                parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) })
+                parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) }, theme.markdownText)
             }
             val text = input.substring(node.children[1].startOffset, node.children.last().startOffset)
-            val parsed = parseText(text, theme.markdownCodeSpan)
+            val parsed = parseText(text, this.theme.markdownCodeSpan)
 
             // Since normal wrapping will trim leading whitespace, we need to manually add a
             // preformatted space to the end of code spans.
             val lines = when (paragraph.children.getOrNull(i + 1)?.type) {
                 MarkdownTokenTypes.WHITE_SPACE, MarkdownTokenTypes.EOL -> {
-                    Lines(listOf(parsed.lines.single() + Span.word(" ")))
+                    Lines(listOf(parsed.lines.single() + Span.word(" ", theme.markdownText)))
                 }
                 else -> parsed
             }
@@ -241,7 +241,7 @@ internal class MarkdownRenderer(
         }
 
         if (i > start) {
-            parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) })
+            parts += Text(paragraph.children.subList(start, i).foldLines { parseInlines(it) }, style = theme.markdownText)
         }
 
         return MarkdownDocument(parts)

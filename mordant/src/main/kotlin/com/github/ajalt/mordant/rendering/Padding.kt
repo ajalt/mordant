@@ -13,6 +13,8 @@ data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, va
     companion object {
         fun all(padding: Int): Padding = Padding(padding, padding, padding, padding)
         fun symmetrical(vertical: Int = 0, horizontal: Int = 0): Padding = Padding(vertical, horizontal, vertical, horizontal)
+        fun vertical(padding: Int = 0): Padding = Padding(padding, 0, padding, 0)
+        fun horizontal(padding: Int = 0): Padding = Padding(0, padding, 0, padding)
     }
 
     val isEmpty = top == 0 && right == 0 && bottom == 0 && left == 0
