@@ -113,6 +113,9 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.STRONG -> {
                 innerInlines(node, drop = 2).withStyle(theme.markdownStrong)
             }
+            GFMElementTypes.STRIKETHROUGH -> {
+                innerInlines(node, drop = 2).withStyle(theme.markdownStikethrough)
+            }
             MarkdownElementTypes.INLINE_LINK,
             MarkdownElementTypes.FULL_REFERENCE_LINK,
             MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
@@ -128,7 +131,7 @@ internal class MarkdownRenderer(
             // GFMTokenTypes
             GFMTokenTypes.TILDE -> TODO("TILDE")
             GFMTokenTypes.TABLE_SEPARATOR -> TODO("TABLE_SEPARATOR")
-            GFMTokenTypes.CHECK_BOX -> TODO("CHECK_BOX")
+            GFMTokenTypes.CHECK_BOX -> TODO("CHECK_BOX") // https://github.github.com/gfm/#task-list-items-extension-
             GFMTokenTypes.CELL -> TODO("CELL")
 
             // TokenTypes

@@ -13,6 +13,7 @@ interface Theme  {
     val markdownText: TextStyle get() = DEFAULT_STYLE
     val markdownEmph: TextStyle get() = TextStyle(italic = true)
     val markdownStrong: TextStyle get() = TextStyle(bold = true)
+    val markdownStikethrough: TextStyle get() = TextStyle(strikethrough = true)
     val markdownCodeBlock: TextStyle get() = TextStyle(brightWhite, black)
     val markdownCodeSpan: TextStyle get() = TextStyle(brightWhite, black)
     val markdownHeaderPadding: Int get() = 1

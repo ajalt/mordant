@@ -3,8 +3,8 @@ package com.github.ajalt.mordant.markdown
 import com.github.ajalt.mordant.AnsiColor.black
 import com.github.ajalt.mordant.AnsiColor.brightWhite
 import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.AnsiStyle.dim
-import com.github.ajalt.mordant.AnsiStyle.italic
+import com.github.ajalt.mordant.AnsiStyle
+import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.TerminalColors
 import io.kotest.matchers.shouldBe
@@ -56,6 +56,33 @@ has some "double quotes"
 and some 'single quotes'.
 """, """
 This paragraph has some "double quotes" and some 'single quotes'.
+""")
+
+    @Test
+    fun `test emphasis`() = doTest("""
+An *em span*.
+
+An _em span_.
+
+A **strong span**.
+
+A __strong span__.
+
+A ***strong em span***.
+
+A ~~strikethrough span~~.
+""", """
+An ${italic("em span")}.
+
+An ${italic("em span")}.
+
+A ${bold("strong span")}.
+
+A ${bold("strong span")}.
+
+A ${(bold + italic)("strong em span")}.
+
+A ${strikethrough("strikethrough span")}.
 """)
 
     @Test
