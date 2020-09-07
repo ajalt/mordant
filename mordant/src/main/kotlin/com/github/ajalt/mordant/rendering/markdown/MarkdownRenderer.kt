@@ -96,6 +96,7 @@ internal class MarkdownRenderer(
 
             MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule(title = "")
             MarkdownTokenTypes.EOL -> EOL_TEXT
+            MarkdownTokenTypes.WHITE_SPACE -> Text(EMPTY_LINES)
             else -> error("Unexpected token when parsing structure: $node")
         }
     }
@@ -137,18 +138,18 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
             MarkdownTokenTypes.SINGLE_QUOTE -> TODO("SINGLE_QUOTE")
             MarkdownTokenTypes.DOUBLE_QUOTE -> TODO("DOUBLE_QUOTE")
-            MarkdownTokenTypes.HARD_LINE_BREAK -> TODO("HARD_LINE_BREAK")
+            MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.LINK_ID -> TODO("LINK_ID")
             MarkdownTokenTypes.ATX_HEADER -> TODO("ATX_HEADER")
             MarkdownTokenTypes.ATX_CONTENT -> TODO("ATX_CONTENT")
             MarkdownTokenTypes.SETEXT_1 -> TODO("SETEXT_1")
             MarkdownTokenTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownTokenTypes.SETEXT_CONTENT -> TODO("SETEXT_CONTENT")
-            MarkdownTokenTypes.ESCAPED_BACKTICKS -> TODO("ESCAPED_BACKTICKS")
+            MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.CODE_FENCE_START -> TODO("CODE_FENCE_START")
             MarkdownTokenTypes.CODE_FENCE_END -> TODO("CODE_FENCE_END")
-            MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", DEFAULT_STYLE)
+            MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
             MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
             MarkdownTokenTypes.TEXT,

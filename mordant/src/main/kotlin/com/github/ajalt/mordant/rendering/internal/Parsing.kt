@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.ESC
 import com.github.ajalt.mordant.rendering.*
 
 
-private val SPLIT_REGEX = Regex("""\r?\n|\s+|\S+""")
+private val SPLIT_REGEX = Regex("""\r?\n|$NEL|$LS|\s+|\S+""")
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 
 /** Like a Span, but with no restrictions on [text] */

@@ -3,6 +3,10 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.internal.parseText
 
+internal const val NEL = "\u0085"
+internal const val LS = "\u2028"
+
+
 class Text internal constructor(
         lines: Lines,
         private val style: TextStyle = DEFAULT_STYLE,
@@ -32,7 +36,6 @@ class Text internal constructor(
 
     /** Wrap spans to a list of lines. The last span in every line will be blank and end with `\n` */
     private fun wrap(wrapWidth: Int): Lines {
-        // TODO: hard break on NEL
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
         var width = 0
@@ -64,6 +67,10 @@ class Text internal constructor(
             }
 
             for (piece in oldLine) {
+                if (piece.text == NEL || piece.text == LS) {
+                    breakLine()
+                    continue
+                }
                 val pieceIsWhitespace = piece.isWhitespace()
 
                 // Collapse whitespace

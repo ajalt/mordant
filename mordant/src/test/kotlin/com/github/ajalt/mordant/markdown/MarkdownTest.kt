@@ -262,6 +262,41 @@ So ${(brightWhite on black)("is this")} span.
 A ${(brightWhite on black)("span with a line break")}.
 """)
 
+// Not supported by the parser yet
+// https://spec.commonmark.org/0.29/#backslash-escapes
+//    @Test
+//    fun `backslash escapes`() = doTest("""
+//\!\"\#\${'$'}\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
+//""", """
+//!"#${'$'}%&'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~
+//""")
+
+    @Test
+    fun `hard line breaks`() = doTest("""
+A hard   
+line break with spaces.
+
+A hard\
+  line break with a backslash.
+  
+A *hard   
+line* break with emph.
+
+Code spans `don't\
+have` hard breaks.
+""", """
+A hard
+line break with spaces.
+
+A hard
+line break with a backslash.
+
+A ${italic("hard")}
+${italic("line")} break with emph.
+
+Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
+""")
+
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
