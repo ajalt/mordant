@@ -23,7 +23,6 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
     }
 }
 
-private val EMPTY_LINES = Lines(emptyList())
 private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 
@@ -138,9 +137,6 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.DOUBLE_QUOTE -> TODO("DOUBLE_QUOTE")
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.LINK_ID -> TODO("LINK_ID")
-            MarkdownTokenTypes.ATX_HEADER -> TODO("ATX_HEADER")
-            MarkdownTokenTypes.ATX_CONTENT -> TODO("ATX_CONTENT")
-            MarkdownTokenTypes.SETEXT_CONTENT -> TODO("SETEXT_CONTENT")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
@@ -177,7 +173,7 @@ internal class MarkdownRenderer(
     private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> Padded(HorizontalRule(bar, atxContent(node).lines[0], style), Padding.vertical(theme.markdownHeaderPadding))
+            else -> Padded(HorizontalRule(bar, Text(atxContent(node)), style), Padding.vertical(theme.markdownHeaderPadding))
         }
     }
 
@@ -196,8 +192,7 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        // TODO: multiline headers
-        return Padded(HorizontalRule(bar, content.lines[0], style), Padding.vertical(theme.markdownHeaderPadding))
+        return Padded(HorizontalRule(bar, Text(content), style), Padding.vertical(theme.markdownHeaderPadding))
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {

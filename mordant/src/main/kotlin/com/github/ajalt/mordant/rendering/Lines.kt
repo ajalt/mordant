@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.rendering.TextAlign.*
+
 typealias Line = List<Span>
 
 
@@ -24,7 +26,7 @@ data class Lines(
 }
 
 /** Pad or crop every line so its width is exactly [newWidth] */
-internal fun Lines.setWidth(newWidth: Int): Lines {
+internal fun Lines.setWidth(newWidth: Int, align: TextAlign): Lines {
     val lines = mutableListOf<Line>()
     for (line in this.lines) {
         var width = 0
@@ -46,11 +48,26 @@ internal fun Lines.setWidth(newWidth: Int): Lines {
             }
         }
 
-        if (width < newWidth) {
-            lines.add(line + Span.word(" ".repeat(newWidth - width)))
+        val remainingWidth = newWidth - width
+        if (remainingWidth > 0) {
+            when (align) {
+                CENTER, JUSTIFY -> {
+                    val l = Span.space(remainingWidth / 2)
+                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2)
+                    lines.add(listOf(listOf(l), line, listOf(r)).flatten())
+                }
+                LEFT -> {
+                    lines.add(line + Span.space(remainingWidth))
+                }
+                RIGHT -> {
+                    lines.add(listOf(Span.space(remainingWidth)) + line)
+                }
+            }
         } else {
             lines.add(line)
         }
     }
     return Lines(lines)
 }
+
+internal val EMPTY_LINES = Lines(emptyList())

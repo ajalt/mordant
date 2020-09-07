@@ -13,13 +13,13 @@ class OrderedList(
 
     private fun bullet(i: Int, t: Theme): Line {
         val style = numberStyle ?: t.listNumber
-        val padding = Span.word(" ", style)
+        val padding = Span.space(style = style)
         return listOf(padding, Span.word("${i + 1}.", style), padding)
     }
 
     private fun continuationPadding(i: Int, t: Theme): Line {
         val n = bulletWidth(i)
-        return listOf(Span.word(" ".repeat(n), numberStyle ?: t.listNumber))
+        return listOf(Span.space(n, numberStyle ?: t.listNumber))
     }
 
     private fun bulletWidth(i: Int): Int {

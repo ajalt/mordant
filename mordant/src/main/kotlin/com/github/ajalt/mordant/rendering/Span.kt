@@ -16,6 +16,7 @@ data class Span private constructor(val text: String, val style: TextStyle = DEF
     internal companion object {
         // TODO: maybe just inline this
         fun word(text: String, style: TextStyle = DEFAULT_STYLE) = Span(text, style)
+        fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE) = Span(" ".repeat(width), style)
     }
 
 

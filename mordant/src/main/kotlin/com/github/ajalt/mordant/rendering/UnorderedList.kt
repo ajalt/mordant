@@ -28,7 +28,7 @@ class UnorderedList(
         val bulletWidth = bullet.sumOf { it.cellWidth }
         val contentWidth = width - bulletWidth
         val continuationPadding = when {
-            bulletWidth > 0 -> listOf(Span.word(" ".repeat(bulletWidth), bulletStyle ?: t.theme.listBullet))
+            bulletWidth > 0 -> listOf(Span.space(bulletWidth, bulletStyle ?: t.theme.listBullet))
             else -> emptyList()
         }
 

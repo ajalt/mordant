@@ -30,8 +30,8 @@ internal class Padded(private val content: Renderable, private val padding: Padd
 
         val blank = emptyList<Span>()
         val output = ArrayList<Line>(padding.top + lines.lines.size + padding.bottom)
-        val left = if (padding.left > 0) listOf(Span.word(" ".repeat(padding.left))) else emptyList()
-        val right = if (padding.right > 0) listOf(Span.word(" ".repeat(padding.right))) else emptyList()
+        val left = if (padding.left > 0) listOf(Span.space(padding.left)) else emptyList()
+        val right = if (padding.right > 0) listOf(Span.space(padding.right)) else emptyList()
 
         repeat(padding.top) { output.add(blank) }
 
