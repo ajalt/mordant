@@ -237,6 +237,35 @@ ${(italic + dim)("Header Text")}
 """, width = 19)
 
     @Test
+    fun `header trailing chars`() = doTest("""
+# Header Text ##
+""", """
+
+═══ Header Text ═══
+
+""", width = 19)
+
+    @Test
+    fun `setext h1`() = doTest("""
+Header Text
+===========
+""", """
+
+═══ Header Text ═══
+
+""", width = 19)
+
+    @Test
+    fun `setext h2`() = doTest("""
+  Header Text  
+---
+""", """
+
+─── Header Text ───
+
+""", width = 19)
+
+    @Test
     fun `empty code span`() = doTest("""
 An `` empty code span.
 """, """

@@ -80,8 +80,8 @@ internal class MarkdownRenderer(
                 Text(innerInlines(node, drop = 0), theme.markdownText)
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
-            MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
-            MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
+            MarkdownElementTypes.SETEXT_1 -> setext("═", theme.markdownH1, node, theme)
+            MarkdownElementTypes.SETEXT_2 ->  setext("─", theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node, theme)
             MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node, theme)
@@ -125,8 +125,6 @@ internal class MarkdownRenderer(
                 parseInlines(node.children[1])
             }
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
-            MarkdownElementTypes.SETEXT_1 -> TODO("SETEXT_1")
-            MarkdownElementTypes.SETEXT_2 -> TODO("SETEXT_2")
 
             // GFMTokenTypes
             GFMTokenTypes.TILDE -> TODO("TILDE")
@@ -142,13 +140,9 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.LINK_ID -> TODO("LINK_ID")
             MarkdownTokenTypes.ATX_HEADER -> TODO("ATX_HEADER")
             MarkdownTokenTypes.ATX_CONTENT -> TODO("ATX_CONTENT")
-            MarkdownTokenTypes.SETEXT_1 -> TODO("SETEXT_1")
-            MarkdownTokenTypes.SETEXT_2 -> TODO("SETEXT_2")
             MarkdownTokenTypes.SETEXT_CONTENT -> TODO("SETEXT_CONTENT")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
-            MarkdownTokenTypes.CODE_FENCE_START -> TODO("CODE_FENCE_START")
-            MarkdownTokenTypes.CODE_FENCE_END -> TODO("CODE_FENCE_END")
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
             MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
@@ -195,10 +189,20 @@ internal class MarkdownRenderer(
     }
 
     private fun atxContent(node: ASTNode): Lines {
-        val drop = when (node.children[1].children.firstOrNull()?.type) {
-            MarkdownTokenTypes.WHITE_SPACE -> 1
-            else -> 0
-        }
-        return innerInlines(node.children[1], drop = drop, dropLast = 0)
+        val (drop, dropLast) = dropWs(node.children[1].children)
+        return innerInlines(node.children[1], drop = drop, dropLast = dropLast)
+    }
+
+    private fun setext(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
+        val (drop, dropLast) = dropWs(node.children[0].children)
+        val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
+        // TODO: multiline headers
+        return Padded(HorizontalRule(bar, content.lines[0], style), Padding.vertical(theme.markdownHeaderPadding))
+    }
+
+    private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
+        val drop = if (nodes.firstOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
+        val dropLast = if (nodes.lastOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
+        return drop to dropLast
     }
 }
