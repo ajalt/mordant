@@ -20,9 +20,9 @@ interface Theme  {
     val markdownH1: TextStyle get() = DEFAULT_STYLE
     val markdownH2: TextStyle get() = DEFAULT_STYLE
     val markdownH3: TextStyle get() = DEFAULT_STYLE
-    val markdownH4: TextStyle get() = TextStyle(italic = true)
+    val markdownH4: TextStyle get() = TextStyle(bold = true)
     val markdownH5: TextStyle get() = TextStyle(italic = true)
-    val markdownH6: TextStyle get() = TextStyle(italic = true, dim = true)
+    val markdownH6: TextStyle get() = TextStyle(dim = true)
 }
 
 internal val DEFAULT_THEME = object : Theme {}

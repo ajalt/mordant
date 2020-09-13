@@ -88,7 +88,6 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
             MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
 
-            GFMElementTypes.STRIKETHROUGH -> TODO("STRIKETHROUGH")
             GFMElementTypes.TABLE -> TODO("TABLE")
             GFMElementTypes.HEADER -> TODO("HEADER")
             GFMElementTypes.ROW -> TODO("ROW")

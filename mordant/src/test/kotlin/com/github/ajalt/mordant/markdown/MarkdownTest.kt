@@ -250,7 +250,7 @@ www.example.com/url
 #### Header Text
 """, """
 
-${italic("Header Text")}
+${bold("Header Text")}
 
 """, width = 19)
 
@@ -268,7 +268,7 @@ ${italic("Header Text")}
 ###### Header Text
 """, """
 
-${(italic + dim)("Header Text")}
+${dim("Header Text")}
 
 """, width = 19)
 
