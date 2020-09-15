@@ -6,7 +6,7 @@ data class WidthRange(val min: Int, val max: Int) {
     operator fun plus(extra: Int) = WidthRange(min + extra, max + extra)
 }
 
-internal fun List<Renderable>.maxWidthRange(
+internal fun Iterable<Renderable>.maxWidthRange(
         t: Terminal,
         width: Int,
         paddingWidth: Int = 0

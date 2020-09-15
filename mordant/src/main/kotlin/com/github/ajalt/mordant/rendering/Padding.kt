@@ -2,6 +2,8 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
 
+internal val DEFAULT_PADDING = Padding()
+
 data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, val left: Int = 0) {
     init {
         require(top >= 0) { "Invalid negative top padding" }

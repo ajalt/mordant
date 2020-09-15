@@ -4,6 +4,8 @@ import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.mordant.AnsiCode
 import com.github.ajalt.mordant.Terminal
 
+internal val DEFAULT_STYLE = TextStyle()
+
 data class TextStyle(
         val color: ConvertibleColor? = null,
         val bgColor: ConvertibleColor? = null,
@@ -14,16 +16,22 @@ data class TextStyle(
         val inverse: Boolean = false,
         val strikethrough: Boolean = false
 ) {
-    operator fun plus(other: TextStyle) = TextStyle(
-            color = other.color ?: color,
-            bgColor = other.bgColor ?: bgColor,
-            bold = bold || other.bold,
-            italic = italic || other.italic,
-            underline = underline || other.underline,
-            dim = dim || other.dim,
-            inverse = inverse || other.inverse,
-            strikethrough = strikethrough || other.strikethrough,
-    )
+    operator fun plus(other: TextStyle): TextStyle {
+        return when {
+            this === DEFAULT_STYLE -> other
+            other === DEFAULT_STYLE -> this
+            else -> TextStyle(
+                    color = other.color ?: color,
+                    bgColor = other.bgColor ?: bgColor,
+                    bold = other.bold || bold,
+                    italic = other.italic || italic,
+                    underline = other.underline || underline,
+                    dim = other.dim || dim,
+                    inverse = other.inverse || inverse,
+                    strikethrough = other.strikethrough || strikethrough,
+            )
+        }
+    }
 }
 
 internal fun TextStyle.toAnsi(t: Terminal): AnsiCode {
@@ -40,4 +48,3 @@ internal fun TextStyle.toAnsi(t: Terminal): AnsiCode {
     return code
 }
 
-internal val DEFAULT_STYLE = TextStyle()
