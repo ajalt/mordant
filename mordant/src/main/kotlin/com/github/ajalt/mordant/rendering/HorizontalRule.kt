@@ -49,7 +49,7 @@ class HorizontalRule internal constructor(
             val rule = listOf(leftRule, space, lastLine, space, rightRule).flatten()
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))
-                        .setWidth(width, TextAlign.CENTER)
+                        .setSize(width, TextAlign.CENTER)
                 firstLines.lines + listOf(rule)
             } else {
                 listOf(rule)

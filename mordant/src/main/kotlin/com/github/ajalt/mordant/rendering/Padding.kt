@@ -31,7 +31,7 @@ internal class Padded(private val content: Renderable, private val padding: Padd
         val lines = content.render(t, width)
 
         val blank = emptyList<Span>()
-        val output = ArrayList<Line>(padding.top + lines.lines.size + padding.bottom)
+        val output = ArrayList<Line>(padding.top + lines.size + padding.bottom)
         val left = if (padding.left > 0) listOf(Span.space(padding.left)) else emptyList()
         val right = if (padding.right > 0) listOf(Span.space(padding.right)) else emptyList()
 

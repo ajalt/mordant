@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.AnsiColor
 import com.github.ajalt.mordant.rendering.*
 
 
@@ -11,6 +10,7 @@ annotation class MordantDsl
 class ColumnBuilder {
     var width: ColumnWidth = ColumnWidth.Default
     var style: TextStyle = DEFAULT_STYLE
+    var padding: Padding? = null
 }
 
 @MordantDsl
@@ -19,12 +19,12 @@ class TableBuilder {
     var borders: Borders? = Borders.SQUARE
     var borderStyle: TextStyle = DEFAULT_STYLE
     var padding: Padding = Padding.horizontal(1)
-    var textStyle: TextStyle = DEFAULT_STYLE
+    var textStyle: TextStyle? = null
 
-    private val columns = mutableMapOf<Int, ColumnBuilder>()
-    private val headerSection = SectionBuilder()
-    private val bodySection = SectionBuilder()
-    private val footerSection = SectionBuilder()
+    internal val columns = mutableMapOf<Int, ColumnBuilder>()
+    internal val headerSection = SectionBuilder()
+    internal val bodySection = SectionBuilder()
+    internal val footerSection = SectionBuilder()
 
     fun column(i: Int, init: ColumnBuilder.() -> Unit) {
         var v = columns[i]
@@ -52,6 +52,11 @@ class TableBuilder {
 @MordantDsl
 class SectionBuilder {
     internal val rows = mutableListOf<RowBuilder>()
+    internal var rowStyles = listOf<TextStyle>()
+
+    fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
+        rowStyles = listOf(style1 + style2) + styles.asList()
+    }
 
     fun row(cells: Iterable<String>, init: RowBuilder.() -> Unit = {}) {
         row(cells.map { Text(it) }, init)
@@ -104,12 +109,12 @@ class RowBuilder internal constructor(
     fun cell(content: String, init: CellBuilder.() -> Unit = {}) = cell(Text(content), init)
 }
 
-
+// TODO: alignment
 @MordantDsl
 class CellBuilder internal constructor(
-        private var content: Renderable = Text(""),
-        var rowSpan: Int = 1,
-        var columnSpan: Int = 1,
+        internal val content: Renderable = Text(""),
+        rowSpan: Int = 1,
+        columnSpan: Int = 1,
         var borderLeft: Boolean = true,
         var borderTop: Boolean = true,
         var borderRight: Boolean = true,
@@ -117,6 +122,18 @@ class CellBuilder internal constructor(
         var padding: Padding? = null,
         var style: TextStyle? = null,
 ) {
+
+    var columnSpan = columnSpan
+        set(value) {
+            require(value > 0) { "Column span must be greater than 0" }
+            field = value
+        }
+
+    var rowSpan = rowSpan
+        set(value) {
+            require(value > 0) { "Row span must be greater than 0" }
+            field = value
+        }
 
     /**
      * Set all cell borders at once.
@@ -134,6 +151,5 @@ class CellBuilder internal constructor(
 }
 
 fun table(init: TableBuilder.() -> Unit): Table {
-    TableBuilder().apply(init)
-    TODO()
+    return TableBuilderLayout(TableBuilder().apply(init)).buildTable()
 }

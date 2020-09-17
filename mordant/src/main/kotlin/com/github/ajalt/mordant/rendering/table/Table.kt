@@ -2,10 +2,6 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-
-private val DEFAULT_ROW_STYLES = listOf(DEFAULT_STYLE)
-private val SPAN_PLACEHOLDER = Cell(Text(""))
 
 data class Cell(
         val content: Renderable,
@@ -15,6 +11,7 @@ data class Cell(
         val borderTop: Boolean = true,
         val borderRight: Boolean = true,
         val borderBottom: Boolean = true,
+        val style: TextStyle? = null
 ) {
     init {
         require(rowSpan > 0) { "rowSpan must be greater than 0" }
@@ -29,11 +26,11 @@ sealed class ColumnWidth {
 }
 
 class Column(
+        val cells: List<Cell>,
         val head: List<Cell>,
         val body: List<Cell>,
         val foot: List<Cell>,
-        val width: ColumnWidth = ColumnWidth.Default,
-        val style: TextStyle = DEFAULT_STYLE
+        val width: ColumnWidth = ColumnWidth.Default
 ) {
     init {
         require(head.isNotEmpty() || body.isNotEmpty() || foot.isNotEmpty()) {
@@ -45,9 +42,6 @@ class Column(
 // TODO: make most of these classes internal
 class Table(
         val columns: List<Column>,
-        val headStyles: List<TextStyle> = DEFAULT_ROW_STYLES,
-        val bodyStyles: List<TextStyle> = DEFAULT_ROW_STYLES,
-        val footStyles: List<TextStyle> = DEFAULT_ROW_STYLES,
         val expand: Boolean = false,
         val borders: Borders? = Borders.SQUARE,
         val borderStyle: TextStyle = DEFAULT_STYLE
@@ -79,6 +73,64 @@ class Table(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        TODO()
+        val columnWidths = calculateColumnWidths(t, width)
+        val renderedColumns = columns.map { column ->
+            RenderedColumn(
+                    renderCells(column.head, t, width),
+                    renderCells(column.body, t, width),
+                    renderCells(column.foot, t, width)
+            )
+        }
+        val headerHeights = rowHeights(renderedColumns.map { it.header })
+        val bodyHeights = rowHeights(renderedColumns.map { it.body })
+        val footerHeights = rowHeights(renderedColumns.map { it.footer })
+
+
+    }
+
+    private fun renderCells(cells: List<Cell>, t: Terminal, width: Int): List<RenderedCell> {
+        return cells.map {
+            RenderedCell(
+                    it.content.render(t, width).withStyle(it.style),
+                    it.borderLeft,
+                    it.borderTop,
+                    it.borderRight,
+                    it.borderBottom
+            )
+        }
+    }
+
+    private fun rowHeights(columns: List<List<RenderedCell>>): List<Int> {
+        if (columns.isEmpty()) return emptyList()
+        val heights = MutableList(columns[0].size) { 0 }
+        for (x in columns.indices) {
+            for (y in columns[0].indices) {
+                heights[y] = maxOf(heights[y], columns[x][y].lines.size)
+            }
+        }
+        return heights
+    }
+
+    private fun calculateColumnWidths(t: Terminal, width: Int): List<Int> {
+        val borderWidth = if (borders == null) 0 else columns.size + 1
+        val remainingWidth = width - borderWidth
+        val maxWidths = columns.map { measureColumn(it, t, remainingWidth).max }
+        return maxWidths // TODO: shrink
     }
 }
+
+private typealias MutableRenderedColumn = MutableList<Lines>
+
+private class RenderedCell(
+        val lines: Lines,
+        val borderLeft: Boolean = true,
+        val borderTop: Boolean = true,
+        val borderRight: Boolean = true,
+        val borderBottom: Boolean = true
+)
+
+private class RenderedColumn(
+        val header: List<RenderedCell>,
+        val body: List<RenderedCell>,
+        val footer: List<RenderedCell>
+)

@@ -8,7 +8,14 @@ typealias Line = List<Span>
 data class Lines(
         val lines: List<Line>,
 ) {
-    internal fun withStyle(style: TextStyle) = Lines(lines.map { l -> l.map { it.withStyle(style) } })
+    val size: Int get() = lines.size
+
+    internal fun withStyle(style: TextStyle?): Lines {
+        return when (style) {
+            null, DEFAULT_STYLE -> this
+            else -> Lines(lines.map { l -> l.map { it.withStyle(style) } })
+        }
+    }
 
     internal operator fun plus(other: Lines): Lines {
         return when {
@@ -26,7 +33,7 @@ data class Lines(
 }
 
 /** Pad or crop every line so its width is exactly [newWidth] */
-internal fun Lines.setWidth(newWidth: Int, align: TextAlign): Lines {
+internal fun Lines.setSize(newWidth: Int, align: TextAlign, height: Int? = null): Lines {
     val lines = mutableListOf<Line>()
     for (line in this.lines) {
         var width = 0
@@ -65,6 +72,18 @@ internal fun Lines.setWidth(newWidth: Int, align: TextAlign): Lines {
             }
         } else {
             lines.add(line)
+        }
+    }
+
+    if (height != null && height != lines.size) {
+        // TODO vertical align
+        if (height < lines.size) {
+            return Lines(lines.take(height))
+        } else {
+            val line = listOf(Span.space(newWidth))
+            repeat(height - lines.size) {
+                lines.add(line)
+            }
         }
     }
     return Lines(lines)

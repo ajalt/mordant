@@ -52,3 +52,17 @@ class Terminal(
         }
     }
 }
+
+private fun TextStyle.toAnsi(t: Terminal): AnsiCode {
+    var code = color?.let { t.colors.color(it) } ?: t.colors.plain
+
+    if (bgColor != null) code += t.colors.color(bgColor).bg
+    if (bold) code += t.colors.bold
+    if (italic) code += t.colors.italic
+    if (underline) code += t.colors.underline
+    if (dim) code += t.colors.dim
+    if (inverse) code += t.colors.inverse
+    if (strikethrough) code += t.colors.strikethrough
+
+    return code
+}
