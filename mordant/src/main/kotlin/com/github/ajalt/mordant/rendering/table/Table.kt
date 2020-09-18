@@ -64,31 +64,51 @@ class Table(
 
     override fun render(t: Terminal, width: Int): Lines {
         val columnWidths = calculateColumnWidths(t, width)
-        val tableLines = mutableListOf<MutableList<Span>>()
+        val renderedRows = rows.map { r -> r.map { it.content.render(t, width).withStyle(it.style) } }
+        val rowHeights = renderedRows.map { r -> r.maxOf { it.size } }
+        val tableLines: MutableList<MutableList<Span>> = MutableList(rowHeights.sum() + rowHeights.size + 1) { mutableListOf() }
 
-        for (row in rows) {
-            val renderedCells = row.map { it.content.render(t, width).withStyle(it.style) }
-            val maxHeight = renderedCells.maxOf { it.size }
-            // TODO: borders
-            val rowLines = MutableList(maxHeight + 1) { mutableListOf<Span>() }
-            for ((x, cell) in row.withIndex()) {
-                val colWidth = columnWidths[x]
-                val lines = renderedCells[x].setSize(colWidth, maxHeight)
-                rowLines[0].add(Span.word("+" + "-".repeat(colWidth)))
-                for ((i, line) in lines.lines.withIndex()) {
-                    rowLines[i + 1].add(Span.word("|"))
-                    rowLines[i + 1].addAll(line)
+        // Render in column-major order so that we can append the lines of cells with row spans
+        // directly, since all the leftward cells have already been rendered.
+        for (x in columnWidths.indices) {
+            val colWidth = columnWidths[x]
+            var tableLineY = 0
+            for ((y, row) in rows.withIndex()) {
+                val rowHeight = rowHeights[y]
+                val cell = row.getOrNull(x)
+                if (cell == null) {
+                    // table is jagged on the right, this row is done
+                    tableLineY += rowHeight + 1
+                    continue
+                }
+
+                tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
+
+                val lines = cell.content.render(t, width).withStyle(cell.style).setSize(colWidth, rowHeight).lines
+
+                for ((i, line) in lines.withIndex()) {
+                    tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    tableLines[tableLineY + i + 1].addAll(line)
+                }
+
+                if (x == row.lastIndex) {
+                    tableLines[tableLineY].add(Span.word("+"))
+                    for (i in lines.indices) {
+                        tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    }
+                }
+
+                tableLineY += lines.size + 1
+
+                if (y == rows.lastIndex) {
+                    tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
+                    if (x == columnWidths.lastIndex) {
+                        tableLines[tableLineY].add(Span.word("+"))
+                    }
+                    tableLineY = 0
                 }
             }
-            rowLines[0].add(Span.word("+"))
-            for (i in 1..rowLines.lastIndex) {
-                rowLines[i].add(Span.word("|"))
-            }
-
-            tableLines.addAll(rowLines)
         }
-
-        tableLines.add(mutableListOf(Borders.ASCII.renderBottom(columnWidths)))
         return Lines(tableLines)
     }
 
@@ -107,10 +127,13 @@ fun main() {
         body {
             row {
                 cell("1")
-                cell(Panel(Text("2 2 2")))
+                cell("tall") {
+                    rowSpan = 2
+                }
             }
             row("4", "5")
         }
     }
     t.print(table)
 }
+

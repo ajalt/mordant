@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.rendering.TextAlign.*
 
 typealias Line = List<Span>
-
+internal typealias MutableLine = MutableList<Span>
 
 data class Lines(
         val lines: List<Line>,
