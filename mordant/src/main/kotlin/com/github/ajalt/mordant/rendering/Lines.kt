@@ -33,7 +33,7 @@ data class Lines(
 }
 
 /** Pad or crop every line so its width is exactly [newWidth] */
-internal fun Lines.setSize(newWidth: Int, align: TextAlign, height: Int? = null): Lines {
+internal fun Lines.setSize(newWidth: Int, height: Int? = null, align: TextAlign = LEFT): Lines {
     val lines = mutableListOf<Line>()
     for (line in this.lines) {
         var width = 0

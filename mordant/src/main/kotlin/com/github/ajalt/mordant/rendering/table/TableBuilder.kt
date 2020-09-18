@@ -4,8 +4,8 @@ import com.github.ajalt.mordant.rendering.Padded
 import com.github.ajalt.mordant.rendering.Text
 import com.github.ajalt.mordant.rendering.foldStyles
 
-private typealias MutableColumn = MutableList<Cell>
-private typealias ImmutableColumn = List<Cell>
+internal typealias ImmutableRow = List<Cell>
+internal typealias MutableRow = MutableList<Cell>
 
 private val SPAN_PLACEHOLDER = Cell(Text("")) // TODO: if we keep track of the original renderable and column span, we could distribute its measurement across its columns
 private val EMPTY_CELL = Cell(Text(""), borderBottom = false, borderLeft = false, borderRight = false, borderTop = false)
@@ -13,55 +13,52 @@ private val EMPTY_CELL = Cell(Text(""), borderBottom = false, borderLeft = false
 internal class TableBuilderLayout(private val table: TableBuilder) {
     fun buildTable(): Table {
         val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
-            it.rows.maxOf { r -> r.cells.size }
+            it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
         }
         val header = buildSection(table.headerSection, builderWidth)
         val body = buildSection(table.bodySection, builderWidth)
         val footer = buildSection(table.footerSection, builderWidth)
 
-        val columns = List(maxOf(header.size, body.size, footer.size)) { i ->
-            Column(
-                    header.getOrNull(i) ?: emptyList(),
-                    body.getOrNull(i) ?: emptyList(),
-                    footer.getOrNull(i) ?: emptyList(),
-                    table.columns[i]?.width ?: ColumnWidth.Default
-            )
-        }
-
-        return Table(columns, table.expand, table.borders, table.borderStyle)
+        return Table(
+                rows = listOf(header, body, footer).flatten(),
+                expand = table.expand,
+                borders = table.borders,
+                borderStyle = table.borderStyle,
+                headerRowCount = header.size,
+                footerRowCount = footer.size,
+                columnWidths = table.columns.mapValues { it.value.width }
+        )
     }
 
-    private fun buildSection(section: SectionBuilder, builderWidth: Int): List<ImmutableColumn> {
-        val initialSize = section.rows.firstOrNull()?.cells?.size ?: 0
-        val columns: MutableList<MutableColumn> = MutableList(initialSize) { ArrayList(section.rows.size) }
+    private fun buildSection(section: SectionBuilder, builderWidth: Int): MutableList<MutableRow> {
+        val rows: MutableList<MutableRow> = MutableList(section.rows.size) { ArrayList(section.rows.size) }
 
-        var x = 0
-
-        for (row in section.rows) {
-            for ((y, cellBuilder) in row.cells.withIndex()) {
-                x = columns.findEmptyColumn(x, y)
-
+        for ((y, row) in section.rows.withIndex()) {
+            var x = 0
+            for (cellBuilder in row.cells) {
+                x = rows.findEmptyColumn(x, y)
                 val cell = buildCell(section, table.columns[y], row, cellBuilder, x, y, builderWidth, section.rows.size)
-                insertCell(cell, columns, x, y)
+                insertCell(cell, rows, x, y)
+                x += 1
             }
         }
 
-        return columns
+        return rows
     }
 
     // The W3 standard calls tables with overlap invalid, and dictates that user agents either show
     // the visual overlap, or shift the overlapping cells.
     // We aren't bound by their laws, and instead take the gentleman's approach and throw an exception.
-    private fun insertCell(cell: Cell, columns: MutableList<MutableColumn>, startingX: Int, startingY: Int) {
+    private fun insertCell(cell: Cell, rows: MutableList<MutableRow>, startingX: Int, startingY: Int) {
         for (x in startingX until startingX + cell.columnSpan) {
-            for (y in startingY until startingY + cell.rowSpan) {
+            for (y in startingY until (startingY + cell.rowSpan)) {
                 val c = if (x == startingX && y == startingY) cell else SPAN_PLACEHOLDER
-                val column = columns.getColumn(x)
-                val existing = column.getCell(y)
+                val row = rows.getRow(y)
+                val existing = row.getCell(x)
                 require(existing !== SPAN_PLACEHOLDER) {
                     "Invalid table: cell spans cannot overlap"
                 }
-                column[y] = c
+                row[x] = c
             }
         }
     }
@@ -99,21 +96,31 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
     }
 }
 
-private fun MutableList<MutableColumn>.findEmptyColumn(x: Int, y: Int): Int {
-    var column: MutableColumn
-    var i = x
-    do {
-        column = getColumn(i++)
-    } while (column.getCell(y) === SPAN_PLACEHOLDER)
-    return i
+private fun MutableList<MutableRow>.findEmptyColumn(x: Int, y: Int): Int {
+    val row = get(y)
+    if (x > row.lastIndex) {
+        row.ensureSize(x + 1)
+        return x
+    }
+
+    for (i in x..row.lastIndex) {
+        if (row[i] === EMPTY_CELL) return i
+    }
+
+    row.ensureSize(row.size + 1)
+    return row.lastIndex
 }
 
-private fun MutableList<MutableColumn>.getColumn(x: Int): MutableColumn {
-    repeat(lastIndex - x) { add(mutableListOf()) }
+private fun MutableList<MutableRow>.getRow(y: Int): MutableRow {
+    repeat(y - lastIndex) { add(mutableListOf()) }
+    return get(y)
+}
+
+private fun MutableRow.getCell(x: Int): Cell {
+    ensureSize(x + 1)
     return get(x)
 }
 
-private fun MutableColumn.getCell(y: Int): Cell {
-    repeat(lastIndex - y) { add(EMPTY_CELL) }
-    return get(y)
+private fun MutableRow.ensureSize(size: Int) {
+    repeat(size - this.size) { add(EMPTY_CELL) }
 }

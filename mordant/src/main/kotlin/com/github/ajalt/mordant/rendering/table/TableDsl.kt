@@ -62,6 +62,7 @@ class SectionBuilder {
         row(cells.map { Text(it) }, init)
     }
 
+    // TODO: allow `Any?`
     fun row(vararg cells: String, init: RowBuilder.() -> Unit = {}) {
         row(cells.asList(), init)
     }

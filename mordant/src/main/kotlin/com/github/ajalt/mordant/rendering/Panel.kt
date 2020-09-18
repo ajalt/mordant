@@ -37,7 +37,7 @@ class Panel(
         val left = listOf(Span.word(borders.body.left, borderStyle))
         val right = listOf(Span.word(borders.body.right, borderStyle))
 
-        val aligned = renderedContent.setSize(contentWidth, TextAlign.LEFT)
+        val aligned = renderedContent.setSize(contentWidth, align = TextAlign.LEFT)
         aligned.lines.mapTo(lines) { line ->
             listOf(left, line, right).flatten()
         }

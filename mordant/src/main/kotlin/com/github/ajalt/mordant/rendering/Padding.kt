@@ -22,7 +22,7 @@ data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, va
     val isEmpty = top == 0 && right == 0 && bottom == 0 && left == 0
 }
 
-internal class Padded(private val content: Renderable, private val padding: Padding) : Renderable {
+internal data class Padded(private val content: Renderable, private val padding: Padding) : Renderable {
     companion object {
         fun get(content: Renderable, padding: Padding) = if (padding.isEmpty) content else Padded(content, padding)
     }
