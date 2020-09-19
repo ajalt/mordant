@@ -3,20 +3,43 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 
-data class Cell(
-        val content: Renderable,
-        val rowSpan: Int = 1,
-        val columnSpan: Int = 1,
-        val borderLeft: Boolean = true,
-        val borderTop: Boolean = true,
-        val borderRight: Boolean = true,
-        val borderBottom: Boolean = true,
-        val style: TextStyle? = null
-) {
-    init {
-        require(rowSpan > 0) { "rowSpan must be greater than 0" }
-        require(columnSpan > 0) { "columnSpan must be greater than 0" }
+sealed class Cell {
+    object Empty : Cell() {
+        override val borderLeft: Boolean get() = false
+        override val borderTop: Boolean get() = false
+        override val borderRight: Boolean get() = false
+        override val borderBottom: Boolean get() = false
     }
+
+    data class SpanRef(val cell: Content) : Cell() {
+        val rowSpan: Int get() = cell.rowSpan
+        val columnSpan: Int get() = cell.columnSpan
+        override val borderLeft: Boolean get() = cell.borderLeft
+        override val borderTop: Boolean get() = cell.borderTop
+        override val borderRight: Boolean get() = cell.borderRight
+        override val borderBottom: Boolean get() = cell.borderBottom
+    }
+
+    data class Content(
+            val content: Renderable,
+            val rowSpan: Int = 1,
+            val columnSpan: Int = 1,
+            override val borderLeft: Boolean = true,
+            override val borderTop: Boolean = true,
+            override val borderRight: Boolean = true,
+            override val borderBottom: Boolean = true,
+            val style: TextStyle? = null
+    ) : Cell() {
+        init {
+            require(rowSpan > 0) { "rowSpan must be greater than 0" }
+            require(columnSpan > 0) { "columnSpan must be greater than 0" }
+        }
+    }
+
+    abstract val borderLeft: Boolean
+    abstract val borderTop: Boolean
+    abstract val borderRight: Boolean
+    abstract val borderBottom: Boolean
 }
 
 sealed class ColumnWidth {
@@ -59,14 +82,30 @@ class Table(
             return WidthRange(columnWidth.width, columnWidth.width)
         }
 
-        return rows.mapNotNull { it.getOrNull(x)?.content }.maxWidthRange(t, width)
+        return rows.maxWidthRange { row ->
+            when (val cell = row.getOrNull(x)) {
+                null -> null
+                is Cell.Empty -> WidthRange(0, 0)
+                is Cell.Content -> cell.content.measure(t, width) / cell.columnSpan
+                is Cell.SpanRef -> cell.cell.content.measure(t, width) / cell.columnSpan
+            }
+        }
     }
 
     override fun render(t: Terminal, width: Int): Lines {
         val columnWidths = calculateColumnWidths(t, width)
-        val renderedRows = rows.map { r -> r.map { it.content.render(t, width).withStyle(it.style) } }
+        val renderedRows = rows.map { r ->
+            r.map {
+                if (it is Cell.Content) {
+                    it.content.render(t, width * it.columnSpan + it.columnSpan).withStyle(it.style)
+                } else {
+                    EMPTY_LINES
+                }
+            }
+        }
         val rowHeights = renderedRows.map { r -> r.maxOf { it.size } }
-        val tableLines: MutableList<MutableList<Span>> = MutableList(rowHeights.sum() + rowHeights.size + 1) { mutableListOf() }
+        val tableLines: MutableList<MutableList<Span>> = MutableList(rowHeights.sum() + rows.size + 1) { mutableListOf() }
+
 
         // Render in column-major order so that we can append the lines of cells with row spans
         // directly, since all the leftward cells have already been rendered.
@@ -75,42 +114,69 @@ class Table(
             var tableLineY = 0
             for ((y, row) in rows.withIndex()) {
                 val rowHeight = rowHeights[y]
-                val cell = row.getOrNull(x)
-                if (cell == null) {
-                    // table is jagged on the right, this row is done
-                    tableLineY += rowHeight + 1
-                    continue
+                val cell = row.getOrNull(x) ?: Cell.Empty
+
+                val lines = when (cell) {
+                    is Cell.SpanRef -> {
+                        emptyList()
+                    }
+                    is Cell.Empty -> {
+                        List(rowHeight) { listOf(Span.space(colWidth)) }
+                    }
+                    is Cell.Content -> {
+                        cell.content.render(t, width)
+                                .withStyle(cell.style)
+                                .setSize(colWidth * cell.columnSpan + cell.columnSpan - 1, rowHeight * cell.rowSpan + cell.rowSpan - 1)
+                                .lines
+                    }
                 }
 
-                tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
-
-                val lines = cell.content.render(t, width).withStyle(cell.style).setSize(colWidth, rowHeight).lines
+                // Top border
+                if (cell !is Cell.SpanRef && (cell.borderTop || cellAt(x, y - 1)?.borderBottom != false)) {
+                    tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
+                }
 
                 for ((i, line) in lines.withIndex()) {
-                    tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    // Left border
+                    if (cell.borderLeft || cellAt(x - 1, y)?.borderRight != false) {
+                        tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    }
+                    // Content
                     tableLines[tableLineY + i + 1].addAll(line)
                 }
 
+                // Right border, if this is the last cell in the row
                 if (x == row.lastIndex) {
                     tableLines[tableLineY].add(Span.word("+"))
-                    for (i in lines.indices) {
-                        tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    if (cell.borderRight) {
+                        for (i in 0 until rowHeight) {
+                            tableLines[tableLineY + i + 1].add(Span.word("|"))
+                        }
                     }
                 }
 
-                tableLineY += lines.size + 1
-
-                if (y == rows.lastIndex) {
-                    tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
-                    if (x == columnWidths.lastIndex) {
-                        tableLines[tableLineY].add(Span.word("+"))
-                    }
-                    tableLineY = 0
-                }
+                tableLineY += rowHeight + 1
             }
         }
+
+        // Bottom borders
+        val line = mutableListOf<Span>()
+        for ((x, colWidth) in columnWidths.withIndex()) {
+            line.add(Span.word("+")) // TODO
+            val border = when (cellAt(x, rows.lastIndex)?.borderBottom) {
+                true -> {
+                    "-"
+                }
+                else -> " "
+            }
+            line.add(Span.word(border.repeat(colWidth)))
+
+        }
+        tableLines[tableLines.lastIndex] = line
         return Lines(tableLines)
     }
+
+    private fun cellAt(x: Int, y: Int): Cell? = rows.getOrNull(y)?.getOrNull(x)
 
     private fun calculateColumnWidths(t: Terminal, width: Int): List<Int> {
         val borderWidth = if (borders == null) 0 else columnCount + 1
@@ -131,7 +197,7 @@ fun main() {
                     rowSpan = 2
                 }
             }
-            row("4", "5")
+            row("4")
         }
     }
     t.print(table)

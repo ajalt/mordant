@@ -54,6 +54,7 @@ class SectionBuilder {
     internal val rows = mutableListOf<RowBuilder>()
     internal var rowStyles = listOf<TextStyle>()
 
+    // TODO: test
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         rowStyles = listOf(style1 + style2) + styles.asList()
     }

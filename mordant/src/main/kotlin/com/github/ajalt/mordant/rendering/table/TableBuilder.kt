@@ -1,14 +1,10 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.Padded
-import com.github.ajalt.mordant.rendering.Text
 import com.github.ajalt.mordant.rendering.foldStyles
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
-
-private val SPAN_PLACEHOLDER = Cell(Text("")) // TODO: if we keep track of the original renderable and column span, we could distribute its measurement across its columns
-private val EMPTY_CELL = Cell(Text(""), borderBottom = false, borderLeft = false, borderRight = false, borderTop = false)
 
 internal class TableBuilderLayout(private val table: TableBuilder) {
     fun buildTable(): Table {
@@ -43,19 +39,27 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
             }
         }
 
+        // Ensure the table is rectangular
+        val width = rows.maxOfOrNull { it.size }
+        if (width != null) {
+            for (row in rows) {
+                row.ensureSize(width)
+            }
+        }
+
         return rows
     }
 
     // The W3 standard calls tables with overlap invalid, and dictates that user agents either show
     // the visual overlap, or shift the overlapping cells.
     // We aren't bound by their laws, and instead take the gentleman's approach and throw an exception.
-    private fun insertCell(cell: Cell, rows: MutableList<MutableRow>, startingX: Int, startingY: Int) {
+    private fun insertCell(cell: Cell.Content, rows: MutableList<MutableRow>, startingX: Int, startingY: Int) {
         for (x in startingX until startingX + cell.columnSpan) {
             for (y in startingY until (startingY + cell.rowSpan)) {
-                val c = if (x == startingX && y == startingY) cell else SPAN_PLACEHOLDER
+                val c = if (x == startingX && y == startingY) cell else Cell.SpanRef(cell)
                 val row = rows.getRow(y)
                 val existing = row.getCell(x)
-                require(existing !== SPAN_PLACEHOLDER) {
+                require(existing === Cell.Empty) {
                     "Invalid table: cell spans cannot overlap"
                 }
                 row[x] = c
@@ -72,7 +76,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
             y: Int,
             builderWidth: Int,
             builderHeight: Int
-    ): Cell {
+    ): Cell.Content {
         val padding = cell.padding ?: row.padding ?: column?.padding ?: table.padding
         val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(y), column?.style, table.textStyle)
         val content = Padded.get(cell.content, padding)
@@ -83,7 +87,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 .coerceAtMost(builderWidth - x).coerceAtLeast(1)
         val rowSpan = cell.rowSpan.coerceAtMost(builderHeight - y)
 
-        return Cell(
+        return Cell.Content(
                 content = content,
                 rowSpan = rowSpan,
                 columnSpan = columnSpan,
@@ -104,7 +108,7 @@ private fun MutableList<MutableRow>.findEmptyColumn(x: Int, y: Int): Int {
     }
 
     for (i in x..row.lastIndex) {
-        if (row[i] === EMPTY_CELL) return i
+        if (row[i] === Cell.Empty) return i
     }
 
     row.ensureSize(row.size + 1)
@@ -122,5 +126,5 @@ private fun MutableRow.getCell(x: Int): Cell {
 }
 
 private fun MutableRow.ensureSize(size: Int) {
-    repeat(size - this.size) { add(EMPTY_CELL) }
+    repeat(size - this.size) { add(Cell.Empty) }
 }
