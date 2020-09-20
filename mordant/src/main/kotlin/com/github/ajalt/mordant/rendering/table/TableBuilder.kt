@@ -33,8 +33,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
             var x = 0
             for (cellBuilder in row.cells) {
                 x = rows.findEmptyColumn(x, y)
-                val cell = buildCell(section, table.columns[y], row, cellBuilder, x, y, builderWidth, section.rows.size)
-                insertCell(cell, rows, x, y)
+                insertCell(section, table.columns[y], row, cellBuilder, builderWidth, rows, x, y)
                 x += 1
             }
         }
@@ -53,16 +52,26 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
     // The W3 standard calls tables with overlap invalid, and dictates that user agents either show
     // the visual overlap, or shift the overlapping cells.
     // We aren't bound by their laws, and instead take the gentleman's approach and throw an exception.
-    private fun insertCell(cell: Cell.Content, rows: MutableList<MutableRow>, startingX: Int, startingY: Int) {
+    private fun insertCell(
+            section: SectionBuilder,
+            column: ColumnBuilder?,
+            rowBuilder: RowBuilder,
+            cell: CellBuilder,
+            builderWidth: Int,
+            rows: MutableList<MutableRow>,
+            startingX: Int,
+            startingY: Int
+    ) {
+        val contentCell = buildCell(section, column, rowBuilder, cell, startingX, startingY, builderWidth, rows.size)
         val lastX = startingX + cell.columnSpan - 1
         for (x in startingX..lastX) {
             val lastY = startingY + cell.rowSpan - 1
             for (y in startingY..lastY) {
                 val c = if (x == startingX && y == startingY) {
-                    cell
+                    contentCell
                 } else {
                     Cell.SpanRef(
-                            cell,
+                            contentCell,
                             borderTop = cell.borderTop && y == startingY,
                             borderRight = cell.borderRight && x == lastX,
                             borderBottom = cell.borderBottom && y == lastY
@@ -104,8 +113,9 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 columnSpan = columnSpan,
                 borderLeft = cell.borderLeft,
                 borderTop = cell.borderTop,
-                borderRight = cell.borderRight,
-                borderBottom = cell.borderBottom,
+                // The content cell of a span is in the top-left, and so doesn't have bottom or right borders
+                borderRight = cell.borderRight && columnSpan == 1,
+                borderBottom = cell.borderBottom && rowSpan == 1,
                 style = style
         )
     }

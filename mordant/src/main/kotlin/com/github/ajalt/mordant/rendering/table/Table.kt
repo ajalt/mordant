@@ -162,6 +162,8 @@ class Table(
             line.add(Span.word(border.repeat(colWidth)))
 
         }
+        // Bottom-right corner
+        line.add(getTopLeftCorner(columnCount, rows.size))
         tableLines[tableLines.lastIndex] = line
         return Lines(tableLines)
     }
