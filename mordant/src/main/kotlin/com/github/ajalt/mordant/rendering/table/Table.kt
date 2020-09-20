@@ -15,13 +15,13 @@ sealed class Cell {
 
     data class SpanRef(
             val cell: Content,
+            override val borderLeft: Boolean,
             override val borderTop: Boolean,
             override val borderRight: Boolean,
             override val borderBottom: Boolean
     ) : Cell() {
         override val rowSpan: Int get() = cell.rowSpan
         override val columnSpan: Int get() = cell.columnSpan
-        override val borderLeft: Boolean get() = false // always drawn by [cell]
     }
 
     data class Content(
@@ -142,8 +142,14 @@ private class TableRenderer(
             }
         }
     }
-    private val rowHeights = renderedRows.map { r -> r.maxOf { it.size } }
-    private val tableLines: MutableList<MutableList<Span>> = MutableList(rowHeights.sum() + rows.size + 1) { mutableListOf() }
+    private val rowHeights = renderedRows.mapIndexed { y, r ->
+        r.withIndex().maxOf { (x, it) ->
+            it.size / (cellAt(x, y)?.rowSpan ?: 1)
+        }
+    }
+
+    private val tableLines: MutableList<MutableList<Span>> =
+            MutableList(rowHeights.sum() + rows.size + 1) { mutableListOf() }
 
     fun render(): Lines {
         // Render in column-major order so that we can append the lines of cells with row spans
@@ -281,7 +287,7 @@ fun main() {
         body {
             row {
                 cell("1")
-                cell("tall") {
+                cell(Text("tall\n - \n2x1", whitespace = Whitespace.PRE)) {
                     rowSpan = 2
                 }
             }

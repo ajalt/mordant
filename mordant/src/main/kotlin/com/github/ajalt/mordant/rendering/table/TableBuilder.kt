@@ -72,6 +72,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 } else {
                     Cell.SpanRef(
                             contentCell,
+                            borderLeft = cell.borderLeft && x == startingX,
                             borderTop = cell.borderTop && y == startingY,
                             borderRight = cell.borderRight && x == lastX,
                             borderBottom = cell.borderBottom && y == lastY

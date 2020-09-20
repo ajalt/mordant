@@ -24,8 +24,11 @@ class Text internal constructor(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         val lines = wrap(width)
-        val min = lines.lines.maxOfOrNull { l -> l.maxOf { it.cellWidth } } ?: 0
-        val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
+        val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
+        val max = lines.lines.maxOfOrNull { l ->
+            // no sumOfOrNull -_-
+            if (l.isEmpty()) 0 else l.sumOf { it.cellWidth }
+        } ?: 0
         return WidthRange(min, max)
     }
 
