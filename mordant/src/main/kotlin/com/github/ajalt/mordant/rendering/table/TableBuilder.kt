@@ -54,9 +54,20 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
     // the visual overlap, or shift the overlapping cells.
     // We aren't bound by their laws, and instead take the gentleman's approach and throw an exception.
     private fun insertCell(cell: Cell.Content, rows: MutableList<MutableRow>, startingX: Int, startingY: Int) {
-        for (x in startingX until startingX + cell.columnSpan) {
-            for (y in startingY until (startingY + cell.rowSpan)) {
-                val c = if (x == startingX && y == startingY) cell else Cell.SpanRef(cell)
+        val lastX = startingX + cell.columnSpan - 1
+        for (x in startingX..lastX) {
+            val lastY = startingY + cell.rowSpan - 1
+            for (y in startingY..lastY) {
+                val c = if (x == startingX && y == startingY) {
+                    cell
+                } else {
+                    Cell.SpanRef(
+                            cell,
+                            borderTop = cell.borderTop && y == startingY,
+                            borderRight = cell.borderRight && x == lastX,
+                            borderBottom = cell.borderBottom && y == lastY
+                    )
+                }
                 val row = rows.getRow(y)
                 val existing = row.getCell(x)
                 require(existing === Cell.Empty) {

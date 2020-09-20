@@ -11,13 +11,15 @@ sealed class Cell {
         override val borderBottom: Boolean get() = false
     }
 
-    data class SpanRef(val cell: Content) : Cell() {
+    data class SpanRef(
+            val cell: Content,
+            override val borderTop: Boolean,
+            override val borderRight: Boolean,
+            override val borderBottom: Boolean
+    ) : Cell() {
         val rowSpan: Int get() = cell.rowSpan
         val columnSpan: Int get() = cell.columnSpan
-        override val borderLeft: Boolean get() = cell.borderLeft
-        override val borderTop: Boolean get() = cell.borderTop
-        override val borderRight: Boolean get() = cell.borderRight
-        override val borderBottom: Boolean get() = cell.borderBottom
+        override val borderLeft: Boolean get() = false // always drawn by [cell]
     }
 
     data class Content(
@@ -116,26 +118,14 @@ class Table(
                 val rowHeight = rowHeights[y]
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
-                val lines = when (cell) {
-                    is Cell.SpanRef -> {
-                        emptyList()
-                    }
-                    is Cell.Empty -> {
-                        List(rowHeight) { listOf(Span.space(colWidth)) }
-                    }
-                    is Cell.Content -> {
-                        cell.content.render(t, width)
-                                .withStyle(cell.style)
-                                .setSize(colWidth * cell.columnSpan + cell.columnSpan - 1, rowHeight * cell.rowSpan + cell.rowSpan - 1)
-                                .lines
-                    }
-                }
 
                 // Top border
                 if (cell !is Cell.SpanRef && (cell.borderTop || cellAt(x, y - 1)?.borderBottom != false)) {
-                    tableLines[tableLineY].add(Span.word("+" + "-".repeat(colWidth)))
+                    tableLines[tableLineY].add(getTopLeftCorner(x, y))
+                    tableLines[tableLineY].add(Span.word("─".repeat(colWidth)))
                 }
 
+                val lines = renderCell(cell, rowHeight, colWidth, t, width)
                 for ((i, line) in lines.withIndex()) {
                     // Left border
                     if (cell.borderLeft || cellAt(x - 1, y)?.borderRight != false) {
@@ -147,7 +137,7 @@ class Table(
 
                 // Right border, if this is the last cell in the row
                 if (x == row.lastIndex) {
-                    tableLines[tableLineY].add(Span.word("+"))
+                    tableLines[tableLineY].add(getTopLeftCorner(x + 1, y))
                     if (cell.borderRight) {
                         for (i in 0 until rowHeight) {
                             tableLines[tableLineY + i + 1].add(Span.word("|"))
@@ -162,10 +152,10 @@ class Table(
         // Bottom borders
         val line = mutableListOf<Span>()
         for ((x, colWidth) in columnWidths.withIndex()) {
-            line.add(Span.word("+")) // TODO
+            line.add(getTopLeftCorner(x, rows.size))
             val border = when (cellAt(x, rows.lastIndex)?.borderBottom) {
                 true -> {
-                    "-"
+                    "─"
                 }
                 else -> " "
             }
@@ -176,6 +166,23 @@ class Table(
         return Lines(tableLines)
     }
 
+    private fun renderCell(cell: Cell, rowHeight: Int, colWidth: Int, t: Terminal, width: Int): List<List<Span>> {
+        return when (cell) {
+            is Cell.SpanRef -> {
+                emptyList()
+            }
+            is Cell.Empty -> {
+                List(rowHeight) { listOf(Span.space(colWidth)) }
+            }
+            is Cell.Content -> {
+                cell.content.render(t, width)
+                        .withStyle(cell.style)
+                        .setSize(colWidth * cell.columnSpan + cell.columnSpan - 1, rowHeight * cell.rowSpan + cell.rowSpan - 1)
+                        .lines
+            }
+        }
+    }
+
     private fun cellAt(x: Int, y: Int): Cell? = rows.getOrNull(y)?.getOrNull(x)
 
     private fun calculateColumnWidths(t: Terminal, width: Int): List<Int> {
@@ -183,6 +190,41 @@ class Table(
         val remainingWidth = width - borderWidth
         val maxWidths = List(columnCount) { measureColumn(it, t, remainingWidth).max }
         return maxWidths // TODO: shrink
+    }
+
+    private fun getTopLeftCorner(x: Int, y: Int): Span {
+        val tl = cellAt(x - 1, y - 1)
+        val tr = cellAt(x, y - 1)
+        val bl = cellAt(x - 1, y)
+        val br = cellAt(x, y)
+        return getCorner(
+                tl?.borderRight == true || tr?.borderLeft == true,
+                tr?.borderBottom == true || br?.borderTop == true,
+                bl?.borderRight == true || br?.borderLeft == true,
+                tl?.borderBottom == true || bl?.borderTop == true,
+        )
+    }
+
+    private fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean): Span {
+        val char = when {
+            !n && e && s && !w -> "┌"
+            !n && e && s && w -> "┬"
+            !n && !e && s && w -> "┐"
+            n && e && s && !w -> "├"
+            n && e && s && w -> "┼"
+            n && !e && s && w -> {
+                "┤"
+            }
+            n && e && !s && !w -> "└"
+            n && e && !s && w -> "┴"
+            n && !e && !s && w -> "┘"
+            !n && e && !s && w -> "─"
+            n && !e && s && !w -> "│"
+            !n && !e && !s && !w -> " "
+            else -> error("impossible corner: n=$n $e=e s=$s w=$w")
+        }
+
+        return Span.word(char, borderStyle)
     }
 }
 
