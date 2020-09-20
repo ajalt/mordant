@@ -145,7 +145,7 @@ private class TableRenderer(
     private val rowHeights = renderedRows.mapIndexed { y, r ->
         r.withIndex().maxOf { (x, it) ->
             it.size / (cellAt(x, y)?.rowSpan ?: 1)
-        }
+        }.coerceAtLeast(1)
     }
 
     private val tableLines: MutableList<MutableList<Span>> =
@@ -182,7 +182,7 @@ private class TableRenderer(
     private fun drawBottomBorder() {
         val line = mutableListOf<Span>()
         for ((x, colWidth) in columnWidths.withIndex()) {
-            line.add(getTopLeftCorner(x, rows.size))
+            getTopLeftCorner(x, rows.size)?.let { line.add(it) }
             val border = when (cellAt(x, rows.lastIndex)?.borderBottom) {
                 true -> {
                     "─"
@@ -193,7 +193,7 @@ private class TableRenderer(
 
         }
         // Bottom-right corner
-        line.add(getTopLeftCorner(columnCount, rows.size))
+        getTopLeftCorner(columnCount, rows.size)?.let { line.add(it) }
         tableLines[tableLines.lastIndex] = line
     }
 
@@ -205,7 +205,7 @@ private class TableRenderer(
     }
 
     private fun drawTopBorderForCell(tableLineY: Int, cell: Cell, x: Int, y: Int, colWidth: Int) {
-        if (cell.borderTop || cellAt(x, y - 1)?.borderBottom != false) {
+        if (cell.borderTop || cellAt(x, y - 1)?.borderBottom == true) {
             tableLines[tableLineY].add(Span.word("─".repeat(colWidth)))
         }
     }
@@ -215,8 +215,8 @@ private class TableRenderer(
         for ((y, row) in rows.withIndex()) {
             val rowHeight = rowHeights[y]
             val cell = row.getOrNull(x) ?: Cell.Empty
-            tableLines[tableLineY].add(getTopLeftCorner(x, y))
-            if (cell.borderLeft || cellAt(x - 1, y)?.borderRight != false) {
+            getTopLeftCorner(x, y)?.let { tableLines[tableLineY].add(it) }
+            if (cell.borderLeft || cellAt(x - 1, y)?.borderRight == true) {
                 for (i in 0 until rowHeight) {
                     tableLines[tableLineY + i + 1].add(Span.word("│"))
                 }
@@ -246,7 +246,7 @@ private class TableRenderer(
 
     private fun cellAt(x: Int, y: Int): Cell? = rows.getOrNull(y)?.getOrNull(x)
 
-    private fun getTopLeftCorner(x: Int, y: Int): Span {
+    private fun getTopLeftCorner(x: Int, y: Int): Span? {
         val tl = cellAt(x - 1, y - 1)
         val tr = cellAt(x, y - 1)
         val bl = cellAt(x - 1, y)
@@ -259,7 +259,7 @@ private class TableRenderer(
         )
     }
 
-    private fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean): Span {
+    private fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean): Span? {
         val char = when {
             !n && e && s && !w -> "┌"
             !n && e && s && w -> "┬"
@@ -272,7 +272,7 @@ private class TableRenderer(
             n && !e && !s && w -> "┘"
             !n && e && !s && w -> "─"
             n && !e && s && !w -> "│"
-            !n && !e && !s && !w -> " "
+            !n && !e && !s && !w -> return null
             else -> error("impossible corner: n=$n $e=e s=$s w=$w")
         }
 
@@ -286,12 +286,24 @@ fun main() {
     val table = table {
         body {
             row {
-                cell("1")
-                cell(Text("tall\n - \n2x1", whitespace = Whitespace.PRE)) {
+                cell("2x2") {
                     rowSpan = 2
+                    columnSpan = 2
+                }
+
+            }
+            row {
+                cell("3") {
+                    rowSpan = 2
+                    columnSpan = 2
                 }
             }
-            row("4")
+            row {
+                cells("5", "6", "7") {
+                    rowSpan = 2
+                    columnSpan = 2
+                }
+            }
         }
     }
     t.print(table)

@@ -109,6 +109,8 @@ class RowBuilder internal constructor(
     }
 
     fun cell(content: String, init: CellBuilder.() -> Unit = {}) = cell(Text(content), init)
+
+    // TODO: validate non-empty
 }
 
 // TODO: alignment
