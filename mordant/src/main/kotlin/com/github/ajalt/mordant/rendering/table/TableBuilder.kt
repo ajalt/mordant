@@ -22,7 +22,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 borderStyle = table.borderStyle,
                 headerRowCount = header.size,
                 footerRowCount = footer.size,
-                columnWidths = table.columns.mapValues { it.value.width }
+                columnStyles = table.columns.mapValues { it.value.width }
         )
     }
 

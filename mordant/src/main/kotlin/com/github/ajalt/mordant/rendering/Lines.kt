@@ -33,7 +33,7 @@ data class Lines(
 }
 
 /** Pad or crop every line so its width is exactly [newWidth] */
-internal fun Lines.setSize(newWidth: Int, height: Int? = null, align: TextAlign = LEFT): Lines {
+internal fun Lines.setSize(newWidth: Int, newHeight: Int? = null, align: TextAlign = LEFT): Lines {
     val lines = mutableListOf<Line>()
     for (line in this.lines) {
         var width = 0
@@ -75,13 +75,13 @@ internal fun Lines.setSize(newWidth: Int, height: Int? = null, align: TextAlign 
         }
     }
 
-    if (height != null && height != lines.size) {
+    if (newHeight != null && newHeight != lines.size) {
         // TODO vertical align
-        if (height < lines.size) {
-            return Lines(lines.take(height))
+        if (newHeight < lines.size) {
+            return Lines(lines.take(newHeight))
         } else {
             val line = listOf(Span.space(newWidth))
-            repeat(height - lines.size) {
+            repeat(newHeight - lines.size) {
                 lines.add(line)
             }
         }
