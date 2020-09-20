@@ -74,11 +74,11 @@ class SectionBuilder {
 
     @JvmName("renderableRow")
     fun row(cells: Iterable<Renderable>, init: RowBuilder.() -> Unit = {}) {
-        rows += RowBuilder(cells.mapTo(mutableListOf()) { CellBuilder(it) }).apply(init)
+        rows += RowBuilder(cells.mapTo(mutableListOf()) { CellBuilder(it) }).apply(init).validate()
     }
 
     fun row(init: RowBuilder.() -> Unit) {
-        rows += RowBuilder(mutableListOf(), DEFAULT_STYLE, null).apply(init)
+        rows += RowBuilder(mutableListOf(), DEFAULT_STYLE, null).apply(init).validate()
     }
 }
 
@@ -110,10 +110,13 @@ class RowBuilder internal constructor(
 
     fun cell(content: String, init: CellBuilder.() -> Unit = {}) = cell(Text(content), init)
 
-    // TODO: validate non-empty
+    internal fun validate(): RowBuilder {
+        require(cells.isNotEmpty()) { "A row cannot be empty" }
+        return this
+    }
 }
 
-// TODO: alignment
+// TODO: alignment / gravity
 @MordantDsl
 class CellBuilder internal constructor(
         internal val content: Renderable = Text(""),
