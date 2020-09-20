@@ -121,6 +121,7 @@ class Table(
     }
 }
 
+
 private class TableRenderer(
         val rows: List<ImmutableRow>,
         val expand: Boolean,
@@ -133,6 +134,7 @@ private class TableRenderer(
         val t: Terminal,
         val renderWidth: Int
 ) {
+    private val rowCount get() = rows.size
     private val renderedRows = rows.map { r ->
         r.map {
             if (it is Cell.Content) {
@@ -149,7 +151,7 @@ private class TableRenderer(
     }
 
     private val tableLines: MutableList<MutableList<Span>> =
-            MutableList(rowHeights.sum() + rows.size + 1) { mutableListOf() }
+            MutableList(rowHeights.sum() + rowCount + 1) { mutableListOf() }
 
     fun render(): Lines {
         // Render in column-major order so that we can append the lines of cells with row spans
@@ -165,7 +167,7 @@ private class TableRenderer(
                 val rowHeight = rowHeights[y]
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
-                drawTopBorderForCell(tableLineY, cell, x, y, colWidth)
+                drawTopBorderForCell(tableLineY, cell.borderTop, x, y, colWidth)
                 drawCellContent(tableLineY, cell, rowHeight, colWidth)
 
                 tableLineY += rowHeight + 1
@@ -180,21 +182,14 @@ private class TableRenderer(
     }
 
     private fun drawBottomBorder() {
-        val line = mutableListOf<Span>()
-        for ((x, colWidth) in columnWidths.withIndex()) {
-            getTopLeftCorner(x, rows.size)?.let { line.add(it) }
-            val border = when (cellAt(x, rows.lastIndex)?.borderBottom) {
-                true -> {
-                    "─"
-                }
-                else -> " "
-            }
-            line.add(Span.word(border.repeat(colWidth)))
-
+        val line = tableLines[tableLines.lastIndex]
+        for (x in columnWidths.indices) {
+            getTopLeftCorner(x, rowCount)?.let { line.add(it) }
+            drawTopBorderForCell(tableLines.lastIndex, false, x, rowCount, columnWidths[x])
         }
+
         // Bottom-right corner
-        getTopLeftCorner(columnCount, rows.size)?.let { line.add(it) }
-        tableLines[tableLines.lastIndex] = line
+        getTopLeftCorner(columnCount, rowCount)?.let { line.add(it) }
     }
 
     private fun drawCellContent(tableLineY: Int, cell: Cell, rowHeight: Int, colWidth: Int) {
@@ -204,9 +199,9 @@ private class TableRenderer(
         }
     }
 
-    private fun drawTopBorderForCell(tableLineY: Int, cell: Cell, x: Int, y: Int, colWidth: Int) {
-        if (cell.borderTop || cellAt(x, y - 1)?.borderBottom == true) {
-            tableLines[tableLineY].add(Span.word("─".repeat(colWidth)))
+    private fun drawTopBorderForCell(tableLineY: Int, borderTop: Boolean, x: Int, y: Int, colWidth: Int) {
+        if (borderTop || cellAt(x, y - 1)?.borderBottom == true) {
+            tableLines[tableLineY].add(Span.word("─".repeat(colWidth), borderStyle))
         }
     }
 
@@ -218,7 +213,7 @@ private class TableRenderer(
             getTopLeftCorner(x, y)?.let { tableLines[tableLineY].add(it) }
             if (cell.borderLeft || cellAt(x - 1, y)?.borderRight == true) {
                 for (i in 0 until rowHeight) {
-                    tableLines[tableLineY + i + 1].add(Span.word("│"))
+                    tableLines[tableLineY + i + 1].add(Span.word("│", borderStyle))
                 }
             }
             tableLineY += rowHeight + 1
