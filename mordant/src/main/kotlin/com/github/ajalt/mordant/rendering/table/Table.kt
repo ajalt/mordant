@@ -267,6 +267,10 @@ private class TableRenderer(
             n && !e && !s && w -> "┘"
             !n && e && !s && w -> "─"
             n && !e && s && !w -> "│"
+            n && !e && !s && !w -> "╷"
+            !n && e && !s && !w -> "╴"
+            !n && !e && s && !w -> "╵"
+            !n && !e && !s && w -> "╶"
             !n && !e && !s && !w -> return null
             else -> error("impossible corner: n=$n $e=e s=$s w=$w")
         }

@@ -2,19 +2,48 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.*
 
+interface CellStyleBuilder {
+    var padding: Padding?
+    var style: TextStyle?
+    var borderLeft: Boolean?
+    var borderTop: Boolean?
+    var borderRight: Boolean?
+    var borderBottom: Boolean?
+
+    /**
+     * Set all cell borders at once.
+     *
+     * The property is `true` if all four borders are `true`.
+     */
+    var border: Boolean
+        get() = borderLeft == true && borderTop == true && borderRight == true && borderBottom == true
+        set(value) {
+            borderLeft = value
+            borderTop = value
+            borderRight = value
+            borderBottom = value
+        }
+}
+
+private class CellStyleBuilderMixin : CellStyleBuilder {
+    override var padding: Padding? = null
+    override var style: TextStyle? = null
+    override var borderLeft: Boolean? = null
+    override var borderTop: Boolean? = null
+    override var borderRight: Boolean? = null
+    override var borderBottom: Boolean? = null
+}
 
 @DslMarker
 annotation class MordantDsl
 
 @MordantDsl
-class ColumnBuilder {
+class ColumnBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
     var width: ColumnWidth = ColumnWidth.Default
-    var style: TextStyle = DEFAULT_STYLE
-    var padding: Padding? = null
 }
 
 @MordantDsl
-class TableBuilder {
+class TableBuilder internal constructor() {
     var expand: Boolean = false
     var borders: Borders? = Borders.SQUARE
     var borderStyle: TextStyle = DEFAULT_STYLE
@@ -50,7 +79,7 @@ class TableBuilder {
 
 
 @MordantDsl
-class SectionBuilder {
+class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
     internal val rows = mutableListOf<RowBuilder>()
     internal var rowStyles = listOf<TextStyle>()
 
@@ -78,17 +107,15 @@ class SectionBuilder {
     }
 
     fun row(init: RowBuilder.() -> Unit) {
-        rows += RowBuilder(mutableListOf(), DEFAULT_STYLE, null).apply(init).validate()
+        rows += RowBuilder(mutableListOf()).apply(init).validate()
     }
 }
 
 
 @MordantDsl
 class RowBuilder internal constructor(
-        internal val cells: MutableList<CellBuilder>,
-        var style: TextStyle? = null,
-        var padding: Padding? = null
-) {
+        internal val cells: MutableList<CellBuilder>
+) : CellStyleBuilder by CellStyleBuilderMixin() {
     fun cells(cells: Iterable<String>, init: CellBuilder.() -> Unit = {}) {
         cells(cells.map { Text(it) }, init)
     }
@@ -122,13 +149,7 @@ class CellBuilder internal constructor(
         internal val content: Renderable = Text(""),
         rowSpan: Int = 1,
         columnSpan: Int = 1,
-        var borderLeft: Boolean = true,
-        var borderTop: Boolean = true,
-        var borderRight: Boolean = true,
-        var borderBottom: Boolean = true,
-        var padding: Padding? = null,
-        var style: TextStyle? = null,
-) {
+) : CellStyleBuilder by CellStyleBuilderMixin() {
 
     var columnSpan = columnSpan
         set(value) {
@@ -140,20 +161,6 @@ class CellBuilder internal constructor(
         set(value) {
             require(value > 0) { "Row span must be greater than 0" }
             field = value
-        }
-
-    /**
-     * Set all cell borders at once.
-     *
-     * The property is `true` if all four borders are `true`, and `false` if at least one border is `false`.
-     */
-    var border: Boolean
-        get() = borderLeft && borderTop && borderRight && borderBottom
-        set(value) {
-            borderLeft = value
-            borderTop = value
-            borderRight = value
-            borderBottom = value
         }
 }
 

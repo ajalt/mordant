@@ -52,67 +52,59 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
             startingY: Int,
             builderWidth: Int
     ) {
-        val columnBuilder = table.columns[startingX]
-        val rowBuilder = section.rows[startingY]
+        val column = table.columns[startingX]
+        val row = section.rows[startingY]
 
         // The W3 standard says that spans are truncated rather than increasing the size of the table
         val maxRowSize = (startingY until startingY + cell.rowSpan)
                 .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
+        val borderLeft = cell.borderLeft ?: row.borderLeft ?: column?.borderLeft ?: true
+        val borderTop = cell.borderTop ?: row.borderTop ?: column?.borderTop ?: true
+        val borderRight = cell.borderRight ?: row.borderRight ?: column?.borderRight ?: true
+        val borderBottom = cell.borderBottom ?: row.borderBottom ?: column?.borderBottom ?: true
+        val padding = cell.padding ?: row.padding ?: column?.padding ?: table.padding
+        val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.textStyle)
+        val content = Padded.get(cell.content, padding)
 
-        val contentCell = buildCell(section, columnBuilder, rowBuilder, cell, startingY, rowSpan, columnSpan)
+        val builtCell = Cell.Content(
+                content = content,
+                rowSpan = rowSpan,
+                columnSpan = columnSpan,
+                borderLeft = borderLeft,
+                borderTop = borderTop,
+                // The content of a span is in the top-left, and so doesn't have bottom or right borders
+                borderRight = borderRight && columnSpan == 1,
+                borderBottom = borderBottom && rowSpan == 1,
+                style = style
+        )
 
         val lastX = startingX + columnSpan - 1
         for (x in startingX..lastX) {
             val lastY = startingY + rowSpan - 1
             for (y in startingY..lastY) {
                 val c = if (x == startingX && y == startingY) {
-                    contentCell
+                    builtCell
                 } else {
                     Cell.SpanRef(
-                            contentCell,
-                            borderLeft = cell.borderLeft && x == startingX,
-                            borderTop = cell.borderTop && y == startingY,
-                            borderRight = cell.borderRight && x == lastX,
-                            borderBottom = cell.borderBottom && y == lastY
+                            builtCell,
+                            borderLeft = borderLeft && x == startingX,
+                            borderTop = borderTop && y == startingY,
+                            borderRight = borderRight && x == lastX,
+                            borderBottom = borderBottom && y == lastY
                     )
                 }
-                val row = rows.getRow(y)
-                val existing = row.getCell(x)
+                val tableRow = rows.getRow(y)
+                val existing = tableRow.getCell(x)
                 require(existing === Cell.Empty) {
                     "Invalid table: cell spans cannot overlap"
                 }
-                row[x] = c
+                tableRow[x] = c
             }
         }
     }
 
-    private fun buildCell(
-            section: SectionBuilder,
-            column: ColumnBuilder?,
-            row: RowBuilder,
-            cell: CellBuilder,
-            y: Int,
-            rowSpan: Int,
-            columnSpan: Int
-    ): Cell.Content {
-        val padding = cell.padding ?: row.padding ?: column?.padding ?: table.padding
-        val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(y), column?.style, table.textStyle)
-        val content = Padded.get(cell.content, padding)
-
-        return Cell.Content(
-                content = content,
-                rowSpan = rowSpan,
-                columnSpan = columnSpan,
-                borderLeft = cell.borderLeft,
-                borderTop = cell.borderTop,
-                // The content cell of a span is in the top-left, and so doesn't have bottom or right borders
-                borderRight = cell.borderRight && columnSpan == 1,
-                borderBottom = cell.borderBottom && rowSpan == 1,
-                style = style
-        )
-    }
 }
 
 private fun MutableList<MutableRow>.findEmptyColumn(x: Int, y: Int): Int {
