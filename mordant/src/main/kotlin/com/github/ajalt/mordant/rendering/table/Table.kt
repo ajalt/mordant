@@ -9,6 +9,8 @@ sealed class Cell {
         override val borderTop: Boolean get() = false
         override val borderRight: Boolean get() = false
         override val borderBottom: Boolean get() = false
+        override val rowSpan: Int get() = 1
+        override val columnSpan: Int get() = 1
     }
 
     data class SpanRef(
@@ -17,15 +19,15 @@ sealed class Cell {
             override val borderRight: Boolean,
             override val borderBottom: Boolean
     ) : Cell() {
-        val rowSpan: Int get() = cell.rowSpan
-        val columnSpan: Int get() = cell.columnSpan
+        override val rowSpan: Int get() = cell.rowSpan
+        override val columnSpan: Int get() = cell.columnSpan
         override val borderLeft: Boolean get() = false // always drawn by [cell]
     }
 
     data class Content(
             val content: Renderable,
-            val rowSpan: Int = 1,
-            val columnSpan: Int = 1,
+            override val rowSpan: Int = 1,
+            override val columnSpan: Int = 1,
             override val borderLeft: Boolean = true,
             override val borderTop: Boolean = true,
             override val borderRight: Boolean = true,
@@ -38,6 +40,8 @@ sealed class Cell {
         }
     }
 
+    abstract val rowSpan: Int
+    abstract val columnSpan: Int
     abstract val borderLeft: Boolean
     abstract val borderTop: Boolean
     abstract val borderRight: Boolean
@@ -114,24 +118,34 @@ class Table(
         for (x in columnWidths.indices) {
             val colWidth = columnWidths[x]
             var tableLineY = 0
+
+            // Left borders
+            for ((y, row) in rows.withIndex()) {
+                val rowHeight = rowHeights[y]
+                val cell = row.getOrNull(x) ?: Cell.Empty
+                tableLines[tableLineY].add(getTopLeftCorner(x, y))
+                if (cell.borderLeft || cellAt(x - 1, y)?.borderRight != false) {
+                    for (i in 0 until rowHeight) {
+                        tableLines[tableLineY + i + 1].add(Span.word("|"))
+                    }
+                }
+                tableLineY += rowHeight + 1
+            }
+
+            tableLineY = 0
+
             for ((y, row) in rows.withIndex()) {
                 val rowHeight = rowHeights[y]
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
-
                 // Top border
-                if (cell !is Cell.SpanRef && (cell.borderTop || cellAt(x, y - 1)?.borderBottom != false)) {
-                    tableLines[tableLineY].add(getTopLeftCorner(x, y))
+                if (cell.borderTop || cellAt(x, y - 1)?.borderBottom != false) {
                     tableLines[tableLineY].add(Span.word("─".repeat(colWidth)))
                 }
 
+                // Content
                 val lines = renderCell(cell, rowHeight, colWidth, t, width)
                 for ((i, line) in lines.withIndex()) {
-                    // Left border
-                    if (cell.borderLeft || cellAt(x - 1, y)?.borderRight != false) {
-                        tableLines[tableLineY + i + 1].add(Span.word("|"))
-                    }
-                    // Content
                     tableLines[tableLineY + i + 1].addAll(line)
                 }
 
@@ -214,9 +228,7 @@ class Table(
             !n && !e && s && w -> "┐"
             n && e && s && !w -> "├"
             n && e && s && w -> "┼"
-            n && !e && s && w -> {
-                "┤"
-            }
+            n && !e && s && w -> "┤"
             n && e && !s && !w -> "└"
             n && e && !s && w -> "┴"
             n && !e && !s && w -> "┘"
