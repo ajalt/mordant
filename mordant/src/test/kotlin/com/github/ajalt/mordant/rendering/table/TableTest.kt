@@ -115,6 +115,31 @@ class TableTest {
         }
     }
 
+    @Test
+    fun `inside borders`() = doBodyTest("""
+    | 1 │ 2 
+    |───┼───
+    | 3 │ 4 
+    """) {
+        row {
+            cell(1) {
+                borders = Borders(right = true)
+            }
+            cell(2) {
+                borders = Borders(bottom = true)
+            }
+        }
+        row {
+            cell(3) {
+                borders = Borders(top=true)
+            }
+            cell(4) {
+                borders = Borders(left=true)
+            }
+        }
+    }
+
+
     private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) = doTest(expected) { body(builder) }
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         val actual = t.render(table(builder))

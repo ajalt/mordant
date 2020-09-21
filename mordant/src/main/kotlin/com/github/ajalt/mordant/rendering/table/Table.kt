@@ -184,10 +184,10 @@ private class TableRenderer(
                 val rowHeight = rowHeights[y]
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
-                drawTopBorderForCell(tableLineY, x, y, cell.borderTop, colWidth)
-                drawCellContent(tableLineY, y, cell, rowHeight, colWidth)
+                tableLineY +=  drawTopBorderForCell(tableLineY, x, y, cell.borderTop, colWidth)
+                drawCellContent(tableLineY, cell, rowHeight, colWidth)
 
-                tableLineY += rowHeight + 1
+                tableLineY += rowHeight
             }
         }
 
@@ -215,19 +215,19 @@ private class TableRenderer(
         }
     }
 
-    private fun drawCellContent(tableLineY: Int, y: Int, cell: Cell, rowHeight: Int, colWidth: Int) {
+    private fun drawCellContent(tableLineY: Int, cell: Cell, rowHeight: Int, colWidth: Int) {
         val lines = renderCell(cell, rowHeight, colWidth)
-        val borderHeight = if (rowBorders[y]) 1 else 0
         for ((i, line) in lines.withIndex()) {
-            tableLines[tableLineY + i + borderHeight].addAll(line)
+            tableLines[tableLineY + i].addAll(line)
         }
     }
 
-    private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, borderTop: Boolean, colWidth: Int) {
-        if (!rowBorders[y]) return
+    private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, borderTop: Boolean, colWidth: Int): Int {
+        if (!rowBorders[y]) return 0
 
         val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) "─" else " "
         tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderTextStyle))
+        return 1
     }
 
     private fun drawLeftBorderForColumn(x: Int) {
