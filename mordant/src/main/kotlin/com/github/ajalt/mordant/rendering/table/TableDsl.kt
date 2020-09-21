@@ -72,7 +72,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 
     fun row(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
         val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
-        rows += RowBuilder(cellBuilders).apply(init).validate()
+        rows += RowBuilder(cellBuilders).apply(init)
     }
 
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
@@ -80,7 +80,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     }
 
     fun row(init: RowBuilder.() -> Unit) {
-        rows += RowBuilder(mutableListOf()).apply(init).validate()
+        rows += RowBuilder(mutableListOf()).apply(init)
     }
 }
 
@@ -101,11 +101,6 @@ class RowBuilder internal constructor(
 
     fun cell(content: Any?, init: CellBuilder.() -> Unit = {}) {
         cells += CellBuilder(getRenderable(content)).apply(init)
-    }
-
-    internal fun validate(): RowBuilder {
-        require(cells.isNotEmpty()) { "A row cannot be empty" }
-        return this
     }
 }
 

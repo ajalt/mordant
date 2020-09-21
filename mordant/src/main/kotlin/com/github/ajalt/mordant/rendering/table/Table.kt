@@ -162,9 +162,9 @@ private class TableRenderer(
         }
     }
     private val rowHeights = renderedRows.mapIndexed { y, r ->
-        r.withIndex().maxOf { (x, it) ->
+        r.withIndex().maxOfOrNull { (x, it) ->
             it.size / (cellAt(x, y)?.rowSpan ?: 1)
-        }.coerceAtLeast(1)
+        }?.coerceAtLeast(1) ?: 1
     }
 
     private val tableLines: MutableList<MutableList<Span>> =

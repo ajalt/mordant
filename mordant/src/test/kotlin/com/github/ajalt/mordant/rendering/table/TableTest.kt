@@ -140,6 +140,22 @@ class TableTest {
     }
 
 
+    @Test
+    fun `empty row`() = doBodyTest("""
+    |┌───┐
+    |│ 1 │
+    |└───┘
+    |     
+    |┌───┐
+    |│ 2 │
+    |└───┘
+    """) {
+        row(1)
+        row()
+        row(2)
+    }
+
+
     private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) = doTest(expected) { body(builder) }
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         val actual = t.render(table(builder))
