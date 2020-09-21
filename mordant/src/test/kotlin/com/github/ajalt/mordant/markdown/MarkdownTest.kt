@@ -369,7 +369,7 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
             showHtml: Boolean = false
     ) {
         try {
-            val terminal = Terminal(colors = TerminalColors(AnsiLevel.TRUECOLOR), width = width)
+            val terminal = Terminal(level=AnsiLevel.TRUECOLOR, width = width)
             val actual = terminal.renderMarkdown(markdown, showHtml)
             actual shouldBe expected
         } catch (e: Throwable) {

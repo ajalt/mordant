@@ -4,10 +4,11 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 
 class Terminal(
-        val colors: TerminalColors = TerminalColors(),
+        level: AnsiLevel = TerminalCapabilities.detectANSISupport(),
         val theme: Theme = DEFAULT_THEME,
         val width: Int = System.getenv("COLUMNS")?.toInt() ?: 79
 ) {
+    val colors: TerminalColors = TerminalColors(level)
 
     fun printMarkdown(markdown: String, showHtml: Boolean=false) {
         return kotlin.io.print(renderMarkdown(markdown, showHtml))
