@@ -1,95 +1,165 @@
 package com.github.ajalt.mordant.rendering
 
 
-data class BorderRow(
-        val left: String, val mid: String, val divider: String, val right: String
+data class BorderStyleSection(
+        val es: String,
+        val esw: String,
+        val sw: String,
+        val nes: String,
+        val nesw: String,
+        val nsw: String,
+        val ns: String,
+        val ne: String,
+        val ew: String,
+        val new: String,
+        val nw: String,
+        val n: String,
+        val w: String,
+        val e: String,
+        val s: String,
 ) {
-    internal companion object {
-        fun build(it: String) = BorderRow(it[0].toString(), it[1].toString(), it[2].toString(), it[3].toString())
+    companion object {
+        fun build(string: String) = BorderStyleSection(
+                es = string[0].toString(),
+                esw = string[2].toString(),
+                sw = string[3].toString(),
+                nes = string[5].toString(),
+                nesw = string[7].toString(),
+                nsw = string[8].toString(),
+                ns = string[12].toString(),
+                ne = string[19].toString(),
+                ew = string[20].toString(),
+                new = string[21].toString(),
+                nw = string[22].toString(),
+                n = string[10].toString(),
+                w = string[16].toString(),
+                e = string[17].toString(),
+                s = string[24].toString(),
+        )
     }
 }
 
 class BorderStyle(
-        val top: BorderRow,
-        val head: BorderRow,
-        val headDivider: BorderRow,
-        val body: BorderRow,
-        val bodyDivider: BorderRow,
-        val footDivider: BorderRow,
-        val foot: BorderRow,
-        val bottom: BorderRow
+        val head: BorderStyleSection,
+        val headBottom: BorderStyleSection,
+        val body: BorderStyleSection,
+        val bodyBottom: BorderStyleSection,
+        val foot: BorderStyleSection
 ) {
-    fun renderTop(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(top, widths, style)
-    fun renderHead(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(headDivider, widths, style)
-    fun renderBody(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(bodyDivider, widths, style)
-    fun renderFoot(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(footDivider, widths, style)
-    fun renderBottom(widths: List<Int>, style: TextStyle = DEFAULT_STYLE): Span = row(bottom, widths, style)
-
-    private fun row(border: BorderRow, widths: List<Int>, style: TextStyle): Span {
-        require(widths.isNotEmpty()) { "Must provide at least one width" }
-
-        val text = buildString {
-            append(border.left)
-            for ((i, width) in widths.withIndex()) {
-                if (i > 0) append(border.divider)
-                repeat(width) { append(border.mid) }
-            }
-            append(border.right)
-        }
-        return Span.word(text, style)
-    }
 
     companion object {
         private fun build(string: String): BorderStyle {
-            val lines = string.trimIndent().lines()
-            return BorderStyle(
-                    top = BorderRow.build(lines[0]),
-                    head = BorderRow.build(lines[1]),
-                    headDivider = BorderRow.build(lines[2]),
-                    body = BorderRow.build(lines[3]),
-                    bodyDivider = BorderRow.build(lines[4]),
-                    footDivider = BorderRow.build(lines[5]),
-                    foot = BorderRow.build(lines[6]),
-                    bottom = BorderRow.build(lines[7]),
+            val s = string.trimIndent()
+            val head = BorderStyleSection.build(s)
+            val headBottom = head.copy(
+                    nes = s[26].toString(),
+                    nesw = s[76].toString(),
+                    nsw = s[28].toString(),
+                    ns = s[29].toString()
             )
+            val body = BorderStyleSection.build(s.drop(31))
+            val bodyBottom = body.copy(
+                    nes = s[57].toString(),
+                    nesw = s[58].toString(),
+                    nsw = s[59].toString(),
+                    ns = s[60].toString()
+            )
+            val foot = BorderStyleSection.build(s.drop(62))
+            return BorderStyle(head, headBottom, body, bodyBottom, foot)
         }
-
-        val ASCII = build(
-                """
-                +-++
-                | ||
-                +-++
-                | ||
-                +-++
-                +-++
-                | ||
-                +-++
-                """
-        )
 
         val SQUARE = build(
                 """
                 ┌─┬┐
-                │ ││
-                ├─┼┤
-                │ ││
-                ├─┼┤
-                ├─┼┤
-                │ ││
-                └─┴┘
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                ├┼┤│
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                ├┼┤│
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                """
+        )
+
+        val ROUNDED = build(
+                """
+                ╭─┬╮
+                ├─┼┤ ╷
+                │ ││╶╴
+                ╰─┴╯ ╵
+                ├┼┤│
+                ╭─┬╮
+                ├─┼┤ ╷
+                │ ││╶╴
+                ╰─┴╯ ╵
+                ├┼┤│
+                ╭─┬╮
+                ├─┼┤ ╷
+                │ ││╶╴
+                ╰─┴╯ ╵
+                """
+        )
+
+        val HEAVY = build(
+                """
+                ┏━┳┓
+                ┣━╋┫ ╻
+                ┃ ┃┃╺╸
+                ┗━┻┛ ╹
+                ┡╇┩╿
+                ┏━┳┓
+                ┣━╋┫ ╻
+                ┃ ┃┃╺╸
+                ┗━┻┛ ╹
+                ┢╈┪╽
+                ┏━┳┓
+                ┣━╋┫ ╻
+                ┃ ┃┃╺╸
+                ┗━┻┛ ╹
                 """
         )
 
         val HEAVY_HEAD_FOOT = build(
                 """
                 ┏━┳┓
-                ┃ ┃┃
-                ┡━╇┩
-                │ ││
-                ├─┼┤
-                ┢━╈┪
-                ┃ ┃┃
-                ┗━┻┛
+                ┣━╋┫ ╻
+                ┃ ┃┃╺╸
+                ┗━┻┛ ╹
+                ┡╇┩╿
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                ┢╈┪╽
+                ┏━┳┓
+                ┣━╋┫ ╻
+                ┃ ┃┃╺╸
+                ┗━┻┛ ╹
+                """
+        )
+
+        val ASCII = build(
+                """
+                +-++
+                +-++  
+                | ||  
+                +-++  
+                +++|
+                +-++
+                +-++  
+                | ||  
+                +-++  
+                +++|
+                +-++
+                +-++  
+                | ||  
+                +-++  
                 """
         )
     }

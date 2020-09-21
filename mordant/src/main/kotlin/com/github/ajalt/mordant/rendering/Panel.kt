@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
 
-// TODO: test
 class Panel(
         content: Renderable,
         private val borderStyle: BorderStyle = BorderStyle.SQUARE,
@@ -33,17 +32,18 @@ class Panel(
             else -> measurement.max.coerceAtMost(maxContentWidth)
         }
 
-        lines.add(listOf(borderStyle.renderTop(listOf(contentWidth))))
+        val b = borderStyle.body
+        val horizontalBorder = Span.word(b.ew.repeat(contentWidth))
+        lines.add(listOf(Span.word(b.es, borderTextStyle), horizontalBorder, Span.word(b.sw, borderTextStyle)))
 
-        val left = listOf(Span.word(borderStyle.body.left, borderTextStyle))
-        val right = listOf(Span.word(borderStyle.body.right, borderTextStyle))
+        val vertical = listOf(Span.word(b.ns, borderTextStyle))
 
-        val aligned = renderedContent.setSize(contentWidth, align = TextAlign.LEFT)
+        val aligned = renderedContent.setSize(contentWidth, align = TextAlign.CENTER)
         aligned.lines.mapTo(lines) { line ->
-            listOf(left, line, right).flatten()
+            listOf(vertical, line, vertical).flatten()
         }
 
-        lines.add(listOf(borderStyle.renderBottom(listOf(contentWidth))))
+        lines.add(listOf(Span.word(b.ne, borderTextStyle), horizontalBorder, Span.word(b.nw, borderTextStyle)))
         return Lines(lines)
     }
 }

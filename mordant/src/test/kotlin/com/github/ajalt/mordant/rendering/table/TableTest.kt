@@ -1,14 +1,9 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.Terminal
-import io.kotest.matchers.shouldBe
+import com.github.ajalt.mordant.rendering.RenderingTest
 import org.junit.Test
 
-class TableTest {
-    private val t = Terminal(level = AnsiLevel.TRUECOLOR)
-
-
+class TableTest : RenderingTest() {
     @Test
     fun `border top`() = doBodyTest("""
     |───
@@ -156,14 +151,7 @@ class TableTest {
     }
 
 
-    private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) = doTest(expected) { body(builder) }
-    private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
-        val actual = t.render(table(builder))
-        try {
-            actual shouldBe expected.trimMargin()
-        } catch (e: Throwable) {
-            println(actual)
-            throw e
-        }
+    private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {
+        doTest(table { body(builder) }, expected)
     }
 }
