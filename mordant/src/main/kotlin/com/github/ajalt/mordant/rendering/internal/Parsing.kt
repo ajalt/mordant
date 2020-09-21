@@ -9,7 +9,7 @@ import com.github.ajalt.mordant.AnsiStyle
 import com.github.ajalt.mordant.ESC
 import com.github.ajalt.mordant.rendering.*
 
-
+//TODO: expand tabs
 private val SPLIT_REGEX = Regex("""\r?\n|$NEL|$LS|\s+|\S+""")
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 

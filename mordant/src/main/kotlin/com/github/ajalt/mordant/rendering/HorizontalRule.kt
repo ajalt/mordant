@@ -42,7 +42,7 @@ class HorizontalRule internal constructor(
                 }
             })
             val lastLine = renderedTitle.lines.last()
-            val space = listOf(Span.word(" "))
+            val space = listOf(SINGLE_SPACE)
             val remainingWidth = width - lastLine.sumOf { it.cellWidth } - 2
             val leftRule = rule(t.theme, remainingWidth / 2)
             val rightRule = rule(t.theme, remainingWidth / 2 + remainingWidth % 2)
