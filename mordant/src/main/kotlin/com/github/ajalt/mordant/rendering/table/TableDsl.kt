@@ -3,35 +3,15 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.rendering.*
 
 interface CellStyleBuilder {
-    var padding: Padding? // TODO: change this to be separate padding ints?
+    var padding: Padding?
     var style: TextStyle?
-    var borderLeft: Boolean?
-    var borderTop: Boolean?
-    var borderRight: Boolean?
-    var borderBottom: Boolean?
-
-    /**
-     * Set all cell borders at once.
-     *
-     * The property is `true` if all four borders are `true`.
-     */
-    var border: Boolean
-        get() = borderLeft == true && borderTop == true && borderRight == true && borderBottom == true
-        set(value) {
-            borderLeft = value
-            borderTop = value
-            borderRight = value
-            borderBottom = value
-        }
+    var borders: Borders?
 }
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
     override var padding: Padding? = null
     override var style: TextStyle? = null
-    override var borderLeft: Boolean? = null
-    override var borderTop: Boolean? = null
-    override var borderRight: Boolean? = null
-    override var borderBottom: Boolean? = null
+    override var borders: Borders? = null
 }
 
 @DslMarker
@@ -45,10 +25,12 @@ class ColumnBuilder internal constructor() : CellStyleBuilder by CellStyleBuilde
 @MordantDsl
 class TableBuilder internal constructor() {
     var expand: Boolean = false
-    var borders: Borders? = Borders.SQUARE
-    var borderStyle: TextStyle = DEFAULT_STYLE
+    var borderStyle: BorderStyle = BorderStyle.SQUARE
+    var borderTextStyle: TextStyle = DEFAULT_STYLE
+
     var padding: Padding = Padding.horizontal(1)
-    var textStyle: TextStyle? = null
+    var style: TextStyle = DEFAULT_STYLE
+    var borders: Borders = Borders.all()
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal val headerSection = SectionBuilder()

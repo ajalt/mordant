@@ -9,7 +9,7 @@ data class BorderRow(
     }
 }
 
-class Borders(
+class BorderStyle(
         val top: BorderRow,
         val head: BorderRow,
         val headDivider: BorderRow,
@@ -40,9 +40,9 @@ class Borders(
     }
 
     companion object {
-        private fun build(string: String): Borders {
+        private fun build(string: String): BorderStyle {
             val lines = string.trimIndent().lines()
-            return Borders(
+            return BorderStyle(
                     top = BorderRow.build(lines[0]),
                     head = BorderRow.build(lines[1]),
                     headDivider = BorderRow.build(lines[2]),

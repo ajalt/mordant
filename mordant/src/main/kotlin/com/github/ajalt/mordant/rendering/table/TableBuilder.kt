@@ -18,8 +18,8 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         return Table(
                 rows = listOf(header, body, footer).flatten(),
                 expand = table.expand,
-                borders = table.borders,
                 borderStyle = table.borderStyle,
+                borderTextStyle = table.borderTextStyle,
                 headerRowCount = header.size,
                 footerRowCount = footer.size,
                 columnStyles = table.columns.mapValues { it.value.width }
@@ -60,23 +60,19 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
-        val borderLeft = cell.borderLeft ?: row.borderLeft ?: column?.borderLeft ?: true
-        val borderTop = cell.borderTop ?: row.borderTop ?: column?.borderTop ?: true
-        val borderRight = cell.borderRight ?: row.borderRight ?: column?.borderRight ?: true
-        val borderBottom = cell.borderBottom ?: row.borderBottom ?: column?.borderBottom ?: true
+        val borders = cell.borders ?: row.borders ?: column?.borders ?: table.borders
         val padding = cell.padding ?: row.padding ?: column?.padding ?: table.padding
-        val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.textStyle)
+        val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.style)
         val content = Padded.get(cell.content, padding)
 
         val builtCell = Cell.Content(
                 content = content,
                 rowSpan = rowSpan,
                 columnSpan = columnSpan,
-                borderLeft = borderLeft,
-                borderTop = borderTop,
-                // The content of a span is in the top-left, and so doesn't have bottom or right borders
-                borderRight = borderRight && columnSpan == 1,
-                borderBottom = borderBottom && rowSpan == 1,
+                borderLeft = borders.left,
+                borderTop = borders.top,
+                borderRight = borders.right && columnSpan == 1,
+                borderBottom = borders.bottom && rowSpan == 1,
                 style = style
         )
 
@@ -89,10 +85,10 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 } else {
                     Cell.SpanRef(
                             builtCell,
-                            borderLeft = borderLeft && x == startingX,
-                            borderTop = borderTop && y == startingY,
-                            borderRight = borderRight && x == lastX,
-                            borderBottom = borderBottom && y == lastY
+                            borderLeft = borders.left && x == startingX,
+                            borderTop = borders.top && y == startingY,
+                            borderRight = borders.right && x == lastX,
+                            borderBottom = borders.bottom && y == lastY
                     )
                 }
                 val tableRow = rows.getRow(y)

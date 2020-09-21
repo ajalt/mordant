@@ -57,12 +57,12 @@ sealed class ColumnWidth {
 // TODO: make most of these classes internal
 class Table(
         val rows: List<ImmutableRow>,
-        val expand: Boolean = false,
-        val borders: Borders? = Borders.SQUARE,
-        val borderStyle: TextStyle = DEFAULT_STYLE,
-        val headerRowCount: Int = 0,
-        val footerRowCount: Int = 0,
-        val columnStyles: Map<Int, ColumnWidth> = emptyMap()
+        val expand: Boolean,
+        val borderStyle: BorderStyle,
+        val borderTextStyle: TextStyle,
+        val headerRowCount: Int,
+        val footerRowCount: Int,
+        val columnStyles: Map<Int, ColumnWidth>,
 ) : Renderable {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -72,7 +72,7 @@ class Table(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         if (expand) return WidthRange(width, width)
-        val borderWidth = if (borders == null) 0 else columnCount + 1
+        val borderWidth = if (borderStyle == null) 0 else columnCount + 1
         val remainingWidth = width - borderWidth
         val ranges = List(columnCount) { measureColumn(it, t, remainingWidth) }
 
@@ -86,8 +86,8 @@ class Table(
         return TableRenderer(
                 rows = rows,
                 expand = expand,
-                borders = borders,
                 borderStyle = borderStyle,
+                borderTextStyle = borderTextStyle,
                 headerRowCount = headerRowCount,
                 footerRowCount = footerRowCount,
                 columnCount = columnCount,
@@ -114,7 +114,7 @@ class Table(
     }
 
     private fun calculateColumnWidths(t: Terminal, width: Int): List<Int> {
-        val borderWidth = if (borders == null) 0 else columnCount + 1
+        val borderWidth = if (borderStyle == null) 0 else columnCount + 1
         val remainingWidth = width - borderWidth
         val maxWidths = List(columnCount) { measureColumn(it, t, remainingWidth).max }
         return maxWidths // TODO: shrink
@@ -125,8 +125,8 @@ class Table(
 private class TableRenderer(
         val rows: List<ImmutableRow>,
         val expand: Boolean,
-        val borders: Borders?,
-        val borderStyle: TextStyle,
+        val borderStyle: BorderStyle?,
+        val borderTextStyle: TextStyle,
         val headerRowCount: Int,
         val footerRowCount: Int,
         val columnCount: Int,
@@ -201,7 +201,7 @@ private class TableRenderer(
 
     private fun drawTopBorderForCell(tableLineY: Int, borderTop: Boolean, x: Int, y: Int, colWidth: Int) {
         if (borderTop || cellAt(x, y - 1)?.borderBottom == true) {
-            tableLines[tableLineY].add(Span.word("─".repeat(colWidth), borderStyle))
+            tableLines[tableLineY].add(Span.word("─".repeat(colWidth), borderTextStyle))
         }
     }
 
@@ -213,7 +213,7 @@ private class TableRenderer(
             getTopLeftCorner(x, y)?.let { tableLines[tableLineY].add(it) }
             if (cell.borderLeft || cellAt(x - 1, y)?.borderRight == true) {
                 for (i in 0 until rowHeight) {
-                    tableLines[tableLineY + i + 1].add(Span.word("│", borderStyle))
+                    tableLines[tableLineY + i + 1].add(Span.word("│", borderTextStyle))
                 }
             }
             tableLineY += rowHeight + 1
@@ -275,7 +275,7 @@ private class TableRenderer(
             else -> error("impossible corner: n=$n $e=e s=$s w=$w")
         }
 
-        return Span.word(char, borderStyle)
+        return Span.word(char, borderTextStyle)
     }
 }
 
