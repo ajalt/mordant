@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.rendering.*
 
 interface CellStyleBuilder {
-    var padding: Padding?
+    var padding: Padding? // TODO: change this to be separate padding ints?
     var style: TextStyle?
     var borderLeft: Boolean?
     var borderTop: Boolean?
@@ -88,22 +88,13 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
         rowStyles = listOf(style1 + style2) + styles.asList()
     }
 
-    fun row(cells: Iterable<String>, init: RowBuilder.() -> Unit = {}) {
-        row(cells.map { Text(it) }, init)
+    fun row(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
+        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
+        rows += RowBuilder(cellBuilders).apply(init).validate()
     }
 
-    // TODO: allow `Any?`
-    fun row(vararg cells: String, init: RowBuilder.() -> Unit = {}) {
+    fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
         row(cells.asList(), init)
-    }
-
-    fun row(vararg cells: Renderable, init: RowBuilder.() -> Unit = {}) {
-        row(cells.asList(), init)
-    }
-
-    @JvmName("renderableRow")
-    fun row(cells: Iterable<Renderable>, init: RowBuilder.() -> Unit = {}) {
-        rows += RowBuilder(cells.mapTo(mutableListOf()) { CellBuilder(it) }).apply(init).validate()
     }
 
     fun row(init: RowBuilder.() -> Unit) {
@@ -116,26 +107,19 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 class RowBuilder internal constructor(
         internal val cells: MutableList<CellBuilder>
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
-    fun cells(cells: Iterable<String>, init: CellBuilder.() -> Unit = {}) {
-        cells(cells.map { Text(it) }, init)
-    }
-
-    fun cells(cell1: String, cell2: String, vararg cells: String, init: CellBuilder.() -> Unit = {}) {
-        this.cells += CellBuilder(Text(cell1)).apply(init)
-        this.cells += CellBuilder(Text(cell2)).apply(init)
+    fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit = {}) {
+        cell(cell1, init)
+        cell(cell2, init)
         cells(cells.asList(), init)
     }
 
-    @JvmName("renderableCells")
-    fun cells(cells: Iterable<Renderable>, init: CellBuilder.() -> Unit = {}) {
-        cells.mapTo(this.cells) { CellBuilder(it).apply(init) }
+    fun cells(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
+        cells.mapTo(this.cells) { CellBuilder(getRenderable(it)).apply(init) }
     }
 
-    fun cell(content: Renderable, init: CellBuilder.() -> Unit = {}) {
-        cells += CellBuilder(content).apply(init)
+    fun cell(content: Any?, init: CellBuilder.() -> Unit = {}) {
+        cells += CellBuilder(getRenderable(content)).apply(init)
     }
-
-    fun cell(content: String, init: CellBuilder.() -> Unit = {}) = cell(Text(content), init)
 
     internal fun validate(): RowBuilder {
         require(cells.isNotEmpty()) { "A row cannot be empty" }
@@ -167,3 +151,5 @@ class CellBuilder internal constructor(
 fun table(init: TableBuilder.() -> Unit): Table {
     return TableBuilderLayout(TableBuilder().apply(init)).buildTable()
 }
+
+private fun getRenderable(content: Any?) = (content as? Renderable) ?: Text(content.toString())

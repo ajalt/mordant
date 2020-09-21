@@ -292,13 +292,13 @@ fun main() {
 
             }
             row {
-                cell("3") {
+                cell(3) {
                     rowSpan = 2
                     columnSpan = 2
                 }
             }
             row {
-                cells("5", "6", "7") {
+                cells(5, 6, 7) {
                     rowSpan = 2
                     columnSpan = 2
                 }
