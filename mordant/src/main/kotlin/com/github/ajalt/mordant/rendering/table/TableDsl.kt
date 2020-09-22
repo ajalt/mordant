@@ -30,7 +30,7 @@ class TableBuilder internal constructor() {
 
     var padding: Padding = Padding.horizontal(1)
     var style: TextStyle = DEFAULT_STYLE
-    var borders: Borders = Borders.all()
+    var borders: Borders = Borders.ALL
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal val headerSection = SectionBuilder()
@@ -95,6 +95,7 @@ class RowBuilder internal constructor(
         cells(cells.asList(), init)
     }
 
+    // TODO: rename
     fun cells(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
         cells.mapTo(this.cells) { CellBuilder(getRenderable(it)).apply(init) }
     }

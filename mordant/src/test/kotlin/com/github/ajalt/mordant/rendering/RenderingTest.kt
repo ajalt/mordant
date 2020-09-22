@@ -11,7 +11,7 @@ abstract class RenderingTest(
 ) {
     protected var t = Terminal(level, theme, width)
 
-    protected fun doTest(renderable: Renderable, expected: String) {
+    protected fun checkRender(renderable: Renderable, expected: String) {
         val actual = t.render(renderable)
         try {
             actual shouldBe expected.trimMargin()

@@ -13,6 +13,7 @@ data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, va
     }
 
     companion object {
+        fun none(): Padding = all(0)
         fun all(padding: Int): Padding = Padding(padding, padding, padding, padding)
         fun symmetrical(vertical: Int = 0, horizontal: Int = 0): Padding = Padding(vertical, horizontal, vertical, horizontal)
         fun vertical(padding: Int = 0): Padding = Padding(padding, 0, padding, 0)

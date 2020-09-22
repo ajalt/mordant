@@ -5,14 +5,14 @@ import org.junit.Test
 class PanelTest : RenderingTest(width = 20) {
 
     @Test
-    fun `no expand`() = doTest(Panel(Text("text"), expand = false), """
+    fun `no expand`() = checkRender(Panel(Text("text"), expand = false), """
     |┌────┐
     |│text│
     |└────┘
     """)
 
     @Test
-    fun expand() = doTest(Panel(Text("text"), expand = true), """
+    fun expand() = checkRender(Panel(Text("text"), expand = true), """
     |┌──────────────────┐
     |│       text       │
     |└──────────────────┘

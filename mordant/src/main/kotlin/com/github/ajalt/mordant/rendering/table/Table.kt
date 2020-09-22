@@ -140,7 +140,7 @@ class Table(
 private class TableRenderer(
         val rows: List<ImmutableRow>,
         val expand: Boolean,
-        val borderStyle: BorderStyle?,
+        val borderStyle: BorderStyle,
         val borderTextStyle: TextStyle,
         val headerRowCount: Int,
         val footerRowCount: Int,
@@ -225,7 +225,7 @@ private class TableRenderer(
     private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, borderTop: Boolean, colWidth: Int): Int {
         if (!rowBorders[y]) return 0
 
-        val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) "─" else " "
+        val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) sectionOfRow(y).ew else " "
         tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderTextStyle))
         return 1
     }
@@ -243,13 +243,13 @@ private class TableRenderer(
                     tableLines[tableLineY].add(getTopLeftCorner(x, y))
                     1
                 }
-                else -> {
-                    0
-                }
+                else -> 0
             }
 
             val border = when {
-                cell.borderLeft || cellAt(x - 1, y)?.borderRight == true -> Span.word("│", borderTextStyle)
+                cell.borderLeft || cellAt(x - 1, y)?.borderRight == true -> {
+                    Span.word(sectionOfRow(y, allowBottom = false).ns, borderTextStyle)
+                }
                 else -> SINGLE_SPACE
             }
             for (i in 0 until rowHeight) {
@@ -285,65 +285,22 @@ private class TableRenderer(
         val tr = cellAt(x, y - 1)
         val bl = cellAt(x - 1, y)
         val br = cellAt(x, y)
-        return getCorner(
+        return sectionOfRow(y).getCorner(
                 tl?.borderRight == true || tr?.borderLeft == true,
                 tr?.borderBottom == true || br?.borderTop == true,
                 bl?.borderRight == true || br?.borderLeft == true,
                 tl?.borderBottom == true || bl?.borderTop == true,
+                borderTextStyle
         )
     }
 
-    private fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean): Span {
-        val char = when {
-            !n && e && s && !w -> "┌"
-            !n && e && s && w -> "┬"
-            !n && !e && s && w -> "┐"
-            n && e && s && !w -> "├"
-            n && e && s && w -> "┼"
-            n && !e && s && w -> "┤"
-            n && e && !s && !w -> "└"
-            n && e && !s && w -> "┴"
-            n && !e && !s && w -> "┘"
-            !n && e && !s && w -> "─"
-            n && !e && s && !w -> "│"
-            n && !e && !s && !w -> "╵"
-            !n && e && !s && !w -> "╶"
-            !n && !e && s && !w -> "╷"
-            !n && !e && !s && w -> "╴"
-            !n && !e && !s && !w -> return SINGLE_SPACE
-            else -> error("impossible corner: n=$n $e=e s=$s w=$w")
-        }
-
-        return Span.word(char, borderTextStyle)
-    }
-}
-
-
-fun main() {
-    val t = Terminal()
-    val table = table {
-        body {
-            row {
-                cell("2x2") {
-                    rowSpan = 2
-                    columnSpan = 2
-                }
-
-            }
-            row {
-                cell(3) {
-                    rowSpan = 2
-                    columnSpan = 2
-                }
-            }
-            row {
-                cells(5, 6, 7) {
-                    rowSpan = 2
-                    columnSpan = 2
-                }
-            }
+    private fun sectionOfRow(y: Int, allowBottom: Boolean = true): BorderStyleSection {
+        return when {
+            y < headerRowCount -> borderStyle.head
+            allowBottom && headerRowCount > 0 && y == headerRowCount -> borderStyle.headBottom
+            allowBottom && footerRowCount > 0 && y == rowCount - footerRowCount -> borderStyle.bodyBottom
+            footerRowCount == 0 || y < rowCount - footerRowCount -> borderStyle.body
+            else -> borderStyle.foot
         }
     }
-    t.print(table)
 }
-

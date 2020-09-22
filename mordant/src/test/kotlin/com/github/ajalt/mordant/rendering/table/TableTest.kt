@@ -1,57 +1,59 @@
 package com.github.ajalt.mordant.rendering.table
 
+import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.rendering.table.Borders.*
 import org.junit.Test
 
 class TableTest : RenderingTest() {
     @Test
-    fun `border top`() = doBodyTest("""
+    fun `border top`() = doTest("""
     |───
     | 1 
     """) {
         row {
             cell(1) {
-                borders = Borders(top = true)
+                borders = TOP
             }
         }
     }
 
     @Test
-    fun `border right`() = doBodyTest("""
+    fun `border right`() = doTest("""
     | 1 │
     """) {
         row {
             cell(1) {
-                borders = Borders(right = true)
+                borders = RIGHT
             }
         }
     }
 
     @Test
-    fun `border bottom`() = doBodyTest("""
+    fun `border bottom`() = doTest("""
     | 1 
     |───
     """) {
         row {
             cell(1) {
-                borders = Borders(bottom = true)
+                borders = BOTTOM
             }
         }
     }
 
     @Test
-    fun `border left`() = doBodyTest("""
+    fun `border left`() = doTest("""
     |│ 1 
     """) {
         row {
             cell(1) {
-                borders = Borders(left = true)
+                borders = LEFT
             }
         }
     }
 
     @Test
-    fun `border top with corners`() = doBodyTest("""
+    fun `border top with corners`() = doTest("""
     |╶───╴
     |  1  
     |┌───┐
@@ -60,14 +62,14 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = Borders(top = true)
+                borders = TOP
             }
         }
         row(2)
     }
 
     @Test
-    fun `border right with corners`() = doBodyTest("""
+    fun `border right with corners`() = doTest("""
     |┌───┐   ╷
     |│ 1 │ 2 │
     |└───┘   ╵
@@ -75,13 +77,13 @@ class TableTest : RenderingTest() {
         row {
             cell(1)
             cell(2) {
-                borders = Borders(right = true)
+                borders = RIGHT
             }
         }
     }
 
     @Test
-    fun `border bottom with corners`() = doBodyTest("""
+    fun `border bottom with corners`() = doTest("""
     |┌───┐
     |│ 1 │
     |└───┘
@@ -91,52 +93,52 @@ class TableTest : RenderingTest() {
         row(1)
         row {
             cell(2) {
-                borders = Borders(bottom = true)
+                borders = BOTTOM
             }
         }
     }
 
     @Test
-    fun `border left with corners`() = doBodyTest("""
+    fun `border left with corners`() = doTest("""
     |╷   ┌───┐
     |│ 1 │ 2 │
     |╵   └───┘
     """) {
         row {
             cell(1) {
-                borders = Borders(left = true)
+                borders = LEFT
             }
             cell(2)
         }
     }
 
     @Test
-    fun `inside borders`() = doBodyTest("""
+    fun `inside borders`() = doTest("""
     | 1 │ 2 
     |───┼───
     | 3 │ 4 
     """) {
         row {
             cell(1) {
-                borders = Borders(right = true)
+                borders = RIGHT
             }
             cell(2) {
-                borders = Borders(bottom = true)
+                borders = BOTTOM
             }
         }
         row {
             cell(3) {
-                borders = Borders(top=true)
+                borders = TOP
             }
             cell(4) {
-                borders = Borders(left=true)
+                borders = LEFT
             }
         }
     }
 
 
     @Test
-    fun `empty row`() = doBodyTest("""
+    fun `empty row`() = doTest("""
     |┌───┐
     |│ 1 │
     |└───┘
@@ -151,7 +153,10 @@ class TableTest : RenderingTest() {
     }
 
 
-    private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {
-        doTest(table { body(builder) }, expected)
+    private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
+        checkRender(table {
+            borderStyle = BorderStyle.HEAVY_HEAD_FOOT
+            body(builder)
+        }, expected)
     }
 }
