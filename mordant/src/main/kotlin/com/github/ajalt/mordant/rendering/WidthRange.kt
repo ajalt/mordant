@@ -3,6 +3,10 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.Terminal
 
 data class WidthRange(val min: Int, val max: Int) {
+    init {
+        require(min <= max) { "Range min cannot be larger than max" }
+    }
+
     operator fun plus(extra: Int) = WidthRange(min + extra, max + extra)
     operator fun div(divisor: Int) = WidthRange(min / divisor, max / divisor)
 }

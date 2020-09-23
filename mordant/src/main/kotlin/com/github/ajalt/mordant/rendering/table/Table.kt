@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 
-sealed class Cell {
+internal sealed class Cell {
     object Empty : Cell() {
         override val borderLeft: Boolean get() = false
         override val borderTop: Boolean get() = false
@@ -48,16 +48,8 @@ sealed class Cell {
     abstract val borderBottom: Boolean
 }
 
-sealed class ColumnWidth {
-    data class Fixed(val width: Int) : ColumnWidth()
-    data class Weighted(val weight: Float) : ColumnWidth()
-    object Default : ColumnWidth()
-}
-
-// TODO: make most of these classes internal
-class Table(
+internal class Table(
         val rows: List<ImmutableRow>,
-        val expand: Boolean,
         val borderStyle: BorderStyle,
         val borderTextStyle: TextStyle,
         val headerRowCount: Int,
@@ -68,6 +60,7 @@ class Table(
         require(rows.isNotEmpty()) { "Table cannot be empty" }
     }
 
+    private val expand = columnStyles.values.any { it is ColumnWidth.Expand }
     private val columnCount = rows.maxOf { it.size }
     private val rowBorders = List(rows.size + 1) { y ->
         (0 until columnCount).any { x ->
@@ -96,7 +89,6 @@ class Table(
     override fun render(t: Terminal, width: Int): Lines {
         return TableRenderer(
                 rows = rows,
-                expand = expand,
                 borderStyle = borderStyle,
                 borderTextStyle = borderTextStyle,
                 headerRowCount = headerRowCount,
@@ -105,8 +97,7 @@ class Table(
                 columnWidths = calculateColumnWidths(t, width),
                 columnBorders = columnBorders,
                 rowBorders = rowBorders,
-                t = t,
-                renderWidth = width
+                t = t
         ).render()
     }
 
@@ -126,20 +117,73 @@ class Table(
         }
     }
 
-    private fun calculateColumnWidths(t: Terminal, width: Int): List<Int> {
-        val remainingWidth = width - borderWidth
-        return List(columnCount) { measureColumn(it, t, remainingWidth).max } // TODO: shrink
+    private fun calculateColumnWidths(t: Terminal, terminalWidth: Int): List<Int> {
+        val availableWidth = terminalWidth - borderWidth
+        if (availableWidth <= 0) return List(columnCount) { 0 }
+
+        val measurements = List(columnCount) { measureColumn(it, t, availableWidth) }
+        val widths = measurements.mapTo(mutableListOf()) { it.max }
+
+        val fixedIdxs = columnStyles.mapNotNull { if (it.value is ColumnWidth.Fixed) it.key else null }
+        val expandIdxs = columnStyles.mapNotNull { if (it.value is ColumnWidth.Expand) it.key else null }
+        val autoIdxs = (0 until columnCount).mapNotNull { i ->
+            if (columnStyles[i]?.let { it !is ColumnWidth.Auto } == true) null else i
+        }
+
+        val maxAutoWidth = autoIdxs.sumOf { measurements[it].max }
+        val minAutoWidth = autoIdxs.sumOf { measurements[it].min }
+        val maxFixedWidth = fixedIdxs.sumOf { measurements[it].max }
+        val minExpandWidth = expandIdxs.sumOf { measurements[it].min }
+
+        // Only shrink fixed columns if they can't fit
+        val allocatedFixedWidth = minOf(maxFixedWidth, availableWidth)
+        // Only shrink auto columns if shrinking is required to allow the flex columns to fit their
+        // min. Never shrink auto columns below their min unless they wouldn't fit.
+        val allocatedAutoWidth = (availableWidth - allocatedFixedWidth - minExpandWidth)
+                .coerceIn(minAutoWidth, maxAutoWidth)
+                .coerceAtMost(availableWidth - allocatedFixedWidth)
+        // Expanding columns get whatever is left
+        val allocatedExpandWidth = availableWidth - allocatedFixedWidth - allocatedAutoWidth
+
+        fun setWeights(idxs: List<Int>, weights: List<Float>, totalWidth: Int) {
+            val distributedWidths = distributeWidths(weights, totalWidth)
+            for ((i, w) in idxs.zip(distributedWidths)) {
+                widths[i] = w
+            }
+        }
+
+        setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth)
+        setWeights(autoIdxs, autoIdxs.map { 1f }, allocatedAutoWidth)
+        setWeights(expandIdxs, expandIdxs.map { (columnStyles[it] as ColumnWidth.Expand).weight }, allocatedExpandWidth)
+
+        return widths
     }
+
+    private fun distributeWidths(weights: List<Float>, totalWidth: Int): List<Int> {
+        if (weights.isEmpty()) return emptyList()
+        if (totalWidth == 0) return weights.map { 0 }
+
+        val totalWeight = weights.sumOf { it.toDouble() }
+        val widths = weights.mapTo(mutableListOf()) { weight ->
+            (weight / totalWeight * totalWidth).toInt()
+        }
+
+        // distribute remainder left over from rounding down
+        repeat(totalWidth - widths.sum()) { i ->
+            widths[i] += 1
+        }
+
+        return widths
+    }
+
 
     private fun getCell(x: Int, y: Int): Cell? {
         return rows.getOrNull(y)?.getOrNull(x)
     }
 }
 
-
 private class TableRenderer(
         val rows: List<ImmutableRow>,
-        val expand: Boolean,
         val borderStyle: BorderStyle,
         val borderTextStyle: TextStyle,
         val headerRowCount: Int,
@@ -148,14 +192,14 @@ private class TableRenderer(
         val columnWidths: List<Int>,
         val columnBorders: List<Boolean>,
         val rowBorders: List<Boolean>,
-        val t: Terminal,
-        val renderWidth: Int
+        val t: Terminal
 ) {
     private val rowCount get() = rows.size
     private val renderedRows = rows.map { r ->
-        r.map {
+        r.mapIndexed { x, it ->
             if (it is Cell.Content) {
-                it.content.render(t, renderWidth * it.columnSpan + it.columnSpan).withStyle(it.style)
+                val w = (x until x + it.columnSpan).sumOf { columnWidths[it] }
+                if (w == 0) EMPTY_LINES else it.content.render(t, w).withStyle(it.style)
             } else {
                 EMPTY_LINES
             }
@@ -185,7 +229,7 @@ private class TableRenderer(
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
                 tableLineY +=  drawTopBorderForCell(tableLineY, x, y, cell.borderTop, colWidth)
-                drawCellContent(tableLineY, cell, rowHeight, colWidth)
+                drawCellContent(tableLineY, cell, x, y)
 
                 tableLineY += rowHeight
             }
@@ -215,8 +259,8 @@ private class TableRenderer(
         }
     }
 
-    private fun drawCellContent(tableLineY: Int, cell: Cell, rowHeight: Int, colWidth: Int) {
-        val lines = renderCell(cell, rowHeight, colWidth)
+    private fun drawCellContent(tableLineY: Int, cell: Cell, x: Int, y: Int) {
+        val lines = renderCell(cell, x, y)
         for ((i, line) in lines.withIndex()) {
             tableLines[tableLineY + i].addAll(line)
         }
@@ -259,20 +303,22 @@ private class TableRenderer(
         }
     }
 
-    private fun renderCell(cell: Cell, rowHeight: Int, colWidth: Int): List<List<Span>> {
+    private fun renderCell(cell: Cell, x: Int, y: Int): List<List<Span>> {
         return when (cell) {
             is Cell.SpanRef -> {
                 emptyList()
             }
             is Cell.Empty -> {
-                List(rowHeight) { listOf(Span.space(colWidth)) }
+                List(rowHeights[y]) { listOf(Span.space(columnWidths[x])) }
             }
             is Cell.Content -> {
-                val cellHeight = colWidth * cell.columnSpan + cell.columnSpan - 1
-                val cellWidth = rowHeight * cell.rowSpan + cell.rowSpan - 1
-                cell.content.render(t, renderWidth)
+                val cellWidth = (x until x + cell.columnSpan).sumOf { columnWidths[it] } +
+                        ((x + 1) until (x + cell.columnSpan)).count { columnBorders[it + 1] }
+                val cellHeight = (y until y + cell.rowSpan).sumOf { rowHeights[it] } +
+                        ((y + 1) until (y + cell.rowSpan)).count { rowBorders[it + 1] }
+                cell.content.render(t, cellWidth)
                         .withStyle(cell.style)
-                        .setSize(cellHeight, cellWidth)
+                        .setSize(cellWidth, cellHeight)
                         .lines
             }
         }

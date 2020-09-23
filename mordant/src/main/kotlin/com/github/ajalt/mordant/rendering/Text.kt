@@ -11,7 +11,7 @@ class Text internal constructor(
         lines: Lines,
         private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
-        private val align: TextAlign = TextAlign.LEFT
+        private val align: TextAlign = TextAlign.LEFT // TODO wordwrap (truncate, ellipses, wrap)
 ) : Renderable {
     private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
@@ -23,12 +23,9 @@ class Text internal constructor(
     ) : this(parseText(text, style), style, whitespace, align)
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val lines = wrap(width)
+        val lines = wrap(width) // TODO: this measurement is invalid for whitespace=pre
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
-        val max = lines.lines.maxOfOrNull { l ->
-            // no sumOfOrNull -_-
-            if (l.isEmpty()) 0 else l.sumOf { it.cellWidth }
-        } ?: 0
+        val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)
     }
 
@@ -37,7 +34,6 @@ class Text internal constructor(
         return wrap(width)
     }
 
-    /** Wrap spans to a list of lines. The last span in every line will be blank and end with `\n` */
     private fun wrap(wrapWidth: Int): Lines {
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()

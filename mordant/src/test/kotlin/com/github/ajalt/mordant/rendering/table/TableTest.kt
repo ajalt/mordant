@@ -157,6 +157,6 @@ class TableTest : RenderingTest() {
         checkRender(table {
             borderStyle = BorderStyle.HEAVY_HEAD_FOOT
             body(builder)
-        }, expected)
+        }, expected.trimMargin(), trimIndent = false)
     }
 }

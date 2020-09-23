@@ -17,7 +17,6 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
 
         return Table(
                 rows = listOf(header, body, footer).flatten(),
-                expand = table.expand,
                 borderStyle = table.borderStyle,
                 borderTextStyle = table.borderTextStyle,
                 headerRowCount = header.size,

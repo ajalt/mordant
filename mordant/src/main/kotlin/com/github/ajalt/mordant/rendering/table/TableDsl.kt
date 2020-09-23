@@ -14,17 +14,32 @@ private class CellStyleBuilderMixin : CellStyleBuilder {
     override var borders: Borders? = null
 }
 
+sealed class ColumnWidth {
+    object Auto : ColumnWidth()
+    class Fixed(val width: Int) : ColumnWidth() {
+        init {
+            require(width > 0) { "width must be greater than zero" }
+        }
+    }
+
+    class Expand(val weight: Float = 1f) : ColumnWidth() {
+        init {
+            require(weight > 0) { "weight must be greater than zero" }
+        }
+        constructor(weight: Int): this(weight.toFloat())
+    }
+}
+
 @DslMarker
 annotation class MordantDsl
 
 @MordantDsl
 class ColumnBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
-    var width: ColumnWidth = ColumnWidth.Default
+    var width: ColumnWidth = ColumnWidth.Auto
 }
 
 @MordantDsl
 class TableBuilder internal constructor() {
-    var expand: Boolean = false
     var borderStyle: BorderStyle = BorderStyle.SQUARE
     var borderTextStyle: TextStyle = DEFAULT_STYLE
 
@@ -126,7 +141,7 @@ class CellBuilder internal constructor(
         }
 }
 
-fun table(init: TableBuilder.() -> Unit): Table {
+fun table(init: TableBuilder.() -> Unit): Renderable {
     return TableBuilderLayout(TableBuilder().apply(init)).buildTable()
 }
 
