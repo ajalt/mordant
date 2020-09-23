@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.rendering.table.Borders.ALL
 import com.github.ajalt.mordant.rendering.table.Borders.LEFT_RIGHT
 import org.junit.Test
 
@@ -87,7 +88,16 @@ class TableColumnWidthTest : RenderingTest() {
             "|||||"
     )
 
-    private fun doTest(tableWidth: Int, expected: String) {
+    @Test
+    fun `shrink fixed completely with row borders`() = doTest(0,
+            """
+            +++++
+            |||||
+            +++++
+            """, borders = ALL
+    )
+
+    private fun doTest(tableWidth: Int, expected: String, borders: Borders = LEFT_RIGHT) {
         t = Terminal(width = tableWidth)
         checkRender(table {
             borderStyle = BorderStyle.ASCII
@@ -96,11 +106,11 @@ class TableColumnWidthTest : RenderingTest() {
             column(2) { width = ColumnWidth.Expand() }
             column(3) { width = ColumnWidth.Expand(2) }
             body {
+                this.borders = borders
                 row {
-                    borders = LEFT_RIGHT
                     cells(11, "22 foo", 33, 44)
                 }
             }
-        }, expected)
+        }, expected.trimIndent())
     }
 }

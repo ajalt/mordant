@@ -153,7 +153,7 @@ internal class Table(
         }
 
         setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth)
-        setWeights(autoIdxs, autoIdxs.map { 1f }, allocatedAutoWidth)
+        setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth)
         setWeights(expandIdxs, expandIdxs.map { (columnStyles[it] as ColumnWidth.Expand).weight }, allocatedExpandWidth)
 
         return widths
@@ -268,6 +268,7 @@ private class TableRenderer(
 
     private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, borderTop: Boolean, colWidth: Int): Int {
         if (!rowBorders[y]) return 0
+        if (colWidth == 0) return 1
 
         val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) sectionOfRow(y).ew else " "
         tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderTextStyle))

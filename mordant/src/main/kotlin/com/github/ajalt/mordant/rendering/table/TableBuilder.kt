@@ -59,8 +59,8 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
-        val borders = cell.borders ?: row.borders ?: column?.borders ?: table.borders
-        val padding = cell.padding ?: row.padding ?: column?.padding ?: table.padding
+        val borders = cell.borders ?: row.borders ?: column?.borders ?: section.borders ?: table.borders
+        val padding = cell.padding ?: row.padding ?: column?.padding ?: section.padding ?: table.padding
         val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.style)
         val content = Padded.get(cell.content, padding)
 

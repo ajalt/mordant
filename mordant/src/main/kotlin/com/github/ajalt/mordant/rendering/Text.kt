@@ -23,7 +23,7 @@ class Text internal constructor(
     ) : this(parseText(text, style), style, whitespace, align)
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val lines = wrap(width) // TODO: this measurement is invalid for whitespace=pre
+        val lines = wrap(width)
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)

@@ -1,7 +1,10 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
+import com.github.ajalt.mordant.rendering.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.rendering.Text
+import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.rendering.table.Borders.*
 import org.junit.Test
 
@@ -150,6 +153,27 @@ class TableTest : RenderingTest() {
         row(1)
         row()
         row(2)
+    }
+
+    @Test
+    fun `preformatted text content`() = doTest("""
+    |┌────────────────┬─┐
+    |│line 1          │2│
+    |│2nd line no wrap│ │
+    |├────────────────┼─┤
+    |│3               │4│
+    |└────────────────┴─┘
+    """) {
+        padding = Padding.none()
+        row {
+            cell(Text("""
+                    line 1
+                    2nd line no wrap
+                    """.trimIndent(), whitespace = PRE)
+            )
+            cell(2)
+        }
+        row(3, 4)
     }
 
 
