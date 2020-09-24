@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import org.junit.Test
 
 class PanelTest : RenderingTest(width = 20) {
@@ -17,4 +18,10 @@ class PanelTest : RenderingTest(width = 20) {
     │       text       │
     └──────────────────┘
     """)
+
+    @Test
+    fun `no border`() = checkRender(Panel(Text("text\nline 2", whitespace = PRE), borderStyle = null), """
+    | text ⏎
+    |line 2⏎
+    """.trimMargin())
 }

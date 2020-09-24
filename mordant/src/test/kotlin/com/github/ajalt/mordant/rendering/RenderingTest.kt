@@ -14,7 +14,8 @@ abstract class RenderingTest(
     protected fun checkRender(renderable: Renderable, expected: String, trimIndent: Boolean = true) {
         val actual = t.render(renderable)
         try {
-            actual shouldBe if (trimIndent) expected.trimIndent() else expected
+            val trimmed = if (trimIndent) expected.trimIndent() else expected
+            actual shouldBe trimmed.replace("⏎", "")
         } catch (e: Throwable) {
             println(actual)
             throw e

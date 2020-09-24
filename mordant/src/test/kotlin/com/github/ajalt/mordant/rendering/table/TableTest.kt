@@ -12,7 +12,7 @@ class TableTest : RenderingTest() {
     @Test
     fun `border top`() = doTest("""
     |───
-    | 1 
+    | 1 ⏎
     """) {
         row {
             cell(1) {
@@ -34,7 +34,7 @@ class TableTest : RenderingTest() {
 
     @Test
     fun `border bottom`() = doTest("""
-    | 1 
+    | 1 ⏎
     |───
     """) {
         row {
@@ -46,7 +46,7 @@ class TableTest : RenderingTest() {
 
     @Test
     fun `border left`() = doTest("""
-    |│ 1 
+    |│ 1 ⏎
     """) {
         row {
             cell(1) {
@@ -58,7 +58,7 @@ class TableTest : RenderingTest() {
     @Test
     fun `border top with corners`() = doTest("""
     |╶───╴
-    |  1  
+    |  1  ⏎
     |┌───┐
     |│ 2 │
     |└───┘
@@ -90,7 +90,7 @@ class TableTest : RenderingTest() {
     |┌───┐
     |│ 1 │
     |└───┘
-    |  2  
+    |  2  ⏎
     |╶───╴
     """) {
         row(1)
@@ -117,9 +117,9 @@ class TableTest : RenderingTest() {
 
     @Test
     fun `inside borders`() = doTest("""
-    | 1 │ 2 
-    |───┼───
-    | 3 │ 4 
+    | 1 │ 2 ⏎
+    |───┼───⏎
+    | 3 │ 4 ⏎
     """) {
         row {
             cell(1) {
@@ -145,7 +145,7 @@ class TableTest : RenderingTest() {
     |┌───┐
     |│ 1 │
     |└───┘
-    |     
+    |     ⏎
     |┌───┐
     |│ 2 │
     |└───┘
