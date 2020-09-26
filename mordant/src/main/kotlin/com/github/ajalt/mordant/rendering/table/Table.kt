@@ -145,22 +145,24 @@ internal class Table(
         // Expanding columns get whatever is left
         val allocatedExpandWidth = availableWidth - allocatedFixedWidth - allocatedAutoWidth
 
-        fun setWeights(idxs: List<Int>, weights: List<Float>, totalWidth: Int) {
-            val distributedWidths = distributeWidths(weights, totalWidth)
+        fun setWeights(idxs: List<Int>, weights: List<Float>, allocatedWidth: Int, maxWidth: Int = -1) {
+            if (weights.isEmpty() || allocatedWidth == maxWidth) return
+            val distributedWidths = distributeWidths(weights, allocatedWidth)
             for ((i, w) in idxs.zip(distributedWidths)) {
                 widths[i] = w
             }
         }
 
-        setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth)
-        setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth)
+        setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth, maxFixedWidth)
         setWeights(expandIdxs, expandIdxs.map { (columnStyles[it] as ColumnWidth.Expand).weight }, allocatedExpandWidth)
+        // Setting a column's weight to its max width allows us to shrink the columns while
+        // maintaining their relative widths
+        setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth, maxAutoWidth)
 
         return widths
     }
 
     private fun distributeWidths(weights: List<Float>, totalWidth: Int): List<Int> {
-        if (weights.isEmpty()) return emptyList()
         if (totalWidth == 0) return weights.map { 0 }
 
         val totalWeight = weights.sumOf { it.toDouble() }

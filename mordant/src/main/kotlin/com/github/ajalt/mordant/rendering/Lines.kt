@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.rendering.TextAlign.*
+import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
 typealias Line = List<Span>
-internal typealias MutableLine = MutableList<Span>
 
 data class Lines(
         val lines: List<Line>,
@@ -32,10 +32,34 @@ data class Lines(
     }
 }
 
-/** Pad or crop every line so its width is exactly [newWidth] */
-internal fun Lines.setSize(newWidth: Int, newHeight: Int? = null, align: TextAlign = LEFT): Lines {
-    val lines = mutableListOf<Line>()
-    line@ for (line in this.lines) {
+/**
+ * Pad or crop every line so its width is exactly [newWidth], and add or remove lines so its height
+ * is exactly [newHeight]
+ */
+internal fun Lines.setSize(
+        newWidth: Int,
+        newHeight: Int = lines.size,
+        verticalAlign: VerticalAlign = TOP,
+        textAlign: TextAlign = NONE
+): Lines {
+    val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
+
+    val emptyLine = listOf(Span.space(newWidth))
+    val lines = ArrayList<Line>(newHeight)
+
+    val topEmptyLines = when (verticalAlign) {
+        TOP -> 0
+        MIDDLE -> heightToAdd / 2 + heightToAdd % 2
+        BOTTOM -> heightToAdd
+    }
+
+    repeat(topEmptyLines) {
+        lines.add(emptyLine)
+    }
+
+    line@ for ((i, line) in this.lines.withIndex()) {
+        if (i >= newHeight) break
+
         var width = 0
         for ((j, span) in line.withIndex()) {
             when {
@@ -56,13 +80,13 @@ internal fun Lines.setSize(newWidth: Int, newHeight: Int? = null, align: TextAli
 
         val remainingWidth = newWidth - width
         if (remainingWidth > 0) {
-            when (align) {
+            when (textAlign) {
                 CENTER, JUSTIFY -> {
                     val l = Span.space(remainingWidth / 2)
                     val r = Span.space(remainingWidth / 2 + remainingWidth % 2)
                     lines.add(listOf(listOf(l), line, listOf(r)).flatten())
                 }
-                LEFT -> {
+                LEFT, NONE -> {
                     lines.add(line + Span.space(remainingWidth))
                 }
                 RIGHT -> {
@@ -74,7 +98,7 @@ internal fun Lines.setSize(newWidth: Int, newHeight: Int? = null, align: TextAli
         }
     }
 
-    if (newHeight != null && newHeight != lines.size) {
+    if (newHeight != lines.size) {
         // TODO vertical align
         if (newHeight < lines.size) {
             return Lines(lines.take(newHeight))

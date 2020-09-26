@@ -9,6 +9,7 @@ class Panel(
         private val borderTextStyle: TextStyle = DEFAULT_STYLE,
         padding: Padding = DEFAULT_PADDING
 ) : Renderable {
+
     private val content: Renderable = Padded.get(content, padding)
 
     override fun measure(t: Terminal, width: Int): WidthRange {
@@ -31,7 +32,7 @@ class Panel(
             else -> measurement.max.coerceAtMost(maxContentWidth)
         }
 
-        val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, align = TextAlign.CENTER)
+        val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth)
         if (borderStyle == null) return renderedContent
 
         val lines = ArrayList<Line>(renderedContent.lines.size + borderSize)
