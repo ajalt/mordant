@@ -42,6 +42,9 @@ internal fun Lines.setSize(
         verticalAlign: VerticalAlign = TOP,
         textAlign: TextAlign = NONE
 ): Lines {
+    if (newHeight == 0) return EMPTY_LINES
+    if (newWidth == 0) return Lines(List(newHeight) { emptyList() })
+
     val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
 
     val emptyLine = listOf(Span.space(newWidth))

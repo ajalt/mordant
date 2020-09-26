@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.Padded
+import com.github.ajalt.mordant.rendering.Text
 import com.github.ajalt.mordant.rendering.foldStyles
 
 internal typealias ImmutableRow = List<Cell>
@@ -59,10 +60,18 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
-        val borders = cell.borders ?: row.borders ?: column?.borders ?: section.borders ?: table.borders
-        val padding = cell.padding ?: row.padding ?: column?.padding ?: section.padding ?: table.padding
+
+        fun <T : Any> getVal(default: T, getter: (CellStyleBuilder) -> T?): T {
+            return getter(cell) ?: getter(row) ?: column?.let(getter) ?: getter(section) ?: default
+        }
+
+        val borders = getVal(table.borders) { it.borders }
+        val padding = getVal(table.padding) { it.padding }
+        val textAlign = getVal(table.align) { it.align }
+        val verticalAlign = getVal(table.verticalAlign) { it.verticalAlign }
         val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.style)
-        val content = Padded.get(cell.content, padding)
+        val alignedContent = if (cell.content is Text) cell.content.withAlign(textAlign) else cell.content
+        val content = Padded.get(alignedContent, padding)
 
         val builtCell = Cell.Content(
                 content = content,
@@ -72,7 +81,9 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 borderTop = borders.top,
                 borderRight = borders.right && columnSpan == 1,
                 borderBottom = borders.bottom && rowSpan == 1,
-                style = style
+                style = style,
+                textAlign = textAlign,
+                verticalAlign = verticalAlign
         )
 
         val lastX = startingX + columnSpan - 1

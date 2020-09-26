@@ -28,8 +28,14 @@ internal data class Padded(private val content: Renderable, private val padding:
         fun get(content: Renderable, padding: Padding) = if (padding.isEmpty) content else Padded(content, padding)
     }
 
+    private val paddingWidth get() = padding.left + padding.right
+
+    override fun measure(t: Terminal, width: Int): WidthRange {
+        return content.measure(t, width - paddingWidth) + paddingWidth
+    }
+
     override fun render(t: Terminal, width: Int): Lines {
-        val lines = content.render(t, width)
+        val lines = content.render(t, width - paddingWidth)
 
         val blank = emptyList<Span>()
         val output = ArrayList<Line>(padding.top + lines.size + padding.bottom)
@@ -45,10 +51,5 @@ internal data class Padded(private val content: Renderable, private val padding:
         repeat(padding.bottom) { output.add(blank) }
 
         return Lines(output)
-    }
-
-    override fun measure(t: Terminal, width: Int): WidthRange {
-        val paddingWidth = padding.left + padding.right
-        return content.measure(t, width - paddingWidth) + paddingWidth
     }
 }

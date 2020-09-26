@@ -6,12 +6,16 @@ interface CellStyleBuilder {
     var padding: Padding?
     var style: TextStyle?
     var borders: Borders?
+    var align: TextAlign?
+    var verticalAlign: VerticalAlign?
 }
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
     override var padding: Padding? = null
     override var style: TextStyle? = null
     override var borders: Borders? = null
+    override var align: TextAlign? = null
+    override var verticalAlign: VerticalAlign? = null
 }
 
 sealed class ColumnWidth {
@@ -46,6 +50,8 @@ class TableBuilder internal constructor() {
     var padding: Padding = Padding.horizontal(1)
     var style: TextStyle = DEFAULT_STYLE
     var borders: Borders = Borders.ALL
+    var align: TextAlign = TextAlign.LEFT
+    var verticalAlign: VerticalAlign = VerticalAlign.TOP
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal val headerSection = SectionBuilder()
@@ -120,7 +126,6 @@ class RowBuilder internal constructor(
     }
 }
 
-// TODO: alignment / gravity
 @MordantDsl
 class CellBuilder internal constructor(
         internal val content: Renderable = Text(""),
@@ -145,4 +150,10 @@ fun table(init: TableBuilder.() -> Unit): Renderable {
     return TableBuilderLayout(TableBuilder().apply(init)).buildTable()
 }
 
-private fun getRenderable(content: Any?) = (content as? Renderable) ?: Text(content.toString())
+private fun getRenderable(content: Any?): Renderable {
+    if (content is Renderable) return content
+    return when (val string = content.toString()) {
+        "" -> EmptyRenderable
+        else -> Text(string)
+    }
+}

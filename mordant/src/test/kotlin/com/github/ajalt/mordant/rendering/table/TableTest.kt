@@ -10,6 +10,16 @@ import org.junit.Test
 
 class TableTest : RenderingTest() {
     @Test
+    fun `empty cell`() = doTest("""
+    |┌┐
+    |││
+    |└┘
+    """) {
+        padding = Padding.none()
+        row("")
+    }
+
+    @Test
     fun `border top`() = doTest("""
     |───
     | 1 ⏎

@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.internal.parseText
 
 class HorizontalRule internal constructor(
         private val ruleCharacter: String = "─",
-        private val title: Renderable = EMPTY_RENDERABLE,
+        private val title: Renderable = EmptyRenderable,
         private val ruleStyle: TextStyle? = null,
         private val titleStyle: TextStyle? = null
 ) : Renderable {

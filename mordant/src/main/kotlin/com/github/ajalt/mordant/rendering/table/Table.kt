@@ -26,13 +26,15 @@ internal sealed class Cell {
 
     data class Content(
             val content: Renderable,
-            override val rowSpan: Int = 1,
-            override val columnSpan: Int = 1,
-            override val borderLeft: Boolean = true,
-            override val borderTop: Boolean = true,
-            override val borderRight: Boolean = true,
-            override val borderBottom: Boolean = true,
-            val style: TextStyle? = null
+            override val rowSpan: Int,
+            override val columnSpan: Int,
+            override val borderLeft: Boolean,
+            override val borderTop: Boolean,
+            override val borderRight: Boolean,
+            override val borderBottom: Boolean,
+            val style: TextStyle?,
+            val textAlign: TextAlign,
+            val verticalAlign: VerticalAlign,
     ) : Cell() {
         init {
             require(rowSpan > 0) { "rowSpan must be greater than 0" }
@@ -321,7 +323,7 @@ private class TableRenderer(
                         ((y + 1) until (y + cell.rowSpan)).count { rowBorders[it + 1] }
                 cell.content.render(t, cellWidth)
                         .withStyle(cell.style)
-                        .setSize(cellWidth, cellHeight)
+                        .setSize(cellWidth, cellHeight, cell.verticalAlign, cell.textAlign)
                         .lines
             }
         }

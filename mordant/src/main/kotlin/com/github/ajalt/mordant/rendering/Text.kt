@@ -12,7 +12,7 @@ class Text internal constructor(
         lines: Lines,
         private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
-        private val align: TextAlign = LEFT // TODO wordwrap (truncate, ellipses, wrap)
+        private val align: TextAlign = NONE // TODO wordwrap (truncate, ellipses, wrap)
 ) : Renderable {
     private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
@@ -23,18 +23,20 @@ class Text internal constructor(
             align: TextAlign = LEFT,
     ) : this(parseText(text, style), style, whitespace, align)
 
+    internal fun withAlign(align: TextAlign) = Text(lines, style, whitespace, align)
+
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val lines = wrap(width)
+        val lines = wrap(width, NONE) // measure without padding from alignment
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return wrap(width)
+        return wrap(width, align)
     }
 
-    private fun wrap(wrapWidth: Int): Lines {
+    private fun wrap(wrapWidth: Int, align: TextAlign): Lines {
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
         var width = 0
@@ -114,7 +116,7 @@ class Text internal constructor(
             }
         }
 
-        if (line.isNotEmpty()) lines += line
+        if (line.isNotEmpty()) breakLine()
 
         return Lines(lines)
     }
