@@ -3,6 +3,8 @@ package com.github.ajalt.mordant.rendering.markdown
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.parseText
+import com.github.ajalt.mordant.rendering.table.SectionBuilder
+import com.github.ajalt.mordant.rendering.table.table
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
@@ -25,6 +27,7 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
 
 private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
+private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
 
 private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
     return fold(EMPTY_LINES) { l, r -> l + transform(r) }
@@ -80,7 +83,7 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
             MarkdownElementTypes.SETEXT_1 -> setext("═", theme.markdownH1, node, theme)
-            MarkdownElementTypes.SETEXT_2 ->  setext("─", theme.markdownH2, node, theme)
+            MarkdownElementTypes.SETEXT_2 -> setext("─", theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node, theme)
             MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node, theme)
@@ -88,9 +91,19 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
             MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
 
-            GFMElementTypes.TABLE -> TODO("TABLE")
-            GFMElementTypes.HEADER -> TODO("HEADER")
-            GFMElementTypes.ROW -> TODO("ROW")
+            GFMElementTypes.TABLE -> table {
+                parseTableAlignment(node).forEachIndexed { i, align ->
+                    column(i) { this.align = align }
+                }
+                header {
+                    parseTableRow(node.children.first { it.type == GFMElementTypes.HEADER })
+                }
+                body {
+                    node.children.filter { it.type == GFMElementTypes.ROW }.forEach {
+                        parseTableRow(it)
+                    }
+                }
+            }
 
             MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule(title = "")
             MarkdownTokenTypes.EOL -> EOL_TEXT
@@ -128,10 +141,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             // GFMTokenTypes
-            GFMTokenTypes.TILDE -> TODO("TILDE")
-            GFMTokenTypes.TABLE_SEPARATOR -> TODO("TABLE_SEPARATOR")
             GFMTokenTypes.CHECK_BOX -> TODO("CHECK_BOX") // https://github.github.com/gfm/#task-list-items-extension-
-            GFMTokenTypes.CELL -> TODO("CELL")
 
             // TokenTypes
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
@@ -160,16 +170,18 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE,
             GFMTokenTypes.GFM_AUTOLINK -> {
-                parseText(input.substring(node.startOffset, node.endOffset), DEFAULT_STYLE)
+                parseText(nodeText(node), DEFAULT_STYLE)
             }
             MarkdownTokenTypes.EOL -> EOL_LINES
             else -> error("Unexpected token when parsing inlines: $node")
         }
     }
 
+    private fun nodeText(node: ASTNode) = input.substring(node.startOffset, node.endOffset)
+
     private fun innerInlines(node: ASTNode, drop: Int, dropLast: Int = drop): Lines {
-            return node.children.subList(drop, node.children.size - dropLast)
-                    .foldLines { parseInlines(it) }
+        return node.children.subList(drop, node.children.size - dropLast)
+                .foldLines { parseInlines(it) }
     }
 
     private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
@@ -202,4 +214,23 @@ internal class MarkdownRenderer(
         val dropLast = if (nodes.lastOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
         return drop to dropLast
     }
+
+    private fun SectionBuilder.parseTableRow(node: ASTNode) = row {
+        for (child in node.children) {
+            if (child.type != GFMTokenTypes.CELL) continue
+            val (drop, dropLast) = dropWs(child.children)
+            cell(Text(innerInlines(child, drop = drop, dropLast = dropLast)))
+        }
+    }
+
+    private fun parseTableAlignment(node: ASTNode): Sequence<TextAlign> {
+        val headerSeparator = node.children.first { it.type == GFMTokenTypes.TABLE_SEPARATOR }
+        return TABLE_DELIMITER_REGEX.findAll(nodeText(headerSeparator)).map {
+            if (it.value.endsWith(":")) {
+                if (it.value.startsWith(":")) TextAlign.CENTER
+                else TextAlign.RIGHT
+            } else TextAlign.LEFT
+        }
+    }
 }
+

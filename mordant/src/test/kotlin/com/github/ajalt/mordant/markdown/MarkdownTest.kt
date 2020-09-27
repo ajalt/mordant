@@ -3,10 +3,8 @@ package com.github.ajalt.mordant.markdown
 import com.github.ajalt.mordant.AnsiColor.black
 import com.github.ajalt.mordant.AnsiColor.brightWhite
 import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.AnsiStyle
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.TerminalColors
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode
@@ -362,6 +360,64 @@ ${italic("line")} break with emph.
 Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
 """)
 
+    // https://github.github.com/gfm/#example-205
+    @Test
+    fun `header only table`() = doTest("""
+| abc | def |
+| --- | --- |
+""", """
+┌─────┐
+│ foo │
+└─────┘
+""")
+
+    // https://github.github.com/gfm/#example-198
+    @Test
+    fun `simple table`() = doTest("""
+ | foo | bar |
+ | --- | --- |
+ | baz | bim |
+""", """
+┌─────┬─────┐
+│ foo │ bar │
+├─────┼─────┤
+│ baz │ bim │
+└─────┴─────┘
+""")
+
+    // https://github.github.com/gfm/#example-204
+    @Test
+    fun `non-rectangular table`() = doTest("""
+| abc | def |
+| --- | --- |
+| bar |
+| bar | baz | boo |
+""", """
+┌─────┬─────┐
+│ abc │ def │
+├─────┼─────┘
+│ bar │      
+├─────┼─────┐
+│ bar │ baz │
+└─────┴─────┘
+""")
+
+    @Test
+    fun `table alignment`() = doTest("""
+| abc | def | ghi |
+| :---: | ---: | :--- |
+| bar | baz | quz |
+| ...... | ...... | ...... |
+""", """
+┌────────┬────────┬────────┐
+│  abc   │    def │ ghi    │
+├────────┼────────┼────────┤
+│  bar   │    baz │ quz    │
+├────────┼────────┼────────┤
+│ ...... │ ...... │ ...... │
+└────────┴────────┴────────┘
+""")
+
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
@@ -369,9 +425,14 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
             showHtml: Boolean = false
     ) {
         try {
-            val terminal = Terminal(level=AnsiLevel.TRUECOLOR, width = width)
+            val terminal = Terminal(level = AnsiLevel.TRUECOLOR, width = width)
             val actual = terminal.renderMarkdown(markdown, showHtml)
-            actual shouldBe expected
+            try {
+                actual shouldBe expected
+            } catch (e: Throwable) {
+                println(actual)
+                throw e
+            }
         } catch (e: Throwable) {
             // Print parse tree on test failure
             val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
