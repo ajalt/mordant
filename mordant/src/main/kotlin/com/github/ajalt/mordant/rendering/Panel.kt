@@ -11,20 +11,20 @@ class Panel(
 ) : Renderable {
 
     private val content: Renderable = Padded.get(content, padding)
+    private val borderWidth get() = if (borderStyle == null) 0 else 2
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val measurement = content.measure(t, width - 2)
+        val measurement = content.measure(t, width - borderWidth)
 
         return if (expand) {
-            WidthRange(measurement.max + 2, measurement.max + 2)
+            WidthRange(measurement.max + borderWidth, measurement.max + borderWidth)
         } else {
-            measurement + 2
+            measurement + borderWidth
         }
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val borderSize = if (borderStyle == null) 0 else 2
-        val maxContentWidth = width - borderSize
+        val maxContentWidth = width - borderWidth
         val measurement = content.measure(t, maxContentWidth)
 
         val contentWidth = when {
@@ -35,7 +35,7 @@ class Panel(
         val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth)
         if (borderStyle == null) return renderedContent
 
-        val lines = ArrayList<Line>(renderedContent.lines.size + borderSize)
+        val lines = ArrayList<Line>(renderedContent.lines.size + borderWidth)
         val b = borderStyle.body
         val horizontalBorder = Span.word(b.ew.repeat(contentWidth), borderTextStyle)
         lines.add(listOf(Span.word(b.es, borderTextStyle), horizontalBorder, Span.word(b.sw, borderTextStyle)))

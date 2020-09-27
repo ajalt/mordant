@@ -20,7 +20,7 @@ class Text internal constructor(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.NORMAL,
-            align: TextAlign = LEFT,
+            align: TextAlign = NONE,
     ) : this(parseText(text, style), style, whitespace, align)
 
     internal fun withAlign(align: TextAlign) = Text(lines, style, whitespace, align)
@@ -160,3 +160,5 @@ class Text internal constructor(
         return "Text(${plain.take(25)}${if (plain.length > 25) "…" else ""})"
     }
 }
+
+internal fun Renderable.withAlign(align: TextAlign): Renderable = if (this is Text) this.withAlign(align) else this

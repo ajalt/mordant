@@ -1,27 +1,35 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
-import io.kotest.matchers.shouldBe
-import kotlin.test.Test
+import org.junit.Test
 
-class HorizontalRuleTest {
+class HorizontalRuleTest : RenderingTest() {
+    @Test
+    fun `no title`() {
+        t = Terminal(width = 10)
+        checkRender(HorizontalRule(), "──────────")
+    }
+
     @Test
     fun `multiple character rules`() {
-        Terminal(width = 20).render(
-                HorizontalRule("1234", title = "title")
-        ) shouldBe "123412 title 1234123"
+        t = Terminal(width = 20)
+        checkRender(HorizontalRule(title = "title", ruleCharacter = "1234"), "123412 title 1234123")
+    }
+
+    @Test
+    fun `rule with whitespace`() {
+        t = Terminal(width = 6)
+        checkRender(HorizontalRule(ruleCharacter = "- -"), "- -- -")
     }
 
     @Test
     fun `multiline title`() {
-        Terminal(width = 19).render(
-                HorizontalRule(title = Text("""
-                Multiline
-                Header Text
-                """.trimIndent()))
-        ) shouldBe """
-             Multiline     
-        ─── Header Text ───
-        """.trimIndent()
+        t = Terminal(width = 19)
+        checkRender(HorizontalRule(title = Text("Multiline\nHeader Text", whitespace = Whitespace.PRE_WRAP)),
+                """
+                     Multiline     ⏎
+                ─── Header Text ───⏎
+                """
+        )
     }
 }

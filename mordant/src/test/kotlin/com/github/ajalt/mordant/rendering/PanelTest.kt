@@ -13,7 +13,7 @@ class PanelTest : RenderingTest(width = 20) {
     """)
 
     @Test
-    fun expand() = checkRender(Panel(Text("text"), expand = true), """
+    fun expand() = checkRender(Panel(Text("text", align = TextAlign.CENTER), expand = true), """
     ┌──────────────────┐
     │       text       │
     └──────────────────┘
@@ -21,7 +21,7 @@ class PanelTest : RenderingTest(width = 20) {
 
     @Test
     fun `no border`() = checkRender(Panel(Text("text\nline 2", whitespace = PRE), borderStyle = null), """
-    | text ⏎
+    |text  ⏎
     |line 2⏎
     """.trimMargin())
 }

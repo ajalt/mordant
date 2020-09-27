@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.rendering.Padded
 import com.github.ajalt.mordant.rendering.Text
 import com.github.ajalt.mordant.rendering.foldStyles
+import com.github.ajalt.mordant.rendering.withAlign
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
@@ -70,8 +71,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val textAlign = getVal(table.align) { it.align }
         val verticalAlign = getVal(table.verticalAlign) { it.verticalAlign }
         val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.style)
-        val alignedContent = if (cell.content is Text) cell.content.withAlign(textAlign) else cell.content
-        val content = Padded.get(alignedContent, padding)
+        val content = Padded.get(cell.content.withAlign(textAlign), padding)
 
         val builtCell = Cell.Content(
                 content = content,

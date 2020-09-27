@@ -1,22 +1,24 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.TextAlign.NONE
 import com.github.ajalt.mordant.rendering.internal.parseText
 
 class HorizontalRule internal constructor(
+        private val title: Renderable,
         private val ruleCharacter: String = "─",
-        private val title: Renderable = EmptyRenderable,
         private val ruleStyle: TextStyle? = null,
         private val titleStyle: TextStyle? = null
 ) : Renderable {
+    constructor() : this(EmptyRenderable)
     constructor(
-            ruleCharacter: String = "─",
             title: String = "",
+            ruleCharacter: String = "─",
             ruleStyle: TextStyle? = null,
             titleStyle: TextStyle? = null
     ) : this(
-            ruleCharacter = ruleCharacter,
             title = Text(parseText(title, DEFAULT_STYLE)),
+            ruleCharacter = ruleCharacter,
             ruleStyle = ruleStyle,
             titleStyle = titleStyle
     )
@@ -32,7 +34,7 @@ class HorizontalRule internal constructor(
 
     override fun render(t: Terminal, width: Int): Lines {
         val minBarWidth = 6 // 2 for each of left bar, right bar, padding
-        val content = title.render(t, width - minBarWidth)
+        val content = title.withAlign(NONE).render(t, width - minBarWidth)
         val lines = if (content.lines.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {
@@ -43,9 +45,9 @@ class HorizontalRule internal constructor(
             })
             val lastLine = renderedTitle.lines.last()
             val space = listOf(SINGLE_SPACE)
-            val remainingWidth = width - lastLine.sumOf { it.cellWidth } - 2
-            val leftRule = rule(t.theme, remainingWidth / 2)
-            val rightRule = rule(t.theme, remainingWidth / 2 + remainingWidth % 2)
+            val ruleWidth = width - lastLine.sumOf { it.cellWidth } - 2 // -2 for padding
+            val leftRule = rule(t.theme, ruleWidth / 2)
+            val rightRule = rule(t.theme, ruleWidth / 2 + ruleWidth % 2)
             val rule = listOf(leftRule, space, lastLine, space, rightRule).flatten()
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))
