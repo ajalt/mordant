@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering.markdown
 
+import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.parseText
@@ -8,11 +9,13 @@ import com.github.ajalt.mordant.rendering.table.table
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
+import org.intellij.markdown.ast.LeafASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
+import java.io.File
 
 
 internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
@@ -151,6 +154,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             // TokenTypes
+            MarkdownTokenTypes.BLOCK_QUOTE -> EMPTY_LINES // don't render '>' delimiters in block quotes
             MarkdownTokenTypes.CODE_LINE -> parseText(nodeText(node).drop(4), DEFAULT_STYLE)
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
@@ -238,4 +242,3 @@ internal class MarkdownRenderer(
         }
     }
 }
-

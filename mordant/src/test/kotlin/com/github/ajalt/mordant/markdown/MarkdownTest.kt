@@ -187,13 +187,42 @@ A ${strikethrough("strikethrough span")}.
     @Test
     fun `block quote`() = doTest("""
 > line 1
->
 > line 2
+>
+> line 3
 """, """
-▎ line 1
+▎ line 1 line 2
 ▎
-▎ line 2
+▎ line 3
 """)
+
+
+    // https://github.github.com/gfm/#example-206
+    @Test
+    fun `block quote with header`() = doTest("""
+># Foo
+>bar
+> baz
+""", """
+▎
+▎ ══ Foo ═══
+▎
+▎ bar baz
+""", width = 10)
+
+    // https://github.github.com/gfm/#example-208
+    @Test
+    fun `indented block quote`() = doTest("""
+   > # Foo
+   > bar
+ > baz
+""", """
+▎
+▎ ══ Foo ═══
+▎
+▎ bar baz
+""", width = 10)
+
 
     @Test
     fun `various links`() = doTest("""
