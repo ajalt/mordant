@@ -122,11 +122,11 @@ class Text internal constructor(
     }
 
     private fun alignLineLeft(line: MutableList<Span>, extraWidth: Int) {
-        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: DEFAULT_STYLE))
+        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: style))
     }
 
     private fun alignLineRight(line: MutableList<Span>, extraWidth: Int) {
-        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: DEFAULT_STYLE))
+        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: style))
     }
 
     private fun alignLineCenter(line: MutableList<Span>, extraWidth: Int) {

@@ -10,8 +10,10 @@ import com.github.ajalt.mordant.ESC
 import com.github.ajalt.mordant.rendering.*
 
 //TODO: expand tabs
-private val SPLIT_REGEX = Regex("""\r?\n|$NEL|$LS|\s+|\S+""")
+
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
+// \s doesn't include NBSP, so we include check for it explicitly
+private val SPLIT_REGEX = Regex("""\r?\n|$NEL|$LS|[\s\u00A0]+|[^\s\u00A0]+""")
 
 /** Like a Span, but with no restrictions on [text] */
 private data class Chunk(val text: String, val style: TextStyle)

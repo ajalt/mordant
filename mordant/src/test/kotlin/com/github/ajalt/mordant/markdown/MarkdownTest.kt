@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiColor.*
+import com.github.ajalt.mordant.AnsiColor.brightWhite
+import com.github.ajalt.mordant.AnsiColor.gray
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
@@ -509,7 +510,7 @@ Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
 """)
 
     @Test
-    fun `indented code block`() = doTest("""
+    fun `indented code block`()= doTest("""
     foo {
         bar
     }
@@ -551,6 +552,20 @@ end
 │${(brightWhite on gray)("end       ")}│
 └──────────┘
 """)
+
+    @Test
+    fun `fenced code block with nbsp`() {
+        val NBSP = '\u00A0'
+        doTest("""
+```
+foo${NBSP}bar baz
+```
+""", """
+┌───────────┐
+│${(brightWhite on gray)("foo${NBSP}bar baz")}│
+└───────────┘
+""")
+    }
 
     private fun doTest(
             @Language("markdown") markdown: String,

@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.AnsiColor
+import com.github.ajalt.mordant.AnsiColor.*
+import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.*
 import org.junit.Test
@@ -67,14 +70,21 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     private fun doTest(align: TextAlign, width: Int, expected: String) {
-        t = Terminal(width = width)
-        checkRender(Text("""
+        t = Terminal(level = AnsiLevel.TRUECOLOR, width = width)
+        val ex = expected.trimMargin().lines().joinToString("\n") { (blue on white)(it) }
+        val text = """
         |one_word
         |
         |two words
         |3 whole words
         |four words 4 4
         |5 5 5 5 5
-        """.trimMargin(), whitespace = Whitespace.PRE_WRAP, align = align), expected.trimMargin(), trimIndent = false)
+        """.trimMargin()
+        checkRender(Text(
+                text,
+                whitespace = Whitespace.PRE_WRAP,
+                align = align,
+                style = TextStyle(blue, white)
+        ), ex, trimIndent = false)
     }
 }

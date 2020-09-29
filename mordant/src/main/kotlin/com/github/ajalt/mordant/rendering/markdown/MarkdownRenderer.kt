@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.rendering.markdown
 
-import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.parseText
@@ -15,7 +14,6 @@ import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
-import java.io.File
 
 
 internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
