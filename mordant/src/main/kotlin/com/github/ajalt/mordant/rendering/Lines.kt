@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
 typealias Line = List<Span>
+internal val EMPTY_LINES = Lines(emptyList())
 
 data class Lines(
         val lines: List<Line>,
@@ -83,20 +84,30 @@ internal fun Lines.setSize(
 
         val remainingWidth = newWidth - width
         if (remainingWidth > 0) {
+            val beginStyle by lazy(NONE) {
+                (i downTo 0).firstOrNull { this.lines.getOrNull(it)?.isEmpty() == false }
+                        ?.let { this.lines[it].first().style } ?: DEFAULT_STYLE
+            }
+            val endStyle by lazy(NONE) {
+                (line.lastOrNull()?.style
+                        ?: (i..this.lines.lastIndex).firstOrNull { this.lines[it].isNotEmpty() }
+                                ?.let { this.lines[it].first().style })
+                        ?: DEFAULT_STYLE
+            }
             when (textAlign) {
                 CENTER, JUSTIFY -> {
-                    val l = Span.space(remainingWidth / 2)
-                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2)
+                    val l = Span.space(remainingWidth / 2, beginStyle)
+                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
                     lines.add(listOf(listOf(l), line, listOf(r)).flatten())
                 }
                 LEFT -> {
-                    lines.add(line + Span.space(remainingWidth, line.lastOrNull()?.style ?: DEFAULT_STYLE))
+                    lines.add(line + Span.space(remainingWidth, endStyle))
                 }
                 NONE -> {
-                    lines.add(line + Span.space(remainingWidth))
+                    lines.add(line + Span.space(remainingWidth)) // No style spaces in this alignment
                 }
                 RIGHT -> {
-                    lines.add(listOf(Span.space(remainingWidth)) + line)
+                    lines.add(listOf(Span.space(remainingWidth, beginStyle)) + line)
                 }
             }
         } else {
@@ -105,7 +116,6 @@ internal fun Lines.setSize(
     }
 
     if (newHeight != lines.size) {
-        // TODO vertical align
         if (newHeight < lines.size) {
             return Lines(lines.take(newHeight))
         } else {
@@ -117,5 +127,3 @@ internal fun Lines.setSize(
     }
     return Lines(lines)
 }
-
-internal val EMPTY_LINES = Lines(emptyList())

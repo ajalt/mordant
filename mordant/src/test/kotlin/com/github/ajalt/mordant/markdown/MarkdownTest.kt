@@ -513,11 +513,19 @@ Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
     fun `indented code block`()= doTest("""
     foo {
         bar
+        
+        
+        
+        baz
     }
 """, """
 ┌───────┐
 │${(brightWhite on gray)("foo {  ")}│
 │${(brightWhite on gray)("    bar")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("    baz")}│
 │${(brightWhite on gray)("}      ")}│
 └───────┘
 """)
@@ -527,12 +535,20 @@ Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
 ```
 foo {
     bar
+
+
+
+    baz
 }
 ```
 """, """
 ┌───────┐
 │${(brightWhite on gray)("foo {  ")}│
 │${(brightWhite on gray)("    bar")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("       ")}│
+│${(brightWhite on gray)("    baz")}│
 │${(brightWhite on gray)("}      ")}│
 └───────┘
 """)
