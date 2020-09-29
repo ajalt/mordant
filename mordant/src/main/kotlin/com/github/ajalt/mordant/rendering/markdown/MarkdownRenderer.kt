@@ -71,10 +71,14 @@ internal class MarkdownRenderer(
                         .map { parseStructure(it) }))
             }
             MarkdownElementTypes.CODE_FENCE -> {
-                // TODO better start/end linebreak handling
-                Text(innerInlines(node, drop = 1), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
+                val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
+                val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
+                val lines = innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
+                Panel(Text(lines, whitespace = Whitespace.PRE, style = theme.markdownCodeBlock))
             }
-            MarkdownElementTypes.CODE_BLOCK -> TODO("CODE_BLOCK")
+            MarkdownElementTypes.CODE_BLOCK -> {
+                Panel(Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock))
+            }
             MarkdownElementTypes.HTML_BLOCK -> when {
                 showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
                 else -> Text(EMPTY_LINES)
@@ -147,11 +151,9 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             // TokenTypes
-            MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
+            MarkdownTokenTypes.CODE_LINE -> parseText(nodeText(node).drop(4), DEFAULT_STYLE)
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
-            MarkdownTokenTypes.LINK_ID -> TODO("LINK_ID")
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
-            MarkdownTokenTypes.FENCE_LANG -> TODO("FENCE_LANG")
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
             MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.BACKTICK,

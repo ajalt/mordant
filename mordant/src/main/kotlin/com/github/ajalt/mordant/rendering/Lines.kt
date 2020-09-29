@@ -89,7 +89,10 @@ internal fun Lines.setSize(
                     val r = Span.space(remainingWidth / 2 + remainingWidth % 2)
                     lines.add(listOf(listOf(l), line, listOf(r)).flatten())
                 }
-                LEFT, NONE -> {
+                LEFT -> {
+                    lines.add(line + Span.space(remainingWidth, line.lastOrNull()?.style ?: DEFAULT_STYLE))
+                }
+                NONE -> {
                     lines.add(line + Span.space(remainingWidth))
                 }
                 RIGHT -> {

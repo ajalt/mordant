@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 
 class Panel(
         content: Renderable,
@@ -32,7 +33,7 @@ class Panel(
             else -> measurement.max.coerceAtMost(maxContentWidth)
         }
 
-        val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth)
+        val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
         if (borderStyle == null) return renderedContent
 
         val lines = ArrayList<Line>(renderedContent.lines.size + borderWidth)

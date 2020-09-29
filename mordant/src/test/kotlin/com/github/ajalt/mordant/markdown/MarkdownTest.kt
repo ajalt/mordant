@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiColor.black
-import com.github.ajalt.mordant.AnsiColor.brightWhite
+import com.github.ajalt.mordant.AnsiColor.*
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
@@ -370,11 +369,11 @@ with
 a
 line break`.
 """, """
-This is a ${(brightWhite on black)("code <br/>")} span.
+This is a ${(brightWhite on gray)("code <br/>")} span.
 
-So ${(brightWhite on black)("is this")} span.
+So ${(brightWhite on gray)("is this")} span.
 
-A ${(brightWhite on black)("span with a line break")}.
+A ${(brightWhite on gray)("span with a line break")}.
 """)
 
 // Not supported by the parser yet
@@ -409,7 +408,7 @@ line break with a backslash.
 A ${italic("hard")}
 ${italic("line")} break with emph.
 
-Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
+Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
 """)
 
     // https://github.github.com/gfm/#example-205
@@ -478,6 +477,50 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
 """, """
  • ☐ foo
  • ☑ bar
+""")
+
+    @Test
+    fun `indented code block`() = doTest("""
+    foo {
+        bar
+    }
+""", """
+┌───────┐
+│${(brightWhite on gray)("foo {  ")}│
+│${(brightWhite on gray)("    bar")}│
+│${(brightWhite on gray)("}      ")}│
+└───────┘
+""")
+
+    @Test
+    fun `fenced code block`() = doTest("""
+```
+foo {
+    bar
+}
+```
+""", """
+┌───────┐
+│${(brightWhite on gray)("foo {  ")}│
+│${(brightWhite on gray)("    bar")}│
+│${(brightWhite on gray)("}      ")}│
+└───────┘
+""")
+
+    // https://github.github.com/gfm/#example-113
+    @Test
+    fun `fenced code block with info string`() = doTest("""
+~~~~    ruby startline=3 ${'$'}%@#${'$'}
+def foo(x)
+  return 3
+end
+~~~~~~~
+""", """
+┌──────────┐
+│${(brightWhite on gray)("def foo(x)")}│
+│${(brightWhite on gray)("  return 3")}│
+│${(brightWhite on gray)("end       ")}│
+└──────────┘
 """)
 
     private fun doTest(
