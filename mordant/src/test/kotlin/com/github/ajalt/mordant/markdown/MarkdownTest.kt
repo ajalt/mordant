@@ -7,8 +7,10 @@ import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
+import org.intellij.markdown.MarkdownTokenTypes.Companion.WHITE_SPACE
 import org.intellij.markdown.ast.ASTNode
-import org.intellij.markdown.ast.CompositeASTNode
+import org.intellij.markdown.ast.LeafASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
@@ -108,6 +110,25 @@ A ${strikethrough("strikethrough span")}.
  • line 3
 """, width = 10)
 
+    // https://github.github.com/gfm/#example-306
+    @Test
+    fun `test unordered list nested`() = doTest("""
+- a
+  - b
+  - c
+
+- d
+  - e
+  - f
+""", """
+ • a
+    • b
+    • c
+ • d
+    • e
+    • f
+""")
+
     @Test
     fun `test ordered list`() = doTest("""
 1. line 1
@@ -132,6 +153,37 @@ A ${strikethrough("strikethrough span")}.
     line 2b
  3. line 3
 """, width = 11)
+
+    @Test
+    fun `test ordered list loose`() = doTest("""
+1. a
+
+1. b
+
+1. c
+""", """
+ 1. a
+ 2. b
+ 3. c
+""")
+
+    @Test
+    fun `test ordered list nested`() = doTest("""
+1. a
+    1. b
+    1. c
+
+1. d
+    1. e
+    1. f
+""", """
+ 1. a
+     1. b
+     2. c
+ 2. d
+     1. e
+     2. f
+""")
 
     @Test
     fun `block quote`() = doTest("""
@@ -366,9 +418,9 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
 | abc | def |
 | --- | --- |
 """, """
-┌─────┐
-│ foo │
-└─────┘
+┌─────┬─────┐
+│ abc │ def │
+└─────┴─────┘
 """)
 
     // https://github.github.com/gfm/#example-198
@@ -418,6 +470,16 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
 └────────┴────────┴────────┘
 """)
 
+    // https://github.github.com/gfm/#example-279
+    @Test
+    fun `task list`() = doTest("""
+- [ ] foo
+- [x] bar
+""", """
+ • ☐ foo
+ • ☑ bar
+""")
+
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
@@ -437,8 +499,22 @@ Code spans ${(brightWhite on black)("don't\\ have")} hard breaks.
             // Print parse tree on test failure
             val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
             val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(markdown)
-            println(parsedTree.children.joinToString("\n"))
+            println(parsedTree.children.joinToString("\n") { buildString { printNode(markdown, it) } })
             throw e
         }
+    }
+}
+
+private fun StringBuilder.printNode(text: String, node: ASTNode, indent: Int = 0) {
+    append(" ".repeat(indent * 2))
+    append(node.type)
+    if (node is LeafASTNode && node.type !in listOf(EOL, WHITE_SPACE)) {
+        append(" \'").append(text.substring(node.startOffset, node.endOffset).replace("\n", "⏎").take(10))
+        if (node.endOffset - node.startOffset > 10) append("…")
+        append("\'")
+    }
+    for (c in node.children) {
+        append("\n")
+        printNode(text, c, indent + 1)
     }
 }

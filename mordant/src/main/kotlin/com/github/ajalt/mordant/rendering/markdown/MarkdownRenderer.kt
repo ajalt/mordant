@@ -28,6 +28,7 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
 private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
+private val CHECK_BOX_REGEX = Regex("""\[[^]]]""")
 
 private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
     return fold(EMPTY_LINES) { l, r -> l + transform(r) }
@@ -55,13 +56,13 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.UNORDERED_LIST -> {
                 UnorderedList(node.children
                         .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                        .map { parseStructure(it.children[1]) }
+                        .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
                 )
             }
             MarkdownElementTypes.ORDERED_LIST -> {
                 OrderedList(node.children
                         .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                        .map { parseStructure(it.children[1]) }
+                        .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
                 )
             }
             MarkdownElementTypes.BLOCK_QUOTE -> {
@@ -90,6 +91,11 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_4 -> atxText(theme.markdownH4, node, theme)
             MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
             MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
+
+            GFMTokenTypes.CHECK_BOX -> {
+                val content = CHECK_BOX_REGEX.find(nodeText(node))!!.value.removeSurrounding("[", "]")
+                Text(parseText(if (content.isBlank()) "☐ " else "☑ ", DEFAULT_STYLE), whitespace = Whitespace.PRE)
+            }
 
             GFMElementTypes.TABLE -> table {
                 parseTableAlignment(node).forEachIndexed { i, align ->
@@ -139,9 +145,6 @@ internal class MarkdownRenderer(
                 parseInlines(node.children[1])
             }
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
-
-            // GFMTokenTypes
-            GFMTokenTypes.CHECK_BOX -> TODO("CHECK_BOX") // https://github.github.com/gfm/#task-list-items-extension-
 
             // TokenTypes
             MarkdownTokenTypes.CODE_LINE -> TODO("CODE_LINE")
