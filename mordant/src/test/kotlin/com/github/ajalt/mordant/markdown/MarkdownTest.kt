@@ -206,7 +206,7 @@ A ${strikethrough("strikethrough span")}.
 > baz
 """, """
 ▎
-▎ ══ Foo ═══
+▎ ══ ${bold("Foo")} ═══
 ▎
 ▎ bar baz
 """, width = 10)
@@ -219,7 +219,7 @@ A ${strikethrough("strikethrough span")}.
  > baz
 """, """
 ▎
-▎ ══ Foo ═══
+▎ ══ ${bold("Foo")} ═══
 ▎
 ▎ bar baz
 """, width = 10)
@@ -302,7 +302,7 @@ www.example.com/url
 # Header Text
 """, """
 
-═══ Header Text ═══
+═══ ${bold("Header Text")} ═══
 
 """, width = 19)
 
@@ -311,7 +311,7 @@ www.example.com/url
 ## Header Text
 """, """
 
-─── Header Text ───
+─── ${bold("Header Text")} ───
 
 """, width = 19)
 
@@ -320,7 +320,7 @@ www.example.com/url
 ### Header Text
 """, """
 
-    Header Text    
+    ${underline("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -329,7 +329,7 @@ www.example.com/url
 #### Header Text
 """, """
 
-${bold("Header Text")}
+    ${italic("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -338,7 +338,7 @@ ${bold("Header Text")}
 ##### Header Text
 """, """
 
-${italic("Header Text")}
+${dim("Header Text")}
 
 """, width = 19)
 
@@ -347,7 +347,7 @@ ${italic("Header Text")}
 ###### Header Text
 """, """
 
-${dim("Header Text")}
+Header Text⏎
 
 """, width = 19)
 
@@ -356,7 +356,7 @@ ${dim("Header Text")}
 # Header Text ##
 """, """
 
-═══ Header Text ═══
+═══ ${bold("Header Text")} ═══
 
 """, width = 19)
 
@@ -366,7 +366,7 @@ Header Text
 ===========
 """, """
 
-═══ Header Text ═══
+═══ ${bold("Header Text")} ═══
 
 """, width = 19)
 
@@ -376,7 +376,7 @@ Header Text
 ---
 """, """
 
-─── Header Text ───
+─── ${bold("Header Text")} ───
 
 """, width = 19)
 
@@ -593,7 +593,7 @@ foo${NBSP}bar baz
             val terminal = Terminal(level = AnsiLevel.TRUECOLOR, width = width)
             val actual = terminal.renderMarkdown(markdown, showHtml)
             try {
-                actual shouldBe expected
+                actual shouldBe expected.replace("⏎", "")
             } catch (e: Throwable) {
                 println(actual)
                 throw e

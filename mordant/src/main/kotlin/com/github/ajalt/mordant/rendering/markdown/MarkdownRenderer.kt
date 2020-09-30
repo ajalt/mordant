@@ -93,7 +93,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node, theme)
             MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node, theme)
-            MarkdownElementTypes.ATX_4 -> atxText(theme.markdownH4, node, theme)
+            MarkdownElementTypes.ATX_4 -> atxHorizRule(" ", theme.markdownH4, node, theme)
             MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
             MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
 
@@ -194,7 +194,7 @@ internal class MarkdownRenderer(
     private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> Padded(HorizontalRule(Text(atxContent(node)), bar, style), Padding.vertical(theme.markdownHeaderPadding))
+            else -> Padded(HorizontalRule(Text(atxContent(node)), bar, titleStyle = style), Padding.vertical(theme.markdownHeaderPadding))
         }
     }
 
@@ -213,7 +213,7 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return Padded(HorizontalRule(Text(content), bar, style), Padding.vertical(theme.markdownHeaderPadding))
+        return Padded(HorizontalRule(Text(content), bar, titleStyle = style), Padding.vertical(theme.markdownHeaderPadding))
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
