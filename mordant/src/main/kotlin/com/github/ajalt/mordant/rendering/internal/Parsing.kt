@@ -50,8 +50,34 @@ private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
     return parts
 }
 
-private fun splitWords(chunk: Chunk): Sequence<Chunk> {
-    return SPLIT_REGEX.findAll(chunk.text).map { Chunk(it.value, chunk.style) }
+// This could be implemented as a one line regex, but regex engines don't behave the same across
+// platforms, especially when dealing with unicode, which we need.
+private fun splitWords(chunk: Chunk): List<Chunk> {
+    val chunks = mutableListOf<Chunk>()
+    var i = 0
+    var start = 0
+    var chunkType = -1 // 0=newline, 1=space, 2=word
+    val t = chunk.text
+    while (i < t.length) {
+        val c = t[i]
+        val type = when {
+            c == '\r' || c == '\n' -> 0
+            c.isWhitespace() -> 1
+            else -> 2
+        }
+        if (i == 0) {
+            chunkType = type
+        } else if (c == '\n' || chunkType != type) {
+            chunks += chunk.copy(text = t.substring(start, i))
+            start = i
+            chunkType = type
+        }
+        i += 1
+    }
+    if (start != i) {
+        chunks += chunk.copy(text = t.substring(start, i))
+    }
+    return chunks
 }
 
 private fun splitLines(words: Iterable<Chunk>): List<Line> {

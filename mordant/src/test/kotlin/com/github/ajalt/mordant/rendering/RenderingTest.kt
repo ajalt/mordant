@@ -5,13 +5,12 @@ import com.github.ajalt.mordant.Terminal
 import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(
-        level: AnsiLevel = AnsiLevel.TRUECOLOR,
-        theme: Theme = DEFAULT_THEME,
-        width: Int = 79
+        private val level: AnsiLevel = AnsiLevel.TRUECOLOR,
+        private val theme: Theme = DEFAULT_THEME,
+        private val width: Int = 79
 ) {
-    protected var t = Terminal(level, theme, width)
-
-    protected fun checkRender(renderable: Renderable, expected: String, trimIndent: Boolean = true) {
+    protected fun checkRender(renderable: Renderable, expected: String, trimIndent: Boolean = true, width: Int = this.width) {
+        val t = Terminal(level, theme, width)
         val actual = t.render(renderable)
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected

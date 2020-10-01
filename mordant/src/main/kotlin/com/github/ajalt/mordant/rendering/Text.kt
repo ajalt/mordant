@@ -44,26 +44,16 @@ class Text internal constructor(
 
 
         fun breakLine() {
-            // TODO truncate whitespace
             if (whitespace.trimEol || align == JUSTIFY) {
-                val lastNonWhitespace = line.indexOfLast { !it.isWhitespace() }
+                val lastNonWhitespace = lastNonWhitespace(line, align)
                 if (lastNonWhitespace >= 0) {
                     repeat(line.lastIndex - lastNonWhitespace) { line.removeLast() }
                 }
             }
 
             if (width < wrapWidth) {
-                val extraWidth = wrapWidth - width
-                when (align) {
-                    LEFT -> alignLineLeft(line, extraWidth)
-                    RIGHT -> alignLineRight(line, extraWidth)
-                    CENTER -> alignLineCenter(line, extraWidth)
-                    JUSTIFY -> line = justifyLine(line, extraWidth)
-                    NONE -> {
-                    }
-                }
+                line = alignLine(line, wrapWidth, width, align)
             }
-
 
             lines += line
             line = mutableListOf()
@@ -72,38 +62,46 @@ class Text internal constructor(
         }
 
         for (oldLine in this.lines.lines) {
-            // Add a space if this line was collapsed
-            if (!lastPieceWasWhitespace) {
-                val style = when (line.last().style) {
-                    oldLine.firstOrNull()?.style -> line.last().style
-                    else -> style
-                }
-                line.add(Span.word(text = " ", style = style))
-                lastPieceWasWhitespace = true
-                width += 1
-            }
+            val lastNonWhitespace = lastNonWhitespace(oldLine, align)
 
-            for (piece in oldLine) {
+            for ((i, piece) in oldLine.withIndex()) {
+                // Treat NEL and LS as hard line breaks
                 if (piece.text == NEL || piece.text == LS) {
                     breakLine()
                     continue
                 }
+
+                // Trim trailing whitespace pieces
+                if ((whitespace.trimEol || align == JUSTIFY) && lastNonWhitespace in 0 until i) {
+                    break
+                }
+
+                // Add a space if this line was collapsed
+                if (i == 0 && !lastPieceWasWhitespace) {
+                    val style = when (line.last().style) {
+                        oldLine.firstOrNull()?.style -> line.last().style
+                        else -> style
+                    }
+                    line.add(Span.word(text = " ", style = style))
+                    lastPieceWasWhitespace = true
+                    width += 1
+                }
+
                 val pieceIsWhitespace = piece.isWhitespace()
 
-                // Collapse whitespace
+                // Collapse spaces
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
                 val span = when {
                     pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
                     else -> piece
                 }
 
-                // Break line if necessary
+                // Wrap line if necessary
                 if (whitespace.wrap && width > 0 && width + span.cellWidth > wrapWidth) {
                     breakLine()
+                    // Don't add spaces to start of line
+                    if (pieceIsWhitespace) continue
                 }
-
-                // Don't add spaces to start of line
-                if (whitespace.collapseSpaces && width == 0 && span.text.isBlank()) continue
 
                 width += span.cellWidth
                 line.add(span)
@@ -119,6 +117,26 @@ class Text internal constructor(
         if (line.isNotEmpty()) breakLine()
 
         return Lines(lines)
+    }
+
+    private fun lastNonWhitespace(line: List<Span>, align: TextAlign): Int {
+        return when {
+            whitespace.trimEol || align == JUSTIFY -> line.indexOfLast { !it.isWhitespace() }
+            else -> -1
+        }
+    }
+
+    private fun alignLine(line: MutableList<Span>, wrapWidth: Int, width: Int, align: TextAlign): MutableList<Span> {
+        val extraWidth = wrapWidth - width
+        when (align) {
+            LEFT -> alignLineLeft(line, extraWidth)
+            RIGHT -> alignLineRight(line, extraWidth)
+            CENTER -> alignLineCenter(line, extraWidth)
+            JUSTIFY -> return justifyLine(line, extraWidth)
+            NONE -> {
+            }
+        }
+        return line
     }
 
     private fun alignLineLeft(line: MutableList<Span>, extraWidth: Int) {

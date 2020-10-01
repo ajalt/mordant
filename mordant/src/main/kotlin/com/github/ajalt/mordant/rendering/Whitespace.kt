@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.rendering
 
-// TODO: test wrap test
 enum class Whitespace(
         val collapseNewlines: Boolean,
         val collapseSpaces: Boolean,
@@ -11,5 +10,5 @@ enum class Whitespace(
     NOWRAP(collapseNewlines = true, collapseSpaces = true, wrap = false, trimEol = true),
     PRE(collapseNewlines = false, collapseSpaces = false, wrap = false, trimEol = false),
     PRE_WRAP(collapseNewlines = false, collapseSpaces = false, wrap = true, trimEol = true),
-    PRE_LINE(collapseNewlines = true, collapseSpaces = false, wrap = true, trimEol = true)
+    PRE_LINE(collapseNewlines = false, collapseSpaces = true, wrap = true, trimEol = true)
 }

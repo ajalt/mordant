@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
@@ -98,7 +97,6 @@ class TableColumnWidthTest : RenderingTest() {
     )
 
     private fun doTest(tableWidth: Int, expected: String, borders: Borders = LEFT_RIGHT) {
-        t = Terminal(width = tableWidth)
         checkRender(table {
             borderStyle = BorderStyle.ASCII
             padding = Padding.none()
@@ -111,6 +109,6 @@ class TableColumnWidthTest : RenderingTest() {
                     cells(11, "22 foo", 33, 44)
                 }
             }
-        }, expected.trimIndent())
+        }, expected.trimIndent(), width = tableWidth)
     }
 }
