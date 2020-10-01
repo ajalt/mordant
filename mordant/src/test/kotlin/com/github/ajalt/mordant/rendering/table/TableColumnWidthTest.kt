@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
+import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.table.Borders.ALL
@@ -100,6 +101,7 @@ class TableColumnWidthTest : RenderingTest() {
         checkRender(table {
             borderStyle = BorderStyle.ASCII
             padding = Padding.none()
+            overflowWrap = OverflowWrap.TRUNCATE
             column(0) { width = ColumnWidth.Fixed(3) }
             column(2) { width = ColumnWidth.Expand() }
             column(3) { width = ColumnWidth.Expand(2) }

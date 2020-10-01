@@ -12,7 +12,8 @@ class Text internal constructor(
         lines: Lines,
         private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
-        private val align: TextAlign = NONE // TODO wordwrap (truncate, ellipses, wrap)
+        private val align: TextAlign = NONE,
+        private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL
 ) : Renderable {
     private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
@@ -21,27 +22,32 @@ class Text internal constructor(
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = NONE,
-    ) : this(parseText(text, style), style, whitespace, align)
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL
+    ) : this(parseText(text, style), style, whitespace, align, overflowWrap)
 
-    internal fun withAlign(align: TextAlign) = Text(lines, style, whitespace, align)
+    internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {
+        return Text(lines, style, whitespace, align, overflowWrap ?: this.overflowWrap)
+    }
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val lines = wrap(width, NONE) // measure without padding from alignment
+        // measure without word wrap or padding from alignment
+        val lines = wrap(width, NONE, OverflowWrap.NORMAL)
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return wrap(width, align)
+        return wrap(width, align, overflowWrap)
     }
 
-    private fun wrap(wrapWidth: Int, align: TextAlign): Lines {
+    private fun wrap(wrapWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {
+        if (wrapWidth == 0 && overflowWrap != OverflowWrap.NORMAL) return EMPTY_LINES
+
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
         var width = 0
         var lastPieceWasWhitespace = true
-
 
         fun breakLine() {
             if (whitespace.trimEol || align == JUSTIFY) {
@@ -91,7 +97,7 @@ class Text internal constructor(
 
                 // Collapse spaces
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
-                val span = when {
+                var span = when {
                     pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
                     else -> piece
                 }
@@ -101,6 +107,29 @@ class Text internal constructor(
                     breakLine()
                     // Don't add spaces to start of line
                     if (pieceIsWhitespace) continue
+                }
+
+                // overflow wrap
+                if (span.cellWidth > wrapWidth) {
+                    when (overflowWrap) {
+                        OverflowWrap.NORMAL -> {
+                        }
+                        OverflowWrap.TRUNCATE -> {
+                            span = span.copy(text = span.text.take(wrapWidth))
+                        }
+                        OverflowWrap.ELLIPSES -> {
+                            span = span.copy(text = span.text.take((wrapWidth - 1)) + "…")
+                        }
+                        OverflowWrap.BREAK_WORD -> {
+                            span.text.chunked(wrapWidth).forEach {
+                                if (it.length == wrapWidth) {
+                                    lines += listOf(span.copy(text = it))
+                                } else {
+                                    span = span.copy(text = it)
+                                }
+                            }
+                        }
+                    }
                 }
 
                 width += span.cellWidth
@@ -179,4 +208,6 @@ class Text internal constructor(
     }
 }
 
-internal fun Renderable.withAlign(align: TextAlign): Renderable = if (this is Text) this.withAlign(align) else this
+internal fun Renderable.withAlign(align: TextAlign, overflowWrap: OverflowWrap? = null): Renderable {
+    return if (this is Text) this.withAlign(align, overflowWrap) else this
+}

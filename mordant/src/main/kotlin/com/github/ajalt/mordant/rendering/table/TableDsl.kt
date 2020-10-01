@@ -8,6 +8,7 @@ interface CellStyleBuilder {
     var borders: Borders?
     var align: TextAlign?
     var verticalAlign: VerticalAlign?
+    var overflowWrap: OverflowWrap?
 }
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
@@ -16,6 +17,7 @@ private class CellStyleBuilderMixin : CellStyleBuilder {
     override var borders: Borders? = null
     override var align: TextAlign? = null
     override var verticalAlign: VerticalAlign? = null
+    override var overflowWrap: OverflowWrap? = null
 }
 
 sealed class ColumnWidth {
@@ -52,6 +54,7 @@ class TableBuilder internal constructor() {
     var borders: Borders = Borders.ALL
     var align: TextAlign = TextAlign.LEFT
     var verticalAlign: VerticalAlign = VerticalAlign.TOP
+    var overflowWrap: OverflowWrap = OverflowWrap.ELLIPSES
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal val headerSection = SectionBuilder()
