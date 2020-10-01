@@ -225,6 +225,7 @@ A ${strikethrough("strikethrough span")}.
 """, width = 10)
 
 
+    @Suppress("MarkdownUnresolvedFileReference")
     @Test
     fun `various links`() = doTest("""
 [a reference link][a link]
@@ -261,6 +262,7 @@ www.example.com/url
 """)
 
     @Test
+    @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")
     fun `default html`() = doTest("""
 <h1 align="center">
     <img src="example.svg">
@@ -270,6 +272,7 @@ www.example.com/url
 """)
 
     @Test
+    @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")
     fun `show html`() = doTest("""
 <h1 align="center">
     <img src="example.svg">
@@ -571,14 +574,14 @@ end
 
     @Test
     fun `fenced code block with nbsp`() {
-        val NBSP = '\u00A0'
+        val nbsp = '\u00A0'
         doTest("""
 ```
-foo${NBSP}bar baz
+foo${nbsp}bar baz
 ```
 """, """
 ┌───────────┐
-│${(brightWhite on gray)("foo${NBSP}bar baz")}│
+│${(brightWhite on gray)("foo${nbsp}bar baz")}│
 └───────────┘
 """)
     }
