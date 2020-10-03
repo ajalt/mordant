@@ -38,7 +38,6 @@ data class BorderStyleSection(
         )
     }
 
-    // TODO: docs
     fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
         val char = when {
             !n && e && s && !w -> this.es

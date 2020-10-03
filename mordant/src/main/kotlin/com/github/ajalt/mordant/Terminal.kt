@@ -18,6 +18,7 @@ class Terminal(
         return render(MarkdownRenderer(markdown, theme, showHtml).render())
     }
 
+    // TODO: add options like width
     fun print(text: String) {
         kotlin.io.print(render(text))
     }

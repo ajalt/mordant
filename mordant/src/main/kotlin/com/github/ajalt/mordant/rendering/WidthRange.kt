@@ -8,6 +8,7 @@ data class WidthRange(val min: Int, val max: Int) {
     }
 
     operator fun plus(extra: Int) = WidthRange(min + extra, max + extra)
+    operator fun plus(other: WidthRange) = WidthRange(min + other.min, max + other.max)
     operator fun div(divisor: Int) = WidthRange(min / divisor, max / divisor)
 }
 

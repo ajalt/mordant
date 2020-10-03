@@ -33,6 +33,8 @@ data class Lines(
     }
 }
 
+internal val Line.lineWidth get() = sumOf { it.cellWidth }
+
 /**
  * Pad or crop every line so its width is exactly [newWidth], and add or remove lines so its height
  * is exactly [newHeight]
