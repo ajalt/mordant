@@ -1,24 +1,36 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
-    `maven-publish`
+    kotlin("multiplatform")
     id("org.jetbrains.dokka")
-    id("com.jfrog.bintray") version "1.8.5"
+    id("maven-publish")
+    id("signing")
+}
+
+kotlin {
+    // TODO: other targets
+    jvm()
+
+    sourceSets {
+        val jvmMain by getting {
+            dependencies {
+                api("com.github.ajalt:colormath:1.4.1")
+                implementation("org.jetbrains:markdown:0.1.45")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("io.kotest:kotest-assertions-core-jvm:4.2.3")
+            }
+        }
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-}
-
-dependencies {
-    api("com.github.ajalt:colormath:1.4.1")
-    implementation("org.jetbrains:markdown:0.1.45")
-
-    testImplementation(kotlin("test-junit"))
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.2.3")
 }
 
 val emptyJavadocJar by tasks.registering(Jar::class) {
@@ -28,45 +40,63 @@ artifacts {
     archives(emptyJavadocJar)
 }
 
-val BINTRAY_USER: String? by project
-val BINTRAY_API_KEY: String? by project
-val MAVEN_USER_TOKEN: String? by project
-val MAVEN_USER_PASS: String? by project
-val deployDryRun = false
 
-val versionTag = version.toString()
-val githubRepo = "github.com/ajalt/mordant"
-val githubUrl = "https://$githubRepo"
-val scmUrl = "scm:git:git://$githubRepo.git"
-val pkgDesc = "Full-featured text styling for Kotlin command-line applications"
+val isSnapshot = version.toString().endsWith("SNAPSHOT")
+val signingKey: String? by project
+val SONATYPE_USERNAME: String? by project
+val SONATYPE_PASSWORD: String? by project
 
-bintray {
-    user = BINTRAY_USER
-    key = BINTRAY_API_KEY
-    dryRun = deployDryRun // Whether to run this as dry-run, without deploying
-    publish = true // If version should be auto published after an upload
-    pkg.apply {
-        repo = "maven"
-        name = "mordant"
-        userOrg = user
-        publicDownloadNumbers = false
-        vcsUrl = "$githubUrl.git"
-        desc = pkgDesc
-        websiteUrl = githubUrl
-        issueTrackerUrl = "$githubUrl/issues"
-        version.apply {
-            name = versionTag
-            desc = pkgDesc
-            vcsTag = versionTag
-            gpg.apply {
-                sign = true // Determines whether to GPG sign the files.
+publishing {
+    publications.withType<MavenPublication>().all {
+        pom {
+            description.set("Text formatting for Kotlin command line applications")
+            name.set("Mordant")
+            url.set("https://github.com/ajalt/mordant")
+            scm {
+                url.set("https://github.com/ajalt/mordant")
+                connection.set("scm:git:git://github.com/ajalt/mordant.git")
+                developerConnection.set("scm:git:ssh://git@github.com/ajalt/mordant.git")
             }
-            mavenCentralSync.apply {
-                sync = true // Optional (true by default). Determines whether to sync the version to Maven Central.
-                user = MAVEN_USER_TOKEN // OSS user token
-                password = MAVEN_USER_PASS // OSS user password
-                close = "1" // Close staging repository and release artifacts to Maven Central. Default = 1 (true). Set to 0 = You will release the version manually.
+            licenses {
+                license {
+                    name.set("The Apache Software License, Version 2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    distribution.set("repo")
+                }
+            }
+            developers {
+                developer {
+                    id.set("ajalt")
+                    name.set("AJ Alt")
+                    url.set("https://github.com/ajalt")
+                }
             }
         }
+    }
+
+    repositories {
+        val releaseUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+        val snapshotUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
+        maven {
+            url = if (isSnapshot) snapshotUrl else releaseUrl
+            credentials {
+                username = SONATYPE_USERNAME ?: ""
+                password = SONATYPE_PASSWORD ?: ""
+            }
+        }
+    }
+
+    publications.withType<MavenPublication>().all {
+        artifact(emptyJavadocJar.get())
+    }
+}
+
+signing {
+    isRequired = !isSnapshot
+
+    if (signingKey != null && !isSnapshot) {
+        @Suppress("UnstableApiUsage")
+        useInMemoryPgpKeys(signingKey, "")
+        sign(publishing.publications)
     }
 }
