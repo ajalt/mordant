@@ -10,15 +10,19 @@ class Terminal(
 ) {
     val colors: TerminalColors = TerminalColors(level)
 
-    fun printMarkdown(markdown: String, showHtml: Boolean=false) {
+    fun printMarkdown(markdown: String, showHtml: Boolean = false) {
         return kotlin.io.print(renderMarkdown(markdown, showHtml))
     }
 
-    fun renderMarkdown(markdown: String, showHtml: Boolean=false): String {
+    fun renderMarkdown(markdown: String, showHtml: Boolean = false): String {
         return render(MarkdownRenderer(markdown, theme, showHtml).render())
     }
 
-    // TODO: add options like width
+    fun parseMarkdown(markdown: String, showHtml: Boolean = false): Renderable {
+        return MarkdownRenderer(markdown, theme, showHtml).render()
+    }
+
+    // TODO: add options like width, padding, whitespace
     fun print(text: String) {
         kotlin.io.print(render(text))
     }

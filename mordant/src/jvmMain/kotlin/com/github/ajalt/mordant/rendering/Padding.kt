@@ -23,10 +23,18 @@ data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, va
     val isEmpty = top == 0 && right == 0 && bottom == 0 && left == 0
 }
 
-// TODO make public
-internal data class Padded(private val content: Renderable, private val padding: Padding) : Renderable {
-    companion object {
-        fun get(content: Renderable, padding: Padding) = if (padding.isEmpty) content else Padded(content, padding)
+fun Renderable.withPadding(padding: Padding, padEmptyLines: Boolean = true): Renderable = Padded.get(this, padding, padEmptyLines)
+fun Renderable.withPadding(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
+fun Renderable.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.vertical(padding), padEmptyLines)
+fun Renderable.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.horizontal(padding), padEmptyLines)
+
+internal data class Padded(
+        private val content: Renderable,
+        private val padding: Padding,
+        private val padEmptyLines: Boolean = true
+) : Renderable {
+    internal companion object {
+        fun get(content: Renderable, padding: Padding, padEmptyLines: Boolean = true) = if (padding.isEmpty) content else Padded(content, padding, padEmptyLines)
     }
 
     private val paddingWidth get() = padding.left + padding.right
@@ -46,7 +54,10 @@ internal data class Padded(private val content: Renderable, private val padding:
         repeat(padding.top) { output.add(blank) }
 
         for (line in lines.lines) {
-            output += listOf(left, line, right).flatten()
+            output += when {
+                !padEmptyLines && line.isEmpty() -> blank
+                else -> listOf(left, line, right).flatten()
+            }
         }
 
         repeat(padding.bottom) { output.add(blank) }

@@ -15,8 +15,6 @@ class Text internal constructor(
         private val align: TextAlign = NONE,
         private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL
 ) : Renderable {
-    private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
-
     constructor(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
@@ -24,6 +22,8 @@ class Text internal constructor(
             align: TextAlign = NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL
     ) : this(parseText(text, style), style, whitespace, align, overflowWrap)
+
+    private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
     internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {
         return Text(lines, style, whitespace, align, overflowWrap ?: this.overflowWrap)

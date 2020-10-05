@@ -5,6 +5,10 @@ import com.github.ajalt.mordant.AnsiColor.gray
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.DEFAULT_THEME
+import com.github.ajalt.mordant.rendering.LS
+import com.github.ajalt.mordant.rendering.NEL
+import com.github.ajalt.mordant.rendering.Theme
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
@@ -14,7 +18,7 @@ import org.intellij.markdown.ast.LeafASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
-import kotlin.test.Test
+import org.junit.Test
 
 class MarkdownTest {
     @Test
@@ -426,11 +430,14 @@ line break with spaces.
 A hard\
   line break with a backslash.
   
-A *hard   
+A *hard   ⏎
 line* break with emph.
 
 Code spans `don't\
 have` hard breaks.
+
+Also break on ${NEL}NEL and on ${LS}LS$LS
+.
 """, """
 A hard
 line break with spaces.
@@ -442,6 +449,11 @@ A ${italic("hard")}
 ${italic("line")} break with emph.
 
 Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
+
+Also break on
+NEL and on
+LS
+.
 """)
 
     // https://github.github.com/gfm/#example-205
@@ -586,15 +598,33 @@ foo${nbsp}bar baz
 """)
     }
 
+    fun `fenced code block with no border in theme`() = doTest("""
+```
+foo  bar
+```
+""", """
+foo  bar
+""")
+
+    fun `indented code block with no border in theme`() = doTest("""
+```
+foo  bar
+```
+""", """
+foo  bar
+""")
+
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
             width: Int = 79,
-            showHtml: Boolean = false
+            showHtml: Boolean = false,
+            theme: Theme = DEFAULT_THEME
     ) {
+        val md = markdown.replace("⏎", "")
         try {
-            val terminal = Terminal(level = AnsiLevel.TRUECOLOR, width = width)
-            val actual = terminal.renderMarkdown(markdown, showHtml)
+            val terminal = Terminal(level = AnsiLevel.TRUECOLOR, width = width, theme = theme)
+            val actual = terminal.renderMarkdown(md, showHtml)
             try {
                 actual shouldBe expected.replace("⏎", "")
             } catch (e: Throwable) {
@@ -604,8 +634,8 @@ foo${nbsp}bar baz
         } catch (e: Throwable) {
             // Print parse tree on test failure
             val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
-            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(markdown)
-            println(parsedTree.children.joinToString("\n") { buildString { printNode(markdown, it) } })
+            val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(md)
+            println(parsedTree.children.joinToString("\n") { buildString { printNode(md, it) } })
             throw e
         }
     }
@@ -615,8 +645,8 @@ private fun StringBuilder.printNode(text: String, node: ASTNode, indent: Int = 0
     append(" ".repeat(indent * 2))
     append(node.type)
     if (node is LeafASTNode && node.type !in listOf(EOL, WHITE_SPACE)) {
-        append(" \'").append(text.substring(node.startOffset, node.endOffset).replace("\n", "⏎").take(10))
-        if (node.endOffset - node.startOffset > 10) append("…")
+        append(" \'").append(text.substring(node.startOffset, node.endOffset).replace("\n", "⏎").take(30))
+        if (node.endOffset - node.startOffset > 30) append("…")
         append("\'")
     }
     for (c in node.children) {

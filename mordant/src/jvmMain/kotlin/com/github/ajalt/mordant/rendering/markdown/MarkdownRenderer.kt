@@ -74,10 +74,12 @@ internal class MarkdownRenderer(
                 val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val lines = innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
-                Panel(Text(lines, whitespace = Whitespace.PRE, style = theme.markdownCodeBlock))
+                val content = Text(lines, whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
+                if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.CODE_BLOCK -> {
-                Panel(Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock))
+                val content = Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
+                if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.HTML_BLOCK -> when {
                 showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
@@ -178,7 +180,11 @@ internal class MarkdownRenderer(
             GFMTokenTypes.GFM_AUTOLINK -> {
                 parseText(nodeText(node), DEFAULT_STYLE)
             }
-            MarkdownTokenTypes.EOL -> EOL_LINES
+            MarkdownTokenTypes.EOL -> {
+                // Add an extra linebreak, since the first one will get folded away by foldLines.
+                // Parse the text rather than hard coding the return value to support NEL and LS.
+                Lines(listOf(emptyList<Span>()) + parseText(nodeText(node), DEFAULT_STYLE).lines)
+            }
             else -> error("Unexpected token when parsing inlines: $node")
         }
     }
@@ -193,15 +199,15 @@ internal class MarkdownRenderer(
     private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> Padded(HorizontalRule(Text(atxContent(node)), bar, titleStyle = style), Padding.vertical(theme.markdownHeaderPadding))
+            else -> HorizontalRule(Text(atxContent(node)), bar, titleStyle = style).withVerticalPadding(theme.markdownHeaderPadding)
         }
     }
 
     private fun atxText(style: TextStyle, node: ASTNode, theme: Theme): Renderable {
-        return Padded(Text(when {
+        return Text(when {
             node.children.size <= 1 -> EOL_LINES
             else -> atxContent(node)
-        }, style = style), Padding.vertical(theme.markdownHeaderPadding))
+        }, style = style).withVerticalPadding(theme.markdownHeaderPadding)
     }
 
     private fun atxContent(node: ASTNode): Lines {
@@ -212,7 +218,7 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return Padded(HorizontalRule(Text(content), bar, titleStyle = style), Padding.vertical(theme.markdownHeaderPadding))
+        return HorizontalRule(Text(content), bar, titleStyle = style).withVerticalPadding(theme.markdownHeaderPadding)
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {

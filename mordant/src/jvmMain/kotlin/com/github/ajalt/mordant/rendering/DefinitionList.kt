@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.Terminal
 
 class DefinitionList(
-        private val items: Map<Renderable, Renderable>,
+        private val items: Map<out Renderable, Renderable>,
         private val inline: Boolean = false,
         private val inlineSpacing: Int = 2
 ) : Renderable {
