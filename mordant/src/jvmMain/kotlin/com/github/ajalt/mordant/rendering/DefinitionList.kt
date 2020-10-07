@@ -27,7 +27,7 @@ class DefinitionList(
         val termMeasurements = items.keys.map { it.measure(t, width) }
         val maxInlineTermWidth = (width / 2.5).toInt()
         val maxDescWidth = measureDescriptions(t, width).max
-        val termWidth = termMeasurements.filter {
+        val termWidth: Int = termMeasurements.filter {
             it.max <= maxInlineTermWidth || inline && it.max + inlineSpacing + maxDescWidth <= width
         }.maxWidthRange { it }.max
         val descOffset = (termWidth + inlineSpacing).coerceAtLeast(4)

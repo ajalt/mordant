@@ -89,12 +89,12 @@ internal class MarkdownRenderer(
                 Text(innerInlines(node, drop = 0), theme.markdownText)
             }
             MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
-            MarkdownElementTypes.SETEXT_1 -> setext("═", theme.markdownH1, node, theme)
-            MarkdownElementTypes.SETEXT_2 -> setext("─", theme.markdownH2, node, theme)
-            MarkdownElementTypes.ATX_1 -> atxHorizRule("═", theme.markdownH1, node, theme)
-            MarkdownElementTypes.ATX_2 -> atxHorizRule("─", theme.markdownH2, node, theme)
-            MarkdownElementTypes.ATX_3 -> atxHorizRule(" ", theme.markdownH3, node, theme)
-            MarkdownElementTypes.ATX_4 -> atxHorizRule(" ", theme.markdownH4, node, theme)
+            MarkdownElementTypes.SETEXT_1 -> setext(theme.markdownH1Rule, theme.markdownH1, node, theme)
+            MarkdownElementTypes.SETEXT_2 -> setext(theme.markdownH2Rule, theme.markdownH2, node, theme)
+            MarkdownElementTypes.ATX_1 -> atxHorizRule(theme.markdownH1Rule, theme.markdownH1, node, theme)
+            MarkdownElementTypes.ATX_2 -> atxHorizRule(theme.markdownH2Rule, theme.markdownH2, node, theme)
+            MarkdownElementTypes.ATX_3 -> atxHorizRule(theme.markdownH3Rule, theme.markdownH3, node, theme)
+            MarkdownElementTypes.ATX_4 -> atxHorizRule(theme.markdownH4Rule, theme.markdownH4, node, theme)
             MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
             MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
 

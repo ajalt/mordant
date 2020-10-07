@@ -15,7 +15,8 @@ class UnorderedList(
     private fun bullet(t: Theme): Line {
         val text = bulletText ?: t.listBulletText
         require("\n" !in text) { "bullet text cannot contain newlines" }
-        return parseText(text, bulletStyle ?: t.listBullet).lines.singleOrNull() ?: emptyList()
+        if (text.isEmpty()) return emptyList()
+        return parseText(text, bulletStyle ?: t.listBullet).lines.single()
     }
 
     override fun measure(t: Terminal, width: Int): WidthRange {

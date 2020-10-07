@@ -25,6 +25,11 @@ interface Theme  {
     val markdownH4: TextStyle get() = TextStyle(italic = true)
     val markdownH5: TextStyle get() = TextStyle(dim = true)
     val markdownH6: TextStyle get() = DEFAULT_STYLE
+
+    val markdownH1Rule: String get() = "═"
+    val markdownH2Rule: String get() = "─"
+    val markdownH3Rule: String get() = " "
+    val markdownH4Rule: String get() = " "
 }
 
 internal val DEFAULT_THEME = object : Theme {}
