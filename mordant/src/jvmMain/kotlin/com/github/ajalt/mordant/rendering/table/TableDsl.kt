@@ -89,18 +89,17 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     internal val rows = mutableListOf<RowBuilder>()
     internal var rowStyles = listOf<TextStyle>()
 
-    // TODO: test
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
-        rowStyles = listOf(style1 + style2) + styles.asList()
+        rowStyles = listOf(style1, style2) + styles.asList()
     }
 
-    fun row(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
+    fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
         val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
         rows += RowBuilder(cellBuilders).apply(init)
     }
 
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
-        row(cells.asList(), init)
+        rowFrom(cells.asList(), init)
     }
 
     fun row(init: RowBuilder.() -> Unit) {
@@ -119,7 +118,6 @@ class RowBuilder internal constructor(
         cells(cells.asList(), init)
     }
 
-    // TODO: rename
     fun cells(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
         cells.mapTo(this.cells) { CellBuilder(getRenderable(it)).apply(init) }
     }

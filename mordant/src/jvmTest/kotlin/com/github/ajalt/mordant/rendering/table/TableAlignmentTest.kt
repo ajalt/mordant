@@ -408,7 +408,7 @@ class TableAlignmentTest : RenderingTest() {
                     cell("1 2")
                     cell(Text("·\n·\n·", whitespace = PRE))
                 }
-                row("·······", "·")
+                rowFrom(listOf("·······", "·"))
             }
         }, expected)
     }

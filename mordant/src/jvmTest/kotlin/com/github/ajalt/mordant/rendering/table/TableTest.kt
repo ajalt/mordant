@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
+import com.github.ajalt.mordant.AnsiColor.blue
+import com.github.ajalt.mordant.AnsiColor.red
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.rendering.table.Borders.*
@@ -202,6 +204,25 @@ class TableTest : RenderingTest() {
         row(".")
     }
 
+    @Test
+    fun `striped row styles`() = doTest("""
+    |┌─────┐
+    |│${red("row 1")}│
+    |├─────┤
+    |│${blue("row 2")}│
+    |├─────┤
+    |│${red("row 3")}│
+    |├─────┤
+    |│${blue("row 4")}│
+    |└─────┘
+    """) {
+        rowStyles(TextStyle(red), TextStyle(blue))
+        padding = Padding.none()
+        row("row 1")
+        row("row 2")
+        row("row 3")
+        row("row 4")
+    }
 
     private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {

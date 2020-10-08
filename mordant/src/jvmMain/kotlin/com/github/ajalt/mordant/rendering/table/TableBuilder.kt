@@ -70,7 +70,8 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val textAlign = getVal(table.align) { it.align }
         val verticalAlign = getVal(table.verticalAlign) { it.verticalAlign }
         val overflowWrap = getVal(table.overflowWrap) { it.overflowWrap }
-        val style = foldStyles(cell.style, row.style, section.rowStyles.getOrNull(startingY), column?.style, table.style)
+        val stripedStyle = section.rowStyles.getOrNull(startingY % section.rowStyles.size)
+        val style = foldStyles(cell.style, row.style, stripedStyle, column?.style, table.style)
         val content = Padded.get(cell.content.withAlign(textAlign, overflowWrap), padding)
 
         val builtCell = Cell.Content(
