@@ -12,7 +12,9 @@ kotlin {
     jvm()
 
     sourceSets {
+        val gen by creating { }
         val jvmMain by getting {
+            dependsOn(gen)
             dependencies {
                 api("com.github.ajalt:colormath:1.4.1")
                 implementation("org.jetbrains:markdown:0.1.45")

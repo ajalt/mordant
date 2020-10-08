@@ -1,9 +1,6 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.rendering.BorderStyle
-import com.github.ajalt.mordant.rendering.Padding
-import com.github.ajalt.mordant.rendering.RenderingTest
-import com.github.ajalt.mordant.rendering.Text
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.rendering.table.Borders.*
 import org.junit.Test
@@ -184,6 +181,25 @@ class TableTest : RenderingTest() {
             cell(2)
         }
         row(3, 4)
+    }
+
+    @Test
+    fun `wide unicode characters`() = doTest("""
+    |┌──────────┐
+    |│ 모ㄹ단ㅌ │
+    |├──────────┤
+    |│   媒人   │
+    |├──────────┤
+    |│  🙊🙉🙈  │
+    |├──────────┤
+    |│    .     │
+    |└──────────┘
+    """) {
+        align = TextAlign.CENTER
+        row("모ㄹ단ㅌ")
+        row("媒人")
+        row("🙊🙉🙈")
+        row(".")
     }
 
 
