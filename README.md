@@ -119,9 +119,17 @@ Mordant is distributed through Maven Central,
 [Jcenter](https://bintray.com/ajalt/maven/mordant) and
 [Jitpack](https://jitpack.io/#ajalt/mordant).
 
+Gradle Groovy:
 ```groovy
 dependencies {
-   implementation 'com.github.ajalt:mordant:1.2.1'
+    implementation 'com.github.ajalt:mordant:1.2.1'
+}
+```
+
+Gradle Kotlin DSL:
+```kotlin
+dependencies {
+    implementation("com.github.ajalt:mordant:1.2.1")
 }
 ```
 
