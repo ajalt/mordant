@@ -33,7 +33,7 @@ class Terminal(
     fun print(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE_WRAP,
+            whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL
     ) {
@@ -43,7 +43,7 @@ class Terminal(
     fun println(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE_WRAP,
+            whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL
     ) {
@@ -61,7 +61,7 @@ class Terminal(
     fun render(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE_WRAP,
+            whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL
     ): String {
