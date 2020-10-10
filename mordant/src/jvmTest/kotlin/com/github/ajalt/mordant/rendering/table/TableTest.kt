@@ -286,6 +286,31 @@ class TableTest : RenderingTest() {
         row(4, 5, 6, 7)
     }
 
+    @Test
+    fun `nested tables`() = doTest("""
+    |┌───────────┬───┐
+    |│ ┌───┬───┐ │ 5 │
+    |│ │ 1 │ 2 │ │   │
+    |│ ├───┼───┤ │   │
+    |│ │ 3 │ 4 │ │   │
+    |│ └───┴───┘ │   │
+    |├───────────┼───┤
+    |│ 6         │ 7 │
+    |└───────────┴───┘
+    """) {
+        row {
+            cell(table {
+                body {
+                    row(1, 2)
+                    row(3, 4)
+                }
+
+            })
+            cell(5)
+        }
+        row(6, 7)
+    }
+
 
     @Test
     fun `outer border`() = checkRender(table {
