@@ -41,9 +41,6 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         return rows
     }
 
-    // The W3 standard calls tables with overlap invalid, and dictates that user agents either show
-    // the visual overlap, or shift the overlapping cells.
-    // We aren't bound by their laws, and instead take the gentleman's approach and throw an exception.
     private fun insertCell(
             cell: CellBuilder,
             section: SectionBuilder,
@@ -70,7 +67,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val textAlign = getVal(table.align) { it.align }
         val verticalAlign = getVal(table.verticalAlign) { it.verticalAlign }
         val overflowWrap = getVal(table.overflowWrap) { it.overflowWrap }
-        val stripedStyle = section.rowStyles.getOrNull(startingY % section.rowStyles.size)
+        val stripedStyle = if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
         val style = foldStyles(cell.style, row.style, stripedStyle, column?.style, table.style)
         val content = Padded.get(cell.content.withAlign(textAlign, overflowWrap), padding)
 
@@ -80,8 +77,8 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 columnSpan = columnSpan,
                 borderLeft = borders.left,
                 borderTop = borders.top,
-                borderRight = borders.right && columnSpan == 1,
-                borderBottom = borders.bottom && rowSpan == 1,
+                borderRight = borders.right.takeIf { columnSpan == 1 },
+                borderBottom = borders.bottom.takeIf { rowSpan == 1 },
                 style = style,
                 textAlign = textAlign,
                 verticalAlign = verticalAlign
@@ -96,14 +93,18 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                 } else {
                     Cell.SpanRef(
                             builtCell,
-                            borderLeft = borders.left && x == startingX,
-                            borderTop = borders.top && y == startingY,
-                            borderRight = borders.right && x == lastX,
-                            borderBottom = borders.bottom && y == lastY
+                            borderLeft = borders.left.takeIf { x == startingX },
+                            borderTop = borders.top.takeIf { y == startingY },
+                            borderRight = borders.right.takeIf { x == lastX },
+                            borderBottom = borders.bottom.takeIf { y == lastY },
                     )
                 }
                 val tableRow = rows.getRow(y)
                 val existing = tableRow.getCell(x)
+
+                // The W3 standard calls tables with overlap invalid, and dictates that user agents
+                // either show the visual overlap, or shift the overlapping cells. We aren't bound
+                // by their laws, and instead take the gentleman's approach and throw an exception.
                 require(existing === Cell.Empty) {
                     "Invalid table: cell spans cannot overlap"
                 }

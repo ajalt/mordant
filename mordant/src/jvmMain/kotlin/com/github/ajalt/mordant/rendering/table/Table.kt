@@ -2,23 +2,25 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
+import com.github.ajalt.mordant.rendering.VerticalAlign.BOTTOM
 
 internal sealed class Cell {
     object Empty : Cell() {
+        override val rowSpan: Int get() = 1
+        override val columnSpan: Int get() = 1
         override val borderLeft: Boolean get() = false
         override val borderTop: Boolean get() = false
         override val borderRight: Boolean get() = false
         override val borderBottom: Boolean get() = false
-        override val rowSpan: Int get() = 1
-        override val columnSpan: Int get() = 1
     }
 
     data class SpanRef(
             val cell: Content,
-            override val borderLeft: Boolean,
-            override val borderTop: Boolean,
-            override val borderRight: Boolean,
-            override val borderBottom: Boolean
+            override val borderLeft: Boolean?,
+            override val borderTop: Boolean?,
+            override val borderRight: Boolean?,
+            override val borderBottom: Boolean?,
     ) : Cell() {
         override val rowSpan: Int get() = cell.rowSpan
         override val columnSpan: Int get() = cell.columnSpan
@@ -28,10 +30,10 @@ internal sealed class Cell {
             val content: Renderable,
             override val rowSpan: Int,
             override val columnSpan: Int,
-            override val borderLeft: Boolean,
-            override val borderTop: Boolean,
-            override val borderRight: Boolean,
-            override val borderBottom: Boolean,
+            override val borderLeft: Boolean?,
+            override val borderTop: Boolean?,
+            override val borderRight: Boolean?,
+            override val borderBottom: Boolean?,
             val style: TextStyle?,
             val textAlign: TextAlign,
             val verticalAlign: VerticalAlign,
@@ -44,10 +46,12 @@ internal sealed class Cell {
 
     abstract val rowSpan: Int
     abstract val columnSpan: Int
-    abstract val borderLeft: Boolean
-    abstract val borderTop: Boolean
-    abstract val borderRight: Boolean
-    abstract val borderBottom: Boolean
+
+    // True borders will draw a line, false will draw a space, null will not draw anything
+    abstract val borderLeft: Boolean?
+    abstract val borderTop: Boolean?
+    abstract val borderRight: Boolean?
+    abstract val borderBottom: Boolean?
 }
 
 internal class Table(
@@ -232,7 +236,7 @@ private class TableRenderer(
                 val rowHeight = rowHeights[y]
                 val cell = row.getOrNull(x) ?: Cell.Empty
 
-                tableLineY +=  drawTopBorderForCell(tableLineY, x, y, cell.borderTop, colWidth)
+                tableLineY += drawTopBorderForCell(tableLineY, x, y, colWidth, cell.borderTop)
                 drawCellContent(tableLineY, cell, x, y)
 
                 tableLineY += rowHeight
@@ -252,14 +256,14 @@ private class TableRenderer(
         val line = tableLines[tableLines.lastIndex]
         for (x in columnWidths.indices) {
             if (columnBorders[x]) {
-                line.add(getTopLeftCorner(x, rowCount))
+                line.add(getTopLeftCorner(x, rowCount)!!)
             }
-            drawTopBorderForCell(tableLines.lastIndex, x, rowCount, false, columnWidths[x])
+            drawTopBorderForCell(tableLines.lastIndex, x, rowCount, columnWidths[x], borderTop = false)
         }
 
         // Bottom-right corner
         if (columnBorders[columnCount]) {
-            line.add(getTopLeftCorner(columnCount, rowCount))
+            getTopLeftCorner(columnCount, rowCount)?.let { line.add(it) }
         }
     }
 
@@ -270,9 +274,10 @@ private class TableRenderer(
         }
     }
 
-    private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, borderTop: Boolean, colWidth: Int): Int {
+    /** Return 1 if any cell in row [y] has a top border, or 0 if they don't */
+    private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, colWidth: Int, borderTop: Boolean?): Int {
         if (!rowBorders[y]) return 0
-        if (colWidth == 0) return 1
+        if (colWidth == 0 || borderTop == null) return 1
 
         val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) sectionOfRow(y).ew else " "
         tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderTextStyle))
@@ -287,24 +292,25 @@ private class TableRenderer(
             val rowHeight = rowHeights[y]
             val cell = row.getOrNull(x) ?: Cell.Empty
 
-            val borderHeight = when {
-                rowBorders[y] -> {
-                    tableLines[tableLineY].add(getTopLeftCorner(x, y))
-                    1
-                }
-                else -> 0
+            if (rowBorders[y]) {
+                getTopLeftCorner(x, y)?.let { tableLines[tableLineY].add(it) }
             }
 
-            val border = when {
-                cell.borderLeft || cellAt(x - 1, y)?.borderRight == true -> {
-                    Span.word(sectionOfRow(y, allowBottom = false).ns, borderTextStyle)
+            val borderLeft = cell.borderLeft
+            val topBorderHeight = if (rowBorders[y]) 1 else 0
+
+            if (borderLeft != null) {
+                val border = when {
+                    borderLeft || cellAt(x - 1, y)?.borderRight == true -> {
+                        Span.word(sectionOfRow(y, allowBottom = false).ns, borderTextStyle)
+                    }
+                    else -> SINGLE_SPACE
                 }
-                else -> SINGLE_SPACE
+                for (i in 0 until rowHeight) {
+                    tableLines[tableLineY + i + topBorderHeight].add(border)
+                }
             }
-            for (i in 0 until rowHeight) {
-                tableLines[tableLineY + i + borderHeight].add(border)
-            }
-            tableLineY += rowHeight + borderHeight
+            tableLineY += rowHeight + topBorderHeight
         }
     }
 
@@ -331,11 +337,18 @@ private class TableRenderer(
 
     private fun cellAt(x: Int, y: Int): Cell? = rows.getOrNull(y)?.getOrNull(x)
 
-    private fun getTopLeftCorner(x: Int, y: Int): Span {
+    private fun getTopLeftCorner(x: Int, y: Int): Span? {
         val tl = cellAt(x - 1, y - 1)
         val tr = cellAt(x, y - 1)
         val bl = cellAt(x - 1, y)
         val br = cellAt(x, y)
+        if (tl?.borderRight == null && tr?.borderLeft == null &&
+                tr?.borderBottom == null && br?.borderTop == null &&
+                bl?.borderRight == null && br?.borderLeft == null &&
+                tl?.borderBottom == null && bl?.borderTop == null
+        ) {
+            return null
+        }
         return sectionOfRow(y).getCorner(
                 tl?.borderRight == true || tr?.borderLeft == true,
                 tr?.borderBottom == true || br?.borderTop == true,

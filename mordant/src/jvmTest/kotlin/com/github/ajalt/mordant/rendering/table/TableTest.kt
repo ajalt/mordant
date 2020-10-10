@@ -3,6 +3,8 @@ package com.github.ajalt.mordant.rendering.table
 import com.github.ajalt.mordant.AnsiColor.blue
 import com.github.ajalt.mordant.AnsiColor.red
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.TextAlign.CENTER
+import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.rendering.table.Borders.*
 import org.junit.Test
@@ -165,6 +167,21 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    fun `non-rectangular table`() = doTest("""
+    |┌───┐   
+    |│ 1 │    
+    |├───┼───┐
+    |│ 2 │ 3 │
+    |├───┼───┘
+    |│ 4 │    
+    |└───┘   
+    """) {
+        row(1)
+        row(2,3)
+        row(4)
+    }
+
+    @Test
     fun `preformatted text content`() = doTest("""
     |┌────────────────┬─┐
     |│line 1          │2│
@@ -197,7 +214,7 @@ class TableTest : RenderingTest() {
     |│    .     │
     |└──────────┘
     """) {
-        align = TextAlign.CENTER
+        align = CENTER
         row("모ㄹ단ㅌ")
         row("媒人")
         row("🙊🙉🙈")
@@ -222,6 +239,51 @@ class TableTest : RenderingTest() {
         row("row 2")
         row("row 3")
         row("row 4")
+    }
+
+    @Test
+    fun `row and column span no borders`() = doTest("""
+    |span1
+    |    2
+    |3 4 5
+    """) {
+        borders = NONE
+        padding = Padding.none()
+        row {
+            cell("span") {
+                rowSpan = 2
+                columnSpan = 2
+            }
+            cell(1)
+        }
+        row(2)
+        row(3, 4, 5)
+    }
+
+    @Test
+    fun `row and column span`() = doTest("""
+    |┌───────────┬───┐
+    |│           │ 1 │
+    |│           ├───┤
+    |│   span    │ 2 │
+    |│           ├───┤
+    |│           │ 3 │
+    |├───┬───┬───┼───┤
+    |│ 4 │ 5 │ 6 │ 7 │
+    |└───┴───┴───┴───┘
+    """) {
+        row {
+            cell("span") {
+                align = CENTER
+                verticalAlign = MIDDLE
+                rowSpan = 3
+                columnSpan = 3
+            }
+            cell(1)
+        }
+        row(2)
+        row(3)
+        row(4, 5, 6, 7)
     }
 
     private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
