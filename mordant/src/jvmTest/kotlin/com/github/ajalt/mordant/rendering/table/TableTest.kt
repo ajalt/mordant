@@ -286,6 +286,28 @@ class TableTest : RenderingTest() {
         row(4, 5, 6, 7)
     }
 
+
+    @Test
+    fun `outer border`() = checkRender(table {
+        outerBorder = false
+        header { row(1, 2, 3) }
+        body {
+            borders = LEFT_RIGHT
+            row(4, 5, 6)
+            row(7, 8, 9)
+        }
+        footer {
+            row(11, 12, 13)
+        }
+    }, """
+     1  │ 2  │ 3  
+    ────┼────┼────
+     4  │ 5  │ 6  
+     7  │ 8  │ 9  
+    ────┼────┼────
+     11 │ 12 │ 13 
+    """)
+
     private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {
             borderStyle = BorderStyle.HEAVY_HEAD_FOOT

@@ -55,6 +55,7 @@ class TableBuilder internal constructor() {
     var align: TextAlign = TextAlign.LEFT
     var verticalAlign: VerticalAlign = VerticalAlign.TOP
     var overflowWrap: OverflowWrap = OverflowWrap.ELLIPSES
+    var outerBorder: Boolean = true
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal val headerSection = SectionBuilder()

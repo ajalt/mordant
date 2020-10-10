@@ -2,8 +2,6 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
-import com.github.ajalt.mordant.rendering.VerticalAlign.BOTTOM
 
 internal sealed class Cell {
     object Empty : Cell() {
@@ -61,6 +59,7 @@ internal class Table(
         val headerRowCount: Int,
         val footerRowCount: Int,
         val columnStyles: Map<Int, ColumnWidth>,
+        val outerBorder: Boolean
 ) : Renderable {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -69,17 +68,16 @@ internal class Table(
     private val expand = columnStyles.values.any { it is ColumnWidth.Expand }
     private val columnCount = rows.maxOf { it.size }
     private val rowBorders = List(rows.size + 1) { y ->
-        (0 until columnCount).any { x ->
+        (outerBorder || y in 1 until rows.size) && (0 until columnCount).any { x ->
             getCell(x, y)?.borderTop == true || getCell(x, y - 1)?.borderBottom == true
         }
     }
     private val columnBorders = List(columnCount + 1) { x ->
-        rows.indices.any { y ->
+        (outerBorder || x in 1 until columnCount) && rows.indices.any { y ->
             getCell(x, y)?.borderLeft == true || getCell(x - 1, y)?.borderRight == true
         }
     }
     private val borderWidth = columnBorders.count { it }
-
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         if (expand) return WidthRange(width, width)
