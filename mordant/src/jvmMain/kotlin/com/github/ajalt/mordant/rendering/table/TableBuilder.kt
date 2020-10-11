@@ -50,7 +50,8 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
             startingY: Int,
             builderWidth: Int
     ) {
-        val column = table.columns[startingX]
+        val tableCol = table.columns[startingX]
+        val sectionCol = section.columns[startingX]
         val row = section.rows[startingY]
 
         // The W3 standard says that spans are truncated rather than increasing the size of the table
@@ -59,17 +60,18 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
 
-        fun <T : Any> getVal(default: T, getter: (CellStyleBuilder) -> T?): T {
-            return getter(cell) ?: getter(row) ?: column?.let(getter) ?: getter(section) ?: default
+        fun <T : Any> getStyle(default: T, getter: (CellStyleBuilder) -> T?): T {
+            return getter(cell) ?: getter(row) ?: sectionCol?.let(getter)
+            ?: tableCol?.let(getter) ?: getter(section) ?: default
         }
 
-        val borders = getVal(table.borders) { it.borders }
-        val padding = getVal(table.padding) { it.padding }
-        val textAlign = getVal(table.align) { it.align }
-        val verticalAlign = getVal(table.verticalAlign) { it.verticalAlign }
-        val overflowWrap = getVal(table.overflowWrap) { it.overflowWrap }
+        val borders = getStyle(table.borders) { it.borders }
+        val padding = getStyle(table.padding) { it.padding }
+        val textAlign = getStyle(table.align) { it.align }
+        val verticalAlign = getStyle(table.verticalAlign) { it.verticalAlign }
+        val overflowWrap = getStyle(table.overflowWrap) { it.overflowWrap }
         val stripedStyle = if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
-        val style = foldStyles(cell.style, row.style, stripedStyle, column?.style, table.style)
+        val style = foldStyles(cell.style, row.style, stripedStyle, sectionCol?.style, tableCol?.style, table.style)
         val content = Padded.get(cell.content.withAlign(textAlign, overflowWrap), padding)
 
         val builtCell = Cell.Content(

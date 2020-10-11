@@ -62,14 +62,7 @@ class TableBuilder internal constructor() {
     internal val bodySection = SectionBuilder()
     internal val footerSection = SectionBuilder()
 
-    fun column(i: Int, init: ColumnBuilder.() -> Unit) {
-        var v = columns[i]
-        if (v == null) {
-            v = ColumnBuilder()
-            columns[i] = v
-        }
-        v.init()
-    }
+    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, init)
 
     fun header(init: SectionBuilder.() -> Unit) {
         headerSection.init()
@@ -88,7 +81,10 @@ class TableBuilder internal constructor() {
 @MordantDsl
 class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
     internal val rows = mutableListOf<RowBuilder>()
+    internal val columns = mutableMapOf<Int, ColumnBuilder>()
     internal var rowStyles = listOf<TextStyle>()
+
+    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, init)
 
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         rowStyles = listOf(style1, style2) + styles.asList()
@@ -158,4 +154,13 @@ private fun getRenderable(content: Any?): Renderable {
         "" -> EmptyRenderable
         else -> Text(string)
     }
+}
+
+private fun initColumn(columns: MutableMap<Int, ColumnBuilder>, i: Int, init: ColumnBuilder.() -> Unit) {
+    var v = columns[i]
+    if (v == null) {
+        v = ColumnBuilder()
+        columns[i] = v
+    }
+    v.init()
 }

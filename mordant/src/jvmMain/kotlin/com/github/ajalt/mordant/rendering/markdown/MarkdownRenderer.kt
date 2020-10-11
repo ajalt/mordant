@@ -203,13 +203,6 @@ internal class MarkdownRenderer(
         }
     }
 
-    private fun atxText(style: TextStyle, node: ASTNode, theme: Theme): Renderable {
-        return Text(when {
-            node.children.size <= 1 -> EOL_LINES
-            else -> atxContent(node)
-        }, style = style).withVerticalPadding(theme.markdownHeaderPadding)
-    }
-
     private fun atxContent(node: ASTNode): Lines {
         val (drop, dropLast) = dropWs(node.children[1].children)
         return innerInlines(node.children[1], drop = drop, dropLast = dropLast)

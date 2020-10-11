@@ -333,6 +333,45 @@ class TableTest : RenderingTest() {
      11 │ 12 │ 13 
     """)
 
+    @Test
+    fun `section column builders`() = checkRender(table {
+        column(0) {
+            align = TextAlign.RIGHT
+        }
+        header {
+            column(1) {
+                align = CENTER
+            }
+            row(1, 2)
+        }
+        body {
+            column(1) {
+                align = TextAlign.RIGHT
+            }
+            row(3, 4)
+        }
+        footer {
+            column(0) {
+                align = TextAlign.LEFT
+            }
+            column(1) {
+                align = CENTER
+            }
+            row(5, 6)
+            row("...", "...")
+        }
+    }, """
+    ┌─────┬─────┐
+    │   1 │  2  │
+    ├─────┼─────┤
+    │   3 │   4 │
+    ├─────┼─────┤
+    │ 5   │  6  │
+    ├─────┼─────┤
+    │ ... │ ... │
+    └─────┴─────┘
+    """)
+
     private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {
             borderStyle = BorderStyle.HEAVY_HEAD_FOOT
