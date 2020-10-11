@@ -44,14 +44,13 @@ class DefinitionList(
             val termLines = term.render(t, termWidth).lines
             val descLines = desc.render(t, width - termWidth - inlineSpacing).lines
             termLines.zip(descLines).mapTo(lines) { (t, d) ->
-                val space = listOf(Span.space(inlineSpacing + termWidth - t.lineWidth))
-                listOf(t, space, d).flatten()
+                flatLine(t, Span.space(inlineSpacing + termWidth - t.lineWidth), d)
             }
 
             if (termLines.size > descLines.size) {
                 lines += termLines.drop(descLines.size)
             } else if (descLines.size > termLines.size) {
-                val paddingLeft = if (descOffset > 0) listOf(Span.space(descOffset)) else emptyList()
+                val paddingLeft = if (descOffset > 0) listOf(Span.space(descOffset)) else EMPTY_LINE
                 descLines.drop(termLines.size).mapTo(lines) {
                     if (it.isEmpty()) it else paddingLeft + it
                 }

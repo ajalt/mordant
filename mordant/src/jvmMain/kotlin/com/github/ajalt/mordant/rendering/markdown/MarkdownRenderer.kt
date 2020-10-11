@@ -25,7 +25,7 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
     }
 }
 
-private val EOL_LINES = Lines(listOf(emptyList(), emptyList()))
+private val EOL_LINES = Lines(listOf(EMPTY_LINE, EMPTY_LINE))
 private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
 private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
 private val CHECK_BOX_REGEX = Regex("""\[[^]]]""")
@@ -95,8 +95,8 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_2 -> atxHorizRule(theme.markdownH2Rule, theme.markdownH2, node, theme)
             MarkdownElementTypes.ATX_3 -> atxHorizRule(theme.markdownH3Rule, theme.markdownH3, node, theme)
             MarkdownElementTypes.ATX_4 -> atxHorizRule(theme.markdownH4Rule, theme.markdownH4, node, theme)
-            MarkdownElementTypes.ATX_5 -> atxText(theme.markdownH5, node, theme)
-            MarkdownElementTypes.ATX_6 -> atxText(theme.markdownH6, node, theme)
+            MarkdownElementTypes.ATX_5 -> atxHorizRule(theme.markdownH5Rule, theme.markdownH5, node, theme)
+            MarkdownElementTypes.ATX_6 -> atxHorizRule(theme.markdownH6Rule, theme.markdownH6, node, theme)
 
             GFMTokenTypes.CHECK_BOX -> {
                 val content = CHECK_BOX_REGEX.find(nodeText(node))!!.value.removeSurrounding("[", "]")
@@ -183,7 +183,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.EOL -> {
                 // Add an extra linebreak, since the first one will get folded away by foldLines.
                 // Parse the text rather than hard coding the return value to support NEL and LS.
-                Lines(listOf(emptyList<Span>()) + parseText(nodeText(node), DEFAULT_STYLE).lines)
+                Lines(listOf(EMPTY_LINE) + parseText(nodeText(node), DEFAULT_STYLE).lines)
             }
             else -> error("Unexpected token when parsing inlines: $node")
         }

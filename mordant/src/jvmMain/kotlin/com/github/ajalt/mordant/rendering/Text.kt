@@ -53,7 +53,7 @@ class Text internal constructor(
             if (whitespace.trimEol || align == JUSTIFY) {
                 val lastNonWhitespace = lastNonWhitespace(line, align)
                 if (lastNonWhitespace >= 0) {
-                    repeat(line.lastIndex - lastNonWhitespace) { line.removeLast() }
+                    repeat(line.lastIndex - lastNonWhitespace) { line.removeAt(line.lastIndex) }
                 }
             }
 
@@ -148,7 +148,7 @@ class Text internal constructor(
         return Lines(lines)
     }
 
-    private fun lastNonWhitespace(line: List<Span>, align: TextAlign): Int {
+    private fun lastNonWhitespace(line: Line, align: TextAlign): Int {
         return when {
             whitespace.trimEol || align == JUSTIFY -> line.indexOfLast { !it.isWhitespace() }
             else -> -1

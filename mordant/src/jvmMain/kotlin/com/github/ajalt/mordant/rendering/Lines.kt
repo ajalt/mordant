@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
 typealias Line = List<Span>
 internal val EMPTY_LINES = Lines(emptyList())
+internal val EMPTY_LINE: Line = emptyList()
 
 data class Lines(
         val lines: List<Line>,
@@ -35,6 +36,20 @@ data class Lines(
 
 internal val Line.lineWidth get() = sumOf { it.cellWidth }
 
+/** Equivalent to `listOf(...).flatten(), but doesn't require wrapping single items in a list */
+internal fun flatLine(vararg parts: Any): Line {
+    val size = parts.sumOf { if (it is Collection<*>) it.size else 1 }
+    val line = ArrayList<Span>(size)
+    for (part in parts) {
+        when (part) {
+            is Collection<*> -> line.addAll(part as Collection<Span>)
+            is Span -> line.add(part)
+            else -> error("not a span: $part")
+        }
+    }
+    return line
+}
+
 /**
  * Pad or crop every line so its width is exactly [newWidth], and add or remove lines so its height
  * is exactly [newHeight]
@@ -46,7 +61,7 @@ internal fun Lines.setSize(
         textAlign: TextAlign = NONE
 ): Lines {
     if (newHeight == 0) return EMPTY_LINES
-    if (newWidth == 0) return Lines(List(newHeight) { emptyList() })
+    if (newWidth == 0) return Lines(List(newHeight) { EMPTY_LINE })
 
     val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
 
@@ -121,7 +136,7 @@ internal fun Lines.setSize(
         if (newHeight < lines.size) {
             return Lines(lines.take(newHeight))
         } else {
-            val line = if (newWidth == 0) emptyList() else listOf(Span.space(newWidth))
+            val line = if (newWidth == 0) EMPTY_LINE else listOf(Span.space(newWidth))
             repeat(newHeight - lines.size) {
                 lines.add(line)
             }

@@ -51,7 +51,7 @@ class Panel(
         val vertical = listOf(Span.word(b.ns, borderTextStyle))
 
         renderedContent.lines.mapTo(lines) { line ->
-            listOf(vertical, line, vertical).flatten()
+            flatLine(vertical, line, vertical)
         }
 
         lines.add(listOf(Span.word(b.ne, borderTextStyle), horizontalBorder, Span.word(b.nw, borderTextStyle)))

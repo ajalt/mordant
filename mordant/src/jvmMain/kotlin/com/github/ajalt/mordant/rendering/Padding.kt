@@ -46,21 +46,20 @@ internal data class Padded(
     override fun render(t: Terminal, width: Int): Lines {
         val lines = content.render(t, width - paddingWidth)
 
-        val blank = emptyList<Span>()
         val output = ArrayList<Line>(padding.top + lines.size + padding.bottom)
-        val left = if (padding.left > 0) listOf(Span.space(padding.left)) else emptyList()
-        val right = if (padding.right > 0) listOf(Span.space(padding.right)) else emptyList()
+        val left = if (padding.left > 0) listOf(Span.space(padding.left)) else EMPTY_LINE
+        val right = if (padding.right > 0) listOf(Span.space(padding.right)) else EMPTY_LINE
 
-        repeat(padding.top) { output.add(blank) }
+        repeat(padding.top) { output.add(EMPTY_LINE) }
 
         for (line in lines.lines) {
             output += when {
-                !padEmptyLines && line.isEmpty() -> blank
-                else -> listOf(left, line, right).flatten()
+                !padEmptyLines && line.isEmpty() -> EMPTY_LINE
+                else -> flatLine(left, line, right)
             }
         }
 
-        repeat(padding.bottom) { output.add(blank) }
+        repeat(padding.bottom) { output.add(EMPTY_LINE) }
 
         return Lines(output)
     }

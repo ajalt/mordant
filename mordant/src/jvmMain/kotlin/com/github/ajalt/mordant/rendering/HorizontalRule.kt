@@ -44,11 +44,10 @@ class HorizontalRule internal constructor(
                 }
             })
             val lastLine = renderedTitle.lines.last()
-            val space = listOf(SINGLE_SPACE)
             val ruleWidth = width - lastLine.sumOf { it.cellWidth } - 2 // -2 for padding
             val leftRule = rule(t.theme, ruleWidth / 2)
             val rightRule = rule(t.theme, ruleWidth / 2 + ruleWidth % 2)
-            val rule = listOf(leftRule, space, lastLine, space, rightRule).flatten()
+            val rule = flatLine(leftRule, SINGLE_SPACE, lastLine, SINGLE_SPACE, rightRule)
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))
                         .setSize(width, textAlign = TextAlign.CENTER)
@@ -60,7 +59,7 @@ class HorizontalRule internal constructor(
         return Lines(lines)
     }
 
-    private fun rule(t: Theme, width: Int): List<Span> {
+    private fun rule(t: Theme, width: Int): Line {
         val style = ruleStyle ?: t.horizontalRule
         val ruleWidth = width / ruleCharacter.length
         val rule = parseText(ruleCharacter.repeat(ruleWidth), style).lines.single()

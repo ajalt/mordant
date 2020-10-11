@@ -15,8 +15,12 @@ class UnorderedList(
     private fun bullet(t: Theme): Line {
         val text = bulletText ?: t.listBulletText
         require("\n" !in text) { "bullet text cannot contain newlines" }
-        if (text.isEmpty()) return emptyList()
-        return parseText(text, bulletStyle ?: t.listBullet).lines.single()
+        if (text.isEmpty()) return EMPTY_LINE
+        return flatLine(
+                SINGLE_SPACE,
+                parseText(text, bulletStyle ?: t.listBullet).lines.firstOrNull() ?: EMPTY_LINE,
+                SINGLE_SPACE
+        )
     }
 
     override fun measure(t: Terminal, width: Int): WidthRange {
@@ -30,7 +34,7 @@ class UnorderedList(
         val contentWidth = width - bulletWidth
         val continuationPadding = when {
             bulletWidth > 0 -> listOf(Span.space(bulletWidth, bulletStyle ?: t.theme.listBullet))
-            else -> emptyList()
+            else -> EMPTY_LINE
         }
 
         val lines = mutableListOf<Line>()

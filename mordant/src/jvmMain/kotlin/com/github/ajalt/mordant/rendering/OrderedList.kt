@@ -1,35 +1,40 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.internal.parseText
 import kotlin.math.log10
 
 class OrderedList(
         private val listEntries: List<Renderable>,
-        private val numberStyle: TextStyle? = null
+        private val numberStyle: TextStyle? = null,
+        private val numberSeparator: String? = null
 ) : Renderable {
     init {
         require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
     }
 
-    private fun bullet(i: Int, t: Theme): Line {
-        val style = numberStyle ?: t.listNumber
-        val padding = Span.space(style = style)
-        return listOf(padding, Span.word("${i + 1}.", style), padding)
+    private fun sep(t: Theme): Line {
+        val text = numberSeparator ?: t.listNumberSeparator
+        require("\n" !in text) { "number separator cannot contain newlines" }
+        return parseText(
+                text,
+                numberStyle ?: t.listNumber
+        ).lines.firstOrNull() ?: EMPTY_LINE
     }
 
-    private fun continuationPadding(i: Int, t: Theme): Line {
-        val n = bulletWidth(i)
-        return listOf(Span.space(n, numberStyle ?: t.listNumber))
+    private fun continuationPadding(i: Int, sepWidth: Int): Line {
+        val n = bulletWidth(i, sepWidth)
+        return listOf(Span.space(n))
     }
 
-    private fun bulletWidth(i: Int): Int {
+    private fun bulletWidth(i: Int, sepWidth: Int): Int {
         return (log10((i + 1).toDouble()).toInt() + 1 // number
                 + 2 // padding
-                + 1 // dot
+                + sepWidth
                 )
     }
 
-    private val maxBulletWidth = bulletWidth(listEntries.size)
+    private val maxBulletWidth = bulletWidth(listEntries.size, sep(DEFAULT_THEME).lineWidth)
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         return listEntries.maxWidthRange(t, width, maxBulletWidth)
@@ -38,11 +43,19 @@ class OrderedList(
     override fun render(t: Terminal, width: Int): Lines {
         val contentWidth = width - maxBulletWidth
         val lines = mutableListOf<Line>()
+        val style = numberStyle ?: t.theme.listNumber
+        val sep = sep(t.theme)
+        val sepWidth = sep.lineWidth
 
         for ((i, entry) in listEntries.withIndex()) {
-            val bullet = bullet(i, t.theme)
+            val bullet = flatLine(
+                    SINGLE_SPACE,
+                    Span.word("${i + 1}", style),
+                    sep,
+                    SINGLE_SPACE
+            )
             for ((j, line) in entry.render(t, contentWidth).lines.withIndex()) {
-                val start = if (j == 0) bullet else continuationPadding(i, t.theme)
+                val start = if (j == 0) bullet else continuationPadding(i, sepWidth)
                 lines += start + line
             }
         }

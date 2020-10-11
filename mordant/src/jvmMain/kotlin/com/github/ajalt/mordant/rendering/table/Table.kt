@@ -312,13 +312,14 @@ private class TableRenderer(
         }
     }
 
-    private fun renderCell(cell: Cell, x: Int, y: Int): List<List<Span>> {
+    private fun renderCell(cell: Cell, x: Int, y: Int): List<Line> {
         return when (cell) {
             is Cell.SpanRef -> {
                 emptyList()
             }
             is Cell.Empty -> {
-                List(rowHeights[y]) { listOf(Span.space(columnWidths[x])) }
+                val space = listOf(Span.space(columnWidths[x]))
+                List(rowHeights[y]) { space }
             }
             is Cell.Content -> {
                 val cellWidth = (x until x + cell.columnSpan).sumOf { columnWidths[it] } +

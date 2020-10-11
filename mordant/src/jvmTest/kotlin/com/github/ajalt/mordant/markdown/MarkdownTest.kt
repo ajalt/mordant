@@ -327,7 +327,7 @@ www.example.com/url
 ### Header Text
 """, """
 
-    ${underline("Header Text")}    ⏎
+    ${(bold+underline)("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -336,7 +336,7 @@ www.example.com/url
 #### Header Text
 """, """
 
-    ${italic("Header Text")}    ⏎
+    ${underline("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -345,7 +345,7 @@ www.example.com/url
 ##### Header Text
 """, """
 
-${dim("Header Text")}
+    ${italic("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -354,7 +354,7 @@ ${dim("Header Text")}
 ###### Header Text
 """, """
 
-Header Text⏎
+    ${dim("Header Text")}    ⏎
 
 """, width = 19)
 
@@ -492,7 +492,7 @@ LS
 ┌─────┬─────┐
 │ abc │ def │
 ├─────┼─────┘
-│ bar │      
+│ bar │      ⏎
 ├─────┼─────┐
 │ bar │ baz │
 └─────┴─────┘
