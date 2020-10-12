@@ -131,8 +131,10 @@ internal class MarkdownRenderer(
         return when (node.type) {
             // ElementTypes
             MarkdownElementTypes.CODE_SPAN -> {
+                // Trim the code as a kludge to prevent the background style from extending if the
+                // code ends with whitespace. It would be better to fix this in the text wrapping code.
                 parseText(input.substring(node.children[1].startOffset,
-                        node.children.last().startOffset), theme.markdownCodeSpan)
+                        node.children.last().startOffset).trim(), theme.markdownCodeSpan)
             }
             MarkdownElementTypes.EMPH -> {
                 innerInlines(node, drop = 1).withStyle(theme.markdownEmph)

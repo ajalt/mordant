@@ -18,6 +18,8 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.junit.Test
 
+private val code = brightWhite on gray
+
 class MarkdownTest {
     @Test
     fun `test paragraphs`() = doTest("""
@@ -409,7 +411,7 @@ An `` empty code span.
 
     @Test
     fun `code span`() = doTest("""
-This is a `code    <br/>`   span.
+This `is ` a `code    <br/>`   `span`.
 
 So `is  this`
 span.
@@ -419,11 +421,11 @@ with
 a
 line break`.
 """, """
-This is a ${(brightWhite on gray)("code <br/>")} span.
+This ${code("is")} a ${code("code <br/>")} ${code("span")}.
 
-So ${(brightWhite on gray)("is this")} span.
+So ${code("is this")} span.
 
-A ${(brightWhite on gray)("span with a line break")}.
+A ${code("span with a line break")}.
 """)
 
 // Not supported by the parser yet
@@ -461,7 +463,7 @@ line break with a backslash.
 A ${italic("hard")}
 ${italic("line")} break with emph.
 
-Code spans ${(brightWhite on gray)("don't\\ have")} hard breaks.
+Code spans ${code("don't\\ have")} hard breaks.
 
 Also break on
 NEL and on
@@ -548,13 +550,13 @@ LS
     }
 """, """
 ┌───────┐
-│${(brightWhite on gray)("foo {  ")}│
-│${(brightWhite on gray)("    bar")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("    baz")}│
-│${(brightWhite on gray)("}      ")}│
+│${code("foo {  ")}│
+│${code("    bar")}│
+│${code("       ")}│
+│${code("       ")}│
+│${code("       ")}│
+│${code("    baz")}│
+│${code("}      ")}│
 └───────┘
 """)
 
@@ -571,13 +573,13 @@ foo {
 ```
 """, """
 ┌───────┐
-│${(brightWhite on gray)("foo {  ")}│
-│${(brightWhite on gray)("    bar")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("       ")}│
-│${(brightWhite on gray)("    baz")}│
-│${(brightWhite on gray)("}      ")}│
+│${code("foo {  ")}│
+│${code("    bar")}│
+│${code("       ")}│
+│${code("       ")}│
+│${code("       ")}│
+│${code("    baz")}│
+│${code("}      ")}│
 └───────┘
 """)
 
@@ -591,9 +593,9 @@ end
 ~~~~~~~
 """, """
 ┌──────────┐
-│${(brightWhite on gray)("def foo(x)")}│
-│${(brightWhite on gray)("  return 3")}│
-│${(brightWhite on gray)("end       ")}│
+│${code("def foo(x)")}│
+│${code("  return 3")}│
+│${code("end       ")}│
 └──────────┘
 """)
 
@@ -606,7 +608,7 @@ foo${nbsp}bar baz
 ```
 """, """
 ┌───────────┐
-│${(brightWhite on gray)("foo${nbsp}bar baz")}│
+│${code("foo${nbsp}bar baz")}│
 └───────────┘
 """)
     }
@@ -617,7 +619,7 @@ foo${nbsp}bar baz
 foo  bar
 ```
 """, """
-${(brightWhite on gray)("foo  bar")}
+${code("foo  bar")}
 """, theme = object : Theme {
         override val markdownCodeBlockBorder: Boolean get() = false
     })
@@ -626,7 +628,7 @@ ${(brightWhite on gray)("foo  bar")}
     fun `indented code block with no border in theme`() = doTest("""
     foo  bar
 """, """
-${(brightWhite on gray)("foo  bar")}
+${code("foo  bar")}
 """, theme = object : Theme {
         override val markdownCodeBlockBorder: Boolean get() = false
     })
