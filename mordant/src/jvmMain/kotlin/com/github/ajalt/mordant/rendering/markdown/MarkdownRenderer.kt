@@ -35,10 +35,13 @@ private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
 }
 
 internal class MarkdownRenderer(
-        private val input: String,
+        input: String,
         private val theme: Theme,
         private val showHtml: Boolean
 ) {
+    // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
+    private val input = input.replace("\r", "")
+
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
         val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(input)

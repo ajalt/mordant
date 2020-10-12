@@ -6,7 +6,6 @@ import com.github.ajalt.mordant.rendering.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
 
 internal val SINGLE_SPACE = Span.space(1)
-internal val SINGLE_SPACE_LINE = listOf(SINGLE_SPACE)
 
 @Suppress("DataClassPrivateConstructor")
 data class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {

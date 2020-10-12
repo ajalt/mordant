@@ -11,8 +11,6 @@ import com.github.ajalt.mordant.rendering.NEL
 import com.github.ajalt.mordant.rendering.Theme
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
-import org.intellij.markdown.MarkdownTokenTypes.Companion.EOL
-import org.intellij.markdown.MarkdownTokenTypes.Companion.WHITE_SPACE
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.ast.LeafASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
@@ -52,6 +50,21 @@ Paragraph
 two wrapped
 line.
 """, width = 11)
+
+    @Test
+    fun `test paragraphs crlf`() = doTest("""
+Paragraph one
+wrapped line.
+
+Paragraph 
+two
+wrapped
+line.
+""".replace("\n", "\r\n"), """
+Paragraph one wrapped line.
+
+Paragraph two wrapped line.
+""")
 
     @Test
     fun `test quotes`() = doTest("""
@@ -598,21 +611,25 @@ foo${nbsp}bar baz
 """)
     }
 
+    @Test
     fun `fenced code block with no border in theme`() = doTest("""
 ```
 foo  bar
 ```
 """, """
-foo  bar
-""")
+${(brightWhite on gray)("foo  bar")}
+""", theme = object : Theme {
+        override val markdownCodeBlockBorder: Boolean get() = false
+    })
 
+    @Test
     fun `indented code block with no border in theme`() = doTest("""
-```
-foo  bar
-```
+    foo  bar
 """, """
-foo  bar
-""")
+${(brightWhite on gray)("foo  bar")}
+""", theme = object : Theme {
+        override val markdownCodeBlockBorder: Boolean get() = false
+    })
 
     private fun doTest(
             @Language("markdown") markdown: String,
@@ -644,8 +661,14 @@ foo  bar
 private fun StringBuilder.printNode(text: String, node: ASTNode, indent: Int = 0) {
     append(" ".repeat(indent * 2))
     append(node.type)
-    if (node is LeafASTNode && node.type !in listOf(EOL, WHITE_SPACE)) {
-        append(" \'").append(text.substring(node.startOffset, node.endOffset).replace("\n", "⏎").take(30))
+    if (node is LeafASTNode) {
+        append(" \'").append(text.substring(node.startOffset, node.endOffset)
+                .replace("\r", "␍")
+                .replace("\n", "␊")
+                .replace(" ", "·")
+                .replace("\t", "␉")
+                .take(30)
+        )
         if (node.endOffset - node.startOffset > 30) append("…")
         append("\'")
     }
