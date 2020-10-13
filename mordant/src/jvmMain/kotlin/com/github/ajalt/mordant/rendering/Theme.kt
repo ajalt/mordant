@@ -1,14 +1,13 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.AnsiColor.brightWhite
-import com.github.ajalt.mordant.AnsiColor.gray
+import com.github.ajalt.mordant.AnsiColor.*
 
 interface Theme  {
     val listNumber: TextStyle get() = DEFAULT_STYLE
     val listNumberSeparator: String get() = "."
     val listBullet: TextStyle get() = DEFAULT_STYLE
     val listBulletText: String get() = "•"
-    val blockQuote: TextStyle get() = DEFAULT_STYLE
+    val blockQuote: TextStyle get() = TextStyle(brightYellow)
     val horizontalRule: TextStyle get() = DEFAULT_STYLE
     val horizontalRuleTitle: TextStyle get() = DEFAULT_STYLE
 
@@ -16,16 +15,20 @@ interface Theme  {
     val markdownEmph: TextStyle get() = TextStyle(italic = true)
     val markdownStrong: TextStyle get() = TextStyle(bold = true)
     val markdownStikethrough: TextStyle get() = TextStyle(strikethrough = true)
-    val markdownCodeBlock: TextStyle get() = TextStyle(brightWhite, gray)
+    val markdownCodeBlock: TextStyle get() = TextStyle(brightRed)
     val markdownCodeBlockBorder: Boolean get() = true
-    val markdownCodeSpan: TextStyle get() = TextStyle(brightWhite, gray)
+    val markdownCodeSpan: TextStyle get() = TextStyle(brightRed, gray, dim = true)
     val markdownHeaderPadding: Int get() = 1
-    val markdownH1: TextStyle get() = TextStyle(bold = true)
-    val markdownH2: TextStyle get() = TextStyle(bold = true)
-    val markdownH3: TextStyle get() = TextStyle(bold = true, underline = true)
-    val markdownH4: TextStyle get() = TextStyle(underline = true)
-    val markdownH5: TextStyle get() = TextStyle(italic = true)
-    val markdownH6: TextStyle get() = TextStyle(dim = true)
+    val markdownTableHeader: TextStyle get() = TextStyle(bold = true)
+    val markdownTableBody: TextStyle get() = DEFAULT_STYLE
+    val markdownLinkText: TextStyle get() = TextStyle(brightBlue)
+    val markdownLinkDestination: TextStyle get() = TextStyle(blue)
+    val markdownH1: TextStyle get() = TextStyle(magenta, bold = true)
+    val markdownH2: TextStyle get() = TextStyle(magenta, bold = true)
+    val markdownH3: TextStyle get() = TextStyle(magenta, bold = true, underline = true)
+    val markdownH4: TextStyle get() = TextStyle(magenta, underline = true)
+    val markdownH5: TextStyle get() = TextStyle(magenta, italic = true)
+    val markdownH6: TextStyle get() = TextStyle(magenta, dim = true)
 
     val markdownH1Rule: String get() = "═"
     val markdownH2Rule: String get() = "─"

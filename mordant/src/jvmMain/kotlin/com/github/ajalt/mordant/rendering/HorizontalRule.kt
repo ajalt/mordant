@@ -38,16 +38,13 @@ class HorizontalRule internal constructor(
         val lines = if (content.lines.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {
-            val renderedTitle = Lines(content.lines.map { l ->
-                l.map {
-                    it.withStyle(titleStyle ?: t.theme.horizontalRuleTitle)
-                }
-            })
+            val renderedTitle = content.withStyle(this.titleStyle ?: t.theme.horizontalRuleTitle)
             val lastLine = renderedTitle.lines.last()
             val ruleWidth = width - lastLine.sumOf { it.cellWidth } - 2 // -2 for padding
             val leftRule = rule(t.theme, ruleWidth / 2)
             val rightRule = rule(t.theme, ruleWidth / 2 + ruleWidth % 2)
-            val rule = flatLine(leftRule, SINGLE_SPACE, lastLine, SINGLE_SPACE, rightRule)
+            val space = SINGLE_SPACE.withStyle(ruleStyle ?: t.theme.horizontalRule)
+            val rule = flatLine(leftRule, space, lastLine, space, rightRule)
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))
                         .setSize(width, textAlign = TextAlign.CENTER)

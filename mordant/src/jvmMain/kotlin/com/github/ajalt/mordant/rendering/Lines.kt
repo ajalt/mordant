@@ -19,6 +19,13 @@ data class Lines(
         }
     }
 
+    internal fun replaceStyle(style: TextStyle?): Lines {
+        return when (style) {
+            null, DEFAULT_STYLE -> this
+            else -> Lines(lines.map { l -> l.map { it.replaceStyle(style) } })
+        }
+    }
+
     internal operator fun plus(other: Lines): Lines {
         return when {
             lines.isEmpty() -> other
@@ -42,7 +49,7 @@ internal fun flatLine(vararg parts: Any): Line {
     val line = ArrayList<Span>(size)
     for (part in parts) {
         when (part) {
-            is Collection<*> -> line.addAll(part as Collection<Span>)
+            is Collection<*> -> part.mapTo(line) { it as Span }
             is Span -> line.add(part)
             else -> error("not a span: $part")
         }

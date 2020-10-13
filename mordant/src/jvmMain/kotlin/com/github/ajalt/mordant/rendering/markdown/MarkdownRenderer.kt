@@ -41,6 +41,8 @@ internal class MarkdownRenderer(
 ) {
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
+    private val linkDestOpen = parseText("(", theme.markdownLinkDestination)
+    private val linkDestClose = parseText(")", theme.markdownLinkDestination)
 
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
@@ -91,15 +93,18 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.PARAGRAPH -> {
                 Text(innerInlines(node, drop = 0), theme.markdownText)
             }
-            MarkdownElementTypes.LINK_DEFINITION -> Text("") // ignore these since we don't support links
-            MarkdownElementTypes.SETEXT_1 -> setext(theme.markdownH1Rule, theme.markdownH1, node, theme)
-            MarkdownElementTypes.SETEXT_2 -> setext(theme.markdownH2Rule, theme.markdownH2, node, theme)
-            MarkdownElementTypes.ATX_1 -> atxHorizRule(theme.markdownH1Rule, theme.markdownH1, node, theme)
-            MarkdownElementTypes.ATX_2 -> atxHorizRule(theme.markdownH2Rule, theme.markdownH2, node, theme)
-            MarkdownElementTypes.ATX_3 -> atxHorizRule(theme.markdownH3Rule, theme.markdownH3, node, theme)
-            MarkdownElementTypes.ATX_4 -> atxHorizRule(theme.markdownH4Rule, theme.markdownH4, node, theme)
-            MarkdownElementTypes.ATX_5 -> atxHorizRule(theme.markdownH5Rule, theme.markdownH5, node, theme)
-            MarkdownElementTypes.ATX_6 -> atxHorizRule(theme.markdownH6Rule, theme.markdownH6, node, theme)
+            MarkdownElementTypes.LINK_DEFINITION -> {
+                Text(parseText(nodeText(node), theme.markdownLinkDestination))
+            }
+
+            MarkdownElementTypes.SETEXT_1 -> setext(theme.markdownH1Rule, theme.markdownH1, node)
+            MarkdownElementTypes.SETEXT_2 -> setext(theme.markdownH2Rule, theme.markdownH2, node)
+            MarkdownElementTypes.ATX_1 -> atxHorizRule(theme.markdownH1Rule, theme.markdownH1, node)
+            MarkdownElementTypes.ATX_2 -> atxHorizRule(theme.markdownH2Rule, theme.markdownH2, node)
+            MarkdownElementTypes.ATX_3 -> atxHorizRule(theme.markdownH3Rule, theme.markdownH3, node)
+            MarkdownElementTypes.ATX_4 -> atxHorizRule(theme.markdownH4Rule, theme.markdownH4, node)
+            MarkdownElementTypes.ATX_5 -> atxHorizRule(theme.markdownH5Rule, theme.markdownH5, node)
+            MarkdownElementTypes.ATX_6 -> atxHorizRule(theme.markdownH6Rule, theme.markdownH6, node)
 
             GFMTokenTypes.CHECK_BOX -> {
                 val content = CHECK_BOX_REGEX.find(nodeText(node))!!.value.removeSurrounding("[", "]")
@@ -111,9 +116,11 @@ internal class MarkdownRenderer(
                     column(i) { this.align = align }
                 }
                 header {
+                    style = theme.markdownTableHeader
                     parseTableRow(node.children.first { it.type == GFMElementTypes.HEADER })
                 }
                 body {
+                    style = theme.markdownTableBody
                     node.children.filter { it.type == GFMElementTypes.ROW }.forEach {
                         parseTableRow(it)
                     }
@@ -145,16 +152,40 @@ internal class MarkdownRenderer(
             GFMElementTypes.STRIKETHROUGH -> {
                 innerInlines(node, drop = 2).withStyle(theme.markdownStikethrough)
             }
-            MarkdownElementTypes.INLINE_LINK,
-            MarkdownElementTypes.FULL_REFERENCE_LINK,
-            MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
-                // first child is LINK_TEXT, second is LINK_LABEL. Ignore the label and brackets.
-                innerInlines(node.children[0], drop = 1)
+            MarkdownElementTypes.FULL_REFERENCE_LINK -> {
+                innerInlines(node, drop = 0)
             }
+            MarkdownElementTypes.LINK_TEXT -> {
+                parseText(nodeText(node.children[1]), theme.markdownLinkText)
+            }
+            MarkdownElementTypes.LINK_LABEL -> {
+                parseText(nodeText(node), theme.markdownLinkDestination)
+            }
+            MarkdownElementTypes.LINK_DESTINATION -> {
+                innerInlines(node, drop = if (node.children.firstOrNull()?.type == MarkdownTokenTypes.LT) 1 else 0)
+                        .replaceStyle(theme.markdownLinkDestination) // the child might be TEXT or GFM_AUTOLINK
+            }
+            MarkdownElementTypes.INLINE_LINK -> {
+                val text = innerInlines(node.children.first { it.type == MarkdownElementTypes.LINK_TEXT }, drop = 1)
+                        .withStyle(theme.markdownLinkText)
+                val dest = node.children.find { it.type == MarkdownElementTypes.LINK_DESTINATION }
+                        ?.let { parseInlines(it) }
+                        ?: EMPTY_LINES
+                listOf(text, linkDestOpen, dest, linkDestClose).foldLines { it }
+            }
+            MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
+                innerInlines(node.children[0], drop = 0).withStyle(theme.markdownLinkText)
+            }
+
             MarkdownElementTypes.IMAGE -> {
                 // for images, just render the alt text if there is any
                 parseInlines(node.children[1])
             }
+            // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end
+            // up rendering the surrounding <>.
+            MarkdownTokenTypes.EMAIL_AUTOLINK,
+            GFMTokenTypes.GFM_AUTOLINK,
+            MarkdownTokenTypes.AUTOLINK -> parseText(nodeText(node), theme.markdownLinkText)
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             // TokenTypes
@@ -163,12 +194,10 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
-            MarkdownTokenTypes.AUTOLINK,
             MarkdownTokenTypes.BACKTICK,
             MarkdownTokenTypes.CODE_FENCE_CONTENT,
             MarkdownTokenTypes.COLON,
             MarkdownTokenTypes.DOUBLE_QUOTE,
-            MarkdownTokenTypes.EMAIL_AUTOLINK, // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end up rendering the surrounding <>.
             MarkdownTokenTypes.EMPH,
             MarkdownTokenTypes.EXCLAMATION_MARK,
             MarkdownTokenTypes.GT,
@@ -181,8 +210,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.SINGLE_QUOTE,
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.URL,
-            MarkdownTokenTypes.WHITE_SPACE,
-            GFMTokenTypes.GFM_AUTOLINK -> {
+            MarkdownTokenTypes.WHITE_SPACE -> {
                 parseText(nodeText(node), DEFAULT_STYLE)
             }
             MarkdownTokenTypes.EOL -> {
@@ -190,7 +218,7 @@ internal class MarkdownRenderer(
                 // Parse the text rather than hard coding the return value to support NEL and LS.
                 Lines(listOf(EMPTY_LINE) + parseText(nodeText(node), DEFAULT_STYLE).lines)
             }
-            else -> error("Unexpected token when parsing inlines: $node")
+            else -> error("Unexpected token when parsing inlines: $node; [${node.type}:'${nodeText(node).take(10)}'}]")
         }
     }
 
@@ -201,10 +229,10 @@ internal class MarkdownRenderer(
                 .foldLines { parseInlines(it) }
     }
 
-    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
+    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> HorizontalRule(Text(atxContent(node)), bar, titleStyle = style).withVerticalPadding(theme.markdownHeaderPadding)
+            else -> headerHr(Text(atxContent(node)), bar, style)
         }
     }
 
@@ -213,10 +241,15 @@ internal class MarkdownRenderer(
         return innerInlines(node.children[1], drop = drop, dropLast = dropLast)
     }
 
-    private fun setext(bar: String, style: TextStyle, node: ASTNode, theme: Theme): Renderable {
+    private fun setext(bar: String, style: TextStyle, node: ASTNode): Renderable {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return HorizontalRule(Text(content), bar, titleStyle = style).withVerticalPadding(theme.markdownHeaderPadding)
+        return headerHr(Text(content), bar, style)
+    }
+
+    private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
+        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor))
+                .withVerticalPadding(theme.markdownHeaderPadding)
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {

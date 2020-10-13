@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiColor.brightWhite
-import com.github.ajalt.mordant.AnsiColor.gray
+import com.github.ajalt.mordant.AnsiColor.*
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.AnsiStyle.*
 import com.github.ajalt.mordant.Terminal
@@ -18,7 +17,7 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import org.junit.Test
 
-private val code = brightWhite on gray
+private val code = (brightRed on gray) + dim
 
 class MarkdownTest {
     @Test
@@ -211,9 +210,9 @@ A ${strikethrough("strikethrough span")}.
 >
 > line 3
 """, """
-▎ line 1 line 2
-▎
-▎ line 3
+${brightYellow("▎ line 1 line 2")}
+${brightYellow("▎")}
+${brightYellow("▎ line 3")}
 """)
 
 
@@ -224,10 +223,10 @@ A ${strikethrough("strikethrough span")}.
 >bar
 > baz
 """, """
-▎
-▎ ══ ${bold("Foo")} ═══
-▎
-▎ bar baz
+${brightYellow("▎")}
+${brightYellow("▎ ══ ")}${(brightYellow + bold)("Foo")}${brightYellow(" ═══")}
+${brightYellow("▎")}
+${brightYellow("▎ bar baz")}
 """, width = 10)
 
     // https://github.github.com/gfm/#example-208
@@ -237,10 +236,10 @@ A ${strikethrough("strikethrough span")}.
    > bar
  > baz
 """, """
-▎
-▎ ══ ${bold("Foo")} ═══
-▎
-▎ bar baz
+${brightYellow("▎")}
+${brightYellow("▎ ══ ")}${(brightYellow + bold)("Foo")}${brightYellow(" ═══")}
+${brightYellow("▎")}
+${brightYellow("▎ bar baz")}
 """, width = 10)
 
 
@@ -251,9 +250,17 @@ A ${strikethrough("strikethrough span")}.
 
 [a link]
 
-[an inline link](example.com "with a title")
+[inline link 1]( example.com "with a title" )
 
-![an image](example.com "with a title")
+[inline link 2](http://www.example.com)
+
+[inline link 3]()
+
+[inline link 4](<>)
+
+[inline link 5](</my uri>)
+
+![an image]( example.com "with a title" )
 
 <https://example.com/autolink>
 
@@ -263,21 +270,29 @@ www.example.com/url
 
 [a link]: example.com
 """, """
-a reference link
+${brightBlue("a reference link")}${blue("[a link]")}
 
-a link
+${brightBlue("[a link]")}
 
-an inline link
+${brightBlue("inline link 1")}${blue("(example.com)")}
 
-an image
+${brightBlue("inline link 2")}${blue("(http://www.example.com)")}
 
-https://example.com/autolink
+${brightBlue("inline link 3")}${blue("()")}
 
-www.example.com/url
+${brightBlue("inline link 4")}${blue("()")}
 
-<autolink@example.com>
+${brightBlue("inline link 5")}${blue("(/my uri)")}
 
+${brightBlue("an image")}${blue("(example.com)")}
 
+${brightBlue("https://example.com/autolink")}
+
+${brightBlue("www.example.com/url")}
+
+<${brightBlue("autolink@example.com")}>
+
+${blue("[a link]: example.com")}
 """)
 
     @Test
@@ -324,7 +339,7 @@ www.example.com/url
 # Header Text
 """, """
 
-═══ ${bold("Header Text")} ═══
+${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
 
 """, width = 19)
 
@@ -333,7 +348,7 @@ www.example.com/url
 ## Header Text
 """, """
 
-─── ${bold("Header Text")} ───
+${magenta("─── ")}${(magenta + bold)("Header Text")}${magenta(" ───")}
 
 """, width = 19)
 
@@ -342,7 +357,7 @@ www.example.com/url
 ### Header Text
 """, """
 
-    ${(bold+underline)("Header Text")}    ⏎
+${magenta("    ")}${(magenta + bold + underline)("Header Text")}${magenta("    ")}
 
 """, width = 19)
 
@@ -351,7 +366,7 @@ www.example.com/url
 #### Header Text
 """, """
 
-    ${underline("Header Text")}    ⏎
+${magenta("    ")}${(magenta + underline)("Header Text")}${magenta("    ")}
 
 """, width = 19)
 
@@ -360,7 +375,7 @@ www.example.com/url
 ##### Header Text
 """, """
 
-    ${italic("Header Text")}    ⏎
+${magenta("    ")}${(magenta + italic)("Header Text")}${magenta("    ")}
 
 """, width = 19)
 
@@ -369,7 +384,7 @@ www.example.com/url
 ###### Header Text
 """, """
 
-    ${dim("Header Text")}    ⏎
+${magenta("    ")}${(magenta + dim)("Header Text")}${magenta("    ")}
 
 """, width = 19)
 
@@ -378,7 +393,7 @@ www.example.com/url
 # Header Text ##
 """, """
 
-═══ ${bold("Header Text")} ═══
+${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
 
 """, width = 19)
 
@@ -388,7 +403,7 @@ Header Text
 ===========
 """, """
 
-═══ ${bold("Header Text")} ═══
+${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
 
 """, width = 19)
 
@@ -398,7 +413,7 @@ Header Text
 ---
 """, """
 
-─── ${bold("Header Text")} ───
+${magenta("─── ")}${(magenta + bold)("Header Text")}${magenta(" ───")}
 
 """, width = 19)
 
@@ -478,7 +493,7 @@ LS
 | --- | --- |
 """, """
 ┌─────┬─────┐
-│ abc │ def │
+│${bold(" abc ")}│${bold(" def ")}│
 └─────┴─────┘
 """)
 
@@ -490,7 +505,7 @@ LS
  | baz | bim |
 """, """
 ┌─────┬─────┐
-│ foo │ bar │
+│${bold(" foo ")}│${bold(" bar ")}│
 ├─────┼─────┤
 │ baz │ bim │
 └─────┴─────┘
@@ -505,7 +520,7 @@ LS
 | bar | baz | boo |
 """, """
 ┌─────┬─────┐
-│ abc │ def │
+│${bold(" abc ")}│${bold(" def ")}│
 ├─────┼─────┘
 │ bar │      ⏎
 ├─────┼─────┐
@@ -521,7 +536,7 @@ LS
 | ...... | ...... | ...... |
 """, """
 ┌────────┬────────┬────────┐
-│  abc   │    def │ ghi    │
+│${bold("  abc   ")}│${bold("    def ")}│${bold(" ghi    ")}│
 ├────────┼────────┼────────┤
 │  bar   │    baz │ quz    │
 ├────────┼────────┼────────┤
@@ -550,13 +565,13 @@ LS
     }
 """, """
 ┌───────┐
-│${code("foo {  ")}│
-│${code("    bar")}│
-│${code("       ")}│
-│${code("       ")}│
-│${code("       ")}│
-│${code("    baz")}│
-│${code("}      ")}│
+│${brightRed("foo {  ")}│
+│${brightRed("    bar")}│
+│${brightRed("       ")}│
+│${brightRed("       ")}│
+│${brightRed("       ")}│
+│${brightRed("    baz")}│
+│${brightRed("}      ")}│
 └───────┘
 """)
 
@@ -573,13 +588,13 @@ foo {
 ```
 """, """
 ┌───────┐
-│${code("foo {  ")}│
-│${code("    bar")}│
-│${code("       ")}│
-│${code("       ")}│
-│${code("       ")}│
-│${code("    baz")}│
-│${code("}      ")}│
+│${brightRed("foo {  ")}│
+│${brightRed("    bar")}│
+│${brightRed("       ")}│
+│${brightRed("       ")}│
+│${brightRed("       ")}│
+│${brightRed("    baz")}│
+│${brightRed("}      ")}│
 └───────┘
 """)
 
@@ -593,9 +608,9 @@ end
 ~~~~~~~
 """, """
 ┌──────────┐
-│${code("def foo(x)")}│
-│${code("  return 3")}│
-│${code("end       ")}│
+│${brightRed("def foo(x)")}│
+│${brightRed("  return 3")}│
+│${brightRed("end       ")}│
 └──────────┘
 """)
 
@@ -608,7 +623,7 @@ foo${nbsp}bar baz
 ```
 """, """
 ┌───────────┐
-│${code("foo${nbsp}bar baz")}│
+│${brightRed("foo${nbsp}bar baz")}│
 └───────────┘
 """)
     }
@@ -619,7 +634,7 @@ foo${nbsp}bar baz
 foo  bar
 ```
 """, """
-${code("foo  bar")}
+${brightRed("foo  bar")}
 """, theme = object : Theme {
         override val markdownCodeBlockBorder: Boolean get() = false
     })
@@ -628,7 +643,7 @@ ${code("foo  bar")}
     fun `indented code block with no border in theme`() = doTest("""
     foo  bar
 """, """
-${code("foo  bar")}
+${brightRed("foo  bar")}
 """, theme = object : Theme {
         override val markdownCodeBlockBorder: Boolean get() = false
     })

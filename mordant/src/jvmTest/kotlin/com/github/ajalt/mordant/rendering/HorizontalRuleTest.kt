@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.AnsiColor
+import com.github.ajalt.mordant.AnsiColor.red
 import org.junit.Test
 
 class HorizontalRuleTest : RenderingTest() {
@@ -27,5 +29,11 @@ class HorizontalRuleTest : RenderingTest() {
                 """,
                 width = 19
         )
+    }
+
+    @Test
+    fun `styled title and rule`() {
+        checkRender(HorizontalRule(title = "title", ruleStyle = TextStyle(red), titleStyle = TextStyle(red)),
+                red("─── title ───"), width = 13)
     }
 }

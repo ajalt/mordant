@@ -71,7 +71,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val verticalAlign = getStyle(table.verticalAlign) { it.verticalAlign }
         val overflowWrap = getStyle(table.overflowWrap) { it.overflowWrap }
         val stripedStyle = if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
-        val style = foldStyles(cell.style, row.style, stripedStyle, sectionCol?.style, tableCol?.style, table.style)
+        val style = foldStyles(cell.style, row.style, stripedStyle, sectionCol?.style, tableCol?.style, section.style, table.style)
         val content = Padded.get(cell.content.withAlign(textAlign, overflowWrap), padding)
 
         val builtCell = Cell.Content(

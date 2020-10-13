@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.CSI
-import com.github.ajalt.mordant.rendering.internal.cellWidth
 import com.github.ajalt.mordant.rendering.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -28,7 +27,8 @@ data class Span private constructor(val text: String, val style: TextStyle = DEF
     internal val cellWidth: Int by lazy(NONE) { stringCellWidth(text) }
     internal fun take(n: Int): Span = copy(text = text.take(n))
 
-    internal fun isWhitespace() : Boolean = text.first().isWhitespace()
+    internal fun isWhitespace(): Boolean = text.first().isWhitespace()
 
-    internal fun withStyle(style: TextStyle) = copy(style = style + this.style)
+    internal fun withStyle(style: TextStyle) = copy(style = this.style + style)
+    internal fun replaceStyle(style: TextStyle) = copy(style = style)
 }

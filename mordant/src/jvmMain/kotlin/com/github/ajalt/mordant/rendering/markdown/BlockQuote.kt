@@ -15,7 +15,7 @@ internal class BlockQuote(private val content: Renderable) : Renderable {
         val bar = Span.word("▎", t.theme.blockQuote)
         val justBar = listOf(bar)
         val paddedBar = listOf(bar, Span.space(style = t.theme.blockQuote))
-        val lines = content.render(t, width).lines
+        val lines = content.render(t, width).withStyle(t.theme.blockQuote).lines
         return Lines(lines.map { if (it.isEmpty()) justBar else paddedBar + it })
     }
 }
