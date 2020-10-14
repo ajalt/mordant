@@ -254,7 +254,7 @@ private class TableRenderer(
         val line = tableLines[tableLines.lastIndex]
         for (x in columnWidths.indices) {
             if (columnBorders[x]) {
-                line.add(getTopLeftCorner(x, rowCount)!!)
+                getTopLeftCorner(x, rowCount)?.let { line.add(it) }
             }
             drawTopBorderForCell(tableLines.lastIndex, x, rowCount, columnWidths[x], borderTop = false)
         }
@@ -341,7 +341,11 @@ private class TableRenderer(
         val tr = cellAt(x, y - 1)
         val bl = cellAt(x - 1, y)
         val br = cellAt(x, y)
-        if (tl?.borderRight == null && tr?.borderLeft == null &&
+
+        // If all the cells around this corner have null borders, we're in the middle of a span, so
+        // don't draw anything.
+        if ((tl != null || tr != null || bl != null || br != null) &&
+                tl?.borderRight == null && tr?.borderLeft == null &&
                 tr?.borderBottom == null && br?.borderTop == null &&
                 bl?.borderRight == null && br?.borderLeft == null &&
                 tl?.borderBottom == null && bl?.borderTop == null
