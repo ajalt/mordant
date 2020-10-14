@@ -2,23 +2,30 @@ package com.github.ajalt.mordant.rendering
 
 
 data class BorderStyleSection(
-        val es: String,
-        val esw: String,
-        val sw: String,
-        val nes: String,
-        val nesw: String,
-        val nsw: String,
-        val ns: String,
-        val ne: String,
-        val ew: String,
-        val new: String,
-        val nw: String,
-        val s: String,
-        val e: String,
-        val w: String,
-        val n: String,
+        private val corners: String
 ) {
+    init {
+        require(corners.length == 15) { "string of corners must have length==15" }
+    }
+
+    // Indexing into this array is ~2x faster than if we indexed into `corners` directly.
     private val array = arrayOf(" ", w, s, sw, e, ew, es, esw, n, nw, ns, nsw, ne, new, nes, nesw)
+
+    val es: String get() = corners[0].toString()
+    val esw: String get() = corners[1].toString()
+    val sw: String get() = corners[2].toString()
+    val nes: String get() = corners[3].toString()
+    val nesw: String get() = corners[4].toString()
+    val nsw: String get() = corners[5].toString()
+    val ns: String get() = corners[6].toString()
+    val ne: String get() = corners[7].toString()
+    val ew: String get() = corners[8].toString()
+    val new: String get() = corners[9].toString()
+    val nw: String get() = corners[10].toString()
+    val s: String get() = corners[11].toString()
+    val e: String get() = corners[12].toString()
+    val w: String get() = corners[13].toString()
+    val n: String get() = corners[14].toString()
 
     fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
         fun bit(it: Boolean, shift: Int) = (if (it) 1 else 0) shl shift
@@ -35,181 +42,180 @@ class BorderStyle(
         val foot: BorderStyleSection
 ) {
     companion object {
-        private fun buildSection(string: String) = BorderStyleSection(
-                es = string[0].toString(),
-                esw = string[2].toString(),
-                sw = string[3].toString(),
-                nes = string[5].toString(),
-                nesw = string[7].toString(),
-                nsw = string[8].toString(),
-                ns = string[12].toString(),
-                ne = string[19].toString(),
-                ew = string[20].toString(),
-                new = string[21].toString(),
-                nw = string[22].toString(),
-                s = string[10].toString(),
-                e = string[16].toString(),
-                w = string[17].toString(),
-                n = string[24].toString(),
+        fun build(
+                head: String,
+                headBottom: String = head,
+                body: String = head,
+                bodyBottom: String = body,
+                foot: String = body
+        ): BorderStyle = BorderStyle(
+                head = BorderStyleSection(head),
+                headBottom = BorderStyleSection(headBottom),
+                body = BorderStyleSection(body),
+                bodyBottom = BorderStyleSection(bodyBottom),
+                foot = BorderStyleSection(foot),
         )
 
-        fun build(string: String): BorderStyle {
-            val s = string.trimIndent().replace("·", " ")
-            val head = buildSection(s)
-            val body = buildSection(s.drop(34))
-            val foot = buildSection(s.drop(68))
-            val headBottom = head.copy(
-                    nes = s[26].toString(),
-                    ew = s[27].toString(),
-                    nesw = s[28].toString(),
-                    nsw = s[29].toString(),
-                    ns = s[30].toString(),
-                    e = s[31].toString(),
-                    w = s[32].toString()
-            )
-            val bodyBottom = foot.copy(
-                    nes = s[60].toString(),
-                    ew = s[61].toString(),
-                    nesw = s[62].toString(),
-                    nsw = s[63].toString(),
-                    ns = s[64].toString(),
-                    e = s[65].toString(),
-                    w = s[66].toString()
-            )
-            return BorderStyle(head, headBottom, body, bodyBottom, foot)
-        }
-
+        /**
+         * ### Example
+         *
+         * ```
+         *┌──┬──┐
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *└──┴──┘
+         * ```
+         */
         val SQUARE = build(
-                """
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                ├─┼┤│╶╴
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                ├─┼┤│╶╴
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                """
+                "┌┬┐├┼┤│└─┴┘╷╶╴╵"
         )
 
-        val SQUARE_DOUBLE_HEAD_SEPARATOR = build(
-                """
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                ╞═╪╡│··
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                ├─┼┤│╶╴
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                """
+        /**
+         * ### Example
+         *
+         * ```
+         *┌──┬──┐
+         *│  │  │
+         *╞══╪══╡
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *╞══╪══╡
+         *│  │  │
+         *└──┴──┘
+         * ```
+         */
+        val SQUARE_DOUBLE_SECTION_SEPARATOR = build(
+                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
+                "╒╤╕╞╪╡│╘═╧╛╷  ╵",
+                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
+                "╒╤╕╞╪╡│╘═╧╛╷  ╵",
         )
 
+        /**
+         * ### Example
+         *
+         * ```
+         *╭──┬──╮
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *╰──┴──╯
+         * ```
+         */
         val ROUNDED = build(
-                """
-                ╭─┬╮
-                ├─┼┤ ╷
-                │ ││╶╴
-                ╰─┴╯ ╵
-                ├─┼┤│╶╴
-                ╭─┬╮
-                ├─┼┤ ╷
-                │ ││╶╴
-                ╰─┴╯ ╵
-                ├─┼┤│╶╴
-                ╭─┬╮
-                ├─┼┤ ╷
-                │ ││╶╴
-                ╰─┴╯ ╵
-                """
+                "╭┬╮├┼┤│╰─┴╯╷╶╴╵"
         )
 
+        /**
+         * ### Example
+         *
+         * ```
+         *┏━━┳━━┓
+         *┃  ┃  ┃
+         *┣━━╋━━┫
+         *┃  ┃  ┃
+         *┣━━╋━━┫
+         *┃  ┃  ┃
+         *┣━━╋━━┫
+         *┃  ┃  ┃
+         *┗━━┻━━┛
+         * ```
+         */
         val HEAVY = build(
-                """
-                ┏━┳┓
-                ┣━╋┫ ╻
-                ┃ ┃┃╺╸
-                ┗━┻┛ ╹
-                ┣━╋┫┃╺╸
-                ┏━┳┓
-                ┣━╋┫ ╻
-                ┃ ┃┃╺╸
-                ┗━┻┛ ╹
-                ┣━╋┫┃╺╸
-                ┏━┳┓
-                ┣━╋┫ ╻
-                ┃ ┃┃╺╸
-                ┗━┻┛ ╹
-                """
+                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹"
         )
 
+        /**
+         * ### Example
+         *
+         * ```
+         *╔══╦══╗
+         *║  ║  ║
+         *╠══╬══╣
+         *║  ║  ║
+         *╠══╬══╣
+         *║  ║  ║
+         *╠══╬══╣
+         *║  ║  ║
+         *╚══╩══╝
+         * ```
+         */
         val DOUBLE = build(
-                """
-                ╔═╦╗
-                ╠═╬╣ ·
-                ║ ║║··
-                ╚═╩╝ ·
-                ╠═╬╣║··
-                ╔═╦╗
-                ╠═╬╣ ·
-                ║ ║║··
-                ╚═╩╝ ·
-                ╠═╬╣║··
-                ╔═╦╗
-                ╠═╬╣ ·
-                ║ ║║··
-                ╚═╩╝ ·
-                """
+                "╔╦╗╠╬╣║╚═╩╝    "
         )
 
+        /**
+         * ### Example
+         *
+         * ```
+         *┏━━┳━━┓
+         *┃  ┃  ┃
+         *┡━━╇━━┩
+         *│  │  │
+         *├──┼──┤
+         *│  │  │
+         *┢━━╈━━┪
+         *┃  ┃  ┃
+         *┗━━┻━━┛
+         * ```
+         */
         val HEAVY_HEAD_FOOT = build(
-                """
-                ┏━┳┓
-                ┣━╋┫ ╻
-                ┃ ┃┃╺╸
-                ┗━┻┛ ╹
-                ┡━╇┩╿╺╸
-                ┌─┬┐
-                ├─┼┤ ╷
-                │ ││╶╴
-                └─┴┘ ╵
-                ┢━╈┪╽╺╸
-                ┏━┳┓
-                ┣━╋┫ ╻
-                ┃ ┃┃╺╸
-                ┗━┻┛ ╹
-                """
+                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹",
+                "┍┯┑┡╇┩╿┗━┻┛╷╺╸╹",
+                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
+                "┏┳┓┢╈┪╽┕━┷┙╻╺╸╵",
+                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹"
         )
 
+        /**
+         * ### Example
+         *
+         * ```
+         *+--+--+
+         *|  |  |
+         *+--+--+
+         *|  |  |
+         *+--+--+
+         *|  |  |
+         *+--+--+
+         *|  |  |
+         *+--+--+
+         * ```
+         */
         val ASCII = build(
-                """
-                +-++
-                +-++ ·
-                | ||··
-                +-++ ·
-                +-++|··
-                +-++
-                +-++ ·
-                | ||··
-                +-++ ·
-                +-++|··
-                +-++
-                +-++ ·
-                | ||··
-                +-++ ·
-                """
+                "++++++|+-++    "
+        )
+
+        /**
+         * ### Example
+         *
+         * ```
+         *+--+--+
+         *|  |  |
+         *+==+==+
+         *|  |  |
+         *+--+--+
+         *|  |  |
+         *+==+==+
+         *|  |  |
+         *+--+--+
+         * ```
+         */
+        val ASCII_DOUBLE_SECTION_SEPARATOR = build(
+                "++++++|+-++    ",
+                "++++++|+=++    ",
+                "++++++|+-++    ",
+                "++++++|+=++    ",
         )
     }
 }

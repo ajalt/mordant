@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering.markdown
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.internal.parseText
 import com.github.ajalt.mordant.rendering.table.SectionBuilder
 import com.github.ajalt.mordant.rendering.table.table
@@ -112,6 +113,7 @@ internal class MarkdownRenderer(
             }
 
             GFMElementTypes.TABLE -> table {
+                borderStyle = SQUARE_DOUBLE_SECTION_SEPARATOR
                 parseTableAlignment(node).forEachIndexed { i, align ->
                     column(i) { this.align = align }
                 }
