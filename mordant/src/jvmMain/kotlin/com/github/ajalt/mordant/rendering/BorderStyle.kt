@@ -73,19 +73,21 @@ class BorderStyle(
         private fun build(string: String): BorderStyle {
             val s = string.trimIndent().replace("·", " ")
             val head = BorderStyleSection.build(s)
-            val body = BorderStyleSection.build(s.drop(31))
-            val foot = BorderStyleSection.build(s.drop(62))
+            val body = BorderStyleSection.build(s.drop(32))
+            val foot = BorderStyleSection.build(s.drop(64))
             val headBottom = head.copy(
                     nes = s[26].toString(),
-                    nesw = s[27].toString(),
-                    nsw = s[28].toString(),
-                    ns = s[29].toString()
+                    ew = s[27].toString(),
+                    nesw = s[28].toString(),
+                    nsw = s[29].toString(),
+                    ns = s[30].toString()
             )
             val bodyBottom = foot.copy(
-                    nes = s[57].toString(),
-                    nesw = s[58].toString(),
-                    nsw = s[59].toString(),
-                    ns = s[60].toString()
+                    nes = s[58].toString(),
+                    ew = s[59].toString(),
+                    nesw = s[60].toString(),
+                    nsw = s[61].toString(),
+                    ns = s[62].toString()
             )
             return BorderStyle(head, headBottom, body, bodyBottom, foot)
         }
@@ -96,12 +98,31 @@ class BorderStyle(
                 ├─┼┤ ╷
                 │ ││╶╴
                 └─┴┘ ╵
-                ├┼┤│
+                ├─┼┤│
                 ┌─┬┐
                 ├─┼┤ ╷
                 │ ││╶╴
                 └─┴┘ ╵
-                ├┼┤│
+                ├─┼┤│
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                """
+        )
+
+        val SQUARE_DOUBLE_HEAD_SEPARATOR = build(
+                """
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                ╞═╪╡│
+                ┌─┬┐
+                ├─┼┤ ╷
+                │ ││╶╴
+                └─┴┘ ╵
+                ├─┼┤│
                 ┌─┬┐
                 ├─┼┤ ╷
                 │ ││╶╴
@@ -115,12 +136,12 @@ class BorderStyle(
                 ├─┼┤ ╷
                 │ ││╶╴
                 ╰─┴╯ ╵
-                ├┼┤│
+                ├─┼┤│
                 ╭─┬╮
                 ├─┼┤ ╷
                 │ ││╶╴
                 ╰─┴╯ ╵
-                ├┼┤│
+                ├─┼┤│
                 ╭─┬╮
                 ├─┼┤ ╷
                 │ ││╶╴
@@ -134,12 +155,12 @@ class BorderStyle(
                 ┣━╋┫ ╻
                 ┃ ┃┃╺╸
                 ┗━┻┛ ╹
-                ┣╋┫┃
+                ┣━╋┫┃
                 ┏━┳┓
                 ┣━╋┫ ╻
                 ┃ ┃┃╺╸
                 ┗━┻┛ ╹
-                ┣╋┫┃
+                ┣━╋┫┃
                 ┏━┳┓
                 ┣━╋┫ ╻
                 ┃ ┃┃╺╸
@@ -153,12 +174,12 @@ class BorderStyle(
                 ╠═╬╣ ·
                 ║ ║║··
                 ╚═╩╝ ·
-                ╠╬╣║
+                ╠═╬╣║
                 ╔═╦╗
                 ╠═╬╣ ·
                 ║ ║║··
                 ╚═╩╝ ·
-                ╠╬╣║
+                ╠═╬╣║
                 ╔═╦╗
                 ╠═╬╣ ·
                 ║ ║║··
@@ -172,12 +193,12 @@ class BorderStyle(
                 ┣━╋┫ ╻
                 ┃ ┃┃╺╸
                 ┗━┻┛ ╹
-                ┡╇┩╿
+                ┡━╇┩╿
                 ┌─┬┐
                 ├─┼┤ ╷
                 │ ││╶╴
                 └─┴┘ ╵
-                ┢╈┪╽
+                ┢━╈┪╽
                 ┏━┳┓
                 ┣━╋┫ ╻
                 ┃ ┃┃╺╸
@@ -191,12 +212,12 @@ class BorderStyle(
                 +-++ ·
                 | ||··
                 +-++ ·
-                +++|
+                +-++|
                 +-++
                 +-++ ·
                 | ||··
                 +-++ ·
-                +++|
+                +-++|
                 +-++
                 +-++ ·
                 | ||··
