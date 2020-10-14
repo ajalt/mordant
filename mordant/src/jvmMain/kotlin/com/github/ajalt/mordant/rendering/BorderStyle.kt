@@ -18,8 +18,24 @@ data class BorderStyleSection(
         val w: String,
         val n: String,
 ) {
+    private val array = arrayOf(" ", w, s, sw, e, ew, es, esw, n, nw, ns, nsw, ne, new, nes, nesw)
+
+    fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
+        fun bit(it: Boolean, shift: Int) = (if (it) 1 else 0) shl shift
+        val i = bit(n, 3) or bit(e, 2) or bit(s, 1) or bit(w, 0)
+        return Span.word(array[i], textStyle)
+    }
+}
+
+class BorderStyle(
+        val head: BorderStyleSection,
+        val headBottom: BorderStyleSection,
+        val body: BorderStyleSection,
+        val bodyBottom: BorderStyleSection,
+        val foot: BorderStyleSection
+) {
     companion object {
-        fun build(string: String) = BorderStyleSection(
+        private fun buildSection(string: String) = BorderStyleSection(
                 es = string[0].toString(),
                 esw = string[2].toString(),
                 sw = string[3].toString(),
@@ -36,45 +52,12 @@ data class BorderStyleSection(
                 w = string[17].toString(),
                 n = string[24].toString(),
         )
-    }
 
-    fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
-        val char = when {
-            !n && e && s && !w -> this.es
-            !n && e && s && w -> this.esw
-            !n && !e && s && w -> this.sw
-            n && e && s && !w -> this.nes
-            n && e && s && w -> this.nesw
-            n && !e && s && w -> this.nsw
-            n && e && !s && !w -> this.ne
-            n && e && !s && w -> this.new
-            n && !e && !s && w -> this.nw
-            !n && e && !s && w -> this.ew
-            n && !e && s && !w -> this.ns
-            n && !e && !s && !w -> this.n
-            !n && e && !s && !w -> this.e
-            !n && !e && s && !w -> this.s
-            !n && !e && !s && w -> this.w
-            !n && !e && !s && !w -> return SINGLE_SPACE
-            else -> error("impossible corner: n=$n $e=e s=$s w=$w")
-        }
-        return Span.word(char, textStyle)
-    }
-}
-
-class BorderStyle(
-        val head: BorderStyleSection,
-        val headBottom: BorderStyleSection,
-        val body: BorderStyleSection,
-        val bodyBottom: BorderStyleSection,
-        val foot: BorderStyleSection
-) {
-    companion object {
-        private fun build(string: String): BorderStyle {
+        fun build(string: String): BorderStyle {
             val s = string.trimIndent().replace("·", " ")
-            val head = BorderStyleSection.build(s)
-            val body = BorderStyleSection.build(s.drop(32))
-            val foot = BorderStyleSection.build(s.drop(64))
+            val head = buildSection(s)
+            val body = buildSection(s.drop(32))
+            val foot = buildSection(s.drop(64))
             val headBottom = head.copy(
                     nes = s[26].toString(),
                     ew = s[27].toString(),
