@@ -320,6 +320,20 @@ ${blue("[a link]: example.com")}
 """, showHtml = true)
 
     @Test
+    fun `default html inline`() = doTest("""
+Hello <b>world</b>.
+""", """
+Hello world.
+""")
+
+    @Test
+    fun `show html inline`() = doTest("""
+Hello <b>world</b>.
+""", """
+Hello <b>world</b>.
+""", showHtml = true)
+
+    @Test
     fun `horizontal rule`() = doTest("""
 ---
 """, """

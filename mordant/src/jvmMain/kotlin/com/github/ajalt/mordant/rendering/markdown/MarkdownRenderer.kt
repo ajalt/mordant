@@ -79,15 +79,15 @@ internal class MarkdownRenderer(
                 val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val lines = innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
-                val content = Text(lines, whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
+                val content = Text(lines, whitespace = Whitespace.PRE_WRAP, style = theme.markdownCodeBlock)
                 if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.CODE_BLOCK -> {
-                val content = Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE, style = theme.markdownCodeBlock)
+                val content = Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE_WRAP, style = theme.markdownCodeBlock)
                 if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.HTML_BLOCK -> when {
-                showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE)
+                showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE_WRAP)
                 else -> Text(EMPTY_LINES)
             }
             MarkdownElementTypes.PARAGRAPH -> {
@@ -188,6 +188,10 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.AUTOLINK -> parseText(nodeText(node), theme.markdownLinkText)
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
+            MarkdownTokenTypes.HTML_TAG -> when {
+                showHtml -> parseText(nodeText(node), DEFAULT_STYLE)
+                else -> EMPTY_LINES
+            }
             // TokenTypes
             MarkdownTokenTypes.BLOCK_QUOTE -> EMPTY_LINES // don't render '>' delimiters in block quotes
             MarkdownTokenTypes.CODE_LINE -> parseText(nodeText(node).drop(4), DEFAULT_STYLE)
