@@ -17,15 +17,15 @@ data class BorderStyleSection(
     val nes: String get() = corners[3].toString()
     val nesw: String get() = corners[4].toString()
     val nsw: String get() = corners[5].toString()
-    val ns: String get() = corners[6].toString()
-    val ne: String get() = corners[7].toString()
-    val ew: String get() = corners[8].toString()
-    val new: String get() = corners[9].toString()
-    val nw: String get() = corners[10].toString()
+    val ne: String get() = corners[6].toString()
+    val new: String get() = corners[7].toString()
+    val nw: String get() = corners[8].toString()
+    val ew: String get() = corners[9].toString()
+    val ns: String get() = corners[10].toString()
     val s: String get() = corners[11].toString()
-    val e: String get() = corners[12].toString()
+    val n: String get() = corners[12].toString()
     val w: String get() = corners[13].toString()
-    val n: String get() = corners[14].toString()
+    val e: String get() = corners[14].toString()
 
     fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
         fun bit(it: Boolean, shift: Int) = (if (it) 1 else 0) shl shift
@@ -72,7 +72,7 @@ class BorderStyle(
          * ```
          */
         val SQUARE = build(
-                "┌┬┐├┼┤│└─┴┘╷╶╴╵"
+                "┌┬┐├┼┤└┴┘─│╷╵╴╶"
         )
 
         /**
@@ -91,10 +91,10 @@ class BorderStyle(
          * ```
          */
         val SQUARE_DOUBLE_SECTION_SEPARATOR = build(
-                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
-                "╒╤╕╞╪╡│╘═╧╛╷  ╵",
-                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
-                "╒╤╕╞╪╡│╘═╧╛╷  ╵",
+                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+                "╒╤╕╞╪╡╘╧╛═│╷╵  ",
+                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+                "╒╤╕╞╪╡╘╧╛═│╷╵  ",
         )
 
         /**
@@ -113,7 +113,7 @@ class BorderStyle(
          * ```
          */
         val ROUNDED = build(
-                "╭┬╮├┼┤│╰─┴╯╷╶╴╵"
+                "╭┬╮├┼┤╰┴╯─│╷╵╴╶",
         )
 
         /**
@@ -132,7 +132,7 @@ class BorderStyle(
          * ```
          */
         val HEAVY = build(
-                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹"
+                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
         )
 
         /**
@@ -151,7 +151,7 @@ class BorderStyle(
          * ```
          */
         val DOUBLE = build(
-                "╔╦╗╠╬╣║╚═╩╝    "
+                "╔╦╗╠╬╣╚╩╝═║    ",
         )
 
         /**
@@ -170,11 +170,11 @@ class BorderStyle(
          * ```
          */
         val HEAVY_HEAD_FOOT = build(
-                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹",
-                "┍┯┑┡╇┩╿┗━┻┛╷╺╸╹",
-                "┌┬┐├┼┤│└─┴┘╷╶╴╵",
-                "┏┳┓┢╈┪╽┕━┷┙╻╺╸╵",
-                "┏┳┓┣╋┫┃┗━┻┛╻╺╸╹"
+                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
+                "┍┯┑┡╇┩┗┻┛━╿╷╹╸╺",
+                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+                "┏┳┓┢╈┪┕┷┙━╽╻╵╸╺",
+                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
         )
 
         /**
@@ -193,7 +193,7 @@ class BorderStyle(
          * ```
          */
         val ASCII = build(
-                "++++++|+-++    "
+                "+++++++++-|    ",
         )
 
         /**
@@ -212,10 +212,10 @@ class BorderStyle(
          * ```
          */
         val ASCII_DOUBLE_SECTION_SEPARATOR = build(
-                "++++++|+-++    ",
-                "++++++|+=++    ",
-                "++++++|+-++    ",
-                "++++++|+=++    ",
+                "+++++++++-|    ",
+                "+++++++++=|    ",
+                "+++++++++-|    ",
+                "+++++++++=|    ",
         )
     }
 }
