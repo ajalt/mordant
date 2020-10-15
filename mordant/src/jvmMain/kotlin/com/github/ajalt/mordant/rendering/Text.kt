@@ -13,15 +13,17 @@ class Text internal constructor(
         private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = NONE,
-        private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL
+        private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        private val width: Int? = null
 ) : Renderable {
     constructor(
             text: String,
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL
-    ) : this(parseText(text, style), style, whitespace, align, overflowWrap)
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width)
 
     private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
@@ -31,14 +33,14 @@ class Text internal constructor(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         // measure without word wrap or padding from alignment
-        val lines = wrap(width, NONE, OverflowWrap.NORMAL)
+        val lines = wrap(this.width ?: width, NONE, OverflowWrap.NORMAL)
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return wrap(width, align, overflowWrap)
+        return wrap(this.width ?: width, align, overflowWrap)
     }
 
     private fun wrap(wrapWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {

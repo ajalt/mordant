@@ -35,9 +35,10 @@ class Terminal(
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
     ) {
-        print(Text(text, style, whitespace, align, overflowWrap))
+        kotlin.io.print(render(text, style, whitespace, align, overflowWrap, width))
     }
 
     fun println(
@@ -45,9 +46,10 @@ class Terminal(
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
     ) {
-        println(Text(text, style, whitespace, align, overflowWrap))
+        kotlin.io.println(render(text, style, whitespace, align, overflowWrap, width))
     }
 
     fun print(renderable: Renderable) {
@@ -63,9 +65,10 @@ class Terminal(
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
     ): String {
-        return render(Text(text, style, whitespace, align, overflowWrap))
+        return render(Text(text, style, whitespace, align, overflowWrap, width))
     }
 
     fun render(renderable: Renderable): String {
