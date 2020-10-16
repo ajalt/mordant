@@ -14,7 +14,8 @@ class Text internal constructor(
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = NONE,
         private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        private val width: Int? = null
+        private val width: Int? = null,
+        private val tabWidth: Int? = null
 ) : Renderable {
     constructor(
             text: String,
@@ -22,8 +23,14 @@ class Text internal constructor(
             whitespace: Whitespace = Whitespace.NORMAL,
             align: TextAlign = NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width)
+            width: Int? = null,
+            tabWidth: Int? = null
+    ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width, tabWidth)
+
+    init {
+        require(width == null || width >= 0) { "width cannot be negative" }
+        require(tabWidth == null || tabWidth >= 0) { "tab width cannot be negative" }
+    }
 
     private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
 
@@ -33,17 +40,17 @@ class Text internal constructor(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         // measure without word wrap or padding from alignment
-        val lines = wrap(this.width ?: width, NONE, OverflowWrap.NORMAL)
+        val lines = wrap(this.width ?: width, tabWidth ?: t.tabWidth, NONE, OverflowWrap.NORMAL)
         val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         return WidthRange(min, max)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return wrap(this.width ?: width, align, overflowWrap)
+        return wrap(this.width ?: width, tabWidth ?: t.tabWidth, align, overflowWrap)
     }
 
-    private fun wrap(wrapWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {
+    private fun wrap(wrapWidth: Int, tabWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {
         if (wrapWidth == 0 && overflowWrap != OverflowWrap.NORMAL) return EMPTY_LINES
 
         val lines = mutableListOf<Line>()
@@ -72,7 +79,7 @@ class Text internal constructor(
         for (oldLine in this.lines.lines) {
             val lastNonWhitespace = lastNonWhitespace(oldLine, align)
 
-            for ((i, piece) in oldLine.withIndex()) {
+            loop@ for ((i, piece) in oldLine.withIndex()) {
                 // Treat NEL and LS as hard line breaks
                 if (piece.text == NEL || piece.text == LS) {
                     breakLine()
@@ -101,11 +108,13 @@ class Text internal constructor(
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
                 var span = when {
                     pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
+                    piece.isTab() -> if (tabWidth > 0) Span.space(tabWidth - (width % tabWidth), piece.style) else continue
                     else -> piece
                 }
 
                 // Wrap line if necessary
-                if (whitespace.wrap && width > 0 && width + span.cellWidth > wrapWidth) {
+                val cellWidth = span.cellWidth
+                if (whitespace.wrap && width > 0 && width + cellWidth > wrapWidth) {
                     breakLine()
                     // Don't add spaces to start of line
                     if (pieceIsWhitespace) continue

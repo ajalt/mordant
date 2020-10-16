@@ -671,7 +671,7 @@ ${brightRed("foo  bar")}
     ) {
         val md = markdown.replace("⏎", "")
         try {
-            val terminal = Terminal(level = AnsiLevel.TRUECOLOR, width = width, theme = theme)
+            val terminal = Terminal(ansiLevel = AnsiLevel.TRUECOLOR, width = width, theme = theme)
             val actual = terminal.renderMarkdown(md, showHtml)
             try {
                 actual shouldBe expected.replace("⏎", "")

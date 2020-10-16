@@ -4,9 +4,10 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 
 class Terminal(
-        level: AnsiLevel = TerminalCapabilities.detectANSISupport(),
+        ansiLevel: AnsiLevel = TerminalCapabilities.detectANSISupport(),
         val theme: Theme = DEFAULT_THEME,
-        val width: Int = currentWidth()
+        val width: Int = currentWidth(),
+        val tabWidth: Int = 8
 ) {
     companion object {
         /**
@@ -16,7 +17,11 @@ class Terminal(
         fun currentWidth(default: Int = 79): Int = System.getenv("COLUMNS")?.toInt() ?: default
     }
 
-    val colors: TerminalColors = TerminalColors(level)
+    init {
+        require(tabWidth >= 0) { "tab width cannot be negative" }
+    }
+
+    val colors: TerminalColors = TerminalColors(ansiLevel)
 
     fun printMarkdown(markdown: String, showHtml: Boolean = false) {
         return kotlin.io.print(renderMarkdown(markdown, showHtml))

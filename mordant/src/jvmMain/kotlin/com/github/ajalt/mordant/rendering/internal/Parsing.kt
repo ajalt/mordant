@@ -9,8 +9,6 @@ import com.github.ajalt.mordant.AnsiStyle
 import com.github.ajalt.mordant.ESC
 import com.github.ajalt.mordant.rendering.*
 
-//TODO: expand tabs
-
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 
 /** Like a Span, but with no restrictions on [text] */
@@ -54,18 +52,19 @@ private fun splitWords(chunk: Chunk): List<Chunk> {
     val chunks = mutableListOf<Chunk>()
     var i = 0
     var start = 0
-    var chunkType = -1 // 0=newline, 1=space, 2=word
+    var chunkType = -1 // 0=newline, 1=tab, 2=space, 3=word
     val t = chunk.text
     while (i < t.length) {
         val c = t[i]
         val type = when {
             c == '\r' || c == '\n' -> 0
-            c.isWhitespace() -> 1
-            else -> 2
+            c == '\t' -> 1
+            c.isWhitespace() -> 2
+            else -> 3
         }
         if (i == 0) {
             chunkType = type
-        } else if (c == '\n' || chunkType != type) {
+        } else if (c == '\n' || c == '\t' || chunkType != type) {
             chunks += chunk.copy(text = t.substring(start, i))
             start = i
             chunkType = type

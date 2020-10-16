@@ -18,7 +18,6 @@ data class Span private constructor(val text: String, val style: TextStyle = DEF
     }
 
     internal companion object {
-        // TODO: maybe just inline this
         fun word(text: String, style: TextStyle = DEFAULT_STYLE) = Span(text, style)
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE) = Span(" ".repeat(width), style)
     }
@@ -27,7 +26,8 @@ data class Span private constructor(val text: String, val style: TextStyle = DEF
     internal val cellWidth: Int by lazy(NONE) { stringCellWidth(text) }
     internal fun take(n: Int): Span = copy(text = text.take(n))
 
-    internal fun isWhitespace(): Boolean = text.first().isWhitespace()
+    internal fun isWhitespace(): Boolean = text[0].isWhitespace()
+    internal fun isTab(): Boolean = text[0] == '\t'
 
     internal fun withStyle(style: TextStyle) = copy(style = this.style + style)
     internal fun replaceStyle(style: TextStyle) = copy(style = style)

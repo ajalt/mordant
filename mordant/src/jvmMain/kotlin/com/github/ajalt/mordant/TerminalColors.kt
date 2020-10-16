@@ -45,7 +45,7 @@ import kotlin.math.abs
  * ```
  */
 class TerminalColors internal constructor(
-        private val level: AnsiLevel = TerminalCapabilities.detectANSISupport()
+        private val level: AnsiLevel
 ) {
     val black: AnsiColorCode get() = ansi16(AnsiColor.black)
     val red: AnsiColorCode get() = ansi16(AnsiColor.red)
@@ -65,7 +65,6 @@ class TerminalColors internal constructor(
     val brightCyan: AnsiColorCode get() = ansi16(AnsiColor.brightCyan)
     val brightWhite: AnsiColorCode get() = ansi16(AnsiColor.brightWhite)
 
-    // TODO: test parsing of single codes
     /** Clear all active styles */
     val reset: AnsiCode get() = style(AnsiStyle.reset)
 

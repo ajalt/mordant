@@ -80,7 +80,6 @@ enum class AnsiStyle(override val code: SingleAnsiCode) : AnsiCodeContainer {
     override fun toString() = code.toString()
 }
 
-// TODO: interface for enums
 @Suppress("EnumEntryName")
 enum class AnsiColor(override val code: Ansi16ColorCode) : AnsiColorCodeContainer, ConvertibleColor by code.color {
     black(Ansi16ColorCode(30)),
@@ -105,7 +104,6 @@ enum class AnsiColor(override val code: Ansi16ColorCode) : AnsiColorCodeContaine
 
     override fun toString() = code.toString()
 
-    // TODO: add level params
     companion object {
         /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
         fun rgb(hex: String, level: AnsiLevel = TRUECOLOR): AnsiColorCode = color(RGB(hex), level)

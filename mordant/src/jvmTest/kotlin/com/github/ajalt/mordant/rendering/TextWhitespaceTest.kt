@@ -68,13 +68,14 @@ class TextWhitespaceTest : RenderingTest() {
         |Lorem ipsum dolor ⏎
         |⏎
         |sit amet, consectetur ⏎
-        |    adipiscing        ⏎
+        |␉adipiscing        ⏎
         |elit,   sed⏎
-        """.trimMargin().replace("⏎", "")
+        """.trimMargin().replace("⏎", "").replace("␉", "\t")
         checkRender(Text(
                 text,
                 whitespace = ws,
                 align = NONE,
+                tabWidth = 4
         ), expected.trimMargin(), trimIndent = false, width = width)
     }
 }
