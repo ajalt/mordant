@@ -61,6 +61,24 @@ class TableBuilder internal constructor() {
     internal val headerSection = SectionBuilder()
     internal val bodySection = SectionBuilder()
     internal val footerSection = SectionBuilder()
+    internal var captionTop: Renderable? = null
+    internal var captionBottom: Renderable? = null
+
+    fun captionTop(renderable: Renderable) {
+        captionTop = renderable
+    }
+
+    fun captionTop(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
+        captionTop(Text(text, style, align = align))
+    }
+
+    fun captionBottom(renderable: Renderable) {
+        captionBottom = renderable
+    }
+
+    fun captionBottom(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
+        captionBottom(Text(text, style, align = align))
+    }
 
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, init)
 
@@ -145,7 +163,15 @@ class CellBuilder internal constructor(
 }
 
 fun table(init: TableBuilder.() -> Unit): Renderable {
-    return TableBuilderLayout(TableBuilder().apply(init)).buildTable()
+    val tableBuilder = TableBuilder().apply(init)
+    val table = TableBuilderLayout(tableBuilder).buildTable()
+    return when {
+        tableBuilder.captionTop != null || tableBuilder.captionBottom != null -> {
+            Caption(table, tableBuilder.captionTop, tableBuilder.captionBottom)
+        }
+        else -> table
+    }
+
 }
 
 private fun getRenderable(content: Any?): Renderable {

@@ -11,7 +11,7 @@ import org.junit.Test
 
 class TableTest : RenderingTest() {
     @Test
-    fun `empty cell`() = doTest("""
+    fun `empty cell`() = doBodyTest("""
     |┌┐
     |││
     |└┘
@@ -21,7 +21,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border top`() = doTest("""
+    fun `border top`() = doBodyTest("""
     |───
     | 1 ⏎
     """) {
@@ -33,7 +33,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border right`() = doTest("""
+    fun `border right`() = doBodyTest("""
     | 1 │
     """) {
         row {
@@ -44,7 +44,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border bottom`() = doTest("""
+    fun `border bottom`() = doBodyTest("""
     | 1 ⏎
     |───
     """) {
@@ -56,7 +56,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border left`() = doTest("""
+    fun `border left`() = doBodyTest("""
     |│ 1 ⏎
     """) {
         row {
@@ -67,7 +67,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border top with corners`() = doTest("""
+    fun `border top with corners`() = doBodyTest("""
     |╶───╴
     |  1  ⏎
     |┌───┐
@@ -83,7 +83,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border right with corners`() = doTest("""
+    fun `border right with corners`() = doBodyTest("""
     |┌───┐   ╷
     |│ 1 │ 2 │
     |└───┘   ╵
@@ -97,7 +97,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border bottom with corners`() = doTest("""
+    fun `border bottom with corners`() = doBodyTest("""
     |┌───┐
     |│ 1 │
     |└───┘
@@ -113,7 +113,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `border left with corners`() = doTest("""
+    fun `border left with corners`() = doBodyTest("""
     |╷   ┌───┐
     |│ 1 │ 2 │
     |╵   └───┘
@@ -127,7 +127,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `inside borders`() = doTest("""
+    fun `inside borders`() = doBodyTest("""
     | 1 │ 2 ⏎
     |───┼───⏎
     | 3 │ 4 ⏎
@@ -152,7 +152,7 @@ class TableTest : RenderingTest() {
 
 
     @Test
-    fun `empty row`() = doTest("""
+    fun `empty row`() = doBodyTest("""
     |┌───┐
     |│ 1 │
     |└───┘
@@ -167,7 +167,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `non-rectangular table`() = doTest("""
+    fun `non-rectangular table`() = doBodyTest("""
     |┌───┐       ⏎
     |│ 1 │       ⏎
     |├───┼───┐   ⏎
@@ -185,7 +185,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `preformatted text content`() = doTest("""
+    fun `preformatted text content`() = doBodyTest("""
     |┌────────────────┬─┐
     |│line 1          │2│
     |│2nd line no wrap│ │
@@ -206,7 +206,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `wide unicode characters`() = doTest("""
+    fun `wide unicode characters`() = doBodyTest("""
     |┌──────────┐
     |│ 모ㄹ단ㅌ │
     |├──────────┤
@@ -225,7 +225,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `striped row styles`() = doTest("""
+    fun `striped row styles`() = doBodyTest("""
     |┌─────┐
     |│${red("row 1")}│
     |├─────┤
@@ -245,7 +245,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `row and column span no borders`() = doTest("""
+    fun `row and column span no borders`() = doBodyTest("""
     |span1
     |    2
     |3 4 5
@@ -264,7 +264,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `row and column span`() = doTest("""
+    fun `row and column span`() = doBodyTest("""
     |┌───────────┬───┐
     |│           │ 1 │
     |│           ├───┤
@@ -290,7 +290,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `nested tables`() = doTest("""
+    fun `nested tables`() = doBodyTest("""
     |┌───────────┬───┐
     |│ ┌───┬───┐ │ 5 │
     |│ │ 1 │ 2 │ │   │
@@ -316,7 +316,14 @@ class TableTest : RenderingTest() {
 
 
     @Test
-    fun `outer border`() = checkRender(table {
+    fun `outer border`() = doTest("""
+    | 1  │ 2  │ 3  
+    |────┼────┼────
+    | 4  │ 5  │ 6  
+    | 7  │ 8  │ 9  
+    |────┼────┼────
+    | 11 │ 12 │ 13 
+    """) {
         outerBorder = false
         header { row(1, 2, 3) }
         body {
@@ -327,17 +334,20 @@ class TableTest : RenderingTest() {
         footer {
             row(11, 12, 13)
         }
-    }, """
-     1  │ 2  │ 3  
-    ────┼────┼────
-     4  │ 5  │ 6  
-     7  │ 8  │ 9  
-    ────┼────┼────
-     11 │ 12 │ 13 
-    """)
+    }
 
     @Test
-    fun `section column builders`() = checkRender(table {
+    fun `section column builders`() = doTest("""
+    |┌─────┬─────┐
+    |│   1 │  2  │
+    |├─────┼─────┤
+    |│   3 │   4 │
+    |├─────┼─────┤
+    |│ 5   │  6  │
+    |├─────┼─────┤
+    |│ ... │ ... │
+    |└─────┴─────┘
+    """) {
         column(0) {
             align = TextAlign.RIGHT
         }
@@ -363,19 +373,26 @@ class TableTest : RenderingTest() {
             row(5, 6)
             row("...", "...")
         }
-    }, """
-    ┌─────┬─────┐
-    │   1 │  2  │
-    ├─────┼─────┤
-    │   3 │   4 │
-    ├─────┼─────┤
-    │ 5   │  6  │
-    ├─────┼─────┤
-    │ ... │ ... │
-    └─────┴─────┘
-    """)
+    }
 
-    private fun doTest(expected: String, builder: SectionBuilder.() -> Unit) {
+    @Test
+    fun captions() = doTest("""
+    |     top     ⏎
+    |┌───┬───┬───┐
+    |│ 1 │ 2 │ 3 │
+    |└───┴───┴───┘
+    |${blue("       bottom")}
+    """) {
+        captionTop("top")
+        captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue))
+        body { row(1,2,3) }
+    }
+
+    private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
+        checkRender(table(builder), expected.trimMargin(), trimIndent = false)
+    }
+
+    private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {
             borderStyle = BorderStyle.HEAVY_HEAD_FOOT
             body(builder)
