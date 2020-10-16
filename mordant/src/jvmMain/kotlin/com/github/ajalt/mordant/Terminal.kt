@@ -35,26 +35,128 @@ class Terminal(
         return MarkdownRenderer(markdown, theme, showHtml).render()
     }
 
-    fun print(
-            text: String,
-            style: TextStyle = DEFAULT_STYLE,
+    fun success(
+            message: Any?,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        kotlin.io.print(render(text, style, whitespace, align, overflowWrap, width))
+        println(message, theme.success, whitespace, align, overflowWrap, width)
     }
 
-    fun println(
-            text: String,
+    fun renderSuccess(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.success, whitespace, align, overflowWrap, width)
+    }
+
+    fun danger(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        println(message, theme.danger, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderDanger(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.danger, whitespace, align, overflowWrap, width)
+    }
+
+    fun warning(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        println(message, theme.warning, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderWarning(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.warning, whitespace, align, overflowWrap, width)
+    }
+
+    fun info(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        println(message, theme.info, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderInfo(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.info, whitespace, align, overflowWrap, width)
+    }
+
+    fun muted(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        println(message, theme.muted, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderMuted(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.muted, whitespace, align, overflowWrap, width)
+    }
+
+    fun print(
+            message: Any?,
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        kotlin.io.println(render(text, style, whitespace, align, overflowWrap, width))
+        kotlin.io.print(render(message, style, whitespace, align, overflowWrap, width))
+    }
+
+    fun println() = kotlin.io.println()
+
+    fun println(
+            message: Any?,
+            style: TextStyle = DEFAULT_STYLE,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        kotlin.io.println(render(message, style, whitespace, align, overflowWrap, width))
     }
 
     fun print(renderable: Renderable) {
@@ -66,14 +168,17 @@ class Terminal(
     }
 
     fun render(
-            text: String,
+            message: Any?,
             style: TextStyle = DEFAULT_STYLE,
             whitespace: Whitespace = Whitespace.PRE,
             align: TextAlign = TextAlign.NONE,
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(Text(text, style, whitespace, align, overflowWrap, width))
+        return render(when (message) {
+            is Renderable -> message
+            else -> Text(message.toString(), style, whitespace, align, overflowWrap, width)
+        })
     }
 
     fun render(renderable: Renderable): String {

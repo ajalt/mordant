@@ -3,6 +3,12 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.AnsiColor.*
 
 interface Theme  {
+    val success: TextStyle get() = TextStyle(green)
+    val danger: TextStyle get() = TextStyle(red)
+    val warning: TextStyle get() = TextStyle(yellow)
+    val info: TextStyle get() = TextStyle(cyan)
+    val muted: TextStyle get() = TextStyle(dim = true)
+
     val listNumber: TextStyle get() = DEFAULT_STYLE
     val listNumberSeparator: String get() = "."
     val listBullet: TextStyle get() = DEFAULT_STYLE
