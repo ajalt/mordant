@@ -7,16 +7,16 @@ class PanelTest : RenderingTest(width = 20) {
 
     @Test
     fun `no expand`() = checkRender(Panel(Text("text"), expand = false), """
-    ┌────┐
+    ╭────╮
     │text│
-    └────┘
+    ╰────╯
     """)
 
     @Test
     fun expand() = checkRender(Panel(Text("text", align = TextAlign.CENTER), expand = true), """
-    ┌──────────────────┐
+    ╭──────────────────╮
     │       text       │
-    └──────────────────┘
+    ╰──────────────────╯
     """)
 
     @Test

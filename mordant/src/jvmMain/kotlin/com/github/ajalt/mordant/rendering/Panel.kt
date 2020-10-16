@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 
 class Panel(
         content: Renderable,
-        private val borderStyle: BorderStyle? = BorderStyle.SQUARE,
+        private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
         private val expand: Boolean = false,
         private val borderTextStyle: TextStyle = DEFAULT_STYLE,
         padding: Padding = DEFAULT_PADDING
