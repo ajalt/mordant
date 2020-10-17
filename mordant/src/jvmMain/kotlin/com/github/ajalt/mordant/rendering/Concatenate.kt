@@ -17,3 +17,28 @@ class Concatenate(val renderables: List<Renderable>) : Renderable {
         return Lines(renderables.flatMap { it.render(t, width).lines })
     }
 }
+
+class RenderableBuilder {
+    private val renderables = mutableListOf<Renderable>()
+
+    fun append(
+            message: Any?,
+            style: TextStyle = DEFAULT_STYLE,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        renderables += Text(message.toString(), style, whitespace, align, overflowWrap, width)
+    }
+
+    fun append(renderable: Renderable) {
+        renderables += renderable
+    }
+
+    fun build(): Renderable = Concatenate(renderables)
+}
+
+inline fun buildRenderable(action: RenderableBuilder.() -> Unit): Renderable {
+    return RenderableBuilder().apply { action() }.build()
+}
