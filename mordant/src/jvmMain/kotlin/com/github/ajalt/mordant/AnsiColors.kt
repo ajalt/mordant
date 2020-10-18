@@ -35,6 +35,8 @@ internal const val ESC = "\u001B"
 
 /** Control Sequence Introducer */
 internal const val CSI = "$ESC["
+/** Operating System Command */
+internal const val OSC = "$ESC]"
 
 private val ANSI_CSI_RE = Regex("""$ESC\[((?:\d{1,3};?)+)m""")
 

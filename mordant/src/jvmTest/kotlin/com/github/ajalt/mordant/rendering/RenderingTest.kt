@@ -9,8 +9,8 @@ abstract class RenderingTest(
         private val theme: Theme = DEFAULT_THEME,
         private val width: Int = 79
 ) {
-    protected fun checkRender(renderable: Renderable, expected: String, trimIndent: Boolean = true, width: Int = this.width) {
-        val t = Terminal(level, theme, width)
+    protected fun checkRender(renderable: Renderable, expected: String, trimIndent: Boolean = true, width: Int = this.width, tabWidth: Int = 8) {
+        val t = Terminal(level, theme, width, tabWidth)
         val actual = t.render(renderable)
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
