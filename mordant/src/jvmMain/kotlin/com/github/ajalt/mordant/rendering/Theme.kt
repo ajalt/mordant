@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.TextColors.*
 
-interface Theme  {
+interface Theme {
     val success: TextStyle get() = TextStyle(green)
     val danger: TextStyle get() = TextStyle(red)
     val warning: TextStyle get() = TextStyle(yellow)

@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
 typealias Line = List<Span>
+
 internal val EMPTY_LINES = Lines(emptyList())
 internal val EMPTY_LINE: Line = emptyList()
 

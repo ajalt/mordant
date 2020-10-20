@@ -16,7 +16,7 @@ class Panel(
             expand: Boolean = false,
             borderTextStyle: TextStyle = DEFAULT_STYLE,
             padding: Padding = DEFAULT_PADDING
-    ): this(Text(content), borderStyle, expand, borderTextStyle, padding)
+    ) : this(Text(content), borderStyle, expand, borderTextStyle, padding)
 
     private val content: Renderable = Padded.get(content, padding)
     private val borderWidth get() = if (borderStyle == null) 0 else 2

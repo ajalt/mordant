@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.rendering.internal
 
-import com.github.ajalt.colormath.*
+import com.github.ajalt.colormath.Ansi16
+import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.colormath.Color
+import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.rendering.*
 
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")

@@ -32,7 +32,8 @@ sealed class ColumnWidth {
         init {
             require(weight > 0) { "weight must be greater than zero" }
         }
-        constructor(weight: Int): this(weight.toFloat())
+
+        constructor(weight: Int) : this(weight.toFloat())
     }
 }
 

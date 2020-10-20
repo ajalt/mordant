@@ -22,7 +22,7 @@ internal class MarkdownDocument(private val parts: List<Renderable>) : Renderabl
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-     return parts.foldLines { it.render(t, width) }
+        return parts.foldLines { it.render(t, width) }
     }
 }
 
