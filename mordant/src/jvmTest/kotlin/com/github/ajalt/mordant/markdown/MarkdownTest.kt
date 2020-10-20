@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiColor.*
+import com.github.ajalt.mordant.TextColors.*
 import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.AnsiStyle.*
+import com.github.ajalt.mordant.TextStyles.*
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.DEFAULT_THEME
 import com.github.ajalt.mordant.rendering.LS
@@ -224,7 +224,7 @@ ${brightYellow("▎ line 3")}
 > baz
 """, """
 ${brightYellow("▎")}
-${brightYellow("▎ ══ ")}${(brightYellow + bold)("Foo")}${brightYellow(" ═══")}
+${brightYellow("▎ ══ ${bold("Foo")} ═══")}
 ${brightYellow("▎")}
 ${brightYellow("▎ bar baz")}
 """, width = 10)
@@ -237,7 +237,7 @@ ${brightYellow("▎ bar baz")}
  > baz
 """, """
 ${brightYellow("▎")}
-${brightYellow("▎ ══ ")}${(brightYellow + bold)("Foo")}${brightYellow(" ═══")}
+${brightYellow("▎ ══ ${(bold)("Foo")} ═══")}
 ${brightYellow("▎")}
 ${brightYellow("▎ bar baz")}
 """, width = 10)
@@ -270,21 +270,21 @@ www.example.com/url
 
 [a link]: example.com
 """, """
-${brightBlue("a reference link")}${blue("[a link]")}
+${blue("${brightBlue("a reference link")}[a link]")}
 
 ${brightBlue("[a link]")}
 
-${brightBlue("inline link 1")}${blue("(example.com)")}
+${blue("${brightBlue("inline link 1")}(example.com)")}
 
-${brightBlue("inline link 2")}${blue("(http://www.example.com)")}
+${blue("${brightBlue("inline link 2")}(http://www.example.com)")}
 
-${brightBlue("inline link 3")}${blue("()")}
+${blue("${brightBlue("inline link 3")}()")}
 
-${brightBlue("inline link 4")}${blue("()")}
+${blue("${brightBlue("inline link 4")}()")}
 
-${brightBlue("inline link 5")}${blue("(/my uri)")}
+${blue("${brightBlue("inline link 5")}(/my uri)")}
 
-${brightBlue("an image")}${blue("(example.com)")}
+${blue("${brightBlue("an image")}(example.com)")}
 
 ${brightBlue("https://example.com/autolink")}
 
@@ -353,7 +353,7 @@ Hello <b>world</b>.
 # Header Text
 """, """
 
-${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
+${magenta("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -362,7 +362,7 @@ ${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══"
 ## Header Text
 """, """
 
-${magenta("─── ")}${(magenta + bold)("Header Text")}${magenta(" ───")}
+${magenta("─── ${bold("Header Text")} ───")}
 
 """, width = 19)
 
@@ -371,7 +371,7 @@ ${magenta("─── ")}${(magenta + bold)("Header Text")}${magenta(" ───"
 ### Header Text
 """, """
 
-${magenta("    ")}${(magenta + bold + underline)("Header Text")}${magenta("    ")}
+${magenta("    ${(bold + underline)("Header Text")}    ")}
 
 """, width = 19)
 
@@ -380,7 +380,7 @@ ${magenta("    ")}${(magenta + bold + underline)("Header Text")}${magenta("    "
 #### Header Text
 """, """
 
-${magenta("    ")}${(magenta + underline)("Header Text")}${magenta("    ")}
+${magenta("    ${underline("Header Text")}    ")}
 
 """, width = 19)
 
@@ -389,7 +389,7 @@ ${magenta("    ")}${(magenta + underline)("Header Text")}${magenta("    ")}
 ##### Header Text
 """, """
 
-${magenta("    ")}${(magenta + italic)("Header Text")}${magenta("    ")}
+${magenta("    ${italic("Header Text")}    ")}
 
 """, width = 19)
 
@@ -398,7 +398,7 @@ ${magenta("    ")}${(magenta + italic)("Header Text")}${magenta("    ")}
 ###### Header Text
 """, """
 
-${magenta("    ")}${(magenta + dim)("Header Text")}${magenta("    ")}
+${magenta("    ${dim("Header Text")}    ")}
 
 """, width = 19)
 
@@ -407,7 +407,7 @@ ${magenta("    ")}${(magenta + dim)("Header Text")}${magenta("    ")}
 # Header Text ##
 """, """
 
-${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
+${magenta("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -417,7 +417,7 @@ Header Text
 ===========
 """, """
 
-${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══")}
+${magenta("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -427,7 +427,7 @@ ${magenta("═══ ")}${(magenta + bold)("Header Text")}${magenta(" ═══"
 ---
 """, """
 
-${magenta("─── ")}${(magenta + bold)("Header Text")}${magenta(" ───")}
+${magenta("─── ${bold("Header Text")} ───")}
 
 """, width = 19)
 
@@ -578,7 +578,7 @@ LS
         baz
     }
 """, """
-┌───────┐
+╭───────╮
 │${brightRed("foo {  ")}│
 │${brightRed("    bar")}│
 │${brightRed("       ")}│
@@ -586,7 +586,7 @@ LS
 │${brightRed("       ")}│
 │${brightRed("    baz")}│
 │${brightRed("}      ")}│
-└───────┘
+╰───────╯
 """)
 
     @Test
@@ -601,7 +601,7 @@ foo {
 }
 ```
 """, """
-┌───────┐
+╭───────╮
 │${brightRed("foo {  ")}│
 │${brightRed("    bar")}│
 │${brightRed("       ")}│
@@ -609,7 +609,7 @@ foo {
 │${brightRed("       ")}│
 │${brightRed("    baz")}│
 │${brightRed("}      ")}│
-└───────┘
+╰───────╯
 """)
 
     // https://github.github.com/gfm/#example-113
@@ -621,11 +621,11 @@ def foo(x)
 end
 ~~~~~~~
 """, """
-┌──────────┐
+╭──────────╮
 │${brightRed("def foo(x)")}│
 │${brightRed("  return 3")}│
 │${brightRed("end       ")}│
-└──────────┘
+╰──────────╯
 """)
 
     @Test
@@ -636,9 +636,9 @@ end
 foo${nbsp}bar baz
 ```
 """, """
-┌───────────┐
+╭───────────╮
 │${brightRed("foo${nbsp}bar baz")}│
-└───────────┘
+╰───────────╯
 """)
     }
 

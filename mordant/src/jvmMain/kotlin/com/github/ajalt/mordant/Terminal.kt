@@ -1,10 +1,11 @@
 package com.github.ajalt.mordant
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
 
 class Terminal(
-        ansiLevel: AnsiLevel = TerminalCapabilities.detectANSISupport(),
+        val ansiLevel: AnsiLevel = TerminalCapabilities.detectANSISupport(),
         val theme: Theme = DEFAULT_THEME,
         val width: Int = currentWidth(),
         val tabWidth: Int = 8
@@ -182,39 +183,6 @@ class Terminal(
     }
 
     fun render(renderable: Renderable): String {
-        return renderLines(renderable.render(this))
+        return renderLinesAnsi(renderable.render(this), ansiLevel)
     }
-
-    private fun renderLines(lines: Lines): String = buildString {
-        for ((i, line) in lines.lines.withIndex()) {
-            if (i > 0) append("\n")
-
-            // Concat equal ansi codes to avoid closing and reopening them on every span
-            var activeCode: AnsiCode? = null
-            for (span in line) {
-                val code = span.style.toAnsi(this@Terminal)
-                if (code != activeCode) {
-                    if (activeCode != null) append(activeCode.close)
-                    activeCode = code
-                    append(code.open)
-                }
-                append(span.text)
-            }
-            activeCode?.let { append(it.close) }
-        }
-    }
-}
-
-private fun TextStyle.toAnsi(t: Terminal): AnsiCode {
-    var code = color?.let { t.colors.color(it) } ?: t.colors.plain
-
-    if (bgColor != null) code += t.colors.color(bgColor).bg
-    if (bold) code += t.colors.bold
-    if (italic) code += t.colors.italic
-    if (underline) code += t.colors.underline
-    if (dim) code += t.colors.dim
-    if (inverse) code += t.colors.inverse
-    if (strikethrough) code += t.colors.strikethrough
-
-    return code
 }

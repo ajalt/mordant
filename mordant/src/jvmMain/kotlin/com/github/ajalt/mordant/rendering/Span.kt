@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.CSI
+import com.github.ajalt.mordant.rendering.internal.CSI
 import com.github.ajalt.mordant.rendering.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
 

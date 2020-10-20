@@ -4,7 +4,6 @@ import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.*
 import com.github.ajalt.mordant.rendering.*
 
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
@@ -36,7 +35,7 @@ private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
             parts += Chunk(text = text.substring(idxAfterLastCmd, command.range.first), style = style)
         }
         idxAfterLastCmd = command.range.last + 1
-        style = updateStyle(style, command.value)
+        style = updateStyle(style, DEFAULT_STYLE, command.value)
     }
     if (idxAfterLastCmd < text.length) {
         parts += Chunk(text = text.substring(idxAfterLastCmd), style = style)
@@ -93,8 +92,13 @@ private fun splitLines(words: Iterable<Chunk>): List<Line> {
     return lines
 }
 
-
-private fun updateStyle(existingStyle: TextStyle, ansi: String): TextStyle {
+/**
+ * Return a copy of [existingStyle] updated with any supported styles from an [ansi] escape sequence.
+ *
+ * If the [ansi] contains any reset codes, the reset style attributes will be set to their
+ * corresponding value from [defaultStyle].
+ */
+internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi: String): TextStyle {
     if (ansi.startsWith(OSC)) return existingStyle // TODO: OSC 8 (hyperlinks)
     if (!ansi.startsWith(CSI)) return existingStyle // DSC, APC, etc. don't affect style, discard them
     if (!ansi.endsWith("m")) return existingStyle // SGR sequences end in "m", others don't affect style
@@ -104,57 +108,76 @@ private fun updateStyle(existingStyle: TextStyle, ansi: String): TextStyle {
             .split(";").mapNotNull { if (it.isEmpty()) 0 else it.toIntOrNull() }
 
     // Empty SGR is treated as reset
-    if (codes.isEmpty()) return DEFAULT_STYLE
+    if (codes.isEmpty()) return defaultStyle
 
-    var style = existingStyle
+    var color = existingStyle.color
+    var bgColor = existingStyle.bgColor
+    var bold = existingStyle.bold
+    var italic = existingStyle.italic
+    var underline = existingStyle.underline
+    var dim = existingStyle.dim
+    var inverse = existingStyle.inverse
+    var strikethrough = existingStyle.strikethrough
+
     var i = 0
 
     // https://en.wikipedia.org/wiki/ANSI_escape_code#SGR
     while (i <= codes.lastIndex) {
         when (val code = codes[i]) {
             // Resets
-            AnsiStyle.reset.closeCode -> style = DEFAULT_STYLE
-            AnsiStyle.bold.closeCode -> style = style.copy(bold = false)
-            AnsiStyle.dim.closeCode -> style = style.copy(dim = false)
-            AnsiStyle.italic.closeCode -> style = style.copy(italic = false)
-            AnsiStyle.underline.closeCode -> style = style.copy(underline = false)
-            AnsiStyle.inverse.closeCode -> style = style.copy(inverse = false)
-            AnsiStyle.strikethrough.closeCode -> style = style.copy(strikethrough = false)
-            AnsiCodes.fgColorReset -> style = style.copy(color = null)
-            AnsiCodes.bgColorReset -> style = style.copy(bgColor = null)
+            AnsiCodes.reset -> {
+                color = existingStyle.color
+                bgColor = existingStyle.bgColor
+                bold = existingStyle.bold
+                italic = existingStyle.italic
+                underline = existingStyle.underline
+                dim = existingStyle.dim
+                inverse = existingStyle.inverse
+                strikethrough = existingStyle.strikethrough
+            }
+            AnsiCodes.boldAndDimClose -> {
+                bold = defaultStyle.bold
+                dim = defaultStyle.dim
+            }
+            AnsiCodes.italicClose -> italic = defaultStyle.italic
+            AnsiCodes.underlineClose -> underline = defaultStyle.underline
+            AnsiCodes.inverseClose -> inverse = defaultStyle.inverse
+            AnsiCodes.strikethroughClose -> strikethrough = defaultStyle.strikethrough
+            AnsiCodes.fgColorReset -> color = defaultStyle.color
+            AnsiCodes.bgColorReset -> bgColor = defaultStyle.bgColor
             // Colors
             in AnsiCodes.fg16Range, in AnsiCodes.fg16BrightRange -> {
-                style = style.copy(color = Ansi16(code))
+                color = Ansi16(code)
             }
             in AnsiCodes.bg16Range, in AnsiCodes.bg16BrightRange -> {
-                style = style.copy(bgColor = Ansi16(code - AnsiCodes.fgBgOffset))
+                bgColor = Ansi16(code - AnsiCodes.fgBgOffset)
             }
             AnsiCodes.fgColorSelector -> {
-                val (color, consumed) = getAnsiColor(i + 1, codes)
-                if (color == null) break // Unrecognized code format: stop parsing
-                style = style.copy(color = color)
+                val (c, consumed) = getAnsiColor(i + 1, codes)
+                if (c == null) break // Unrecognized code format: stop parsing
+                color = c
                 i += consumed
             }
             AnsiCodes.bgColorSelector -> {
-                val (color, consumed) = getAnsiColor(i + 1, codes)
-                if (color == null) break
-                style = style.copy(bgColor = color)
+                val (c, consumed) = getAnsiColor(i + 1, codes)
+                if (c == null) break
+                bgColor = c
                 i += consumed
             }
             // Styles
-            AnsiStyle.bold.openCode -> style = style.copy(bold = true)
-            AnsiStyle.italic.openCode -> style = style.copy(italic = true)
-            AnsiStyle.underline.openCode -> style = style.copy(underline = true)
-            AnsiStyle.dim.openCode -> style = style.copy(dim = true)
-            AnsiStyle.inverse.openCode -> style = style.copy(inverse = true)
-            AnsiStyle.strikethrough.openCode -> style = style.copy(strikethrough = true)
+            AnsiCodes.boldOpen -> bold = true
+            AnsiCodes.italicOpen -> italic = true
+            AnsiCodes.underlineOpen -> underline = true
+            AnsiCodes.dimOpen -> dim = true
+            AnsiCodes.inverseOpen -> inverse = true
+            AnsiCodes.strikethroughOpen -> strikethrough = true
             // Unsupported
             AnsiCodes.underlineColorSelector -> {
                 // skip its arguments
                 i += when {
                     i == codes.lastIndex -> 0
-                    codes[i + 1] == AnsiCodes.selector256 -> 1
-                    codes[i + 1] == AnsiCodes.selectorRgb -> 3
+                    codes.getOrNull(i + 1) == AnsiCodes.selector256 -> 1
+                    codes.getOrNull(i + 1) == AnsiCodes.selectorRgb -> 3
                     else -> break
                 }
             }
@@ -162,7 +185,7 @@ private fun updateStyle(existingStyle: TextStyle, ansi: String): TextStyle {
         i += 1
     }
 
-    return style
+    return TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough)
 }
 
 private fun getAnsiColor(i: Int, codes: List<Int>): Pair<ConvertibleColor?, Int> {

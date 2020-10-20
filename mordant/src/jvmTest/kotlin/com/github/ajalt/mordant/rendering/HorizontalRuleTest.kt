@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.AnsiColor
-import com.github.ajalt.mordant.AnsiColor.red
+import com.github.ajalt.mordant.TextColors.red
 import org.junit.Test
 
 class HorizontalRuleTest : RenderingTest() {

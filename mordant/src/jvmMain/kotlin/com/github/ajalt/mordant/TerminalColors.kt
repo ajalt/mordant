@@ -2,124 +2,81 @@ package com.github.ajalt.mordant
 
 import com.github.ajalt.colormath.ConvertibleColor
 import com.github.ajalt.colormath.RGB
-import kotlin.math.abs
+import com.github.ajalt.mordant.TextColors.Companion.hsl
+import com.github.ajalt.mordant.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
+import com.github.ajalt.mordant.rendering.TextStyle
 
-
-/**
- * The com.github.ajalt.mordant.rendering.markdown.main entry point into mordant. Used to generate ANSI codes.
- *
- * You typically want to use this in a `with` block. Colors and types can be nested, and will automatically be
- * reset.
- *
- * This will print the text "red white and blue", with foreground colors matching the text:
- *
- * ```kotlin
- * with(TerminalColors()) {
- *     println("${red("red")} ${white("white")} and ${blue("blue")}")
- * }
- * ```
- *
- *
- * This will set the background color while leaving the foreground unchanged:
- *
- * ```kotlin
- * with(TerminalColors()) {
- *     println("The foreground ${brightBlue.bg("color will stay the")} same")
- * }
- * ```
- *
- * This will set foreground and background:
- *
- * ```kotlin
- * with(TerminalColors()) {
- *     println((yellow on brightGreen)("this is easy to read, right?"))
- * }
- * ```
- *
- * You can also mix text styles with colors:
- *
- * ```kotlin
- * with(TerminalColors()) {
- *     println((bold + white + underline)("Listen!"))
- * }
- * ```
- */
 class TerminalColors internal constructor(
         private val level: AnsiLevel
 ) {
-    val black: AnsiColorCode get() = ansi16(AnsiColor.black)
-    val red: AnsiColorCode get() = ansi16(AnsiColor.red)
-    val green: AnsiColorCode get() = ansi16(AnsiColor.green)
-    val yellow: AnsiColorCode get() = ansi16(AnsiColor.yellow)
-    val blue: AnsiColorCode get() = ansi16(AnsiColor.blue)
-    val magenta: AnsiColorCode get() = ansi16(AnsiColor.magenta)
-    val cyan: AnsiColorCode get() = ansi16(AnsiColor.cyan)
-    val white: AnsiColorCode get() = ansi16(AnsiColor.white)
-    val gray: AnsiColorCode get() = ansi16(AnsiColor.gray)
+    val black: TextStyle get() = downsample(TextColors.black)
+    val red: TextStyle get() = downsample(TextColors.red)
+    val green: TextStyle get() = downsample(TextColors.green)
+    val yellow: TextStyle get() = downsample(TextColors.yellow)
+    val blue: TextStyle get() = downsample(TextColors.blue)
+    val magenta: TextStyle get() = downsample(TextColors.magenta)
+    val cyan: TextStyle get() = downsample(TextColors.cyan)
+    val white: TextStyle get() = downsample(TextColors.white)
+    val gray: TextStyle get() = downsample(TextColors.gray)
 
-    val brightRed: AnsiColorCode get() = ansi16(AnsiColor.brightRed)
-    val brightGreen: AnsiColorCode get() = ansi16(AnsiColor.brightGreen)
-    val brightYellow: AnsiColorCode get() = ansi16(AnsiColor.brightYellow)
-    val brightBlue: AnsiColorCode get() = ansi16(AnsiColor.brightBlue)
-    val brightMagenta: AnsiColorCode get() = ansi16(AnsiColor.brightMagenta)
-    val brightCyan: AnsiColorCode get() = ansi16(AnsiColor.brightCyan)
-    val brightWhite: AnsiColorCode get() = ansi16(AnsiColor.brightWhite)
+    val brightRed: TextStyle get() = downsample(TextColors.brightRed)
+    val brightGreen: TextStyle get() = downsample(TextColors.brightGreen)
+    val brightYellow: TextStyle get() = downsample(TextColors.brightYellow)
+    val brightBlue: TextStyle get() = downsample(TextColors.brightBlue)
+    val brightMagenta: TextStyle get() = downsample(TextColors.brightMagenta)
+    val brightCyan: TextStyle get() = downsample(TextColors.brightCyan)
+    val brightWhite: TextStyle get() = downsample(TextColors.brightWhite)
 
-    /** Clear all active styles */
-    val reset: AnsiCode get() = style(AnsiStyle.reset)
+    // TODO
+//    /** Clear all active styles */
+//    val reset: AnsiCode get() = style(TextStyles.reset)
 
     /**
      * Render text as bold or increased intensity.
      *
      * Might be rendered as a different color instead of a different font weight.
      */
-    val bold: AnsiCode get() = style(AnsiStyle.bold)
+    val bold: TextStyle get() = downsample(TextStyles.bold)
 
     /**
      * Render text as faint or decreased intensity.
      *
      * Not widely supported.
      */
-    val dim: AnsiCode get() = style(AnsiStyle.dim)
+    val dim: TextStyle get() = downsample(TextStyles.dim)
 
     /**
      * Render text as italic.
      *
      * Not widely supported, might be rendered as inverse instead of italic.
      */
-    val italic: AnsiCode get() = style(AnsiStyle.italic)
+    val italic: TextStyle get() = downsample(TextStyles.italic)
 
     /**
      * Underline text.
      *
      * Might be rendered with different colors instead of underline.
      */
-    val underline: AnsiCode get() = style(AnsiStyle.underline)
+    val underline: TextStyle get() = downsample(TextStyles.underline)
 
     /** Render text with background and foreground colors switched. */
-    val inverse: AnsiCode get() = style(AnsiStyle.inverse)
-
-    /**
-     * Conceal text.
-     *
-     * Not widely supported.
-     */
-    val hidden: AnsiCode get() = style(AnsiStyle.hidden)
+    val inverse: TextStyle get() = downsample(TextStyles.inverse)
 
     /**
      * Render text with a strikethrough.
      *
      * Not widely supported.
      */
-    val strikethrough: AnsiCode get() = style(AnsiStyle.strikethrough)
+    val strikethrough: TextStyle get() = downsample(TextStyles.strikethrough)
 
     /**
      * No style.
      */
-    val plain: AnsiCode get() = AnsiCode(emptyList())
+    val plain: TextStyle get() = DEFAULT_STYLE
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
-    fun rgb(hex: String): AnsiColorCode = color(RGB(hex))
+    fun rgb(hex: String): TextStyle = color(RGB(hex))
 
     /**
      * Create a color code from an RGB color.
@@ -128,7 +85,7 @@ class TerminalColors internal constructor(
      * @param g The green amount, in the range \[0, 255]
      * @param b The blue amount, in the range \[0, 255]
      */
-    fun rgb(r: Int, g: Int, b: Int): AnsiColorCode = AnsiColor.rgb(r, g, b, level)
+    fun rgb(r: Int, g: Int, b: Int): TextStyle = TextColors.rgb(r, g, b, level)
 
     /**
      * Create a color code from an HSL color.
@@ -137,7 +94,7 @@ class TerminalColors internal constructor(
      * @param s The saturation, in the range \[0, 100]
      * @param l The lightness, in the range \[0, 100]
      */
-    fun hsl(h: Int, s: Int, l: Int): AnsiColorCode = AnsiColor.hsl(h, s, l, level)
+    fun hsl(h: Int, s: Int, l: Int): TextStyle = TextColors.hsl(h, s, l, level)
 
     /**
      * Create a color code from an HSV color.
@@ -146,7 +103,7 @@ class TerminalColors internal constructor(
      * @param s The saturation, in the range \[0,100]
      * @param v The value, in the range \[0,100]
      */
-    fun hsv(h: Int, s: Int, v: Int): AnsiColorCode = AnsiColor.hsv(h, s, v, level)
+    fun hsv(h: Int, s: Int, v: Int): TextStyle = TextColors.hsv(h, s, v, level)
 
     /**
      * Create a color code from a CMYK color.
@@ -156,14 +113,14 @@ class TerminalColors internal constructor(
      * @param y The yellow amount, in the range \[0,100]
      * @param k The black amount, in the range \[0,100]
      */
-    fun cmyk(c: Int, m: Int, y: Int, k: Int): AnsiColorCode = AnsiColor.cmyk(c, m, y, k, level)
+    fun cmyk(c: Int, m: Int, y: Int, k: Int): TextStyle = TextColors.cmyk(c, m, y, k, level)
 
     /**
      * Create a grayscale color code from a fraction in the range \[0, 1].
      *
      * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
      */
-    fun gray(fraction: Double): AnsiColorCode = AnsiColor.gray(fraction, level)
+    fun gray(fraction: Double): TextStyle = TextColors.gray(fraction, level)
 
     /**
      * Create a color code from a CIE XYZ color.
@@ -172,7 +129,7 @@ class TerminalColors internal constructor(
      *
      * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
      */
-    fun xyz(x: Double, y: Double, z: Double): AnsiColorCode = AnsiColor.xyz(x, y, z, level)
+    fun xyz(x: Double, y: Double, z: Double): TextStyle = TextColors.xyz(x, y, z, level)
 
 
     /**
@@ -183,69 +140,68 @@ class TerminalColors internal constructor(
      * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
      * but are generally in [-100, 100]
      */
-    fun lab(l: Double, a: Double, b: Double): AnsiColorCode = AnsiColor.lab(l, a, b, level)
+    fun lab(l: Double, a: Double, b: Double): TextStyle = TextColors.lab(l, a, b, level)
 
     /**
-     * Create an ANSI code to move the cursor up [count] cells.
-     *
-     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-     * If [count] is negative, the cursor will be moved down instead.
-     */
-    fun cursorUp(count: Int): String = moveCursor(if (count < 0) "B" else "A", abs(count))
-
-    /**
-     * Create an ANSI code to move the cursor down [count] cells.
-     *
-     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-     * If [count] is negative, the cursor will be moved up instead.
-     */
-    fun cursorDown(count: Int): String = moveCursor(if (count < 0) "A" else "B", abs(count))
-
-    /**
-     * Create an ANSI code to move the cursor left [count] cells.
-     *
-     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-     * If [count] is negative, the cursor will be moved right instead.
-     */
-    fun cursorLeft(count: Int): String = moveCursor(if (count < 0) "C" else "D", abs(count))
-
-    /**
-     * Create an ANSI code to move the cursor right [count] cells.
-     *
-     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-     * If [count] is negative, the cursor will be moved left instead.
-     */
-    fun cursorRight(count: Int): String = moveCursor(if (count < 0) "D" else "C", abs(count))
-
-    /**
-     * Create an ANSI code to hide the cursor.
-     *
-     * If ANSI codes are not supported, an empty string is returned.
-     */
-    val hideCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25l"
-
-    /**
-     * Create an ANSI code to show the cursor.
-     *
-     * If ANSI codes are not supported, an empty string is returned.
-     */
-    val showCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25h"
-
-    private fun moveCursor(dir: String, count: Int): String {
-        return if (count == 0 || level == AnsiLevel.NONE) ""
-        else "$CSI$count$dir"
-    }
-
-    private fun ansi16(color: AnsiColor) =
-            if (level == AnsiLevel.NONE) DisabledAnsiColorCode else color.code
-
-    private fun style(style: AnsiStyle) =
-            if (level == AnsiLevel.NONE) DisabledAnsiCode else style.code
-
-    /**
-     * Create a color from an existing [ConvertibleColor].
+     * Create a [TextStyle] with a foreground of [color], downsampled to a given [level].
      *
      * It's usually easier to use a function like [rgb] or [hsl] instead.
      */
-    fun color(color: ConvertibleColor): AnsiColorCode = AnsiColor.color(color, level)
+    fun color(color: ConvertibleColor): TextStyle = TextColors.color(color, level)
+
+// TODO
+
+//    /**
+//     * Create an ANSI code to move the cursor up [count] cells.
+//     *
+//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+//     * If [count] is negative, the cursor will be moved down instead.
+//     */
+//    fun cursorUp(count: Int): String = moveCursor(if (count < 0) "B" else "A", abs(count))
+//
+//    /**
+//     * Create an ANSI code to move the cursor down [count] cells.
+//     *
+//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+//     * If [count] is negative, the cursor will be moved up instead.
+//     */
+//    fun cursorDown(count: Int): String = moveCursor(if (count < 0) "A" else "B", abs(count))
+//
+//    /**
+//     * Create an ANSI code to move the cursor left [count] cells.
+//     *
+//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+//     * If [count] is negative, the cursor will be moved right instead.
+//     */
+//    fun cursorLeft(count: Int): String = moveCursor(if (count < 0) "C" else "D", abs(count))
+//
+//    /**
+//     * Create an ANSI code to move the cursor right [count] cells.
+//     *
+//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
+//     * If [count] is negative, the cursor will be moved left instead.
+//     */
+//    fun cursorRight(count: Int): String = moveCursor(if (count < 0) "D" else "C", abs(count))
+//
+//    /**
+//     * Create an ANSI code to hide the cursor.
+//     *
+//     * If ANSI codes are not supported, an empty string is returned.
+//     */
+//    val hideCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25l"
+//
+//    /**
+//     * Create an ANSI code to show the cursor.
+//     *
+//     * If ANSI codes are not supported, an empty string is returned.
+//     */
+//    val showCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25h"
+//
+//    private fun moveCursor(dir: String, count: Int): String {
+//        return if (count == 0 || level == AnsiLevel.NONE) ""
+//        else "$CSI$count$dir"
+//    }
+
+    private fun downsample(style: TextStyleContainer): TextStyle =
+            if (level == AnsiLevel.NONE) DEFAULT_STYLE else style.style
 }

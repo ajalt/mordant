@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.AnsiColor.blue
-import com.github.ajalt.mordant.AnsiColor.red
+import com.github.ajalt.mordant.TextColors.blue
+import com.github.ajalt.mordant.TextColors.red
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE

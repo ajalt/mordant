@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.AnsiColor.*
+import com.github.ajalt.mordant.TextColors.*
 
 interface Theme  {
     val success: TextStyle get() = TextStyle(green)
