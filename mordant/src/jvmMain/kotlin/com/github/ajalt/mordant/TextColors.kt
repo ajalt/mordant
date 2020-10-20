@@ -43,8 +43,8 @@ enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
 
 @Suppress("EnumEntryName")
 enum class TextColors(
-        private val color: ConvertibleColor
-) : TextColorContainer, ConvertibleColor by color {
+        private val color: Color
+) : TextColorContainer, Color by color {
     black(Ansi16(30)),
     red(Ansi16(31)),
     green(Ansi16(32)),
@@ -143,7 +143,7 @@ enum class TextColors(
          *
          * It's usually easier to use a function like [rgb] or [hsl] instead.
          */
-        fun color(color: ConvertibleColor, level: AnsiLevel = TRUECOLOR): TextStyle {
+        fun color(color: Color, level: AnsiLevel = TRUECOLOR): TextStyle {
             val c = when (color) {
                 is TextColorContainer -> color.style.color ?: return DEFAULT_STYLE
                 else -> color

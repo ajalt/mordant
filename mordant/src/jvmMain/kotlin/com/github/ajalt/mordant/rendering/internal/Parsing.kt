@@ -1,9 +1,6 @@
 package com.github.ajalt.mordant.rendering.internal
 
-import com.github.ajalt.colormath.Ansi16
-import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.colormath.ConvertibleColor
-import com.github.ajalt.colormath.RGB
+import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.rendering.*
 
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
@@ -188,7 +185,7 @@ internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi
     return TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough)
 }
 
-private fun getAnsiColor(i: Int, codes: List<Int>): Pair<ConvertibleColor?, Int> {
+private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
     return when (codes[i]) {
         AnsiCodes.selector256 -> {
             if (i >= codes.lastIndex || codes[i + 1] in 0..255) {

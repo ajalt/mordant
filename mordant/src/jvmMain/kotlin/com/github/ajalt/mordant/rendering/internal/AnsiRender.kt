@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.rendering.internal
 
 import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.colormath.ConvertibleColor
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.TextColorContainer
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
@@ -70,7 +70,7 @@ private fun downsample(style: TextStyle, level: AnsiLevel): TextStyle {
     }
 }
 
-private fun TextStyle.copy(fg: ConvertibleColor?, bg: ConvertibleColor?) = TextStyle(
+private fun TextStyle.copy(fg: Color?, bg: Color?) = TextStyle(
         fg, bg, bold, italic, underline, dim, inverse, strikethrough
 )
 
@@ -94,7 +94,7 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
     return if (codes.isEmpty()) "" else codes.joinToString(";", prefix = CSI, postfix = "m")
 }
 
-private fun ConvertibleColor?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
+private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
     return when (val it = (this as? TextColorContainer)?.style?.color ?: (this)) {
         null -> listOf(reset)
         is Ansi16 -> listOf(it.code + offset)

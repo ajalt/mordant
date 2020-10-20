@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant
 
-import com.github.ajalt.colormath.ConvertibleColor
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.TextColors.Companion.hsl
 import com.github.ajalt.mordant.TextColors.Companion.rgb
@@ -147,7 +147,7 @@ class TerminalColors internal constructor(
      *
      * It's usually easier to use a function like [rgb] or [hsl] instead.
      */
-    fun color(color: ConvertibleColor): TextStyle = TextColors.color(color, level)
+    fun color(color: Color): TextStyle = TextColors.color(color, level)
 
 // TODO
 

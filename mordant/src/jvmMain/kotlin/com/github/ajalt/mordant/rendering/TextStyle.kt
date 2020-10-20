@@ -1,14 +1,14 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.colormath.ConvertibleColor
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.TextStyleContainer
 import com.github.ajalt.mordant.rendering.internal.invokeStyle
 
 internal val DEFAULT_STYLE = TextStyle()
 
 interface TextStyle {
-    val color: ConvertibleColor?
-    val bgColor: ConvertibleColor?
+    val color: Color?
+    val bgColor: Color?
     val bold: Boolean
     val italic: Boolean
     val underline: Boolean
@@ -19,7 +19,7 @@ interface TextStyle {
     val bg: TextStyle
 
     infix fun on(bg: TextStyle): TextStyle
-    infix fun on(bg: ConvertibleColor): TextStyle
+    infix fun on(bg: Color): TextStyle
 
     operator fun invoke(text: String): String = invokeStyle(text)
 
@@ -44,8 +44,8 @@ interface TextStyle {
 
 @Suppress("FunctionName")
 fun TextStyle(
-        color: ConvertibleColor? = null,
-        bgColor: ConvertibleColor? = null,
+        color: Color? = null,
+        bgColor: Color? = null,
         bold: Boolean = false,
         italic: Boolean = false,
         underline: Boolean = false,
@@ -64,8 +64,8 @@ fun TextStyle(
 )
 
 private data class TextStyleImpl(
-        override val color: ConvertibleColor?,
-        override val bgColor: ConvertibleColor?,
+        override val color: Color?,
+        override val bgColor: Color?,
         override val bold: Boolean,
         override val italic: Boolean,
         override val underline: Boolean,
@@ -77,7 +77,7 @@ private data class TextStyleImpl(
         return copy(bgColor = bg.color)
     }
 
-    override infix fun on(bg: ConvertibleColor): TextStyle {
+    override infix fun on(bg: Color): TextStyle {
         return copy(bgColor = bg)
     }
 
