@@ -3,26 +3,22 @@ package com.github.ajalt.mordant
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
+import com.github.ajalt.mordant.terminal.TerminalDetection
+import com.github.ajalt.mordant.terminal.TerminalInfo
 
 class Terminal(
-        val ansiLevel: AnsiLevel = TerminalCapabilities.detectANSISupport(),
+        ansiLevel: AnsiLevel? = null,
         val theme: Theme = DEFAULT_THEME,
-        val width: Int = currentWidth(),
+        width: Int? = null,
+        hyperlinks: Boolean? = null,
         val tabWidth: Int = 8
 ) {
-    companion object {
-        /**
-         * Return the current width in cells of the interactive terminal, or [default] if the
-         * terminal is not interactive or its width cannot be determined.
-         */
-        fun currentWidth(default: Int = 79): Int = System.getenv("COLUMNS")?.toInt() ?: default
-    }
-
     init {
         require(tabWidth >= 0) { "tab width cannot be negative" }
     }
 
-    val colors: TerminalColors = TerminalColors(ansiLevel)
+    val info: TerminalInfo = TerminalDetection.detectTerminal(ansiLevel, width, hyperlinks)
+    val colors: TerminalColors = TerminalColors(info.ansiLevel)
 
     fun printMarkdown(markdown: String, showHtml: Boolean = false) {
         return kotlin.io.print(renderMarkdown(markdown, showHtml))
@@ -183,6 +179,6 @@ class Terminal(
     }
 
     fun render(renderable: Renderable): String {
-        return renderLinesAnsi(renderable.render(this), ansiLevel)
+        return renderLinesAnsi(renderable.render(this), info.ansiLevel)
     }
 }
