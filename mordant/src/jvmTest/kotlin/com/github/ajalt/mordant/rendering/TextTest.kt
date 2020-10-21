@@ -20,6 +20,17 @@ class TextTest : RenderingTest() {
     """, width = 79)
 
     @Test
+    fun `hard line breaks`() = checkRender(Text("""
+    Lorem${NEL}ipsum dolor $LS
+    sit $LS  amet
+    """), """
+    Lorem
+    ipsum dolor
+    sit
+    amet
+    """)
+
+    @Test
     fun tabs() = forAll(
             row("\t.",/*   */ "    ."),
             row(".\t.",/*  */ ".   ."),
@@ -43,9 +54,13 @@ class TextTest : RenderingTest() {
 
 
     @Test
-    fun `ansi parsing 2`() = checkRender(Text("""
-    ${TextStyle(red, white)("red ${TextStyle(blue)("blue ${TextStyle(gray).bg("gray.bg")}")} red")}
+    fun `ansi parsing with styles`() = checkRender(Text("""
+    ${TextStyle(red, white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor =  gray)("gray.bg")}")} red")}
+    ${CSI}255munknown
+    ${CSI}6ndevice status report
     """.trimIndent(), whitespace = PRE), """
     ${(red on white)("red ${blue("blue ${gray.bg("gray.bg")}")} red")}
+    unknown
+    device status report
     """, width = 79)
 }

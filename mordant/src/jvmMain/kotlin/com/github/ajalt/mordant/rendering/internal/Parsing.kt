@@ -7,6 +7,8 @@ import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.rendering.*
 
 private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
+private const val NEL = '\u0085'
+private const val LS = '\u2028'
 
 /** Like a Span, but with no restrictions on [text] */
 private data class Chunk(val text: String, val style: TextStyle)
@@ -49,19 +51,19 @@ private fun splitWords(chunk: Chunk): List<Chunk> {
     val chunks = mutableListOf<Chunk>()
     var i = 0
     var start = 0
-    var chunkType = -1 // 0=newline, 1=tab, 2=space, 3=word
+    var chunkType = -1 // 0=newline, 1=always break chunk, 2=space, 3=word
     val t = chunk.text
     while (i < t.length) {
         val c = t[i]
         val type = when {
-            c == '\r' || c == '\n' -> 0
-            c == '\t' -> 1
+            c == '\r' -> 0
+            c == '\n' || c == '\t' || c == NEL || c == LS -> 1
             c.isWhitespace() -> 2
             else -> 3
         }
         if (i == 0) {
             chunkType = type
-        } else if (c == '\n' || c == '\t' || chunkType != type) {
+        } else if (type == 1 || chunkType != type) {
             chunks += chunk.copy(text = t.substring(start, i))
             start = i
             chunkType = type

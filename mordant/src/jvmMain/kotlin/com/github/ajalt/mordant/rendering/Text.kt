@@ -86,9 +86,9 @@ class Text internal constructor(
                     continue
                 }
 
-                // Trim trailing whitespace pieces
+                // Trim trailing whitespace pieces. Continue rather than break in case there is a trailing NEL
                 if ((whitespace.trimEol || align == JUSTIFY) && lastNonWhitespace in 0 until i) {
-                    break
+                    continue
                 }
 
                 // Add a space if this line was collapsed
