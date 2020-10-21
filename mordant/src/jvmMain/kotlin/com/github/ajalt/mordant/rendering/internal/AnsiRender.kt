@@ -99,6 +99,9 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
         null -> listOf(reset)
         is Ansi16 -> listOf(it.code + offset)
         is Ansi256 -> listOf(select, selector256, it.code)
+        // The ITU T.416 spec uses colons for the rgb separator as well as extra parameters for CMYK
+        // and such. Most terminals only support the semicolon form, so that's what we use.
+        // https://gist.github.com/XVilka/8346728#gistcomment-2774523
         else -> it.toRGB().run { listOf(select, selectorRgb, r, g, b) }
     }
 }

@@ -13,29 +13,34 @@ object TerminalCapabilities {
      */
     fun detectANSISupport(default: AnsiLevel = NONE): AnsiLevel {
         // Consoles built in to some IDEs/Editors support color, but always cause System.console() to return null
-        if (isIntellijConsole()) return AnsiLevel.ANSI16
-        if (System.getenv("TERM_PROGRAM")?.toLowerCase() == "vscode") {
-            return AnsiLevel.ANSI256 // github.com/Microsoft/vscode/pull/30346
-        }
+        if (isIntellijConsole()) return ANSI16
+
+        // https://github.com/Microsoft/vscode/pull/30346
+        if (System.getenv("TERM_PROGRAM")?.toLowerCase() == "vscode") return ANSI256
+
+        // https://github.com/microsoft/terminal/issues/1040#issuecomment-496691842
+        if (!System.getenv("WT_SESSION").isNullOrEmpty()) return TRUECOLOR
 
         if (!consoleAvailable()) return NONE
 
-        when (System.getenv("COLORTERM")?.toLowerCase()) { // github.com/termstandard/colors/
-            "24bit", "truecolor" -> return TRUECOLOR
+        // https://github.com/termstandard/colors/
+        when (System.getenv("COLORTERM")?.toLowerCase()) {
+            "24bit", "24bits", "truecolor" -> return TRUECOLOR
         }
 
         when (System.getenv("TERM_PROGRAM")?.toLowerCase()) {
             "hyper" -> TRUECOLOR // stackoverflow.com/q/7052683
             "apple_terminal" -> ANSI256
             "iterm.app" -> {
-                val ver = System.getenv("TERM_PROGRAM_VERSION").toIntOrNull()
+                val ver = System.getenv("TERM_PROGRAM_VERSION")?.split(".")?.firstOrNull()?.toIntOrNull()
                 return if (ver != null && ver >= 3) TRUECOLOR else ANSI256
             }
         }
 
         val term = System.getenv("TERM")?.toLowerCase()
-        if (term != null && (term.endsWith("-256color") || term.endsWith("-256"))) {
-            return ANSI256
+        when (term?.split("-")?.takeIf { it.size > 1 }?.last()) {
+            "256", "256color", "256colors" -> return ANSI256
+            "24bit", "24bits", "direct", "truecolor" -> return TRUECOLOR
         }
 
         return when (term) {
@@ -45,7 +50,7 @@ object TerminalCapabilities {
                 System.getProperty("os.name") == "Windows 10" -> TRUECOLOR
                 else -> ANSI256
             }
-            "xterm", "vt100", "screen", "ansi", "rxvt" -> ANSI16
+            "xterm", "vt100", "vt220", "screen", "ansi", "rxvt" -> ANSI16
             "dumb" -> NONE
             else -> default
         }
