@@ -254,7 +254,7 @@ internal class MarkdownRenderer(
     }
 
     private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
-        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor))
+        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor, ))
                 .withVerticalPadding(theme.markdownHeaderPadding)
     }
 

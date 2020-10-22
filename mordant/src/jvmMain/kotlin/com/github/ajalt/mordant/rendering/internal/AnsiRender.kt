@@ -5,9 +5,8 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.TextColorContainer
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorSelector
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgBgOffset
@@ -15,17 +14,19 @@ import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selectorRgb
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.absoluteValue
 
 private val ANSI_CSI_RE = Regex("""$ESC\[[\d;]*m""")
 
-internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel): String = buildString {
+internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {
         if (i > 0) append("\n")
 
         // Concat equal ansi codes to avoid closing and reopening them on every span
         var activeStyle: TextStyle = DEFAULT_STYLE
         for (span in line) {
-            val newStyle = downsample(span.style, level)
+            val newStyle = downsample(span.style, level, hyperlinks)
             append(makeTag(activeStyle, newStyle))
             activeStyle = newStyle
             append(span.text)
@@ -55,24 +56,30 @@ internal fun TextStyle.invokeStyle(text: String): String {
     return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
 }
 
-private fun downsample(style: TextStyle, level: AnsiLevel): TextStyle {
+private fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
     return if (style === DEFAULT_STYLE) style else when (level) {
         AnsiLevel.NONE -> DEFAULT_STYLE
         AnsiLevel.ANSI16 -> style.copy(
                 fg = style.color?.toAnsi16(),
-                bg = style.bgColor?.toAnsi16()
+                bg = style.bgColor?.toAnsi16(),
+                hyperlink = style.hyperlink.takeIf { hyperlinks },
+                hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
         AnsiLevel.ANSI256 -> style.copy(
                 fg = style.color?.let { if (it is Ansi16) it else it.toAnsi256() },
-                bg = style.bgColor?.let { if (it is Ansi16) it else it.toAnsi256() }
+                bg = style.bgColor?.let { if (it is Ansi16) it else it.toAnsi256() },
+                hyperlink = style.hyperlink.takeIf { hyperlinks },
+                hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
-        AnsiLevel.TRUECOLOR -> style
+        AnsiLevel.TRUECOLOR -> if (hyperlinks || style.hyperlink == null) style else style.copy(
+                fg = style.color,
+                bg = style.bgColor,
+                hyperlink = null,
+                hyperlinkId = null
+        )
     }
 }
 
-private fun TextStyle.copy(fg: Color?, bg: Color?) = TextStyle(
-        fg, bg, bold, italic, underline, dim, inverse, strikethrough
-)
 
 private fun makeTag(old: TextStyle, new: TextStyle): String {
     if (old == new) return ""
@@ -91,7 +98,17 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
     style(old.inverse, new.inverse, AnsiCodes.inverseOpen, AnsiCodes.inverseClose)
     style(old.strikethrough, new.strikethrough, AnsiCodes.strikethroughOpen, AnsiCodes.strikethroughClose)
 
-    return if (codes.isEmpty()) "" else codes.joinToString(";", prefix = CSI, postfix = "m")
+    val csi = if (codes.isEmpty()) "" else codes.joinToString(";", prefix = CSI, postfix = "m")
+    return when {
+        old.hyperlink != new.hyperlink -> csi + makeHyperlinkTag(new.hyperlink, new.hyperlinkId)
+        else -> csi
+    }
+}
+
+private fun makeHyperlinkTag(hyperlink: String?, hyperlinkId: String?): String {
+    if (hyperlink == null) return "${OSC}8;;$ST"
+    val id = hyperlinkId?.let { "id=$it" } ?: ""
+    return "${OSC}8;$id;$hyperlink$ST"
 }
 
 private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
@@ -105,3 +122,7 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
         else -> it.toRGB().run { listOf(select, selectorRgb, r, g, b) }
     }
 }
+
+internal fun generateHyperlinkId(): String = nextHyperlinkId.getAndIncrement().toString()
+
+private val nextHyperlinkId = AtomicInteger(1)

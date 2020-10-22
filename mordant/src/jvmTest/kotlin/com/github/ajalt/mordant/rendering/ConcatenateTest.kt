@@ -14,7 +14,7 @@ class ConcatenateTest : RenderingTest() {
             buildRenderable {
                 append("1")
                 append(Text("2"))
-                append("3", style = TextStyle(red))
+                append("3", style = TextStyle(red, ))
             }, "1\n2\n${red("3")}"
     )
 }

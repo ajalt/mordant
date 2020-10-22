@@ -15,6 +15,8 @@ interface TextStyle {
     val dim: Boolean
     val inverse: Boolean
     val strikethrough: Boolean
+    val hyperlink: String?
+    val hyperlinkId: String?
 
     val bg: TextStyle
 
@@ -28,7 +30,7 @@ interface TextStyle {
         return when {
             this === DEFAULT_STYLE -> other
             other === DEFAULT_STYLE -> this
-            else -> TextStyle(
+            else -> TxtStyle(
                     color = other.color ?: color,
                     bgColor = other.bgColor ?: bgColor,
                     bold = other.bold || bold,
@@ -37,6 +39,8 @@ interface TextStyle {
                     dim = other.dim || dim,
                     inverse = other.inverse || inverse,
                     strikethrough = other.strikethrough || strikethrough,
+                    hyperlink = other.hyperlink ?: hyperlink,
+                    hyperlinkId = other.hyperlinkId ?: hyperlinkId
             )
         }
     }
@@ -51,8 +55,9 @@ fun TextStyle(
         underline: Boolean = false,
         dim: Boolean = false,
         inverse: Boolean = false,
-        strikethrough: Boolean = false
-): TextStyle = TextStyleImpl(
+        strikethrough: Boolean = false,
+        hyperlink: String? = null
+): TextStyle = TxtStyle(
         color = color,
         bgColor = bgColor,
         bold = bold,
@@ -61,9 +66,11 @@ fun TextStyle(
         dim = dim,
         inverse = inverse,
         strikethrough = strikethrough,
+        hyperlink = hyperlink,
+        hyperlinkId = null
 )
 
-private data class TextStyleImpl(
+internal data class TxtStyle(
         override val color: Color?,
         override val bgColor: Color?,
         override val bold: Boolean,
@@ -71,7 +78,9 @@ private data class TextStyleImpl(
         override val underline: Boolean,
         override val dim: Boolean,
         override val inverse: Boolean,
-        override val strikethrough: Boolean
+        override val strikethrough: Boolean,
+        override val hyperlink: String?,
+        override val hyperlinkId: String?
 ) : TextStyle {
     override infix fun on(bg: TextStyle): TextStyle {
         return copy(bgColor = bg.color)
@@ -84,6 +93,14 @@ private data class TextStyleImpl(
     override val bg: TextStyle get() = copy(color = null, bgColor = color)
 }
 
+internal fun TextStyle.copy(
+        fg: Color? = color,
+        bg: Color? = bgColor,
+        hyperlink: String? = this.hyperlink,
+        hyperlinkId: String? = this.hyperlinkId
+) = TxtStyle(
+        fg, bg, bold, italic, underline, dim, inverse, strikethrough, hyperlink, hyperlinkId
+)
 
 internal fun foldStyles(vararg styles: TextStyle?): TextStyle? {
     var style: TextStyle? = null

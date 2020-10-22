@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.*
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.internal.parseText
 
 internal const val NEL = "\u0085"
@@ -10,7 +11,7 @@ internal const val LS = "\u2028"
 
 class Text internal constructor(
         lines: Lines,
-        private val style: TextStyle = DEFAULT_STYLE,
+        style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = NONE,
         private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
@@ -32,10 +33,21 @@ class Text internal constructor(
         require(tabWidth == null || tabWidth >= 0) { "tab width cannot be negative" }
     }
 
-    private val lines = Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
+    private val style = when {
+        style.hyperlink == null || style.hyperlinkId != null -> style
+        else -> style.copy(hyperlinkId = generateHyperlinkId())
+    }
+
+    private val lines = when {
+        this.style === DEFAULT_STYLE -> lines
+        else -> Lines(lines.lines.map { l -> l.map { it.withStyle(this.style) } })
+    }
 
     internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {
-        return Text(lines, style, whitespace, align, overflowWrap ?: this.overflowWrap)
+        return when {
+            align == this.align && (overflowWrap == null || overflowWrap == this.overflowWrap) -> this
+            else -> Text(lines, style, whitespace, align, overflowWrap ?: this.overflowWrap)
+        }
     }
 
     override fun measure(t: Terminal, width: Int): WidthRange {

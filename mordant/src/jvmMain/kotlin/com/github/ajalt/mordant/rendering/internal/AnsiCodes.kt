@@ -39,3 +39,6 @@ internal const val CSI = "$ESC["
 
 /** Operating System Command */
 internal const val OSC = "$ESC]"
+
+/** String Terminator */
+internal const val ST = "$ESC\\"

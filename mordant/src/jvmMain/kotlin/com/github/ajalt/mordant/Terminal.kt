@@ -179,6 +179,6 @@ class Terminal(
     }
 
     fun render(renderable: Renderable): String {
-        return renderLinesAnsi(renderable.render(this), info.ansiLevel)
+        return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
     }
 }

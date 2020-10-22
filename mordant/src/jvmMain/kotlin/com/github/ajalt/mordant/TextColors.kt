@@ -31,12 +31,12 @@ interface TextColorContainer : TextStyleContainer {
 
 @Suppress("EnumEntryName")
 enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
-    bold(TextStyle(bold = true)),
-    dim(TextStyle(dim = true)),
-    italic(TextStyle(italic = true)),
-    underline(TextStyle(underline = true)),
-    inverse(TextStyle(inverse = true)),
-    strikethrough(TextStyle(strikethrough = true));
+    bold(TextStyle(bold = true, )),
+    dim(TextStyle(dim = true, )),
+    italic(TextStyle(italic = true, )),
+    underline(TextStyle(underline = true, )),
+    inverse(TextStyle(inverse = true, )),
+    strikethrough(TextStyle(strikethrough = true, ));
 
     override fun toString() = style.toString()
 }
@@ -63,7 +63,7 @@ enum class TextColors(
     brightCyan(Ansi16(96)),
     brightWhite(Ansi16(97));
 
-    override val style: TextStyle get() = TextStyle(color)
+    override val style: TextStyle get() = TextStyle(color, )
     override fun toString() = style.toString()
 
     companion object {
@@ -148,12 +148,14 @@ enum class TextColors(
                 is TextColorContainer -> color.style.color ?: return DEFAULT_STYLE
                 else -> color
             }
-            return TextStyle(when (level) {
-                NONE -> null
-                ANSI16 -> c.toAnsi16()
-                ANSI256 -> if (c is Ansi16) c else c.toAnsi256()
-                TRUECOLOR -> c
-            })
+            return TextStyle(
+                    when (level) {
+                        NONE -> null
+                        ANSI16 -> c.toAnsi16()
+                        ANSI256 -> if (c is Ansi16) c else c.toAnsi256()
+                        TRUECOLOR -> c
+                    },
+            )
         }
     }
 }
