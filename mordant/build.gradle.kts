@@ -17,6 +17,11 @@ kotlin {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
             }
         }
+        val commonTest by getting {
+            dependencies {
+                implementation("io.kotest:kotest-assertions-core:4.3.0")
+            }
+        }
         val gen by creating { }
         val jvmMain by getting {
             dependsOn(gen)
@@ -27,7 +32,6 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("io.kotest:kotest-assertions-core-jvm:4.2.3")
             }
         }
     }
