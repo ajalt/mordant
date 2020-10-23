@@ -20,6 +20,10 @@ import org.intellij.markdown.parser.MarkdownParser
 
 internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
     override fun measure(t: Terminal, width: Int): WidthRange {
+        // This isn't measure isn't correct in some cases, e.g. task lists that place renderables on
+        // the same line. We use a RenderableBuilder instead of this class to get accurate
+        // measurements, but it makes parsing md blocks more complicated. The worst case scenario is
+        // that a table column is a little narrow, truncating the markdown.
         return parts.maxWidthRange(t, width)
     }
 
