@@ -6,9 +6,11 @@ import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SE
 import com.github.ajalt.mordant.rendering.internal.parseText
 import com.github.ajalt.mordant.rendering.table.SectionBuilder
 import com.github.ajalt.mordant.rendering.table.table
+import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
+import org.intellij.markdown.ast.findChildOfType
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -38,12 +40,13 @@ private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
 internal class MarkdownRenderer(
         input: String,
         private val theme: Theme,
-        private val showHtml: Boolean
+        private val showHtml: Boolean,
+        private val hyperlinks: Boolean
 ) {
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
-    private val linkDestOpen = parseText("(", theme.markdownLinkDestination)
-    private val linkDestClose = parseText(")", theme.markdownLinkDestination)
+
+    private val linkDefinitions = mutableMapOf<String, String>()
 
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
@@ -51,8 +54,21 @@ internal class MarkdownRenderer(
         return parseFile(parsedTree)
     }
 
+    private fun collectLinkDefinitions(node: ASTNode) {
+        node.children.forEach { child ->
+            if (child.type == MarkdownElementTypes.LINK_DEFINITION) {
+                val label = child.findChildOfType(MarkdownElementTypes.LINK_LABEL)?.nodeText(drop = 1)
+                val dest = child.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)?.nodeText()
+                if (label != null && dest != null && label !in linkDefinitions) {
+                    linkDefinitions[label] = dest
+                }
+            }
+        }
+    }
+
     private fun parseFile(node: ASTNode): MarkdownDocument {
         require(node.type == MarkdownElementTypes.MARKDOWN_FILE)
+        if (hyperlinks) collectLinkDefinitions(node)
         return MarkdownDocument(node.children.map { parseStructure(it) })
     }
 
@@ -84,18 +100,19 @@ internal class MarkdownRenderer(
                 if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.CODE_BLOCK -> {
-                val content = Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE_WRAP, style = theme.markdownCodeBlock)
+                val content = Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP, style = theme.markdownCodeBlock)
                 if (theme.markdownCodeBlockBorder) Panel(content) else content
             }
             MarkdownElementTypes.HTML_BLOCK -> when {
-                showHtml -> Text(innerInlines(node, drop = 0), whitespace = Whitespace.PRE_WRAP)
+                showHtml -> Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP)
                 else -> Text(EMPTY_LINES)
             }
             MarkdownElementTypes.PARAGRAPH -> {
-                Text(innerInlines(node, drop = 0), theme.markdownText)
+                Text(innerInlines(node), theme.markdownText)
             }
             MarkdownElementTypes.LINK_DEFINITION -> {
-                Text(parseText(nodeText(node), theme.markdownLinkDestination))
+                if (hyperlinks) EmptyRenderable
+                else Text(parseText(node.nodeText(), theme.markdownLinkDestination))
             }
 
             MarkdownElementTypes.SETEXT_1 -> setext(theme.markdownH1Rule, theme.markdownH1, node)
@@ -108,7 +125,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_6 -> atxHorizRule(theme.markdownH6Rule, theme.markdownH6, node)
 
             GFMTokenTypes.CHECK_BOX -> {
-                val content = CHECK_BOX_REGEX.find(nodeText(node))!!.value.removeSurrounding("[", "]")
+                val content = CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
                 Text(parseText(if (content.isBlank()) "☐ " else "☑ ", DEFAULT_STYLE), whitespace = Whitespace.PRE)
             }
 
@@ -119,7 +136,7 @@ internal class MarkdownRenderer(
                 }
                 header {
                     style = theme.markdownTableHeader
-                    parseTableRow(node.children.first { it.type == GFMElementTypes.HEADER })
+                    parseTableRow(node.firstChildOfType(GFMElementTypes.HEADER))
                 }
                 body {
                     style = theme.markdownTableBody
@@ -154,49 +171,42 @@ internal class MarkdownRenderer(
             GFMElementTypes.STRIKETHROUGH -> {
                 innerInlines(node, drop = 2).withStyle(theme.markdownStikethrough)
             }
-            MarkdownElementTypes.FULL_REFERENCE_LINK -> {
-                innerInlines(node, drop = 0)
-            }
             MarkdownElementTypes.LINK_TEXT -> {
-                parseText(nodeText(node.children[1]), theme.markdownLinkText)
+                parseText(node.children[1].nodeText(), theme.markdownLinkText)
             }
             MarkdownElementTypes.LINK_LABEL -> {
-                parseText(nodeText(node), theme.markdownLinkDestination)
+                parseText(node.nodeText(), theme.markdownLinkDestination)
             }
             MarkdownElementTypes.LINK_DESTINATION -> {
                 innerInlines(node, drop = if (node.children.firstOrNull()?.type == MarkdownTokenTypes.LT) 1 else 0)
                         .replaceStyle(theme.markdownLinkDestination) // the child might be TEXT or GFM_AUTOLINK
             }
             MarkdownElementTypes.INLINE_LINK -> {
-                val text = innerInlines(node.children.first { it.type == MarkdownElementTypes.LINK_TEXT }, drop = 1)
-                        .withStyle(theme.markdownLinkText)
-                val dest = node.children.find { it.type == MarkdownElementTypes.LINK_DESTINATION }
-                        ?.let { parseInlines(it) }
-                        ?: EMPTY_LINES
-                listOf(text, linkDestOpen, dest, linkDestClose).foldLines { it }
+                parseInlineLink(node)
             }
+            MarkdownElementTypes.FULL_REFERENCE_LINK,
             MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
-                innerInlines(node.children[0], drop = 0).withStyle(theme.markdownLinkText)
+                parseReferenceLink(node, hyperlinks)
             }
 
             MarkdownElementTypes.IMAGE -> {
-                // for images, just render the alt text if there is any
+                // for images, just render the hyperlink
                 parseInlines(node.children[1])
             }
             // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end
             // up rendering the surrounding <>.
             MarkdownTokenTypes.EMAIL_AUTOLINK,
             GFMTokenTypes.GFM_AUTOLINK,
-            MarkdownTokenTypes.AUTOLINK -> parseText(nodeText(node), theme.markdownLinkText)
+            MarkdownTokenTypes.AUTOLINK -> parseText(node.nodeText(), theme.markdownLinkText)
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             MarkdownTokenTypes.HTML_TAG -> when {
-                showHtml -> parseText(nodeText(node), DEFAULT_STYLE)
+                showHtml -> parseText(node.nodeText(), DEFAULT_STYLE)
                 else -> EMPTY_LINES
             }
             // TokenTypes
             MarkdownTokenTypes.BLOCK_QUOTE -> EMPTY_LINES // don't render '>' delimiters in block quotes
-            MarkdownTokenTypes.CODE_LINE -> parseText(nodeText(node).drop(4), DEFAULT_STYLE)
+            MarkdownTokenTypes.CODE_LINE -> parseText(node.nodeText().drop(4), DEFAULT_STYLE)
             MarkdownTokenTypes.HARD_LINE_BREAK -> parseText(NEL, theme.markdownText)
             MarkdownTokenTypes.ESCAPED_BACKTICKS -> parseText("`", theme.markdownText)
             MarkdownTokenTypes.BAD_CHARACTER -> parseText("�", theme.markdownText)
@@ -217,20 +227,20 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE -> {
-                parseText(nodeText(node), DEFAULT_STYLE)
+                parseText(node.nodeText(), DEFAULT_STYLE)
             }
             MarkdownTokenTypes.EOL -> {
                 // Add an extra linebreak, since the first one will get folded away by foldLines.
                 // Parse the text rather than hard coding the return value to support NEL and LS.
-                Lines(listOf(EMPTY_LINE) + parseText(nodeText(node), DEFAULT_STYLE).lines)
+                Lines(listOf(EMPTY_LINE) + parseText(node.nodeText(), DEFAULT_STYLE).lines)
             }
-            else -> error("Unexpected token when parsing inlines: $node; [${node.type}:'${nodeText(node).take(10)}'}]")
+            else -> error("Unexpected token when parsing inlines: $node; [${node.type}:'${node.nodeText().take(10)}'}]")
         }
     }
 
-    private fun nodeText(node: ASTNode) = input.substring(node.startOffset, node.endOffset)
+    private fun ASTNode.nodeText(drop: Int = 0) = input.substring(startOffset + drop, endOffset - drop)
 
-    private fun innerInlines(node: ASTNode, drop: Int, dropLast: Int = drop): Lines {
+    private fun innerInlines(node: ASTNode, drop: Int = 0, dropLast: Int = drop): Lines {
         return node.children.subList(drop, node.children.size - dropLast)
                 .foldLines { parseInlines(it) }
     }
@@ -254,7 +264,7 @@ internal class MarkdownRenderer(
     }
 
     private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
-        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor, ))
+        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor))
                 .withVerticalPadding(theme.markdownHeaderPadding)
     }
 
@@ -273,12 +283,40 @@ internal class MarkdownRenderer(
     }
 
     private fun parseTableAlignment(node: ASTNode): Sequence<TextAlign> {
-        val headerSeparator = node.children.first { it.type == GFMTokenTypes.TABLE_SEPARATOR }
-        return TABLE_DELIMITER_REGEX.findAll(nodeText(headerSeparator)).map {
+        val headerSeparator = node.firstChildOfType(GFMTokenTypes.TABLE_SEPARATOR)
+        return TABLE_DELIMITER_REGEX.findAll(headerSeparator.nodeText()).map {
             if (it.value.endsWith(":")) {
                 if (it.value.startsWith(":")) TextAlign.CENTER
                 else TextAlign.RIGHT
             } else TextAlign.LEFT
         }
     }
+
+    private fun parseInlineLink(node: ASTNode): Lines {
+        val text = node.firstChildOfType(MarkdownElementTypes.LINK_TEXT).children[1].nodeText()
+        val dest = node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
+                ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
+                ?.nodeText() ?: ""
+
+        if (hyperlinks && dest.isNotBlank()) {
+            return parseText(text, theme.markdownLinkText.copy(hyperlink = dest))
+        }
+
+        val parsedText = parseText(text, theme.markdownLinkText)
+        val parsedDest = parseText("($dest)", theme.markdownLinkDestination)
+        return listOf(parsedText, parsedDest).foldLines { it }
+    }
+
+    private fun parseReferenceLink(node: ASTNode, hyperlinks: Boolean): Lines {
+        if (!hyperlinks) return innerInlines(node)
+
+        val text = node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.children?.get(1)?.nodeText()
+        val label = node.firstChildOfType(MarkdownElementTypes.LINK_LABEL).children[1].nodeText()
+        return when (val hyperlink = linkDefinitions[label]) {
+            null -> innerInlines(node)
+            else -> parseText(text ?: label, theme.markdownLinkText.copy(hyperlink = hyperlink))
+        }
+    }
 }
+
+private fun ASTNode.firstChildOfType(type: IElementType) = findChildOfType(type)!!

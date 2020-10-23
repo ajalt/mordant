@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.TextColors.*
+import com.github.ajalt.mordant.TextStyles
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
@@ -93,7 +94,7 @@ class TextTest : RenderingTest() {
     )
 
     private fun doHyperlinkTest(text: String, expected: String, overflowWrap: OverflowWrap = NORMAL, width: Int = 79) = checkRender(
-            Text(text, TextStyle(hyperlink = "http://example.com"), overflowWrap = overflowWrap),
+            Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
             expected,
             width = width
     ) { it.replace(Regex("id=\\d+"), "id=x") }

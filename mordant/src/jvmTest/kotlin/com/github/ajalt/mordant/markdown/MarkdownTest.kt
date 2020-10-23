@@ -1,13 +1,12 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.TextColors.*
 import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.TextStyles.*
 import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.DEFAULT_THEME
-import com.github.ajalt.mordant.rendering.LS
-import com.github.ajalt.mordant.rendering.NEL
-import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.TextColors.*
+import com.github.ajalt.mordant.TextStyles
+import com.github.ajalt.mordant.TextStyles.*
+import com.github.ajalt.mordant.TextStyles.Companion.hyperlink
+import com.github.ajalt.mordant.rendering.*
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode
@@ -245,7 +244,7 @@ ${brightYellow("▎ bar baz")}
 
     @Suppress("MarkdownUnresolvedFileReference")
     @Test
-    fun `various links`() = doTest("""
+    fun `visible links`() = doTest("""
 [a reference link][a link]
 
 [a link]
@@ -272,7 +271,7 @@ www.example.com/url
 """, """
 ${blue("${brightBlue("a reference link")}[a link]")}
 
-${brightBlue("[a link]")}
+${blue("[a link]")}
 
 ${blue("${brightBlue("inline link 1")}(example.com)")}
 
@@ -294,6 +293,58 @@ ${brightBlue("www.example.com/url")}
 
 ${blue("[a link]: example.com")}
 """)
+
+    @Suppress("MarkdownUnresolvedFileReference")
+    @Test
+    fun `link with hyperlinks`() = doTest("""
+[a reference link][a link]
+
+[a link]
+
+[inline link 1]( example.com/1 "with a title" )
+
+[inline link 2](http://www.example.com/2)
+
+[inline link 3]()
+
+[inline link 4](<>)
+
+[inline link 5](</my uri>)
+
+![an image]( example.com/#3 "with a title" )
+
+<https://example.com/autolink>
+
+www.example.com/url
+
+<autolink@example.com>
+
+[a link]: example.com/4
+""", """
+${(brightBlue + hyperlink("example.com/4"))("a reference link")}
+
+${(brightBlue + hyperlink("example.com/4"))("a link")}
+
+${(brightBlue + hyperlink("example.com/1"))("inline link 1")}
+
+${(brightBlue + hyperlink("http://www.example.com/2"))("inline link 2")}
+
+${blue("${brightBlue("inline link 3")}()")}
+
+${blue("${brightBlue("inline link 4")}()")}
+
+${(brightBlue + hyperlink("/my uri"))("inline link 5")}
+
+${(brightBlue + hyperlink("example.com/#3"))("an image")}
+
+${brightBlue("https://example.com/autolink")}
+
+${brightBlue("www.example.com/url")}
+
+<${brightBlue("autolink@example.com")}>
+
+
+""", hyperlinks = true)
 
     @Test
     @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")
@@ -667,11 +718,17 @@ ${brightRed("foo  bar")}
             expected: String,
             width: Int = 79,
             showHtml: Boolean = false,
-            theme: Theme = DEFAULT_THEME
+            theme: Theme = DEFAULT_THEME,
+            hyperlinks: Boolean = false
     ) {
         val md = markdown.replace("⏎", "")
         try {
-            val terminal = Terminal(ansiLevel = AnsiLevel.TRUECOLOR, width = width, theme = theme)
+            val terminal = Terminal(
+                    ansiLevel = AnsiLevel.TRUECOLOR,
+                    width = width,
+                    theme = theme,
+                    hyperlinks = hyperlinks
+            )
             val actual = terminal.renderMarkdown(md, showHtml)
             try {
                 actual shouldBe expected.replace("⏎", "")

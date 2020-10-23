@@ -25,11 +25,11 @@ class Terminal(
     }
 
     fun renderMarkdown(markdown: String, showHtml: Boolean = false): String {
-        return render(MarkdownRenderer(markdown, theme, showHtml).render())
+        return render(parseMarkdown(markdown, showHtml))
     }
 
     fun parseMarkdown(markdown: String, showHtml: Boolean = false): Renderable {
-        return MarkdownRenderer(markdown, theme, showHtml).render()
+        return MarkdownRenderer(markdown, theme, showHtml, info.ansiHyperLinks).render()
     }
 
     fun success(

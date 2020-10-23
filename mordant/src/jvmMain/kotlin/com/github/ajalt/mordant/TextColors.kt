@@ -31,19 +31,29 @@ interface TextColorContainer : TextStyleContainer {
 
 @Suppress("EnumEntryName")
 enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
-    bold(TextStyle(bold = true, )),
-    dim(TextStyle(dim = true, )),
-    italic(TextStyle(italic = true, )),
-    underline(TextStyle(underline = true, )),
-    inverse(TextStyle(inverse = true, )),
-    strikethrough(TextStyle(strikethrough = true, ));
+    bold(TextStyle(bold = true)),
+    dim(TextStyle(dim = true)),
+    italic(TextStyle(italic = true)),
+    underline(TextStyle(underline = true)),
+    inverse(TextStyle(inverse = true)),
+    strikethrough(TextStyle(strikethrough = true));
+
+    companion object {
+        /**
+         * Add a hyperlink to this style.
+         *
+         * The [destination] should include an explicit protocol like `https://`, since most
+         * terminals won't open links without one.
+         */
+        fun hyperlink(destination: String) = TextStyle(hyperlink = destination)
+    }
 
     override fun toString() = style.toString()
 }
 
 @Suppress("EnumEntryName")
 enum class TextColors(
-        private val color: Color
+        private val color: Color,
 ) : TextColorContainer, Color by color {
     black(Ansi16(30)),
     red(Ansi16(31)),
@@ -63,7 +73,7 @@ enum class TextColors(
     brightCyan(Ansi16(96)),
     brightWhite(Ansi16(97));
 
-    override val style: TextStyle get() = TextStyle(color, )
+    override val style: TextStyle get() = TextStyle(color)
     override fun toString() = style.toString()
 
     companion object {
