@@ -5,11 +5,13 @@ import com.github.ajalt.mordant.AnsiLevel
 
 interface TerminalInfo {
     val width: Int
-    // TODO: terminal height
     val ansiLevel: AnsiLevel
     val ansiHyperLinks: Boolean
     val stdoutInteractive: Boolean
     val stdinInteractive: Boolean
+
+    /** Return true if both stdin and stdout are interactive */
+    val interactive: Boolean get() = stdinInteractive && stdinInteractive
 }
 
 internal data class StaticTerminalInfo(

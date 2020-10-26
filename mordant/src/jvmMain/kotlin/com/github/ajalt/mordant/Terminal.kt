@@ -3,6 +3,7 @@ package com.github.ajalt.mordant
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
+import com.github.ajalt.mordant.terminal.TerminalCursor
 import com.github.ajalt.mordant.terminal.TerminalDetection
 import com.github.ajalt.mordant.terminal.TerminalInfo
 
@@ -19,6 +20,7 @@ class Terminal(
 
     val info: TerminalInfo = TerminalDetection.detectTerminal(ansiLevel, width, hyperlinks)
     val colors: TerminalColors = TerminalColors(info.ansiLevel)
+    val cursor: TerminalCursor = TerminalCursor(info.interactive)
 
     fun printMarkdown(markdown: String, showHtml: Boolean = false) {
         return kotlin.io.print(renderMarkdown(markdown, showHtml))
