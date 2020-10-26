@@ -32,7 +32,7 @@ class HorizontalRuleTest : RenderingTest() {
 
     @Test
     fun `styled title and rule`() {
-        checkRender(HorizontalRule(title = "title", ruleStyle = TextStyle(red, ), titleStyle = TextStyle(red, )),
+        checkRender(HorizontalRule(title = "title", ruleStyle = TextStyle(red), titleStyle = TextStyle(red)),
                 red("─── title ───"), width = 13)
     }
 }

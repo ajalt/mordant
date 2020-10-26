@@ -187,7 +187,7 @@ internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi
         i += 1
     }
 
-    return TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, )
+    return TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough)
 }
 
 private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {

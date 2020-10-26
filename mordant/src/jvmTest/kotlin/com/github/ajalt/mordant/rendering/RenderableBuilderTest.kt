@@ -10,7 +10,7 @@ class RenderableBuilderTest : RenderingTest() {
                 appendln("1")
                 appendln()
                 appendAll(listOf(Text("2"), Text("3")))
-                appendln("4", style = TextStyle(red, ))
+                appendln("4", style = TextStyle(red))
             }, "1\n\n2\n3\n${red("4")}"
     )
 }

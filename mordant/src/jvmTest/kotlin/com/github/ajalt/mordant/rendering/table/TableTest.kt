@@ -236,7 +236,7 @@ class TableTest : RenderingTest() {
     |│${blue("row 4")}│
     |└─────┘
     """) {
-        rowStyles(TextStyle(red, ), TextStyle(blue, ))
+        rowStyles(TextStyle(red), TextStyle(blue))
         padding = Padding.none()
         row("row 1")
         row("row 2")
@@ -384,7 +384,7 @@ class TableTest : RenderingTest() {
     |${blue("       bottom")}
     """) {
         captionTop("top")
-        captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue, ))
+        captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue))
         body { row(1,2,3) }
     }
 

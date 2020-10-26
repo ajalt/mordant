@@ -81,7 +81,7 @@ class TextAlignmentTest : RenderingTest() {
                 text,
                 whitespace = Whitespace.PRE_WRAP,
                 align = align,
-                style = TextStyle(blue, white, )
+                style = TextStyle(blue, white)
         ), ex, trimIndent = false, width = width)
     }
 }
