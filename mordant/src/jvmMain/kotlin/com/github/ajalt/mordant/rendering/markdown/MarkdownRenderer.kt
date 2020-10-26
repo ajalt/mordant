@@ -15,6 +15,7 @@ import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMElementTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
+import org.intellij.markdown.parser.LinkMap
 import org.intellij.markdown.parser.MarkdownParser
 
 
@@ -50,7 +51,7 @@ internal class MarkdownRenderer(
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
 
-    private val linkDefinitions = mutableMapOf<String, String>()
+    private var linkMap : LinkMap? = null
 
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
@@ -58,21 +59,9 @@ internal class MarkdownRenderer(
         return parseFile(parsedTree)
     }
 
-    private fun collectLinkDefinitions(node: ASTNode) {
-        node.children.forEach { child ->
-            if (child.type == MarkdownElementTypes.LINK_DEFINITION) {
-                val label = child.findChildOfType(MarkdownElementTypes.LINK_LABEL)?.nodeText(drop = 1)
-                val dest = child.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)?.nodeText()
-                if (label != null && dest != null && label !in linkDefinitions) {
-                    linkDefinitions[label] = dest
-                }
-            }
-        }
-    }
-
     private fun parseFile(node: ASTNode): MarkdownDocument {
         require(node.type == MarkdownElementTypes.MARKDOWN_FILE)
-        if (hyperlinks) collectLinkDefinitions(node)
+        if (hyperlinks) linkMap = LinkMap.buildLinkMap(node, input)
         return MarkdownDocument(node.children.map { parseStructure(it) })
     }
 
@@ -316,7 +305,7 @@ internal class MarkdownRenderer(
 
         val text = node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.children?.get(1)?.nodeText()
         val label = node.firstChildOfType(MarkdownElementTypes.LINK_LABEL).children[1].nodeText()
-        return when (val hyperlink = linkDefinitions[label]) {
+        return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
             null -> innerInlines(node)
             else -> parseText(text ?: label, theme.markdownLinkText.copy(hyperlink = hyperlink))
         }
