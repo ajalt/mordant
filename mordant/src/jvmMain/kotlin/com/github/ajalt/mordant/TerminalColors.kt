@@ -149,59 +149,6 @@ class TerminalColors internal constructor(
      */
     fun color(color: Color): TextStyle = TextColors.color(color, level)
 
-// TODO
-
-//    /**
-//     * Create an ANSI code to move the cursor up [count] cells.
-//     *
-//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-//     * If [count] is negative, the cursor will be moved down instead.
-//     */
-//    fun cursorUp(count: Int): String = moveCursor(if (count < 0) "B" else "A", abs(count))
-//
-//    /**
-//     * Create an ANSI code to move the cursor down [count] cells.
-//     *
-//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-//     * If [count] is negative, the cursor will be moved up instead.
-//     */
-//    fun cursorDown(count: Int): String = moveCursor(if (count < 0) "A" else "B", abs(count))
-//
-//    /**
-//     * Create an ANSI code to move the cursor left [count] cells.
-//     *
-//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-//     * If [count] is negative, the cursor will be moved right instead.
-//     */
-//    fun cursorLeft(count: Int): String = moveCursor(if (count < 0) "C" else "D", abs(count))
-//
-//    /**
-//     * Create an ANSI code to move the cursor right [count] cells.
-//     *
-//     * If ANSI codes are not supported, or [count] is 0, an empty string is returned.
-//     * If [count] is negative, the cursor will be moved left instead.
-//     */
-//    fun cursorRight(count: Int): String = moveCursor(if (count < 0) "D" else "C", abs(count))
-//
-//    /**
-//     * Create an ANSI code to hide the cursor.
-//     *
-//     * If ANSI codes are not supported, an empty string is returned.
-//     */
-//    val hideCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25l"
-//
-//    /**
-//     * Create an ANSI code to show the cursor.
-//     *
-//     * If ANSI codes are not supported, an empty string is returned.
-//     */
-//    val showCursor: String get() = if (level == AnsiLevel.NONE) "" else "$CSI?25h"
-//
-//    private fun moveCursor(dir: String, count: Int): String {
-//        return if (count == 0 || level == AnsiLevel.NONE) ""
-//        else "$CSI$count$dir"
-//    }
-
     private fun downsample(style: TextStyleContainer): TextStyle =
             if (level == AnsiLevel.NONE) DEFAULT_STYLE else style.style
 }

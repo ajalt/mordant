@@ -14,11 +14,12 @@ abstract class RenderingTest(
             expected: String,
             trimIndent: Boolean = true,
             width: Int = this.width,
+            height: Int = 24,
             tabWidth: Int = 8,
             hyperlinks: Boolean = true,
             transformActual: (String) -> String = { it }
     ) {
-        val t = Terminal(level, theme, width, hyperlinks, tabWidth)
+        val t = Terminal(level, theme, width, height, hyperlinks, tabWidth)
         val actual = transformActual(t.render(renderable))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
