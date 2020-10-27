@@ -35,6 +35,8 @@ interface Theme {
     val markdownH4: TextStyle get() = TextStyle(magenta, underline = true)
     val markdownH5: TextStyle get() = TextStyle(magenta, italic = true)
     val markdownH6: TextStyle get() = TextStyle(magenta, dim = true)
+    val markdownTaskChecked: String get() = "☑"
+    val markdownTaskUnchecked: String get() = "☐"
 
     val markdownH1Rule: String get() = "═"
     val markdownH2Rule: String get() = "─"
@@ -48,6 +50,8 @@ interface Theme {
             override val listBulletText: String get() = "*"
             override val markdownH1Rule: String get() = "="
             override val markdownH2Rule: String get() = "-"
+            override val markdownTaskChecked: String get() = "[x]"
+            override val markdownTaskUnchecked: String get() = "[ ]"
         }
     }
 }

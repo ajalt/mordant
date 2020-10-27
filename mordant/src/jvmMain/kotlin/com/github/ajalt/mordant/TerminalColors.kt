@@ -28,10 +28,6 @@ class TerminalColors internal constructor(
     val brightCyan: TextStyle get() = downsample(TextColors.brightCyan)
     val brightWhite: TextStyle get() = downsample(TextColors.brightWhite)
 
-    // TODO
-//    /** Clear all active styles */
-//    val reset: AnsiCode get() = style(TextStyles.reset)
-
     /**
      * Render text as bold or increased intensity.
      *
@@ -149,6 +145,8 @@ class TerminalColors internal constructor(
      */
     fun color(color: Color): TextStyle = TextColors.color(color, level)
 
+    // All of the TextStyleContainers are already Ansi16, so there's no downsampling to do other
+    // than turning them off entirely
     private fun downsample(style: TextStyleContainer): TextStyle =
             if (level == AnsiLevel.NONE) DEFAULT_STYLE else style.style
 }

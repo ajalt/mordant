@@ -119,7 +119,8 @@ internal class MarkdownRenderer(
 
             GFMTokenTypes.CHECK_BOX -> {
                 val content = CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
-                Text(parseText(if (content.isBlank()) "☐ " else "☑ ", DEFAULT_STYLE), whitespace = Whitespace.PRE)
+                val checkbox = if (content.isBlank()) theme.markdownTaskUnchecked else theme.markdownTaskChecked
+                Text(parseText("$checkbox ", DEFAULT_STYLE), whitespace = Whitespace.PRE)
             }
 
             GFMElementTypes.TABLE -> table {
