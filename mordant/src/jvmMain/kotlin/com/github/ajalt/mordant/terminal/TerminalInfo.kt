@@ -3,21 +3,34 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.mordant.AnsiLevel
 
 
-interface TerminalInfo {
-    val width: Int
-    val ansiLevel: AnsiLevel
-    val ansiHyperLinks: Boolean
-    val stdoutInteractive: Boolean
-    val stdinInteractive: Boolean
+class TerminalInfo(
+        width: Int,
+        height: Int,
+        val ansiLevel: AnsiLevel,
+        val ansiHyperLinks: Boolean,
+        val stdoutInteractive: Boolean,
+        val stdinInteractive: Boolean,
+) {
+    var width: Int = width
+        private set
+    var height: Int = height
+        private set
+
 
     /** Return true if both stdin and stdout are interactive */
     val interactive: Boolean get() = stdinInteractive && stdinInteractive
-}
 
-internal data class StaticTerminalInfo(
-        override val width: Int,
-        override val ansiLevel: AnsiLevel,
-        override val ansiHyperLinks: Boolean,
-        override val stdoutInteractive: Boolean,
-        override val stdinInteractive: Boolean
-): TerminalInfo
+    /**
+     * Query the terminal for its current size, updating [width] and [height] if successful.
+     *
+     * This call will create subprocess and block for up to [timeoutMs] waiting for it to complete.
+     *
+     * @return `true` if the size was updated, of `false` if it was not
+     */
+    fun updateTerminalSize(timeoutMs: Long = 5000): Boolean {
+        val (w, h) = TerminalDetection.detectSize(timeoutMs) ?: return false
+        width = w
+        height = h
+        return true
+    }
+}

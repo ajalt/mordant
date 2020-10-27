@@ -2,24 +2,49 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.AnsiLevel.*
+import java.io.IOException
 import java.lang.management.ManagementFactory
+import java.util.concurrent.TimeUnit
 
 internal object TerminalDetection {
     fun detectTerminal(
             ansiLevel: AnsiLevel? = null,
             width: Int? = null,
+            height: Int? = null,
             hyperlinks: Boolean? = null
-    ): TerminalInfo {
-        return StaticTerminalInfo(
-                width = width ?: width() ?: 79,
-                ansiLevel = ansiLevel ?: ansiLevel(),
-                ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
-                stdoutInteractive = stdoutInteractive(),
-                stdinInteractive = stdinInteractive()
-        )
+    ): TerminalInfo = TerminalInfo(
+            width = width ?: width() ?: 79,
+            height = height ?: height() ?: 24,
+            ansiLevel = ansiLevel ?: ansiLevel(),
+            ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
+            stdoutInteractive = stdoutInteractive(),
+            stdinInteractive = stdinInteractive()
+    )
+
+    fun detectSize(timeoutMs: Long): Pair<Int, Int>? {
+        val process = try {
+            ProcessBuilder("stty", "size")
+                    .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                    .start()
+        } catch (e: IOException) {
+            return null
+        }
+        try {
+            if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
+                return null
+            }
+        } catch (e: InterruptedException) {
+            return null
+        }
+
+        val output = process.inputStream.bufferedReader().readText()
+        val dimens = output.trim().split(" ").mapNotNull { it.toIntOrNull() }
+        if (dimens.size != 2) return null
+        return dimens[1] to dimens[0]
     }
 
     private fun width(): Int? = System.getenv("COLUMNS")?.toInt()
+    private fun height(): Int? = System.getenv("LINES")?.toInt()
 
     // https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
     private fun ansiHyperLinks(): Boolean {
@@ -58,7 +83,7 @@ internal object TerminalDetection {
             "wezterm" -> return TRUECOLOR
         }
 
-        val (term, level) = System.getenv("TERM")?.toLowerCase()?.split("-")
+        val (term, level) = getTerm()?.split("-")
                 ?.let { it.firstOrNull() to it.lastOrNull() }
                 ?: null to null
 
@@ -81,6 +106,8 @@ internal object TerminalDetection {
             else -> NONE
         }
     }
+
+    private fun getTerm() = System.getenv("TERM")?.toLowerCase()
 
     // https://github.com/termstandard/colors/
     private fun getColorTerm() = System.getenv("COLORTERM")?.toLowerCase()
@@ -128,6 +155,16 @@ internal object TerminalDetection {
             jvmArgs.any { it.startsWith("-javaagent") && "idea_rt.jar" in it }
         } catch (e: SecurityException) {
             false
+        }
+    }
+
+    private fun sttySize(): String? {
+        return try {
+            val process = ProcessBuilder("stty", "size").start()
+            process.waitFor(100, TimeUnit.MILLISECONDS)
+            process.inputStream.bufferedReader().readText()
+        } catch (err: Exception) {
+            null
         }
     }
 }

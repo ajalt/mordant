@@ -11,6 +11,7 @@ class Terminal(
         ansiLevel: AnsiLevel? = null,
         val theme: Theme = DEFAULT_THEME,
         width: Int? = null,
+        height: Int? = null,
         hyperlinks: Boolean? = null,
         val tabWidth: Int = 8
 ) {
@@ -18,7 +19,7 @@ class Terminal(
         require(tabWidth >= 0) { "tab width cannot be negative" }
     }
 
-    val info: TerminalInfo = TerminalDetection.detectTerminal(ansiLevel, width, hyperlinks)
+    val info: TerminalInfo = TerminalDetection.detectTerminal(ansiLevel, width, height, hyperlinks)
     val colors: TerminalColors = TerminalColors(info.ansiLevel)
     val cursor: TerminalCursor = TerminalCursor(info.interactive)
 
