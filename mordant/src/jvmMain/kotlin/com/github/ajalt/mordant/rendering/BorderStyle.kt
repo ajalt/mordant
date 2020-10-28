@@ -217,5 +217,9 @@ class BorderStyle(
                 "+++++++++-|    ",
                 "+++++++++=|    ",
         )
+
+        val BLANK = build(
+                "               ",
+        )
     }
 }

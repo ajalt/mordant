@@ -385,8 +385,17 @@ class TableTest : RenderingTest() {
     """) {
         captionTop("top")
         captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue))
-        body { row(1,2,3) }
+        body { row(1, 2, 3) }
     }
+
+    @Test
+    fun grid() = checkRender(grid {
+        row(1, ".2.", 3)
+        row(4, 5, 6)
+    }, """
+    1 .2. 3
+    4 5   6
+    """)
 
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         checkRender(table(builder), expected.trimMargin(), trimIndent = false)

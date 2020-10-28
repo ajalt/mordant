@@ -172,7 +172,16 @@ fun table(init: TableBuilder.() -> Unit): Renderable {
         }
         else -> table
     }
+}
 
+fun grid(init: SectionBuilder.() -> Unit): Renderable {
+    return table {
+        borders = Borders.LEFT_RIGHT
+        outerBorder = false
+        borderStyle = BorderStyle.BLANK
+        padding = Padding.none()
+        body(init)
+    }
 }
 
 private fun getRenderable(content: Any?): Renderable {
