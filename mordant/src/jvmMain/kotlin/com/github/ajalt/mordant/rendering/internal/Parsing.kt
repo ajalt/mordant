@@ -111,10 +111,10 @@ private fun updateStyleWithOsc(ansi: String, existingStyle: TextStyle, defaultSt
     val params = ansi.substring(3, ansi.length - 2).split(";")
     if (params.isEmpty()) return existingStyle // invalid ansi sequence
     val hyperlink = params.last().takeUnless { it.isBlank() }
-    val id = params.find { it.startsWith("id=") }?.drop(3)?.takeUnless { hyperlink == null }
+    val id = if (hyperlink == null) defaultStyle.hyperlinkId else params.find { it.startsWith("id=") }?.drop(3)
     return existingStyle.copy(
             hyperlink = hyperlink ?: defaultStyle.hyperlink,
-            hyperlinkId = id ?: defaultStyle.hyperlinkId
+            hyperlinkId = id
     )
 }
 

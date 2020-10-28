@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.*
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.internal.parseText
 
 internal const val NEL = "\u0085"
@@ -11,7 +10,7 @@ internal const val LS = "\u2028"
 
 class Text internal constructor(
         lines: Lines,
-        style: TextStyle = DEFAULT_STYLE,
+        private val style: TextStyle = DEFAULT_STYLE,
         private val whitespace: Whitespace = Whitespace.NORMAL,
         private val align: TextAlign = NONE,
         private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
@@ -33,14 +32,9 @@ class Text internal constructor(
         require(tabWidth == null || tabWidth >= 0) { "tab width cannot be negative" }
     }
 
-    private val style = when {
-        style.hyperlink == null || style.hyperlinkId != null -> style
-        else -> style.copy(hyperlinkId = generateHyperlinkId())
-    }
-
     private val lines = when {
-        this.style === DEFAULT_STYLE -> lines
-        else -> Lines(lines.lines.map { l -> l.map { it.withStyle(this.style) } })
+        style === DEFAULT_STYLE -> lines
+        else -> Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
     }
 
     internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {

@@ -1,22 +1,32 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.rendering.internal.OSC
 import com.github.ajalt.mordant.rendering.internal.ST
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class TextStyleOscTest {
+    init {
+        generateHyperlinkId = { "x" }
+    }
+
     @Test
     fun `single hyperlink`() = doTest(
-            TextStyle(hyperlink = "foo.com")("bar"),
-            "<;;foo.com>bar<;;>"
+            hyperlink("foo.com")("bar"),
+            "<;id=x;foo.com>bar<;;>"
     )
 
     @Test
-    fun `nested hyperlink`() = doTest(
-            TextStyle(hyperlink = "foo")("bar${TextStyle(hyperlink = "baz")("qux")}qor"),
-            "<;;foo>bar<;;baz>qux<;;foo>qor<;;>"
-    )
+    fun `nested hyperlink`() {
+        var i = 1
+        generateHyperlinkId = { (i++).toString() }
+        doTest(
+                hyperlink("foo")("bar${hyperlink("baz")("qux")}qor"),
+                "<;id=1;foo>bar<;id=2;baz>qux<;id=1;foo>qor<;;>"
+        )
+    }
 
     private fun doTest(actual: String, expected: String) {
         try {

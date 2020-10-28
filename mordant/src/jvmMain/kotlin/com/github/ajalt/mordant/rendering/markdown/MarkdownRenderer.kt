@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.rendering.markdown
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.internal.parseText
 import com.github.ajalt.mordant.rendering.table.SectionBuilder
 import com.github.ajalt.mordant.rendering.table.table
@@ -293,7 +294,7 @@ internal class MarkdownRenderer(
                 ?.nodeText() ?: ""
 
         if (hyperlinks && dest.isNotBlank()) {
-            return parseText(text, theme.markdownLinkText.copy(hyperlink = dest))
+            return parseText(text, theme.markdownLinkText.copy(hyperlink = dest, hyperlinkId = generateHyperlinkId()))
         }
 
         val parsedText = parseText(text, theme.markdownLinkText)
@@ -308,7 +309,7 @@ internal class MarkdownRenderer(
         val label = node.firstChildOfType(MarkdownElementTypes.LINK_LABEL).children[1].nodeText()
         return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
             null -> innerInlines(node)
-            else -> parseText(text ?: label, theme.markdownLinkText.copy(hyperlink = hyperlink))
+            else -> parseText(text ?: label, theme.markdownLinkText.copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId()))
         }
     }
 }

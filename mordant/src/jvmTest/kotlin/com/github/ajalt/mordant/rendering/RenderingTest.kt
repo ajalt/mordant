@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(
@@ -9,6 +10,10 @@ abstract class RenderingTest(
         private val theme: Theme = DEFAULT_THEME,
         private val width: Int = 79
 ) {
+    init {
+        generateHyperlinkId = { "x" }
+    }
+
     protected fun checkRender(
             renderable: Renderable,
             expected: String,

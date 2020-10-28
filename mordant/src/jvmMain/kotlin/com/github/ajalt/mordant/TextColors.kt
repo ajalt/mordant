@@ -4,6 +4,8 @@ import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.AnsiLevel.*
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TxtStyle
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import kotlin.math.roundToInt
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
@@ -40,12 +42,12 @@ enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
 
     companion object {
         /**
-         * Add a hyperlink to this style.
+         * Create a text style with a hyperlink.
          *
          * The [destination] should include an explicit protocol like `https://`, since most
          * terminals won't open links without one.
          */
-        fun hyperlink(destination: String) = TextStyle(hyperlink = destination)
+        fun hyperlink(destination: String): TextStyle = TextStyle(hyperlink = destination)
     }
 
     override fun toString() = style.toString()

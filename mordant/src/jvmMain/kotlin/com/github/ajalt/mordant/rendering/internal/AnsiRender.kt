@@ -16,7 +16,6 @@ import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selectorRgb
-import java.util.concurrent.atomic.AtomicInteger
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {
@@ -53,9 +52,7 @@ internal fun TextStyle.invokeStyle(text: String): String {
         style = new
         tag
     }
-    val openTag = makeTag(DEFAULT_STYLE, openStyle)
-    val closeTag = makeTag(style, DEFAULT_STYLE)
-    return "$openTag$inner$closeTag"
+    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
 }
 
 private fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
@@ -124,7 +121,3 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
         else -> it.toRGB().run { listOf(select, selectorRgb, r, g, b) }
     }
 }
-
-internal fun generateHyperlinkId(): String = nextHyperlinkId.getAndIncrement().toString()
-
-private val nextHyperlinkId = AtomicInteger(1)

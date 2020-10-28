@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.TextStyleContainer
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.internal.invokeStyle
 
 internal val DEFAULT_STYLE = TextStyle()
@@ -67,7 +68,7 @@ fun TextStyle(
         inverse = inverse,
         strikethrough = strikethrough,
         hyperlink = hyperlink,
-        hyperlinkId = null // TODO: generate ids always
+        hyperlinkId = hyperlink?.let { generateHyperlinkId() }
 )
 
 internal data class TxtStyle(

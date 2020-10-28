@@ -64,7 +64,7 @@ class TextTest : RenderingTest() {
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
     ${CSI}31;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}31;47m red${CSI}39;49m
-    ${OSC}8;;foo.com${ST}foo.${OSC}8;;bar.com${ST}bar${OSC}8;;foo.com${ST}.com${OSC}8;;${ST}/baz
+    ${OSC}8;id=x;foo.com${ST}foo.${OSC}8;id=x;bar.com${ST}bar${OSC}8;id=x;foo.com${ST}.com${OSC}8;;${ST}/baz
     """, width = 79)
 
     @Test
@@ -95,5 +95,5 @@ class TextTest : RenderingTest() {
             Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
             expected,
             width = width
-    ) { it.replace(Regex("id=\\d+"), "id=x") }
+    )
 }

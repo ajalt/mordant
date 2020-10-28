@@ -3,10 +3,13 @@ package com.github.ajalt.mordant.markdown
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.TextColors.*
-import com.github.ajalt.mordant.TextStyles
 import com.github.ajalt.mordant.TextStyles.*
 import com.github.ajalt.mordant.TextStyles.Companion.hyperlink
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.DEFAULT_THEME
+import com.github.ajalt.mordant.rendering.LS
+import com.github.ajalt.mordant.rendering.NEL
+import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode
@@ -19,6 +22,10 @@ import org.junit.Test
 private val code = (brightRed on gray) + dim
 
 class MarkdownTest {
+    init {
+        generateHyperlinkId = { "x" }
+    }
+
     @Test
     fun `test paragraphs`() = doTest("""
 Paragraph one
