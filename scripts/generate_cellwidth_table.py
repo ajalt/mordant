@@ -44,15 +44,18 @@ def parse_east_asian():
     properties = ('F', 'W')
     ranges = []
 
-    # The following code blocks are all 2-cells wide, but EastAsianWidth.txt lists
-    # a number of codepoints in them with width 'N' or 'A' for some reason.
-    # For example,
-    # U+1F004 🀄 MAHJONG TILE RED DRAGON is listed as 'W', but
-    # U+1F005 🀅 MAHJONG TILE GREEN DRAGON is listed as 'N'
-    # We manually set all of these widths to 2. These overrides could be
-    # further improved; for example, the Miscellaneous Symbols block
-    # includes both single and double width characters, but not all of the
-    # double width characters are listed as such.
+    # All glyphs in the following blocks have an emoji representation (see
+    # https://en.wikipedia.org/wiki/Emoji#Emoji_versus_text_presentation), but EastAsianWidth.txt
+    # lists a number of codepoints in them with width 'N' or 'A', often in ways that seem arbitrary
+    # but probably have some historical explanation.
+    #
+    # For example, U+1F004 🀄 MAHJONG TILE RED DRAGON is listed as 'W',
+    # but U+1F005 🀅 MAHJONG TILE GREEN DRAGON is listed as 'N'.
+    #
+    # Since most modern terminals display all of these codepoints as emojii, we list them as 2 cells
+    # wide. This list could be refined further; for example, the Miscellaneous Symbols block
+    # includes both single and double width characters, but not all of the double width characters
+    # are listed as such.
     override_ranges = [
         (0x1f000, 0x1f02f, 2, 'Mahjong Tiles'),
         (0x1f0a0, 0x1f0ff, 2, 'Playing Cards'),
