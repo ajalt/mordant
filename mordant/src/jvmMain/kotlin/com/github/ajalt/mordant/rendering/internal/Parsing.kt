@@ -6,7 +6,7 @@ import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.rendering.*
 
-private val ANSI_RE = Regex("""$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
+internal val ANSI_RE = Regex("""$OSC[^$ESC]*$ESC\\|$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 private const val NEL = '\u0085'
 private const val LS = '\u2028'
 
@@ -37,7 +37,7 @@ private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
             parts += Chunk(text = text.substring(idxAfterLastCmd, command.range.first), style = style)
         }
         idxAfterLastCmd = command.range.last + 1
-        style = updateStyle(style, DEFAULT_STYLE, command.value)
+        style = updateStyle(style, defaultStyle, command.value)
     }
     if (idxAfterLastCmd < text.length) {
         parts += Chunk(text = text.substring(idxAfterLastCmd), style = style)
@@ -101,8 +101,24 @@ private fun splitLines(words: Iterable<Chunk>): List<Line> {
  * corresponding value from [defaultStyle].
  */
 internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi: String): TextStyle {
-    if (ansi.startsWith(OSC)) return existingStyle // TODO: OSC 8 (hyperlinks)
-    if (!ansi.startsWith(CSI)) return existingStyle // DSC, APC, etc. don't affect style, discard them
+    if (ansi.startsWith(OSC)) return updateStyleWithOsc(ansi, existingStyle, defaultStyle)
+    if (ansi.startsWith(CSI)) return updateStyleWithCsi(ansi, existingStyle, defaultStyle)
+    return existingStyle // DSC, APC, etc. don't affect style, discard them
+}
+
+private fun updateStyleWithOsc(ansi: String, existingStyle: TextStyle, defaultStyle: TextStyle): TextStyle {
+    if (!ansi.startsWith("${OSC}8")) return existingStyle // Only OSC 8 (hyperlinks) are supported
+    val params = ansi.substring(3, ansi.length - 2).split(";")
+    if (params.isEmpty()) return existingStyle // invalid ansi sequence
+    val hyperlink = params.last().takeUnless { it.isBlank() }
+    val id = params.find { it.startsWith("id=") }?.drop(3)?.takeUnless { hyperlink == null }
+    return existingStyle.copy(
+            hyperlink = hyperlink ?: defaultStyle.hyperlink,
+            hyperlinkId = id ?: defaultStyle.hyperlinkId
+    )
+}
+
+private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultStyle: TextStyle): TextStyle {
     if (!ansi.endsWith("m")) return existingStyle // SGR sequences end in "m", others don't affect style
 
     // SGR sequences only contains numbers; anything else is malformed and we skip it.
@@ -187,7 +203,18 @@ internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi
         i += 1
     }
 
-    return TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough)
+    return TxtStyle(
+            color = color,
+            bgColor = bgColor,
+            bold = bold,
+            italic = italic,
+            underline = underline,
+            dim = dim,
+            inverse = inverse,
+            strikethrough = strikethrough,
+            hyperlink = existingStyle.hyperlink,
+            hyperlinkId = existingStyle.hyperlinkId
+    )
 }
 
 private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {

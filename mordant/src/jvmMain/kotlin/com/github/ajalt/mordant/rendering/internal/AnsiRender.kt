@@ -5,8 +5,10 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.TextColorContainer
-import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
+import com.github.ajalt.mordant.rendering.Lines
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.copy
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorSelector
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgBgOffset
@@ -15,9 +17,6 @@ import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selectorRgb
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.absoluteValue
-
-private val ANSI_CSI_RE = Regex("""$ESC\[[\d;]*m""")
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {
@@ -41,7 +40,8 @@ internal fun TextStyle.invokeStyle(text: String): String {
     if (text.isEmpty()) return ""
     var openStyle = this
     var style = this
-    val inner = ANSI_CSI_RE.replace(text) { match ->
+    val inner = ANSI_RE.replace(text) { match ->
+        // Remove any tags at the beginning or end of `text`, since we always make new ones
         if (match.range.last == text.lastIndex) return@replace ""
         val new = updateStyle(style, this, match.value)
         if (match.range.first == 0) {
@@ -53,7 +53,9 @@ internal fun TextStyle.invokeStyle(text: String): String {
         style = new
         tag
     }
-    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
+    val openTag = makeTag(DEFAULT_STYLE, openStyle)
+    val closeTag = makeTag(style, DEFAULT_STYLE)
+    return "$openTag$inner$closeTag"
 }
 
 private fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {

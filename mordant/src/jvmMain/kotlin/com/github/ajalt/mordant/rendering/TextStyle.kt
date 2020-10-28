@@ -67,7 +67,7 @@ fun TextStyle(
         inverse = inverse,
         strikethrough = strikethrough,
         hyperlink = hyperlink,
-        hyperlinkId = null
+        hyperlinkId = null // TODO: generate ids always
 )
 
 internal data class TxtStyle(

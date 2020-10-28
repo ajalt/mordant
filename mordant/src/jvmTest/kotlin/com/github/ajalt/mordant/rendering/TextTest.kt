@@ -52,7 +52,7 @@ class TextTest : RenderingTest() {
     ${CSI}255munknown
     ${CSI}6ndevice status report
     """.trimIndent(), whitespace = PRE), """
-    ${(red on white)("red ${blue("blue ${gray.bg("gray.bg")}")} red")}
+    ${CSI}31;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}31;47m red${CSI}39;49m
     unknown
     device status report
     """, width = 79)
@@ -61,12 +61,10 @@ class TextTest : RenderingTest() {
     @Test
     fun `ansi parsing with styles`() = checkRender(Text("""
     ${TextStyle(red, white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor = gray)("gray.bg")}")} red")}
-    ${CSI}255munknown
-    ${CSI}6ndevice status report
+    ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
-    ${(red on white)("red ${blue("blue ${gray.bg("gray.bg")}")} red")}
-    unknown
-    device status report
+    ${CSI}31;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}31;47m red${CSI}39;49m
+    ${OSC}8;;foo.com${ST}foo.${OSC}8;;bar.com${ST}bar${OSC}8;;foo.com${ST}.com${OSC}8;;${ST}/baz
     """, width = 79)
 
     @Test
