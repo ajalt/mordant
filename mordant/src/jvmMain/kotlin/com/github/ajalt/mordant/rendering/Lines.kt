@@ -11,7 +11,8 @@ internal val EMPTY_LINE: Line = emptyList()
 data class Lines(
         val lines: List<Line>,
 ) {
-    val size: Int get() = lines.size
+    val height: Int get() = lines.size
+    val width: Int get() = lines.maxOf { it.lineWidth }
 
     internal fun withStyle(style: TextStyle?): Lines {
         return when (style) {

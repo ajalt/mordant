@@ -24,6 +24,7 @@ interface TerminalCursor {
      * If [count] is negative, the cursor will be moved left instead.
      */
     fun right(count: Int)
+
     /**
      * Print an ANSI code to move the cursor left [count] cells.
      *
@@ -32,18 +33,19 @@ interface TerminalCursor {
      */
     fun left(count: Int)
 
+    fun startOfLine()
+
     // TODO: docs
     /**
      * [x] and [y] are 0-indexed
      */
     fun setPosition(x: Int, y: Int)
+
+    fun show()
+    fun hide(showOnExit: Boolean = true)
+
     fun clearScreen()
-    /**
-     * Print an ANSI command to show or hide the terminal's cursor.
-     *
-     * If ANSI codes are not supported, nothing is printed.
-     */
-    fun setVisible(visible: Boolean)
+    fun clearScreenAfterCursor()
 }
 
 internal object DisabledTerminalCursor : TerminalCursor {
@@ -51,9 +53,12 @@ internal object DisabledTerminalCursor : TerminalCursor {
     override fun down(count: Int) {}
     override fun right(count: Int) {}
     override fun left(count: Int) {}
+    override fun startOfLine() {}
     override fun setPosition(x: Int, y: Int) {}
+    override fun show() {}
+    override fun hide(showOnExit: Boolean) {}
     override fun clearScreen() {}
-    override fun setVisible(visible: Boolean) {}
+    override fun clearScreenAfterCursor() {}
 }
 
 internal open class PrintTerminalCursor : TerminalCursor {
@@ -86,6 +91,10 @@ internal open class PrintTerminalCursor : TerminalCursor {
         }
     }
 
+    override fun startOfLine() {
+        print("\r")
+    }
+
     /**
      * [x] and [y] are 0-indexed
      */
@@ -97,12 +106,23 @@ internal open class PrintTerminalCursor : TerminalCursor {
         csi("${y + 1};${x + 1}H")
     }
 
+    override fun show() {
+        csi("?25h")
+    }
+
+    override fun hide(showOnExit: Boolean) {
+        if (showOnExit) {
+            Runtime.getRuntime().addShutdownHook(Thread { show() })
+        }
+        csi("?25l")
+    }
+
     override fun clearScreen() {
         csi("2J")
     }
 
-    override fun setVisible(visible: Boolean) {
-        csi("?25${if (visible) "h" else "l"}")
+    override fun clearScreenAfterCursor() {
+        csi("0J")
     }
 
     private fun csi(command: String) {

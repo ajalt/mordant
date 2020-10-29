@@ -12,7 +12,7 @@ class Panel(
 ) : Renderable {
     constructor(
             content: String,
-            borderStyle: BorderStyle? = BorderStyle.SQUARE,
+            borderStyle: BorderStyle? = BorderStyle.ROUNDED,
             expand: Boolean = false,
             borderTextStyle: TextStyle = DEFAULT_STYLE,
             padding: Padding = DEFAULT_PADDING

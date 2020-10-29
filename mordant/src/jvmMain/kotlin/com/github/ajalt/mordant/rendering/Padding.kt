@@ -46,7 +46,7 @@ internal data class Padded(
     override fun render(t: Terminal, width: Int): Lines {
         val lines = content.render(t, width - paddingWidth)
 
-        val output = ArrayList<Line>(padding.top + lines.size + padding.bottom)
+        val output = ArrayList<Line>(padding.top + lines.height + padding.bottom)
         val left = if (padding.left > 0) listOf(Span.space(padding.left)) else EMPTY_LINE
         val right = if (padding.right > 0) listOf(Span.space(padding.right)) else EMPTY_LINE
 

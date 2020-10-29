@@ -213,7 +213,7 @@ private class TableRenderer(
     }
     private val rowHeights = renderedRows.mapIndexed { y, r ->
         r.withIndex().maxOfOrNull { (x, it) ->
-            it.size / (cellAt(x, y)?.rowSpan ?: 1)
+            it.height / (cellAt(x, y)?.rowSpan ?: 1)
         }?.coerceAtLeast(1) ?: 1
     }
 
