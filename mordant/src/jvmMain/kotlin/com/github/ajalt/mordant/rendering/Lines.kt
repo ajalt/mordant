@@ -12,7 +12,7 @@ data class Lines(
         val lines: List<Line>,
 ) {
     val height: Int get() = lines.size
-    val width: Int get() = lines.maxOf { it.lineWidth }
+    val width: Int get() = lines.maxOfOrNull { it.lineWidth } ?: 0
 
     internal fun withStyle(style: TextStyle?): Lines {
         return when (style) {

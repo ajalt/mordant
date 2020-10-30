@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.AnsiLevel
 import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.TerminalColors
 import com.github.ajalt.mordant.rendering.DEFAULT_THEME
+import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.Renderable
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
@@ -35,8 +36,8 @@ class VirtualTerminal(
     override val colors: TerminalColors = TerminalColors(info.ansiLevel)
     override val cursor: TerminalCursor = if (stdinInteractive && stdinInteractive) PrintTerminalCursor(this) else DisabledTerminalCursor
 
-    override fun render(renderable: Renderable): String {
-        return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
+    override fun render(lines: Lines): String {
+        return renderLinesAnsi(lines, info.ansiLevel, info.ansiHyperLinks)
     }
 
     override fun println() {

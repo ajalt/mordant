@@ -169,7 +169,11 @@ interface Terminal {
         })
     }
 
-    fun render(renderable: Renderable): String
+    fun render(renderable: Renderable): String {
+        return render(renderable.render(this))
+    }
+
+    fun render(lines: Lines): String
     fun println()
     fun rawPrintln(message: String)
     fun rawPrint(message: String)
