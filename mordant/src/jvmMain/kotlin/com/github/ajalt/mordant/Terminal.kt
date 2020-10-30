@@ -1,28 +1,20 @@
 package com.github.ajalt.mordant
 
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
-import com.github.ajalt.mordant.terminal.*
+import com.github.ajalt.mordant.terminal.AnsiTerminal
+import com.github.ajalt.mordant.terminal.TerminalCursor
+import com.github.ajalt.mordant.terminal.TerminalInfo
 
-class Terminal(
-        ansiLevel: AnsiLevel? = null,
-        val theme: Theme = DEFAULT_THEME,
-        width: Int? = null,
-        height: Int? = null,
-        hyperlinks: Boolean? = null,
-        val tabWidth: Int = 8
-) {
-    init {
-        require(tabWidth >= 0) { "tab width cannot be negative" }
-    }
-
-    val info: TerminalInfo = TerminalDetection.detectTerminal(ansiLevel, width, height, hyperlinks)
-    val colors: TerminalColors = TerminalColors(info.ansiLevel)
-    val cursor: TerminalCursor = if (info.interactive) PrintTerminalCursor() else DisabledTerminalCursor
+interface Terminal {
+    val theme: Theme
+    val tabWidth: Int
+    val info: TerminalInfo
+    val colors: TerminalColors
+    val cursor: TerminalCursor
 
     fun printMarkdown(markdown: String, showHtml: Boolean = false) {
-        return kotlin.io.print(renderMarkdown(markdown, showHtml))
+        return rawPrint(renderMarkdown(markdown, showHtml))
     }
 
     fun renderMarkdown(markdown: String, showHtml: Boolean = false): String {
@@ -43,16 +35,6 @@ class Terminal(
         println(message, theme.success, whitespace, align, overflowWrap, width)
     }
 
-    fun renderSuccess(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ): String {
-        return render(message, theme.success, whitespace, align, overflowWrap, width)
-    }
-
     fun danger(
             message: Any?,
             whitespace: Whitespace = Whitespace.PRE,
@@ -61,16 +43,6 @@ class Terminal(
             width: Int? = null
     ) {
         println(message, theme.danger, whitespace, align, overflowWrap, width)
-    }
-
-    fun renderDanger(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ): String {
-        return render(message, theme.danger, whitespace, align, overflowWrap, width)
     }
 
     fun warning(
@@ -103,16 +75,6 @@ class Terminal(
         println(message, theme.info, whitespace, align, overflowWrap, width)
     }
 
-    fun renderInfo(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ): String {
-        return render(message, theme.info, whitespace, align, overflowWrap, width)
-    }
-
     fun muted(
             message: Any?,
             whitespace: Whitespace = Whitespace.PRE,
@@ -123,16 +85,6 @@ class Terminal(
         println(message, theme.muted, whitespace, align, overflowWrap, width)
     }
 
-    fun renderMuted(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ): String {
-        return render(message, theme.muted, whitespace, align, overflowWrap, width)
-    }
-
     fun print(
             message: Any?,
             style: TextStyle = DEFAULT_STYLE,
@@ -141,10 +93,8 @@ class Terminal(
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        kotlin.io.print(render(message, style, whitespace, align, overflowWrap, width))
+        rawPrint(render(message, style, whitespace, align, overflowWrap, width))
     }
-
-    fun println() = kotlin.io.println()
 
     fun println(
             message: Any?,
@@ -154,15 +104,55 @@ class Terminal(
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        kotlin.io.println(render(message, style, whitespace, align, overflowWrap, width))
+        rawPrintln(render(message, style, whitespace, align, overflowWrap, width))
     }
 
     fun print(renderable: Renderable) {
-        kotlin.io.print(render(renderable))
+        rawPrint(render(renderable))
     }
 
     fun println(renderable: Renderable) {
-        kotlin.io.println(render(renderable))
+        rawPrintln(render(renderable))
+    }
+
+    fun renderSuccess(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.success, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderDanger(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.danger, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderInfo(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.info, whitespace, align, overflowWrap, width)
+    }
+
+    fun renderMuted(
+            message: Any?,
+            whitespace: Whitespace = Whitespace.PRE,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ): String {
+        return render(message, theme.muted, whitespace, align, overflowWrap, width)
     }
 
     fun render(
@@ -179,7 +169,20 @@ class Terminal(
         })
     }
 
-    fun render(renderable: Renderable): String {
-        return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
-    }
+    fun render(renderable: Renderable): String
+    fun println()
+    fun rawPrintln(message: String)
+    fun rawPrint(message: String)
+}
+
+@Suppress("FunctionName")
+fun Terminal(
+        ansiLevel: AnsiLevel? = null,
+        theme: Theme = DEFAULT_THEME,
+        width: Int? = null,
+        height: Int? = null,
+        hyperlinks: Boolean? = null,
+        tabWidth: Int = 8
+): Terminal {
+    return AnsiTerminal(ansiLevel, theme, width, height, hyperlinks, tabWidth)
 }

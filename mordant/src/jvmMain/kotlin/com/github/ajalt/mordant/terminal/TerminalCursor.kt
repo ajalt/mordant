@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.Terminal
 import com.github.ajalt.mordant.rendering.internal.CSI
 
 interface TerminalCursor {
@@ -61,7 +62,7 @@ internal object DisabledTerminalCursor : TerminalCursor {
     override fun clearScreenAfterCursor() {}
 }
 
-internal open class PrintTerminalCursor : TerminalCursor {
+internal class PrintTerminalCursor(private val terminal: Terminal) : TerminalCursor {
     override fun up(count: Int) {
         when {
             count < 0 -> down(-count)
@@ -129,5 +130,5 @@ internal open class PrintTerminalCursor : TerminalCursor {
         print(CSI + command)
     }
 
-    open fun print(text: String) = kotlin.io.print(text)
+    private fun print(text: String) = terminal.rawPrint(text)
 }
