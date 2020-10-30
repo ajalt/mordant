@@ -220,20 +220,22 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
 private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
     return when (codes[i]) {
         AnsiCodes.selector256 -> {
-            if (i >= codes.lastIndex || codes[i + 1] in 0..255) {
-                Ansi256(codes[i + 1]) to 1
-            } else {
+            if (i + 1 > codes.lastIndex
+                    || codes[i + 1] !in 0..255
+            ) {
                 null to 0
+            } else {
+                Ansi256(codes[i + 1]) to 2
             }
         }
         AnsiCodes.selectorRgb -> {
-            if (i + 3 >= codes.lastIndex
+            if (i + 3 > codes.lastIndex
                     || codes[i + 1] !in 0..255
                     || codes[i + 2] !in 0..255
                     || codes[i + 3] !in 0..255) {
                 null to 0
             } else {
-                RGB(codes[i + 1], codes[i + 2], codes[i + 3]) to 3
+                RGB(codes[i + 1], codes[i + 2], codes[i + 3]) to 4
             }
         }
         else -> null to 0
