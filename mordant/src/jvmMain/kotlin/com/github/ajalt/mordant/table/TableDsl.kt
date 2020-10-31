@@ -1,9 +1,10 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.components.Caption
 import com.github.ajalt.mordant.components.Padding
 import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.rendering.*
 
 interface CellStyleBuilder {
     var padding: Padding?
@@ -12,6 +13,20 @@ interface CellStyleBuilder {
     var align: TextAlign?
     var verticalAlign: VerticalAlign?
     var overflowWrap: OverflowWrap?
+
+    fun style(
+            color: Color? = null,
+            bgColor: Color? = null,
+            bold: Boolean = false,
+            italic: Boolean = false,
+            underline: Boolean = false,
+            dim: Boolean = false,
+            inverse: Boolean = false,
+            strikethrough: Boolean = false,
+            hyperlink: String? = null
+    ) {
+        style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
+    }
 }
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
@@ -196,6 +211,7 @@ private fun getRenderable(content: Any?): Renderable {
 }
 
 private fun initColumn(columns: MutableMap<Int, ColumnBuilder>, i: Int, init: ColumnBuilder.() -> Unit) {
+    require(i >= 0) { "column index cannot be negative" }
     var v = columns[i]
     if (v == null) {
         v = ColumnBuilder()
