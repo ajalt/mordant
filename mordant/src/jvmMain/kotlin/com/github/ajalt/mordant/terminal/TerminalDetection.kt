@@ -60,8 +60,7 @@ internal object TerminalDetection {
 
         // Terminals embedded in some IDEs support color even though stdout isn't interactive. Check
         // those terminals before checking stdout.
-        if (isIntellijConsole()) return ANSI16
-        if (isVsCodeTerminal()) return ANSI256
+        if (isIntellijConsole() || isVsCodeTerminal()) return TRUECOLOR
 
         // If stdout isn't interactive, never output colors, since we might be redirected to a file etc.
         if (!stdoutInteractive()) return NONE
@@ -100,7 +99,7 @@ internal object TerminalDetection {
                 System.getProperty("os.name") == "Windows 10" -> TRUECOLOR
                 else -> ANSI256
             }
-            "xterm", "vt100", "vt220", "screen", "ansi", "rxvt", "konsole" -> ANSI16
+            "xterm", "vt100", "vt220", "screen", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
             "dumb" -> NONE
             else -> NONE
         }
@@ -113,8 +112,12 @@ internal object TerminalDetection {
 
     private fun forcedColor(): AnsiLevel? {
         return when {
-            System.getenv("NO_COLOR") != null -> NONE // https://no-color.org/
-            else -> when (System.getenv("FORCE_COLOR")) {
+            getTerm() == "dumb" -> NONE
+            // https://no-color.org/
+            System.getenv("NO_COLOR") != null -> NONE
+            // A lot of npm packages support the FORCE_COLOR envvar, although they all look for
+            // different values. We try to support them all.
+            else -> when (System.getenv("FORCE_COLOR")?.toLowerCase()) {
                 "0", "false", "none" -> NONE
                 "1", "", "true", "16color" -> ANSI16
                 "2", "256color" -> ANSI256
@@ -129,7 +132,6 @@ internal object TerminalDetection {
     // https://github.com/Microsoft/vscode/pull/30346
     private fun isVsCodeTerminal() = getTermProgram() == "vscode"
 
-
     // https://github.com/microsoft/terminal/issues/1040#issuecomment-496691842
     private fun isWindowsTerminal() = !System.getenv("WT_SESSION").isNullOrEmpty()
 
@@ -141,9 +143,10 @@ internal object TerminalDetection {
         return ver != null && ver >= 3
     }
 
-    // Unfortunately, the JVM doesn't let us check stdin and stdout separately
-    private fun stdoutInteractive(): Boolean = System.console() != null
-    private fun stdinInteractive(): Boolean = System.console() != null
+    // Unfortunately, the JVM doesn't let us check stdin and stdout separately. The IntelliJ console
+    // is interactive even though it redirects stdin.
+    private fun stdoutInteractive(): Boolean = System.console() != null || isIntellijConsole()
+    private fun stdinInteractive(): Boolean = System.console() != null || isIntellijConsole()
 
     // Consoles built in to some IDEs/Editors support color, but always cause System.console() to
     // return null
@@ -154,16 +157,6 @@ internal object TerminalDetection {
             jvmArgs.any { it.startsWith("-javaagent") && "idea_rt.jar" in it }
         } catch (e: SecurityException) {
             false
-        }
-    }
-
-    private fun sttySize(): String? {
-        return try {
-            val process = ProcessBuilder("stty", "size").start()
-            process.waitFor(100, TimeUnit.MILLISECONDS)
-            process.inputStream.bufferedReader().readText()
-        } catch (err: Exception) {
-            null
         }
     }
 }
