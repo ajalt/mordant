@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.components.Text
 import org.junit.Test
 
 

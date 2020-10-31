@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.table
+package com.github.ajalt.mordant.table
 
 enum class Borders(
         val left: Boolean,

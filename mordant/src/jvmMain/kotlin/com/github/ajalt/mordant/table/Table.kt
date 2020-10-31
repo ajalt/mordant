@@ -1,6 +1,6 @@
-package com.github.ajalt.mordant.rendering.table
+package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.*
 
 internal sealed class Cell {

@@ -1,15 +1,15 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.TextColors.*
-import com.github.ajalt.mordant.TextStyles.*
-import com.github.ajalt.mordant.TextStyles.Companion.hyperlink
+import com.github.ajalt.mordant.terminal.AnsiLevel
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.terminal.TextStyles.*
+import com.github.ajalt.mordant.terminal.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.rendering.DEFAULT_THEME
-import com.github.ajalt.mordant.rendering.LS
-import com.github.ajalt.mordant.rendering.NEL
+import com.github.ajalt.mordant.components.LS
+import com.github.ajalt.mordant.components.NEL
 import com.github.ajalt.mordant.rendering.Theme
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
+import com.github.ajalt.mordant.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode

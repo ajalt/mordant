@@ -1,6 +1,6 @@
-package com.github.ajalt.mordant.rendering.markdown
+package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.Renderable
 import com.github.ajalt.mordant.rendering.Span

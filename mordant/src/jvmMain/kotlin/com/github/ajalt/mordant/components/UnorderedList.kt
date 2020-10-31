@@ -1,7 +1,8 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.components
 
-import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.internal.parseText
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.internal.parseText
 
 class UnorderedList(
         private val listEntries: List<Renderable>,

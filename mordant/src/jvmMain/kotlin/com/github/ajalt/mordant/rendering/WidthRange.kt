@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.terminal.Terminal
 
 data class WidthRange(val min: Int, val max: Int) {
     init {

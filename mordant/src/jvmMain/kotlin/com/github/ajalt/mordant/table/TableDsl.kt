@@ -1,6 +1,9 @@
-package com.github.ajalt.mordant.rendering.table
+package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.components.Caption
+import com.github.ajalt.mordant.components.Padding
+import com.github.ajalt.mordant.components.Text
 
 interface CellStyleBuilder {
     var padding: Padding?

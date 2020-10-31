@@ -1,9 +1,11 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
-import com.github.ajalt.mordant.rendering.Padding
+import com.github.ajalt.mordant.components.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
-import com.github.ajalt.mordant.rendering.table.Borders.*
+import com.github.ajalt.mordant.table.Borders.*
+import com.github.ajalt.mordant.table.SectionBuilder
+import com.github.ajalt.mordant.table.table
 import org.junit.Test
 
 class TableBorderStyleTest : RenderingTest() {

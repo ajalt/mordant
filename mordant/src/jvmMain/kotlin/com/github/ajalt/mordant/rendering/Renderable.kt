@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.terminal.Terminal
 
 interface Renderable {
     fun measure(t: Terminal, width: Int = t.info.width): WidthRange

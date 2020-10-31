@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.mordant.TextStyleContainer
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
-import com.github.ajalt.mordant.rendering.internal.invokeStyle
+import com.github.ajalt.mordant.terminal.TextStyleContainer
+import com.github.ajalt.mordant.internal.generateHyperlinkId
+import com.github.ajalt.mordant.internal.invokeStyle
 
 internal val DEFAULT_STYLE = TextStyle()
 

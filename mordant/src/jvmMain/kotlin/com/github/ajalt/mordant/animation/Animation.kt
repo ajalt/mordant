@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.*
 
 abstract class Animation<T>(private val terminal: Terminal) {

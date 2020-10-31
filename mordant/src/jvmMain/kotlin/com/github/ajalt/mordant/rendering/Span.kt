@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.rendering.internal.CSI
-import com.github.ajalt.mordant.rendering.internal.stringCellWidth
+import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
 
 internal val SINGLE_SPACE = Span.space(1)

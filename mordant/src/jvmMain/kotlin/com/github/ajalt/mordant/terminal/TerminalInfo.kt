@@ -1,7 +1,5 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.AnsiLevel
-
 
 class TerminalInfo(
         width: Int,

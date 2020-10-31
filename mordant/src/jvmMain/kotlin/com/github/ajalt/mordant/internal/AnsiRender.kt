@@ -1,21 +1,21 @@
-package com.github.ajalt.mordant.rendering.internal
+package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.TextColorContainer
+import com.github.ajalt.mordant.terminal.AnsiLevel
+import com.github.ajalt.mordant.terminal.TextColorContainer
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.copy
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorReset
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.bgColorSelector
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgBgOffset
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorReset
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.fgColorSelector
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selector256
-import com.github.ajalt.mordant.rendering.internal.AnsiCodes.selectorRgb
+import com.github.ajalt.mordant.internal.AnsiCodes.bgColorReset
+import com.github.ajalt.mordant.internal.AnsiCodes.bgColorSelector
+import com.github.ajalt.mordant.internal.AnsiCodes.fgBgOffset
+import com.github.ajalt.mordant.internal.AnsiCodes.fgColorReset
+import com.github.ajalt.mordant.internal.AnsiCodes.fgColorSelector
+import com.github.ajalt.mordant.internal.AnsiCodes.selector256
+import com.github.ajalt.mordant.internal.AnsiCodes.selectorRgb
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {

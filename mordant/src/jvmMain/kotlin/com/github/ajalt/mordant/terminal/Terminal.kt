@@ -1,10 +1,8 @@
-package com.github.ajalt.mordant
+package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.markdown.MarkdownRenderer
-import com.github.ajalt.mordant.terminal.AnsiTerminal
-import com.github.ajalt.mordant.terminal.TerminalCursor
-import com.github.ajalt.mordant.terminal.TerminalInfo
+import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.markdown.MarkdownRenderer
 
 interface Terminal {
     val theme: Theme

@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.internal.CSI
+import com.github.ajalt.mordant.internal.CSI
 
 interface TerminalCursor {
     /**

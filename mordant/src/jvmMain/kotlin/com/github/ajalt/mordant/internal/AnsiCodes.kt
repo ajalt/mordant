@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.internal
+package com.github.ajalt.mordant.internal
 
 internal object AnsiCodes {
     val fg16Range = 30..37

@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.terminal.Terminal
 
 internal class Concatenate(val renderables: List<Renderable>) : Renderable {
     init {

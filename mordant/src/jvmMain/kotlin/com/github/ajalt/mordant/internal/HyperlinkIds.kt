@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.internal
+package com.github.ajalt.mordant.internal
 
 import java.util.concurrent.atomic.AtomicInteger
 

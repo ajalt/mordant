@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.internal
+package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256

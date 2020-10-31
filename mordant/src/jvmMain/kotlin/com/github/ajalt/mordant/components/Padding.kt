@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.components
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 
 internal val DEFAULT_PADDING = Padding()
 

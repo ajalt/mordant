@@ -22,7 +22,7 @@ internal class CellWidthTest {
             row("ぁ", 2), // HIRAGANA LETTER SMALL A
             row("💯", 2), // HUNDRED POINTS SYMBOL
     ) { char, width ->
-        cellWidth(char.codePointAt(0)) shouldBe width
+        com.github.ajalt.mordant.internal.cellWidth(char.codePointAt(0)) shouldBe width
     }
 
     @Test
@@ -36,6 +36,6 @@ internal class CellWidthTest {
             row("🙊🙉🙈", 6),
             row("en\u0303e", 3),
     ) { str, width ->
-        stringCellWidth(str) shouldBe width
+        com.github.ajalt.mordant.internal.stringCellWidth(str) shouldBe width
     }
 }

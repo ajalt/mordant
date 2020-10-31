@@ -1,8 +1,9 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.components
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.*
-import com.github.ajalt.mordant.rendering.internal.parseText
+import com.github.ajalt.mordant.internal.parseText
 
 internal const val NEL = "\u0085"
 internal const val LS = "\u2028"

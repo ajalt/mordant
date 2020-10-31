@@ -1,12 +1,16 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.TextColors.blue
-import com.github.ajalt.mordant.TextColors.red
+import com.github.ajalt.mordant.terminal.TextColors.blue
+import com.github.ajalt.mordant.terminal.TextColors.red
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.rendering.table.Borders.*
+import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.table.Borders.*
+import com.github.ajalt.mordant.table.SectionBuilder
+import com.github.ajalt.mordant.table.TableBuilder
+import com.github.ajalt.mordant.table.table
 import org.junit.Test
 
 class TableTest : RenderingTest() {
@@ -16,7 +20,7 @@ class TableTest : RenderingTest() {
     |││
     |└┘
     """) {
-        padding = Padding.none()
+        padding = com.github.ajalt.mordant.components.Padding.none()
         row("")
     }
 
@@ -193,7 +197,7 @@ class TableTest : RenderingTest() {
     |│3               │4│
     |└────────────────┴─┘
     """) {
-        padding = Padding.none()
+        padding = com.github.ajalt.mordant.components.Padding.none()
         row {
             cell(Text("""
                     line 1
@@ -237,7 +241,7 @@ class TableTest : RenderingTest() {
     |└─────┘
     """) {
         rowStyles(TextStyle(red), TextStyle(blue))
-        padding = Padding.none()
+        padding = com.github.ajalt.mordant.components.Padding.none()
         row("row 1")
         row("row 2")
         row("row 3")
@@ -251,7 +255,7 @@ class TableTest : RenderingTest() {
     |3 4 5
     """) {
         borders = NONE
-        padding = Padding.none()
+        padding = com.github.ajalt.mordant.components.Padding.none()
         row {
             cell("span") {
                 rowSpan = 2
@@ -389,7 +393,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun grid() = checkRender(grid {
+    fun grid() = checkRender(com.github.ajalt.mordant.table.grid {
         row(1, ".2.", 3)
         row(4, 5, 6)
     }, """

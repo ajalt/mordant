@@ -1,13 +1,9 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.TerminalColors
 import com.github.ajalt.mordant.rendering.DEFAULT_THEME
 import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Renderable
 import com.github.ajalt.mordant.rendering.Theme
-import com.github.ajalt.mordant.rendering.internal.renderLinesAnsi
+import com.github.ajalt.mordant.internal.renderLinesAnsi
 
 
 class VirtualTerminal(

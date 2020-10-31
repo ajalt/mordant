@@ -1,9 +1,9 @@
-package com.github.ajalt.mordant
+package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.TextColors.Companion.hsl
-import com.github.ajalt.mordant.TextColors.Companion.rgb
+import com.github.ajalt.mordant.terminal.TextColors.Companion.hsl
+import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 

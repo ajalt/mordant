@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.rendering.internal.CSI
+import com.github.ajalt.mordant.internal.CSI
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
@@ -52,8 +51,8 @@ class TerminalCursorTest {
             row(c { right(4) }, "${CSI}4C"),
             row(c { left(5) }, "${CSI}5D"),
             row(c { setPosition(6, 7) }, "${CSI}8;7H"),
-            row(c { show() }, "${CSI}?25h"),
-            row(c { hide(showOnExit = false) }, "${CSI}?25l"),
+            row(c { show() }, "$CSI?25h"),
+            row(c { hide(showOnExit = false) }, "$CSI?25l"),
             row(c { clearScreen() }, "${CSI}2J"),
     ) { actual, expected ->
         actual shouldBe expected

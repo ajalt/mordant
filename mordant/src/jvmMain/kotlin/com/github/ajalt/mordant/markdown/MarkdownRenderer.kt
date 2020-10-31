@@ -1,12 +1,14 @@
-package com.github.ajalt.mordant.rendering.markdown
+package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.Terminal
+import com.github.ajalt.mordant.components.*
+import com.github.ajalt.mordant.components.NEL
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
-import com.github.ajalt.mordant.rendering.internal.parseText
-import com.github.ajalt.mordant.rendering.table.SectionBuilder
-import com.github.ajalt.mordant.rendering.table.table
+import com.github.ajalt.mordant.internal.generateHyperlinkId
+import com.github.ajalt.mordant.internal.parseText
+import com.github.ajalt.mordant.table.SectionBuilder
+import com.github.ajalt.mordant.table.table
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes

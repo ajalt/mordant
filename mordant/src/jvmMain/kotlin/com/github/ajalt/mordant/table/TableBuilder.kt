@@ -1,8 +1,8 @@
-package com.github.ajalt.mordant.rendering.table
+package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.rendering.Padded
+import com.github.ajalt.mordant.components.Padded
 import com.github.ajalt.mordant.rendering.foldStyles
-import com.github.ajalt.mordant.rendering.withAlign
+import com.github.ajalt.mordant.components.withAlign
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>

@@ -1,11 +1,9 @@
-package com.github.ajalt.mordant
+package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.*
-import com.github.ajalt.mordant.AnsiLevel.*
+import com.github.ajalt.mordant.terminal.AnsiLevel.*
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TxtStyle
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
 import kotlin.math.roundToInt
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }

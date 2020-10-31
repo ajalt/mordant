@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.AnsiLevel
-import com.github.ajalt.mordant.Terminal
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
+import com.github.ajalt.mordant.terminal.AnsiLevel
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(

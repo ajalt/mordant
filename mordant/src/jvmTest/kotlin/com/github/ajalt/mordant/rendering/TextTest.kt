@@ -2,15 +2,18 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.TextColors
-import com.github.ajalt.mordant.TextColors.*
-import com.github.ajalt.mordant.TextStyles
+import com.github.ajalt.mordant.terminal.TextColors
+import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.terminal.TextStyles
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.rendering.internal.CSI
-import com.github.ajalt.mordant.rendering.internal.OSC
-import com.github.ajalt.mordant.rendering.internal.ST
+import com.github.ajalt.mordant.components.LS
+import com.github.ajalt.mordant.components.NEL
+import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.OSC
+import com.github.ajalt.mordant.internal.ST
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import org.junit.Test
@@ -78,7 +81,7 @@ class TextTest : RenderingTest() {
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
     ${CSI}38;2;255;0;0;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}38;2;255;0;0;47m red${CSI}39;49m
-    ${OSC}8;id=x;foo.com${ST}foo.${OSC}8;id=x;bar.com${ST}bar${OSC}8;id=x;foo.com${ST}.com${OSC}8;;${ST}/baz
+    ${OSC}8;id=x;foo.com${ST}foo.${OSC}8;id=x;bar.com${ST}bar${OSC}8;id=x;foo.com$ST.com${OSC}8;;$ST/baz
     """, width = 79)
 
     @Test

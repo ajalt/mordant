@@ -1,8 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.TextColors.blue
-import com.github.ajalt.mordant.TextColors.white
+import com.github.ajalt.mordant.terminal.TextColors.blue
+import com.github.ajalt.mordant.terminal.TextColors.white
 import com.github.ajalt.mordant.rendering.TextAlign.*
+import com.github.ajalt.mordant.components.Text
 import org.junit.Test
 
 

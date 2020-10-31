@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.TextStyles.Companion.hyperlink
-import com.github.ajalt.mordant.rendering.internal.OSC
-import com.github.ajalt.mordant.rendering.internal.ST
-import com.github.ajalt.mordant.rendering.internal.generateHyperlinkId
+import com.github.ajalt.mordant.terminal.TextStyles.Companion.hyperlink
+import com.github.ajalt.mordant.internal.OSC
+import com.github.ajalt.mordant.internal.ST
+import com.github.ajalt.mordant.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
