@@ -33,38 +33,38 @@ class TerminalColors internal constructor(
      *
      * Might be rendered as a different color instead of a different font weight.
      */
-    val bold: TextStyle get() = downsample(TextStyles.bold)
+    val bold: TextStyle get() = downsample(TextStyles.bold.style)
 
     /**
      * Render text as faint or decreased intensity.
      *
      * Not widely supported.
      */
-    val dim: TextStyle get() = downsample(TextStyles.dim)
+    val dim: TextStyle get() = downsample(TextStyles.dim.style)
 
     /**
      * Render text as italic.
      *
      * Not widely supported, might be rendered as inverse instead of italic.
      */
-    val italic: TextStyle get() = downsample(TextStyles.italic)
+    val italic: TextStyle get() = downsample(TextStyles.italic.style)
 
     /**
      * Underline text.
      *
      * Might be rendered with different colors instead of underline.
      */
-    val underline: TextStyle get() = downsample(TextStyles.underline)
+    val underline: TextStyle get() = downsample(TextStyles.underline.style)
 
     /** Render text with background and foreground colors switched. */
-    val inverse: TextStyle get() = downsample(TextStyles.inverse)
+    val inverse: TextStyle get() = downsample(TextStyles.inverse.style)
 
     /**
      * Render text with a strikethrough.
      *
      * Not widely supported.
      */
-    val strikethrough: TextStyle get() = downsample(TextStyles.strikethrough)
+    val strikethrough: TextStyle get() = downsample(TextStyles.strikethrough.style)
 
     /**
      * No style.
@@ -145,8 +145,8 @@ class TerminalColors internal constructor(
      */
     fun color(color: Color): TextStyle = TextColors.color(color, level)
 
-    // All of the TextStyleContainers are already Ansi16, so there's no downsampling to do other
+    // All of the TextColors enums are already Ansi16, so there's no downsampling to do other
     // than turning them off entirely
-    private fun downsample(style: TextStyleContainer): TextStyle =
-            if (level == AnsiLevel.NONE) DEFAULT_STYLE else style.style
+    private fun downsample(style: TextStyle): TextStyle =
+            if (level == AnsiLevel.NONE) DEFAULT_STYLE else style
 }

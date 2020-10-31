@@ -1,42 +1,27 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.*
-import com.github.ajalt.mordant.terminal.AnsiLevel.*
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.terminal.AnsiLevel.*
 import kotlin.math.roundToInt
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
 
-interface TextStyleContainer {
-    val style: TextStyle
-
-    operator fun invoke(text: String) = style.invoke(text)
-    operator fun plus(other: TextStyle) = style + other
-    operator fun plus(other: TextStyleContainer) = style + other.style
-}
-
-interface TextColorContainer : TextStyleContainer {
-    /**
-     * Get a color for background only.
-     *
-     * Note that if you want to specify both a background and foreground color, use [on] instead of
-     * this property.
-     */
-    val bg: TextStyle get() = style.bg
-
-    infix fun on(bg: TextStyle): TextStyle = style on bg
-    infix fun on(bg: TextColorContainer): TextStyle = style on bg.style
-}
-
+// Unfortunately, this enum can't implement TextStyle because the enum values have the same name is
+// TextStyle properties
 @Suppress("EnumEntryName")
-enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
+enum class TextStyles(val style: TextStyle) {
     bold(TextStyle(bold = true)),
     dim(TextStyle(dim = true)),
     italic(TextStyle(italic = true)),
     underline(TextStyle(underline = true)),
     inverse(TextStyle(inverse = true)),
     strikethrough(TextStyle(strikethrough = true));
+
+    operator fun invoke(text: String) = style.invoke(text)
+    operator fun plus(other: TextStyle) = style + other
+    operator fun plus(other: TextStyles) = style + other.style
 
     companion object {
         /**
@@ -53,28 +38,27 @@ enum class TextStyles(override val style: TextStyle) : TextStyleContainer {
 
 @Suppress("EnumEntryName")
 enum class TextColors(
-        private val color: Color,
-) : TextColorContainer, Color by color {
-    black(Ansi16(30)),
-    red(Ansi16(31)),
-    green(Ansi16(32)),
-    yellow(Ansi16(33)),
-    blue(Ansi16(34)),
-    magenta(Ansi16(35)),
-    cyan(Ansi16(36)),
-    white(Ansi16(37)),
-    gray(Ansi16(90)),
+        private val textStyle: TextStyle,
+) : Color by textStyle.color!!, TextStyle by textStyle {
+    black(TextStyle(Ansi16(30))),
+    red(TextStyle(Ansi16(31))),
+    green(TextStyle(Ansi16(32))),
+    yellow(TextStyle(Ansi16(33))),
+    blue(TextStyle(Ansi16(34))),
+    magenta(TextStyle(Ansi16(35))),
+    cyan(TextStyle(Ansi16(36))),
+    white(TextStyle(Ansi16(37))),
+    gray(TextStyle(Ansi16(90))),
 
-    brightRed(Ansi16(91)),
-    brightGreen(Ansi16(92)),
-    brightYellow(Ansi16(93)),
-    brightBlue(Ansi16(94)),
-    brightMagenta(Ansi16(95)),
-    brightCyan(Ansi16(96)),
-    brightWhite(Ansi16(97));
+    brightRed(TextStyle(Ansi16(91))),
+    brightGreen(TextStyle(Ansi16(92))),
+    brightYellow(TextStyle(Ansi16(93))),
+    brightBlue(TextStyle(Ansi16(94))),
+    brightMagenta(TextStyle(Ansi16(95))),
+    brightCyan(TextStyle(Ansi16(96))),
+    brightWhite(TextStyle(Ansi16(97)));
 
-    override val style: TextStyle get() = TextStyle(color)
-    override fun toString() = style.toString()
+    override fun toString() = textStyle.toString()
 
     companion object {
         /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
@@ -155,7 +139,7 @@ enum class TextColors(
          */
         fun color(color: Color, level: AnsiLevel = TRUECOLOR): TextStyle {
             val c = when (color) {
-                is TextColorContainer -> color.style.color ?: return DEFAULT_STYLE
+                is TextStyle -> color.color ?: return DEFAULT_STYLE
                 else -> color
             }
             return TextStyle(

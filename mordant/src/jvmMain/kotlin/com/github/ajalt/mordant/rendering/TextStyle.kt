@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.mordant.terminal.TextStyleContainer
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.invokeStyle
+import com.github.ajalt.mordant.terminal.TextStyles
 
 internal val DEFAULT_STYLE = TextStyle()
 
@@ -22,11 +22,10 @@ interface TextStyle {
     val bg: TextStyle
 
     infix fun on(bg: TextStyle): TextStyle
-    infix fun on(bg: Color): TextStyle
 
     operator fun invoke(text: String): String = invokeStyle(text)
 
-    operator fun plus(other: TextStyleContainer): TextStyle = this + other.style
+    operator fun plus(other: TextStyles): TextStyle = this + other.style
     operator fun plus(other: TextStyle): TextStyle {
         return when {
             this === DEFAULT_STYLE -> other
@@ -85,10 +84,6 @@ internal data class TxtStyle(
 ) : TextStyle {
     override infix fun on(bg: TextStyle): TextStyle {
         return copy(bgColor = bg.color)
-    }
-
-    override infix fun on(bg: Color): TextStyle {
-        return copy(bgColor = bg)
     }
 
     override val bg: TextStyle get() = copy(color = null, bgColor = color)

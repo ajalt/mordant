@@ -4,7 +4,6 @@ import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.terminal.AnsiLevel
-import com.github.ajalt.mordant.terminal.TextColorContainer
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.TextStyle
@@ -111,7 +110,7 @@ private fun makeHyperlinkTag(hyperlink: String?, hyperlinkId: String?): String {
 }
 
 private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
-    return when (val it = (this as? TextColorContainer)?.style?.color ?: (this)) {
+    return when (val it = (this as? TextStyle)?.color ?: this) {
         null -> listOf(reset)
         is Ansi16 -> listOf(it.code + offset)
         is Ansi256 -> listOf(select, selector256, it.code)
