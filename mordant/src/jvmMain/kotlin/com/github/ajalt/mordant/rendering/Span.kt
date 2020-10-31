@@ -6,8 +6,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 internal val SINGLE_SPACE = Span.space(1)
 
-@Suppress("DataClassPrivateConstructor")
-data class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
+class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
     init {
         require(text.isNotEmpty()) { "Span text cannot be empty" }
         require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
@@ -22,13 +21,12 @@ data class Span private constructor(val text: String, val style: TextStyle = DEF
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE) = Span(" ".repeat(width), style)
     }
 
-
     internal val cellWidth: Int by lazy(NONE) { stringCellWidth(text) }
-    internal fun take(n: Int): Span = copy(text = text.take(n))
+    internal fun take(n: Int): Span = Span(text.take(n), style)
 
     internal fun isWhitespace(): Boolean = text[0].isWhitespace()
     internal fun isTab(): Boolean = text[0] == '\t'
 
-    internal fun withStyle(style: TextStyle) = copy(style = this.style + style)
-    internal fun replaceStyle(style: TextStyle) = copy(style = style)
+    internal fun withStyle(style: TextStyle) = Span(text, this.style + style)
+    internal fun replaceStyle(style: TextStyle) = Span(text, style)
 }

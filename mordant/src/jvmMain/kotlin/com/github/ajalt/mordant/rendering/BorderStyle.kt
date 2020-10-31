@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 
-data class BorderStyleSection(
+class BorderStyleSection(
         private val corners: String
 ) {
     init {

@@ -8,7 +8,7 @@ typealias Line = List<Span>
 internal val EMPTY_LINES = Lines(emptyList())
 internal val EMPTY_LINE: Line = emptyList()
 
-data class Lines(
+class Lines(
         val lines: List<Line>,
 ) {
     val height: Int get() = lines.size

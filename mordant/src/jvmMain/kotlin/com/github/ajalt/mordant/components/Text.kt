@@ -114,7 +114,7 @@ class Text internal constructor(
                 // Collapse spaces
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
                 var span = when {
-                    pieceIsWhitespace && whitespace.collapseSpaces -> piece.copy(text = " ")
+                    pieceIsWhitespace && whitespace.collapseSpaces -> Span.space(1, piece.style)
                     piece.isTab() -> if (tabWidth > 0) Span.space(tabWidth - (width % tabWidth), piece.style) else continue
                     else -> piece
                 }
@@ -133,17 +133,17 @@ class Text internal constructor(
                         OverflowWrap.NORMAL -> {
                         }
                         OverflowWrap.TRUNCATE -> {
-                            span = span.copy(text = span.text.take(wrapWidth))
+                            span = Span.word(span.text.take(wrapWidth), span.style)
                         }
                         OverflowWrap.ELLIPSES -> {
-                            span = span.copy(text = span.text.take((wrapWidth - 1)) + "…")
+                            span = Span.word(span.text.take((wrapWidth - 1)) + "…", span.style)
                         }
                         OverflowWrap.BREAK_WORD -> {
                             span.text.chunked(wrapWidth).forEach {
                                 if (it.length == wrapWidth) {
-                                    lines += listOf(span.copy(text = it))
+                                    lines += listOf(Span.word(it, span.style))
                                 } else {
-                                    span = span.copy(text = it)
+                                    span = Span.word(it, span.style)
                                 }
                             }
                         }
