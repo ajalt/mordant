@@ -10,6 +10,8 @@ Mordant has:
 * Components for laying out our terminal output, including lists, tables, panels, and more
 * Support for animating anything you can render, like progress bars and dashboards
 
+##### This README documents Mordant 2.0, which is in alpha. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
+
 ## Usage
 
 Create a `Terminal` instance, and import any enum entries you want from `TextColors` and
@@ -203,9 +205,11 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-   implementation("com.github.ajalt:mordant:1.2.1")
+   implementation("com.github.ajalt.mordant:mordant:2.0.0-alpha1")
 }
 ```
+
+###### In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
 
 ## License
 
