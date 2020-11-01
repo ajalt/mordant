@@ -176,6 +176,20 @@ t.printMarkdown(File("README.md").readText())
 
 ![](.github/markdown.png)
 
+## Controlling the cursor
+
+You can show and hide the cursor, move it around, and clear parts of the screen with the `cursor`
+property on `Terminal`. If your terminal doesn't support cursor movements (like when output is
+redirected to a file) these commands are no-ops.
+
+```kotlin
+val t = Terminal()
+t.cursor.up(3)
+t.cursor.startOfLine()
+t.cursor.clearScreenAfterCursor()
+t.cursor.hide(showOnExit = true)
+```
+
 ## Animations
 
 You can animate any renderable component like a table with `Terminal.animation`, or any regular
