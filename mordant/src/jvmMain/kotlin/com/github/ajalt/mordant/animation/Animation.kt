@@ -1,7 +1,8 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 
 abstract class Animation<T>(private val terminal: Terminal) {
     private var lastRender: Lines? = null
@@ -44,5 +45,19 @@ abstract class Animation<T>(private val terminal: Terminal) {
 inline fun <T> Terminal.animation(crossinline draw: (T) -> Renderable): Animation<T> {
     return object : Animation<T>(this) {
         override fun renderData(data: T): Renderable = draw(data)
+    }
+}
+
+inline fun <T> Terminal.textAnimation(
+        style: TextStyle = TextStyle(),
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null,
+        tabWidth: Int? = null,
+        crossinline draw: (T) -> String,
+): Animation<T> {
+    return object : Animation<T>(this) {
+        override fun renderData(data: T): Renderable = Text(draw(data), style, whitespace, align, overflowWrap, width, tabWidth)
     }
 }
