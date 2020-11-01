@@ -59,7 +59,7 @@ val SONATYPE_PASSWORD: String? by project
 publishing {
     publications.withType<MavenPublication>().all {
         pom {
-            description.set("Text formatting for Kotlin command line applications")
+            description.set("Colorful multiplatform styling Kotlin for command-line applications")
             name.set("Mordant")
             url.set("https://github.com/ajalt/mordant")
             scm {
@@ -105,7 +105,6 @@ signing {
     isRequired = !isSnapshot
 
     if (signingKey != null && !isSnapshot) {
-        @Suppress("UnstableApiUsage")
         useInMemoryPgpKeys(signingKey, "")
         sign(publishing.publications)
     }
