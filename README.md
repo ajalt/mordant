@@ -1,123 +1,205 @@
 <h1 align="center">Mordant</h1>
-<h4 align="center">Dead simple text styling for command-line applications</h4>
+<h4 align="center">Colorful styling for command-line applications</h4>
 
 > /mɔː(ɹ)dənt/ A substance used to set (i.e. bind) colored dyes on fabrics <sup>[1](https://wikipedia.org/wiki/Mordant)</sup>
 
 Mordant has:
 
-* An easy, configuration-free, API
-* Support for nesting styles and colors
-* Automatic detection of terminal color support
-* Support for 256 and 24-bit colors, with automatic downsampling
-* Support for specifying colors in every color space supported by [colormath](https://github.com/ajalt/colormath)
-
-<div align="center"><img src=".github/rainbow.gif"></div>
+* Easy colorful ANSI output with automatic detection of terminal capabilities
+* Markdown rendering directly to the terminal
+* Components for laying out our terminal output, including lists, tables, panels, and more
+* Support for animating anything you can render, like progress bars and dashboards
 
 ## Usage
 
+Create a `Terminal` instance, and import any enum entries you want from `TextColors` and
+`TextStyles`. The `println` function on your `Terminal` will detect your current terminal
+capabilities and automatically downsample ANSI codes if necessary.
+
 ```kotlin
-val t = TermColors()
-println(t.red("This text will be red on terminals that support color"))
+import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.terminal.TextStyles.*
+
+val t = Terminal()
+t.println(red("This text will be red on terminals that support color"))
 ```
 
-<img src=".github/example_basic.png">
+![](.github/example_basic.png)
 
 #### Multiple styles
 
 ```kotlin
-with(TermColors()) {
-    println("${red("red")} ${white("white")} and ${blue("blue")}")
-}
+import com.github.ajalt.mordant.terminal.TextColors.*
+val t = Terminal()
+t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 ```
 
-<img src=".github/example_multi.png">
+![](.github/example_multi.png)
 
 #### Foreground and background colors
 
 ```kotlin
-with(TermColors()) {
-    println((yellow on brightGreen)("this is easy to read, right?"))
-}
+t.println((yellow on brightGreen)("this is easy to read, right?"))
 ```
 
-<img src=".github/example_fg_bg.png">
+![](.github/example_fg_bg.png)
 
 #### Background color alone
 
 ```kotlin
-with(TermColors()) {
-    println("The foreground ${brightBlue.bg("color will stay the")} same")
-}
+t.println("The foreground ${brightBlue.bg("color will stay the")} same")
 ```
 
-<img src=".github/example_bg.png">
+![](.github/example_bg.png)
 
 #### Combine styles and colors
 
 ```kotlin
-with(TermColors()) {
-    val style = (bold + white + underline)
-    println(style("You can save styles"))
-    println(style("to reuse"))
-}
+val style = (bold + white + underline)
+t.println(style("You can save styles"))
+t.println(style("to reuse"))
 ```
 
-<img src=".github/example_styles.png">
+![](.github/example_styles.png)
 
 #### Nest styles and colors
 
 ```kotlin
-with(TermColors()) {
-    println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} styles")} arbitrarily"))
-}
+t.println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} styles")} arbitrarily"))
 ```
 
-<img src=".github/example_nesting.png">
+![](.github/example_nesting.png)
 
 #### True color and other color spaces
+
 ```kotlin
-with(TermColors()) {
-    println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
-}
+import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
+
+t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
 ```
 
-<img src=".github/example_rgb.png">
+![](.github/example_rgb.png)
 <p></p>
 
 ```kotlin
-with(TermColors()) {
-    for (v in 0..100 step 4) {
-        for (h in 0..360 step 4) {
-            print(hsv(h, 100, 100 - v).bg(" "))
-        }
-        println()
+for (v in 0..100 step 4) {
+    for (h in 0..360 step 4) {
+        t.print(hsv(h, 100, 100 - v).bg(" "))
     }
+    t.println()
 }
 ```
 
-<img src=".github/example_hsv.png">
+![](.github/example_hsv.png)
 
 ### Terminal color support detection
 
-By default, `TermColors()` will try to detect ANSI support in the current stdout stream. If you'd
-like to override the detection, you can pass a specific value to the `TermColors` constructor.
+By default, `Terminal()` will try to detect ANSI support in the current stdout stream. If you'd
+like to override the detection, you can pass a specific value to the `Terminal` constructor.
 
 For example, to always output ANSI RGB color codes, even if stdout is currently directed to a file,
 you can do this:
 
 ```kotlin
-TermColors(TermColors.Level.TRUECOLOR)
+Terminal(AnsiLevel.TRUECOLOR)
 ```
 
-## API Documentation
+## Tables
 
-API docs are [hosted on JitPack](https://jitpack.io/com/github/ajalt/mordant/1.2.0/javadoc/com/github/ajalt/mordant/TermColors.html).
+Use the `table` DSL to quickly create tables. Mordant handles ANSI styles and wide characters like
+CJK and emojii.
+
+```kotlin
+val t = Terminal()
+t.println(table {
+    header { row("CJK", "Emojis") }
+    body { row("모ㄹ단ㅌ", "🙊🙉🙈") }
+})
+```
+
+![](.github/simple_table.png)
+
+Mordant gives you lots of customization for your tables, including striped row styles, row and
+column spans, and different border styles.
+
+```kotlin
+table {
+    borderStyle = SQUARE_DOUBLE_SECTION_SEPARATOR
+    align = RIGHT
+    outerBorder = false
+    column(0) {
+        align = LEFT
+        borders = ALL
+        style = magenta
+    }
+    column(3) {
+        borders = ALL
+        style = magenta
+    }
+    header {
+        style(magenta, bold = true)
+        row("", "Projected Cost", "Actual Cost", "Difference")
+    }
+    body {
+        rowStyles(blue, brightBlue)
+        borders = TOM_BOTTOM
+        row("Food", "$400", "$200", "$200")
+        row("Data", "$100", "$150", "-$50")
+        row("Rent", "$800", "$800", "$0")
+        row("Candles", "$0", "$3,600", "-$3,600")
+        row("Utility", "$145", "$150", "-$5")
+    }
+    footer {
+        style(bold = true)
+        row {
+            cell("Subtotal")
+            cell("$-3,455") { columnSpan = 3 }
+        }
+    }
+    captionBottom("Budget courtesy @dril", TextStyle(dim = true))
+}
+```
+
+![](.github/complex_table.png)
+
+## Markdown
+
+Mordant can render GitHub Flavored Markdown. Hyperlinks will even be clickable if you're on a
+terminal that supports it, like recent versions of iTerm or Windows Terminal.
+
+```kotlin
+val t = Terminal()
+t.printMarkdown(File("README.md").readText())
+```
+
+![](.github/markdown.png)
+
+## Animations
+
+You can animate any renderable component like a table with `Terminal.animation`, or any regular
+string with `Terminal.textAnimation`.
+
+```kotln
+val t = Terminal()
+val a = t.textAnimation<Int> { frame ->
+    (1..50).joinToString("") {
+        val hue = (frame + it) * 3 % 360
+        t.colors.hsv(hue, 100, 100)("━")
+    }
+}
+
+t.cursor.hide(showOnExit = true)
+repeat(120) {
+    a.update(it)
+    Thread.sleep(25)
+}
+``` 
+
+![](.github/animation.svg)
 
 ## Installation
 
-Mordant is distributed through Maven Central,
-[Jcenter](https://bintray.com/ajalt/maven/mordant) and
-[Jitpack](https://jitpack.io/#ajalt/mordant).
+Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
@@ -127,7 +209,7 @@ dependencies {
 
 ## License
 
-    Copyright 2018-2019 AJ Alt
+    Copyright 2018-2020 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
