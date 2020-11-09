@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.mordant.terminal.TextColors
 import com.github.ajalt.mordant.terminal.TextColors.*
 
 interface Theme {
@@ -23,7 +25,7 @@ interface Theme {
     val markdownStikethrough: TextStyle get() = TextStyle(strikethrough = true)
     val markdownCodeBlock: TextStyle get() = TextStyle(brightRed)
     val markdownCodeBlockBorder: Boolean get() = true
-    val markdownCodeSpan: TextStyle get() = TextStyle(brightRed, gray, dim = true)
+    val markdownCodeSpan: TextStyle get() = TextStyle(brightRed, Ansi256(236))
     val markdownHeaderPadding: Int get() = 1
     val markdownTableHeader: TextStyle get() = TextStyle(bold = true)
     val markdownTableBody: TextStyle get() = DEFAULT_STYLE
