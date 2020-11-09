@@ -290,10 +290,10 @@ internal class MarkdownRenderer(
         val text = findLinkText(node)!!
         val dest = findLinkDest(node) ?: ""
         if (hyperlinks && dest.isNotBlank()) {
-            return parseText(text, theme.markdownLinkText.copy(hyperlink = dest, hyperlinkId = generateHyperlinkId()))
+          return text.replaceStyle(theme.markdownLinkText.copy(hyperlink = dest, hyperlinkId = generateHyperlinkId()))
         }
 
-        val parsedText = parseText(text, theme.markdownLinkText)
+        val parsedText = text.replaceStyle(theme.markdownLinkText)
         val parsedDest = parseText("($dest)", theme.markdownLinkDestination)
         return listOf(parsedText, parsedDest).foldLines { it }
     }
@@ -301,19 +301,21 @@ internal class MarkdownRenderer(
     private fun renderReferenceLink(node: ASTNode): Lines {
         if (!hyperlinks) return innerInlines(node)
 
-        val text = findLinkText(node)
-        val label = findLinkLabel(node)
+        val label = findLinkLabel(node)!!
         return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
             null -> innerInlines(node)
-            else -> parseText(text
-                    ?: label!!, theme.markdownLinkText.copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId()))
+            else -> {
+                val style = theme.markdownLinkText.copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId())
+                findLinkText(node)?.replaceStyle(style) ?: parseText(label, style)
+            }
         }
     }
 
     private fun renderImageLink(node: ASTNode): Lines {
         val text = findLinkText(node.firstChildOfType(MarkdownElementTypes.INLINE_LINK))
-        if (text.isNullOrBlank()) return EMPTY_LINES
-        return parseText("🖼️ " + theme.markdownImgAltText(text), DEFAULT_STYLE)
+                ?.takeUnless { it.lines.isEmpty() }
+                ?: return EMPTY_LINES
+        return listOf(parseText("🖼️ ", DEFAULT_STYLE), text.replaceStyle(theme.markdownImgAltText)).foldLines { it }
     }
 
     private fun findLinkLabel(node: ASTNode): String? {
@@ -326,8 +328,9 @@ internal class MarkdownRenderer(
                 ?.nodeText()
     }
 
-    private fun findLinkText(node: ASTNode): String? {
-        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.nodeText(drop = 1)
+    private fun findLinkText(node: ASTNode): Lines? {
+        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)
+                ?.let { innerInlines(it, drop = 1) }
     }
 }
 

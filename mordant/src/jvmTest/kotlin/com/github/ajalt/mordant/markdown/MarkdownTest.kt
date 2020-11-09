@@ -371,6 +371,17 @@ ${brightBlue("www.example.com/url")}
 """)
 
     @Test
+    fun `md in link titles`() = doTest("""
+[`code`](example.com/1)
+
+[![an image](img.png)](example.com/2)
+""", """
+${(brightBlue + hyperlink("example.com/1"))("code")}
+
+${(brightBlue + hyperlink("example.com/2"))("🖼️ an image")}
+""", hyperlinks = true)
+
+    @Test
     @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")
     fun `default html`() = doTest("""
 <h1 align="center">
