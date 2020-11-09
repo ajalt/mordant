@@ -266,8 +266,6 @@ ${brightYellow("▎ bar baz")}
 
 [inline link 5](</my uri>)
 
-![an image]( example.com "with a title" )
-
 <https://example.com/autolink>
 
 www.example.com/url
@@ -290,8 +288,6 @@ ${blue("${brightBlue("inline link 4")}()")}
 
 ${blue("${brightBlue("inline link 5")}(/my uri)")}
 
-${blue("${brightBlue("an image")}(example.com)")}
-
 ${brightBlue("https://example.com/autolink")}
 
 ${brightBlue("www.example.com/url")}
@@ -308,6 +304,8 @@ ${blue("[a link]: example.com")}
 
 [a link]
 
+[a link][]
+
 [inline link 1]( example.com/1 "with a title" )
 
 [inline link 2](http://www.example.com/2)
@@ -317,8 +315,6 @@ ${blue("[a link]: example.com")}
 [inline link 4](<>)
 
 [inline link 5](</my uri>)
-
-![an image]( example.com/#3 "with a title" )
 
 <https://example.com/autolink>
 
@@ -332,6 +328,8 @@ ${(brightBlue + hyperlink("example.com/4"))("a reference link")}
 
 ${(brightBlue + hyperlink("example.com/4"))("a link")}
 
+${(brightBlue + hyperlink("example.com/4"))("a link")}
+
 ${(brightBlue + hyperlink("example.com/1"))("inline link 1")}
 
 ${(brightBlue + hyperlink("http://www.example.com/2"))("inline link 2")}
@@ -342,8 +340,6 @@ ${blue("${brightBlue("inline link 4")}()")}
 
 ${(brightBlue + hyperlink("/my uri"))("inline link 5")}
 
-${(brightBlue + hyperlink("example.com/#3"))("an image")}
-
 ${brightBlue("https://example.com/autolink")}
 
 ${brightBlue("www.example.com/url")}
@@ -352,6 +348,25 @@ ${brightBlue("www.example.com/url")}
 
 
 """, hyperlinks = true)
+
+    @Test
+    fun `image tags`() = doTest("""
+![an image]( example.png "a title" )
+
+![](example.png "a title")
+
+![an image](example.png)
+
+![](example.png)
+""", """
+🖼️ ${dim("an image")}
+
+
+
+🖼️ ${dim("an image")}
+
+
+""")
 
     @Test
     @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")

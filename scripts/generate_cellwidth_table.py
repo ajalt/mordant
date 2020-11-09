@@ -15,7 +15,7 @@ def parse_categories():
     # 0591..05BD    ; Mn #  [45] HEBREW ACCENT ETNAHTA..HEBREW POINT METEG
     # 05BF          ; Mn #       HEBREW POINT RAFE
     text = requests.get(categories_url).text
-    categories = ('Me', 'Mn', 'Cc')
+    categories = ('Pc', 'Pd', 'Pe', 'Pf', 'Pi', 'Po', 'Ps')
     ranges = []
 
     for i, line in enumerate(text.splitlines()):
@@ -111,7 +111,7 @@ def parse_points(points):
 
 
 def parse_all():
-    combined = sorted(parse_categories() + parse_east_asian() + parse_cf(), key=lambda it: it[0])
+    combined = sorted(parse_categories(), key=lambda it: it[0])
     # concat adjacent ranges
     ranges = []
     iterator = iter(combined)
@@ -136,7 +136,7 @@ internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 internal val CELL_WIDTH_TABLE : Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>('''
           )
     for low, high, width, desc in parse_all():
-        print(f'        CellWidthTableEntry({hex(low)}, {hex(high)}, {width}), // {desc}')
+        print(f"        '{hex(low)}'..'{hex(high)}',// {desc}".replace('0x', '\\u'))
     print(')')
 
 

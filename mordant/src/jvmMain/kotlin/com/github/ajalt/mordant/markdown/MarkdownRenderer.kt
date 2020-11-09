@@ -1,14 +1,13 @@
 package com.github.ajalt.mordant.markdown
 
 import com.github.ajalt.mordant.components.*
-import com.github.ajalt.mordant.components.NEL
-import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.terminal.Terminal
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
@@ -179,16 +178,14 @@ internal class MarkdownRenderer(
                         .replaceStyle(theme.markdownLinkDestination) // the child might be TEXT or GFM_AUTOLINK
             }
             MarkdownElementTypes.INLINE_LINK -> {
-                parseInlineLink(node)
+                renderInlineLink(node)
             }
             MarkdownElementTypes.FULL_REFERENCE_LINK,
             MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
-                parseReferenceLink(node, hyperlinks)
+                renderReferenceLink(node)
             }
-
             MarkdownElementTypes.IMAGE -> {
-                // for images, just render the hyperlink
-                parseInlines(node.children[1])
+                renderImageLink(node)
             }
             // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end
             // up rendering the surrounding <>.
@@ -289,12 +286,9 @@ internal class MarkdownRenderer(
         }
     }
 
-    private fun parseInlineLink(node: ASTNode): Lines {
-        val text = node.firstChildOfType(MarkdownElementTypes.LINK_TEXT).children[1].nodeText()
-        val dest = node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-                ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
-                ?.nodeText() ?: ""
-
+    private fun renderInlineLink(node: ASTNode): Lines {
+        val text = findLinkText(node)!!
+        val dest = findLinkDest(node) ?: ""
         if (hyperlinks && dest.isNotBlank()) {
             return parseText(text, theme.markdownLinkText.copy(hyperlink = dest, hyperlinkId = generateHyperlinkId()))
         }
@@ -304,15 +298,36 @@ internal class MarkdownRenderer(
         return listOf(parsedText, parsedDest).foldLines { it }
     }
 
-    private fun parseReferenceLink(node: ASTNode, hyperlinks: Boolean): Lines {
+    private fun renderReferenceLink(node: ASTNode): Lines {
         if (!hyperlinks) return innerInlines(node)
 
-        val text = node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.children?.get(1)?.nodeText()
-        val label = node.firstChildOfType(MarkdownElementTypes.LINK_LABEL).children[1].nodeText()
+        val text = findLinkText(node)
+        val label = findLinkLabel(node)
         return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
             null -> innerInlines(node)
-            else -> parseText(text ?: label, theme.markdownLinkText.copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId()))
+            else -> parseText(text
+                    ?: label!!, theme.markdownLinkText.copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId()))
         }
+    }
+
+    private fun renderImageLink(node: ASTNode): Lines {
+        val text = findLinkText(node.firstChildOfType(MarkdownElementTypes.INLINE_LINK))
+        if (text.isNullOrBlank()) return EMPTY_LINES
+        return parseText("🖼️ " + theme.markdownImgAltText(text), DEFAULT_STYLE)
+    }
+
+    private fun findLinkLabel(node: ASTNode): String? {
+        return node.findChildOfType(MarkdownElementTypes.LINK_LABEL)?.children?.get(1)?.nodeText()
+    }
+
+    private fun findLinkDest(node: ASTNode): String? {
+        return node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
+                ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
+                ?.nodeText()
+    }
+
+    private fun findLinkText(node: ASTNode): String? {
+        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.nodeText(drop = 1)
     }
 }
 

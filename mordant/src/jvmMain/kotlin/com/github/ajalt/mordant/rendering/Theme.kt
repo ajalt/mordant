@@ -29,6 +29,7 @@ interface Theme {
     val markdownTableBody: TextStyle get() = DEFAULT_STYLE
     val markdownLinkText: TextStyle get() = TextStyle(brightBlue)
     val markdownLinkDestination: TextStyle get() = TextStyle(blue)
+    val markdownImgAltText: TextStyle get() = TextStyle(dim = true)
     val markdownH1: TextStyle get() = TextStyle(magenta, bold = true)
     val markdownH2: TextStyle get() = TextStyle(magenta, bold = true)
     val markdownH3: TextStyle get() = TextStyle(magenta, bold = true, underline = true)
