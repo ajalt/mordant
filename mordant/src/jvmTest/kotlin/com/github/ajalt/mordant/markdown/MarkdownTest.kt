@@ -764,7 +764,7 @@ ${brightRed("foo  bar")}
                     theme = theme,
                     hyperlinks = hyperlinks
             )
-            val actual = terminal.renderMarkdown(md, showHtml)
+            val actual = terminal.render(Markdown(md, showHtml))
             try {
                 actual shouldBe expected.replace("⏎", "")
             } catch (e: Throwable) {

@@ -1,8 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.components.Text
-import com.github.ajalt.mordant.markdown.MarkdownRenderer
+import com.github.ajalt.mordant.rendering.*
 
 interface Terminal {
     val theme: Theme
@@ -10,18 +9,6 @@ interface Terminal {
     val info: TerminalInfo
     val colors: TerminalColors
     val cursor: TerminalCursor
-
-    fun printMarkdown(markdown: String, showHtml: Boolean = false) {
-        return rawPrint(renderMarkdown(markdown, showHtml))
-    }
-
-    fun renderMarkdown(markdown: String, showHtml: Boolean = false): String {
-        return render(parseMarkdown(markdown, showHtml))
-    }
-
-    fun parseMarkdown(markdown: String, showHtml: Boolean = false): Renderable {
-        return MarkdownRenderer(markdown, theme, showHtml, info.ansiHyperLinks).render()
-    }
 
     fun success(
             message: Any?,
