@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
+import com.github.ajalt.mordant.components.Padding
+import com.github.ajalt.mordant.components.Padding.Companion
 import com.github.ajalt.mordant.terminal.TextColors.blue
 import com.github.ajalt.mordant.terminal.TextColors.red
 import com.github.ajalt.mordant.rendering.*
@@ -11,6 +13,7 @@ import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.TableBuilder
 import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.terminal.Terminal
 import org.junit.Test
 
 class TableTest : RenderingTest() {
@@ -20,7 +23,7 @@ class TableTest : RenderingTest() {
     |││
     |└┘
     """) {
-        padding = com.github.ajalt.mordant.components.Padding.none()
+        padding = Padding.none()
         row("")
     }
 
@@ -197,7 +200,7 @@ class TableTest : RenderingTest() {
     |│3               │4│
     |└────────────────┴─┘
     """) {
-        padding = com.github.ajalt.mordant.components.Padding.none()
+        padding = Padding.none()
         row {
             cell(Text("""
                     line 1
@@ -241,7 +244,7 @@ class TableTest : RenderingTest() {
     |└─────┘
     """) {
         rowStyles(TextStyle(red), TextStyle(blue))
-        padding = com.github.ajalt.mordant.components.Padding.none()
+        padding = Padding.none()
         row("row 1")
         row("row 2")
         row("row 3")
@@ -255,7 +258,7 @@ class TableTest : RenderingTest() {
     |3 4 5
     """) {
         borders = NONE
-        padding = com.github.ajalt.mordant.components.Padding.none()
+        padding = Padding.none()
         row {
             cell("span") {
                 rowSpan = 2
@@ -389,6 +392,23 @@ class TableTest : RenderingTest() {
     """) {
         captionTop("top")
         captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue))
+        body { row(1, 2, 3) }
+    }
+
+    @Test
+    fun `caption renderables`() = doTest("""
+    |!
+    |┌───┬───┬───┐
+    |│ 1 │ 2 │ 3 │
+    |└───┴───┴───┘
+    |!
+    """) {
+        val r = object : Renderable {
+            override fun measure(t: Terminal, width: Int)=WidthRange(1,1)
+            override fun render(t: Terminal, width: Int) = Lines(listOf(listOf(Span.word("!"))))
+        }
+        captionTop(r)
+        captionBottom(r)
         body { row(1, 2, 3) }
     }
 

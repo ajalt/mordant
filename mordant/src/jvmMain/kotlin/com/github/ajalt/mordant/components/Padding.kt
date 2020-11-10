@@ -3,9 +3,18 @@ package com.github.ajalt.mordant.components
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-internal val DEFAULT_PADDING = Padding()
+data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int) {
+    constructor(all: Int) : this(all, all, all, all)
+    constructor(vertical: Int, horizontal: Int) : this(vertical, horizontal, vertical, horizontal)
+    constructor(top: Int, horizontal: Int, bottom: Int) : this(top, horizontal, bottom, horizontal)
 
-data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, val left: Int = 0) {
+    companion object {
+        fun none(): Padding = Padding(0)
+        fun vertical(padding: Int = 0): Padding = Padding(padding, 0)
+        fun horizontal(padding: Int = 0): Padding = Padding(0, padding)
+        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding = Padding(top, right, bottom, left)
+    }
+
     init {
         require(top >= 0) { "Invalid negative top padding" }
         require(right >= 0) { "Invalid negative right padding" }
@@ -13,29 +22,26 @@ data class Padding(val top: Int = 0, val right: Int = 0, val bottom: Int = 0, va
         require(left >= 0) { "Invalid negative left padding" }
     }
 
-    companion object {
-        fun none(): Padding = all(0)
-        fun all(padding: Int): Padding = Padding(padding, padding, padding, padding)
-        fun symmetrical(vertical: Int = 0, horizontal: Int = 0): Padding = Padding(vertical, horizontal, vertical, horizontal)
-        fun vertical(padding: Int = 0): Padding = Padding(padding, 0, padding, 0)
-        fun horizontal(padding: Int = 0): Padding = Padding(0, padding, 0, padding)
-    }
-
-    val isEmpty = top == 0 && right == 0 && bottom == 0 && left == 0
+    val isEmpty get() = top == 0 && right == 0 && bottom == 0 && left == 0
 }
 
 fun Renderable.withPadding(padding: Padding, padEmptyLines: Boolean = true): Renderable = Padded.get(this, padding, padEmptyLines)
-fun Renderable.withPadding(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
+fun Renderable.withPadding(all: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(all), padEmptyLines)
+fun Renderable.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(vertical, horizontal), padEmptyLines)
+fun Renderable.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, horizontal, bottom), padEmptyLines)
+fun Renderable.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
 fun Renderable.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.vertical(padding), padEmptyLines)
 fun Renderable.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.horizontal(padding), padEmptyLines)
 
-internal data class Padded(
+private class Padded private constructor(
         private val content: Renderable,
         private val padding: Padding,
-        private val padEmptyLines: Boolean = true
+        private val padEmptyLines: Boolean
 ) : Renderable {
-    internal companion object {
-        fun get(content: Renderable, padding: Padding, padEmptyLines: Boolean = true) = if (padding.isEmpty) content else Padded(content, padding, padEmptyLines)
+    companion object {
+        fun get(content: Renderable, padding: Padding, padEmptyLines: Boolean): Renderable {
+            return if (padding.isEmpty) content else Padded(content, padding, padEmptyLines)
+        }
     }
 
     private val paddingWidth get() = padding.left + padding.right

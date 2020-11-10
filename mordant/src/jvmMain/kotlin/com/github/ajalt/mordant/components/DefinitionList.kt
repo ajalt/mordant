@@ -38,7 +38,7 @@ class DefinitionList(
             val (term, desc) = entry
             if (!inline || termMeasurements[i].max > termWidth) {
                 lines += term.render(t, width).lines
-                lines += Padded.get(desc, Padding(left = descOffset)).render(t, width).lines
+                lines += desc.withPadding(0,0,0,descOffset).render(t, width).lines
                 continue
             }
 

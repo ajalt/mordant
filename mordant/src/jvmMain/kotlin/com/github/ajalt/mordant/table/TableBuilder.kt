@@ -1,8 +1,12 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.components.Padded
-import com.github.ajalt.mordant.rendering.foldStyles
+import com.github.ajalt.mordant.components.Padding
 import com.github.ajalt.mordant.components.withAlign
+import com.github.ajalt.mordant.components.withPadding
+import com.github.ajalt.mordant.rendering.OverflowWrap
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.VerticalAlign
+import com.github.ajalt.mordant.rendering.foldStyles
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
@@ -62,17 +66,17 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
 
         fun <T : Any> getStyle(default: T, getter: (CellStyleBuilder) -> T?): T {
             return getter(cell) ?: getter(row) ?: sectionCol?.let(getter)
-            ?: tableCol?.let(getter) ?: getter(section) ?: default
+            ?: tableCol?.let(getter) ?: getter(section) ?: getter(table) ?: default
         }
 
-        val borders = getStyle(table.borders) { it.borders }
-        val padding = getStyle(table.padding) { it.padding }
-        val textAlign = getStyle(table.align) { it.align }
-        val verticalAlign = getStyle(table.verticalAlign) { it.verticalAlign }
-        val overflowWrap = getStyle(table.overflowWrap) { it.overflowWrap }
+        val borders = getStyle(Borders.ALL) { it.borders }
+        val padding = getStyle(Padding.horizontal(1)) { it.padding }
+        val textAlign = getStyle(TextAlign.LEFT) { it.align }
+        val verticalAlign = getStyle(VerticalAlign.TOP) { it.verticalAlign }
+        val overflowWrap = getStyle(OverflowWrap.ELLIPSES) { it.overflowWrap }
         val stripedStyle = if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
         val style = foldStyles(cell.style, row.style, stripedStyle, sectionCol?.style, tableCol?.style, section.style, table.style)
-        val content = Padded.get(cell.content.withAlign(textAlign, overflowWrap), padding)
+        val content = cell.content.withAlign(textAlign, overflowWrap).withPadding(padding)
 
         val builtCell = Cell.Content(
                 content = content,

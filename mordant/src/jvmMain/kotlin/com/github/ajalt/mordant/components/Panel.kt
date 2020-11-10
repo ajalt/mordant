@@ -4,6 +4,8 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 
+private val DEFAULT_PADDING = Padding(0)
+
 class Panel(
         content: Renderable,
         private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
@@ -19,7 +21,7 @@ class Panel(
             padding: Padding = DEFAULT_PADDING
     ) : this(Text(content), borderStyle, expand, borderTextStyle, padding)
 
-    private val content: Renderable = Padded.get(content, padding)
+    private val content: Renderable = content.withPadding(padding)
     private val borderWidth get() = if (borderStyle == null) 0 else 2
 
     override fun measure(t: Terminal, width: Int): WidthRange {

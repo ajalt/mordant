@@ -27,6 +27,22 @@ interface CellStyleBuilder {
     ) {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
+
+    fun padding(all: Int) {
+        padding = Padding(all)
+    }
+
+    fun padding(vertical: Int, horizontal: Int) {
+        padding = Padding(vertical, horizontal, vertical, horizontal)
+    }
+
+    fun padding(top: Int, horizontal: Int, bottom: Int) {
+        padding = Padding(top, horizontal, bottom, horizontal)
+    }
+
+    fun padding(top: Int, right: Int, bottom: Int, left: Int) {
+        padding = Padding(top, right, bottom, left)
+    }
 }
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
@@ -64,16 +80,9 @@ class ColumnBuilder internal constructor() : CellStyleBuilder by CellStyleBuilde
 }
 
 @MordantDsl
-class TableBuilder internal constructor() {
+class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
     var borderStyle: BorderStyle = BorderStyle.SQUARE
     var borderTextStyle: TextStyle = DEFAULT_STYLE
-
-    var padding: Padding = Padding.horizontal(1)
-    var style: TextStyle = DEFAULT_STYLE
-    var borders: Borders = Borders.ALL
-    var align: TextAlign = TextAlign.LEFT
-    var verticalAlign: VerticalAlign = VerticalAlign.TOP
-    var overflowWrap: OverflowWrap = OverflowWrap.ELLIPSES
     var outerBorder: Boolean = true
 
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
