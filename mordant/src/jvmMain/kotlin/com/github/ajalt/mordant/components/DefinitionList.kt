@@ -1,51 +1,60 @@
 package com.github.ajalt.mordant.components
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.table.MordantDsl
 import com.github.ajalt.mordant.terminal.Terminal
 
-class DefinitionList(
-        private val items: Map<out Renderable, Renderable>,
-        private val inline: Boolean = false,
-        private val inlineSpacing: Int = 2
+private class DefinitionList(
+        private val entries: List<Pair<Renderable, Renderable>>,
+        private val inline: Boolean,
+        private val descriptionSpacing: Int,
+        private val entrySpacing: Int,
 ) : Renderable {
-    constructor(
-            vararg items: Pair<String, String>,
-            inline: Boolean = false,
-            inlineSpacing: Int = 2
-    ) : this(items.associate { Text(it.first) to Text(it.second) }, inline, inlineSpacing)
+    init {
+        require(descriptionSpacing >= 0) { "Spacing cannot be negative" }
+    }
+
+    private val keys get() = entries.map { it.first }
+    private val values get() = entries.map { it.second }
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        val termMeasurement = items.keys.maxWidthRange(t, width)
+        val termMeasurement = keys.maxWidthRange(t, width)
         val descMeasurement = measureDescriptions(t, width)
         return termMeasurement + descMeasurement
     }
 
-    private fun measureDescriptions(t: Terminal, width: Int) = items.values.maxWidthRange(t, width)
+    private fun measureDescriptions(t: Terminal, width: Int) = values.maxWidthRange(t, width)
 
     override fun render(t: Terminal, width: Int): Lines {
         if (width == 0) return EMPTY_LINES
 
-        val termMeasurements = items.keys.map { it.measure(t, width) }
+        val termMeasurements = keys.map { it.measure(t, width) }
         val maxInlineTermWidth = (width / 2.5).toInt()
         val maxDescWidth = measureDescriptions(t, width).max
         val termWidth: Int = termMeasurements.filter {
-            it.max <= maxInlineTermWidth || inline && it.max + inlineSpacing + maxDescWidth <= width
+            it.max <= maxInlineTermWidth || inline && it.max + descriptionSpacing + maxDescWidth <= width
         }.maxWidthRange { it }.max
-        val descOffset = (termWidth + inlineSpacing).coerceAtLeast(4)
+        val descOffset = (termWidth + descriptionSpacing).coerceAtLeast(4)
         val lines = mutableListOf<Line>()
 
-        for ((i, entry) in items.entries.withIndex()) {
+        for ((i, entry) in entries.withIndex()) {
+            if (i > 0) repeat(entrySpacing) { lines += emptyList<Span>() }
             val (term, desc) = entry
-            if (!inline || termMeasurements[i].max > termWidth) {
+            if (!inline) {
                 lines += term.render(t, width).lines
-                lines += desc.withPadding(0,0,0,descOffset).render(t, width).lines
+                repeat(descriptionSpacing) { lines += emptyList<Span>() }
+                lines += desc.render(t, width).lines
                 continue
             }
-
+            if (termMeasurements[i].max > termWidth) {
+                lines += term.render(t, width).lines
+                lines += desc.withPadding(0, 0, 0, descOffset).render(t, width).lines
+                continue
+            }
             val termLines = term.render(t, termWidth).lines
-            val descLines = desc.render(t, width - termWidth - inlineSpacing).lines
+            val descLines = desc.render(t, width - termWidth - descriptionSpacing).lines
             termLines.zip(descLines).mapTo(lines) { (t, d) ->
-                flatLine(t, Span.space(inlineSpacing + termWidth - t.lineWidth), d)
+                flatLine(t, Span.space(descriptionSpacing + termWidth - t.lineWidth), d)
             }
 
             if (termLines.size > descLines.size) {
@@ -60,4 +69,99 @@ class DefinitionList(
 
         return Lines(lines)
     }
+}
+
+@MordantDsl
+class DefinitionListBuilder {
+    private val items = mutableListOf<Pair<Renderable, Renderable>>()
+
+    var inline: Boolean = false
+
+    private var _descriptionSpacing: Int? = null
+    private var _entrySpacing: Int? = null
+
+    /**
+     * If [inline] is `true`, this is the minimum number of spaces between a term and its
+     * description (default 2).
+     * If [inline] is `false`, this is the number of blank lines between a term and its
+     * description (default 0)
+     */
+    var descriptionSpacing: Int
+        get() = _descriptionSpacing ?: if (inline) 2 else 0
+        set(value) {
+            _descriptionSpacing = value
+        }
+
+    /** The number of blank lines between entries */
+    var entrySpacing: Int
+        get() = _entrySpacing ?: if (inline) 0 else 1
+        set(value) {
+            _entrySpacing = value
+        }
+
+    fun entry(term: String, description: String) {
+        entry(Text(term), Text(description))
+    }
+
+    fun entry(term: Renderable, description: String) {
+        entry(term, Text(description))
+    }
+
+    fun entry(term: String, description: Renderable) {
+        entry(Text(term), description)
+    }
+
+    fun entry(term: Renderable, description: Renderable) {
+        items += term to description
+    }
+
+    fun entry(init: DefinitionListEntryBuilder.() -> Unit) {
+        items += DefinitionListEntryBuilder().apply(init).build()
+    }
+
+    internal fun build(): Renderable = DefinitionList(items, inline, descriptionSpacing, entrySpacing)
+}
+
+@MordantDsl
+class DefinitionListEntryBuilder {
+    private var term: Renderable? = null
+    private var desc: Renderable? = null
+    fun term(term: Renderable) {
+        this.term = term
+    }
+
+    fun term(
+            term: String,
+            style: TextStyle = DEFAULT_STYLE,
+            whitespace: Whitespace = Whitespace.NORMAL,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        term(Text(term, style, whitespace, align, overflowWrap, width))
+    }
+
+    fun description(description: Renderable) {
+        this.desc = description
+    }
+
+    fun description(
+            description: String,
+            style: TextStyle = DEFAULT_STYLE,
+            whitespace: Whitespace = Whitespace.NORMAL,
+            align: TextAlign = TextAlign.NONE,
+            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+            width: Int? = null
+    ) {
+        description(Text(description, style, whitespace, align, overflowWrap, width))
+    }
+
+    internal fun build(): Pair<Renderable, Renderable> = Pair(
+            requireNotNull(term) { "Must provide a term" },
+            requireNotNull(desc) { "Must provide a description" },
+    )
+}
+
+fun definitionList(init: DefinitionListBuilder.() -> Unit): Renderable {
+    return DefinitionListBuilder().apply(init).build()
 }
