@@ -14,6 +14,8 @@ class Lines(
     val height: Int get() = lines.size
     val width: Int get() = lines.maxOfOrNull { it.lineWidth } ?: 0
 
+    fun isEmpty(): Boolean = lines.isEmpty()
+
     internal fun withStyle(style: TextStyle?): Lines {
         return when (style) {
             null, DEFAULT_STYLE -> this
