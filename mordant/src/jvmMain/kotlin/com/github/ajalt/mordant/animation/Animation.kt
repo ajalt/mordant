@@ -26,11 +26,13 @@ abstract class Animation<T>(private val terminal: Terminal) {
 
     private fun clear(renderedHeight: Int, renderedWidth: Int) {
         val lastRender = lastRender ?: return
-        terminal.cursor.startOfLine()
-        terminal.cursor.up(lastRender.height - 1)
+        terminal.cursor.move {
+            startOfLine()
+            up(lastRender.height - 1)
 
-        if (lastRender.height > renderedHeight || lastRender.width > renderedWidth) {
-            terminal.cursor.clearScreenAfterCursor()
+            if (lastRender.height > renderedHeight || lastRender.width > renderedWidth) {
+                clearScreenAfterCursor()
+            }
         }
     }
 
