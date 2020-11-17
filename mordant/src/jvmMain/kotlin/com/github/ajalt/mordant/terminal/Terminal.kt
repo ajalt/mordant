@@ -17,7 +17,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        println(message, theme.success, whitespace, align, overflowWrap, width)
+        println(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
 
     fun danger(
@@ -27,7 +27,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        println(message, theme.danger, whitespace, align, overflowWrap, width)
+        println(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
 
     fun warning(
@@ -37,7 +37,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        println(message, theme.warning, whitespace, align, overflowWrap, width)
+        println(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
 
     fun renderWarning(
@@ -47,7 +47,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(message, theme.warning, whitespace, align, overflowWrap, width)
+        return render(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
 
     fun info(
@@ -57,7 +57,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        println(message, theme.info, whitespace, align, overflowWrap, width)
+        println(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
 
     fun muted(
@@ -67,7 +67,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ) {
-        println(message, theme.muted, whitespace, align, overflowWrap, width)
+        println(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
 
     fun print(
@@ -107,7 +107,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(message, theme.success, whitespace, align, overflowWrap, width)
+        return render(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
 
     fun renderDanger(
@@ -117,7 +117,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(message, theme.danger, whitespace, align, overflowWrap, width)
+        return render(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
 
     fun renderInfo(
@@ -127,7 +127,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(message, theme.info, whitespace, align, overflowWrap, width)
+        return render(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
 
     fun renderMuted(
@@ -137,7 +137,7 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(message, theme.muted, whitespace, align, overflowWrap, width)
+        return render(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
 
     fun render(
@@ -167,7 +167,7 @@ interface Terminal {
 @Suppress("FunctionName")
 fun Terminal(
         ansiLevel: AnsiLevel? = null,
-        theme: Theme = DEFAULT_THEME,
+        theme: Theme = Theme.Default,
         width: Int? = null,
         height: Int? = null,
         hyperlinks: Boolean? = null,

@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.rendering.DEFAULT_THEME
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.internal.renderLinesAnsi
@@ -8,7 +7,7 @@ import com.github.ajalt.mordant.internal.renderLinesAnsi
 
 class VirtualTerminal(
         ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-        override val theme: Theme = DEFAULT_THEME,
+        override val theme: Theme = Theme.Default,
         width: Int = 79,
         height: Int = 24,
         hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,

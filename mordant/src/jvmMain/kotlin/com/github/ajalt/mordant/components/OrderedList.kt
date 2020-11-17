@@ -15,11 +15,11 @@ class OrderedList(
     }
 
     private fun sep(t: Theme): Line {
-        val text = numberSeparator ?: t.listNumberSeparator
+        val text = numberSeparator ?: t.string("list.number.separator")
         require("\n" !in text) { "number separator cannot contain newlines" }
         return parseText(
                 text,
-                numberStyle ?: t.listNumber
+                numberStyle ?: t.style("list.number")
         ).lines.firstOrNull() ?: EMPTY_LINE
     }
 
@@ -35,7 +35,7 @@ class OrderedList(
                 )
     }
 
-    private val maxBulletWidth = bulletWidth(listEntries.size, sep(DEFAULT_THEME).lineWidth)
+    private val maxBulletWidth = bulletWidth(listEntries.size, sep(Theme.Default).lineWidth)
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         return listEntries.maxWidthRange(t, width, maxBulletWidth)
@@ -44,7 +44,7 @@ class OrderedList(
     override fun render(t: Terminal, width: Int): Lines {
         val contentWidth = width - maxBulletWidth
         val lines = mutableListOf<Line>()
-        val style = numberStyle ?: t.theme.listNumber
+        val style = numberStyle ?: t.theme.style("list.number")
         val sep = sep(t.theme)
         val sepWidth = sep.lineWidth
 

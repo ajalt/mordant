@@ -1,62 +1,116 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.mordant.terminal.TextColors
 import com.github.ajalt.mordant.terminal.TextColors.*
 
-interface Theme {
-    val success: TextStyle get() = TextStyle(green)
-    val danger: TextStyle get() = TextStyle(red)
-    val warning: TextStyle get() = TextStyle(yellow)
-    val info: TextStyle get() = TextStyle(cyan)
-    val muted: TextStyle get() = TextStyle(dim = true)
-
-    val listNumber: TextStyle get() = DEFAULT_STYLE
-    val listNumberSeparator: String get() = "."
-    val listBullet: TextStyle get() = DEFAULT_STYLE
-    val listBulletText: String get() = "•"
-    val blockQuote: TextStyle get() = TextStyle(brightYellow)
-    val horizontalRule: TextStyle get() = DEFAULT_STYLE
-    val horizontalRuleTitle: TextStyle get() = DEFAULT_STYLE
-
-    val markdownText: TextStyle get() = DEFAULT_STYLE
-    val markdownEmph: TextStyle get() = TextStyle(italic = true)
-    val markdownStrong: TextStyle get() = TextStyle(bold = true)
-    val markdownStikethrough: TextStyle get() = TextStyle(strikethrough = true)
-    val markdownCodeBlock: TextStyle get() = TextStyle(brightRed)
-    val markdownCodeBlockBorder: Boolean get() = true
-    val markdownCodeSpan: TextStyle get() = TextStyle(brightRed, Ansi256(236))
-    val markdownHeaderPadding: Int get() = 1
-    val markdownTableHeader: TextStyle get() = TextStyle(bold = true)
-    val markdownTableBody: TextStyle get() = DEFAULT_STYLE
-    val markdownLinkText: TextStyle get() = TextStyle(brightBlue)
-    val markdownLinkDestination: TextStyle get() = TextStyle(blue)
-    val markdownImgAltText: TextStyle get() = TextStyle(dim = true)
-    val markdownH1: TextStyle get() = TextStyle(magenta, bold = true)
-    val markdownH2: TextStyle get() = TextStyle(magenta, bold = true)
-    val markdownH3: TextStyle get() = TextStyle(magenta, bold = true, underline = true)
-    val markdownH4: TextStyle get() = TextStyle(magenta, underline = true)
-    val markdownH5: TextStyle get() = TextStyle(magenta, italic = true)
-    val markdownH6: TextStyle get() = TextStyle(magenta, dim = true)
-    val markdownTaskChecked: String get() = "☑"
-    val markdownTaskUnchecked: String get() = "☐"
-
-    val markdownH1Rule: String get() = "═"
-    val markdownH2Rule: String get() = "─"
-    val markdownH3Rule: String get() = " "
-    val markdownH4Rule: String get() = " "
-    val markdownH5Rule: String get() = " "
-    val markdownH6Rule: String get() = " "
-
+sealed class Theme(
+        val styles: Map<String, TextStyle>,
+        val strings: Map<String, String>,
+        val flags: Map<String, Boolean>,
+        val dimensions: Map<String, Int>,
+) {
     companion object {
-        val ASCII = object : Theme {
-            override val listBulletText: String get() = "*"
-            override val markdownH1Rule: String get() = "="
-            override val markdownH2Rule: String get() = "-"
-            override val markdownTaskChecked: String get() = "[x]"
-            override val markdownTaskUnchecked: String get() = "[ ]"
+        val Default: Theme = BuiltTheme(
+                mapOf(
+                        "success" to TextStyle(green),
+                        "danger" to TextStyle(red),
+                        "warning" to TextStyle(yellow),
+                        "info" to TextStyle(cyan),
+                        "muted" to TextStyle(dim = true),
+
+                        "list.number" to DEFAULT_STYLE,
+                        "list.bullet" to DEFAULT_STYLE,
+                        "blockquote" to TextStyle(brightYellow),
+                        "hr.rule" to DEFAULT_STYLE,
+                        "hr.title" to DEFAULT_STYLE,
+
+                        "markdown.emph" to TextStyle(italic = true),
+                        "markdown.strong" to TextStyle(bold = true),
+                        "markdown.stikethrough" to TextStyle(strikethrough = true),
+                        "markdown.code.block" to TextStyle(brightRed),
+                        "markdown.code.span" to TextStyle(brightRed, Ansi256(236)),
+                        "markdown.table.header" to TextStyle(bold = true),
+                        "markdown.table.body" to DEFAULT_STYLE,
+                        "markdown.link.text" to TextStyle(brightBlue),
+                        "markdown.link.destination" to TextStyle(blue),
+                        "markdown.img.alt-text" to TextStyle(dim = true),
+                        "markdown.h1" to TextStyle(magenta, bold = true),
+                        "markdown.h2" to TextStyle(magenta, bold = true),
+                        "markdown.h3" to TextStyle(magenta, bold = true, underline = true),
+                        "markdown.h4" to TextStyle(magenta, underline = true),
+                        "markdown.h5" to TextStyle(magenta, italic = true),
+                        "markdown.h6" to TextStyle(magenta, dim = true),
+                ),
+                mapOf(
+                        "list.number.separator" to ".",
+                        "list.bullet.text" to "•",
+                        "markdown.task.checked" to "☑",
+                        "markdown.task.unchecked" to "☐",
+                        "markdown.h1.rule" to "═",
+                        "markdown.h2.rule" to "─",
+                        "markdown.h3.rule" to " ",
+                        "markdown.h4.rule" to " ",
+                        "markdown.h5.rule" to " ",
+                        "markdown.h6.rule" to " ",
+                ),
+                mapOf(
+                        "markdown.code.block.border" to true,
+                        "markdown.table.ascii" to false,
+                ),
+                mapOf(
+                        "markdown.header.padding" to 1,
+                )
+        )
+
+        val Plain: Theme = BuiltTheme(emptyMap(), Default.strings, Default.flags, Default.dimensions)
+
+        val PlainAscii: Theme = Theme(Plain) {
+            strings["list.number.separator"] = "."
+            strings["list.bullet.text"] = "*"
+            strings["markdown.task.checked"] = "[x]"
+            strings["markdown.task.unchecked"] = "[ ]"
+            strings["markdown.h1.rule"] = "="
+            strings["markdown.h2.rule"] = "-"
+            flags["markdown.table.ascii"] = true
         }
     }
+
+    /** Return a style if defined, or [default] otherwise */
+    fun style(style: String, default: TextStyle = DEFAULT_STYLE): TextStyle = styles.getOrDefault(style, default)
+
+    /** Return a flag if defined, or [default] otherwise */
+    fun flag(flag: String, default: Boolean = false): Boolean = flags.getOrDefault(flag, default)
+
+    /** Return a string if defined, or [default] otherwise */
+    fun string(string: String, default: String = "") = strings.getOrDefault(string, default)
+
+    /** Return a dimension if defined, or [default] otherwise */
+    fun dimension(dimension: String, default: Int = 0) = dimensions.getOrDefault(dimension, default)
 }
 
-internal val DEFAULT_THEME = object : Theme {}
+class ThemeBuilder internal constructor(
+        val styles: MutableMap<String, TextStyle>,
+        val strings: MutableMap<String, String>,
+        val flags: MutableMap<String, Boolean>,
+        val dimensions: MutableMap<String, Int>,
+) {
+    internal fun build(): Theme = BuiltTheme(styles, strings, flags, dimensions)
+}
+
+
+@Suppress("FunctionName")
+fun Theme(from: Theme = Theme.Default, init: ThemeBuilder.() -> Unit): Theme {
+    return ThemeBuilder(
+            from.styles.toMutableMap(),
+            from.strings.toMutableMap(),
+            from.flags.toMutableMap(),
+            from.dimensions.toMutableMap(),
+    ).apply(init).build()
+}
+
+private class BuiltTheme(
+        styles: Map<String, TextStyle>,
+        strings: Map<String, String>,
+        flags: Map<String, Boolean>,
+        dimensions: Map<String, Int>,
+) : Theme(styles, strings, flags, dimensions)

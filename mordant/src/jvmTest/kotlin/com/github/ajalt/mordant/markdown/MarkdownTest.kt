@@ -4,7 +4,6 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.mordant.components.LS
 import com.github.ajalt.mordant.components.NEL
 import com.github.ajalt.mordant.internal.generateHyperlinkId
-import com.github.ajalt.mordant.rendering.DEFAULT_THEME
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.AnsiLevel
@@ -735,8 +734,8 @@ foo  bar
 ```
 """, """
 ${brightRed("foo  bar")}
-""", theme = object : Theme {
-        override val markdownCodeBlockBorder: Boolean get() = false
+""", theme = Theme {
+        flags["markdown.code.block.border"] = false
     })
 
     @Test
@@ -744,16 +743,59 @@ ${brightRed("foo  bar")}
     foo  bar
 """, """
 ${brightRed("foo  bar")}
-""", theme = object : Theme {
-        override val markdownCodeBlockBorder: Boolean get() = false
+""", theme = Theme {
+        flags["markdown.code.block.border"] = false
     })
+
+    @Test
+    fun `plain theme`() = doTest("""
+# H1
+A ***~~span~~*** and `some code`.
+
+[link](c.com)
+""", """
+
+═════ H1 ══════
+
+A span and some
+code.
+
+link(c.com)
+""", theme=Theme.Plain, width = 15)
+
+    @Test
+    fun `ascii theme`() = doTest("""
+# H1
+## H2
+- [ ] foo
+- [x] bar
+
+| a | b |
+|---|---|
+| c | d |
+""", """
+
+=== H1 ===
+
+
+--- H2 ---
+
+ * [ ] foo
+ * [x] bar
+
++---+---+
+| a | b |
++===+===+
+| c | d |
++---+---+
+""", theme = Theme.PlainAscii, width = 10)
 
     private fun doTest(
             @Language("markdown") markdown: String,
             expected: String,
             width: Int = 79,
             showHtml: Boolean = false,
-            theme: Theme = DEFAULT_THEME,
+            theme: Theme = Theme.Default,
             hyperlinks: Boolean = false
     ) {
         val md = markdown.replace("⏎", "")

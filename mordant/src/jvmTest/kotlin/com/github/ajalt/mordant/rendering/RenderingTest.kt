@@ -7,7 +7,7 @@ import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(
         private val level: AnsiLevel = AnsiLevel.TRUECOLOR,
-        private val theme: Theme = DEFAULT_THEME,
+        private val theme: Theme = Theme.Default,
         private val width: Int = 79
 ) {
     init {
