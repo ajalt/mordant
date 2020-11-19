@@ -1,36 +1,24 @@
-package com.github.ajalt.mordant.animation
-
+import com.github.ajalt.mordant.components.RawRenderable
 import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 abstract class Animation<T>(private val terminal: Terminal) {
-    private var lastRender: Lines? = null
+    private var size: Pair<Int, Int>? = null
 
     protected abstract fun renderData(data: T): Renderable
 
-    fun log(
-            message: Any?,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
-    ) {
-        clear()
-        terminal.println(message, style, whitespace, align, overflowWrap, width)
-        lastRender?.let { terminal.rawPrint(terminal.render(it)) }
+    fun clear() {
+        getClear(0, 0)?.let { terminal.print(RawRenderable(it)) }
     }
 
-    fun clear() = clear(0, 0)
-
-    private fun clear(renderedHeight: Int, renderedWidth: Int) {
-        val lastRender = lastRender ?: return
-        terminal.cursor.move {
+    private fun getClear(renderedHeight: Int, renderedWidth: Int): String? {
+        val (height, width) = size ?: return null
+        return terminal.cursor.getMoves {
             startOfLine()
-            up(lastRender.height - 1)
+            up(height)
 
-            if (lastRender.height > renderedHeight || lastRender.width > renderedWidth) {
+            if (height > renderedHeight || width > renderedWidth) {
                 clearScreenAfterCursor()
             }
         }
@@ -38,9 +26,10 @@ abstract class Animation<T>(private val terminal: Terminal) {
 
     fun update(data: T) {
         val rendered = renderData(data).render(terminal)
-        clear(rendered.height, rendered.width)
-        lastRender = rendered
-        terminal.rawPrint(terminal.render(rendered))
+        size = rendered.height to rendered.width
+        val codes = getClear(rendered.height, rendered.width)
+        val combined = RawRenderable(codes + terminal.render(rendered))
+        terminal.print(combined)
     }
 }
 

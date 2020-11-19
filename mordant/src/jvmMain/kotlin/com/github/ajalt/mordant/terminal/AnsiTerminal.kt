@@ -20,10 +20,6 @@ internal class AnsiTerminal(
     override val colors: TerminalColors = TerminalColors(info.ansiLevel)
     override val cursor: TerminalCursor = if (info.interactive) PrintTerminalCursor(this) else DisabledTerminalCursor
 
-    override fun render(lines: Lines): String {
-        return renderLinesAnsi(lines, info.ansiLevel, info.ansiHyperLinks)
-    }
-
     override fun println() {
         kotlin.io.println()
     }

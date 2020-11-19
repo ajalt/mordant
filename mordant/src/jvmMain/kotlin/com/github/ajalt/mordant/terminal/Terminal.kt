@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.*
 
 interface Terminal {
@@ -148,17 +149,17 @@ interface Terminal {
             overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
             width: Int? = null
     ): String {
-        return render(when (message) {
-            is Renderable -> message
-            else -> Text(message.toString(), style, whitespace, align, overflowWrap, width)
-        })
+        return when (message) {
+            is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)
+            is Renderable -> render(message)
+            else -> render(Text(message.toString(), style, whitespace, align, overflowWrap, width))
+        }
     }
 
     fun render(renderable: Renderable): String {
-        return render(renderable.render(this))
+        return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
     }
 
-    fun render(lines: Lines): String
     fun println()
     fun rawPrintln(message: String)
     fun rawPrint(message: String)

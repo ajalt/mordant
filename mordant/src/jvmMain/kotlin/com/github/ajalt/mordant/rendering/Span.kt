@@ -7,18 +7,19 @@ import kotlin.LazyThreadSafetyMode.NONE
 internal val SINGLE_SPACE = Span.space(1)
 
 class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
-    init {
-        require(text.isNotEmpty()) { "Span text cannot be empty" }
-        require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
-            "Spans must contain ether all whitespace, or no whitespace: \"$text\""
-        }
-        require("\n" !in text) { "Spans cannot contain newlines" }
-        require(CSI !in text) { "Spans cannot contain ANSI codes" }
-    }
-
     internal companion object {
-        fun word(text: String, style: TextStyle = DEFAULT_STYLE) = Span(text, style)
+        fun word(text: String, style: TextStyle = DEFAULT_STYLE): Span {
+            require(text.isNotEmpty()) { "Span text cannot be empty" }
+            require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
+                "Spans must contain ether all whitespace, or no whitespace: \"$text\""
+            }
+            require("\n" !in text) { "Spans cannot contain newlines" }
+            require(CSI !in text) { "Spans cannot contain ANSI codes" }
+            return Span(text, style)
+        }
+
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE) = Span(" ".repeat(width), style)
+        fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 
     internal val cellWidth: Int by lazy(NONE) { stringCellWidth(text) }

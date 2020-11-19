@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.components.RawRenderable
 import com.github.ajalt.mordant.internal.CSI
 
 interface TerminalCursor {
@@ -162,7 +163,7 @@ internal class PrintTerminalCursor(private val terminal: Terminal) : TerminalCur
                 Runtime.getRuntime().removeShutdownHook(hook)
             }
         }
-        terminal.rawPrint("$CSI?25h")
+        terminal.print(RawRenderable("$CSI?25h"))
     }
 
     override fun hide(showOnExit: Boolean) {
@@ -174,11 +175,11 @@ internal class PrintTerminalCursor(private val terminal: Terminal) : TerminalCur
                 }
             }
         }
-        terminal.rawPrint("$CSI?25l")
+        terminal.print(RawRenderable("$CSI?25l"))
     }
 
     override fun move(movements: CursorMovements.() -> Unit) {
-        terminal.rawPrint(getMoves(movements))
+        terminal.print(RawRenderable(getMoves(movements)))
     }
 
     override fun getMoves(movements: CursorMovements.() -> Unit): String {

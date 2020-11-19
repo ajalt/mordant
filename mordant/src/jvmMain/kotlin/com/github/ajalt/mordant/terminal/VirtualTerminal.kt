@@ -31,10 +31,6 @@ class VirtualTerminal(
     override val colors: TerminalColors = TerminalColors(info.ansiLevel)
     override val cursor: TerminalCursor = if (stdinInteractive && stdinInteractive) PrintTerminalCursor(this) else DisabledTerminalCursor
 
-    override fun render(lines: Lines): String {
-        return renderLinesAnsi(lines, info.ansiLevel, info.ansiHyperLinks)
-    }
-
     override fun println() {
         sb.append("\n")
     }
