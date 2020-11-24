@@ -434,6 +434,19 @@ Hello <b>world</b>.
 """, width = 19)
 
     @Test
+    fun `header 1 custom padding`() = doTest("""
+# Header Text
+""", """
+
+
+${magenta("═══ ${bold("Header Text")} ═══")}
+
+
+""", width = 19, theme = Theme {
+        dimensions["markdown.header.padding"] = 2
+    })
+
+    @Test
     fun `header 1`() = doTest("""
 # Header Text
 """, """
