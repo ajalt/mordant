@@ -10,29 +10,50 @@ plugins {
 kotlin {
     // TODO: other targets
     jvm()
+    macosX64()
+    linuxX64()
+    mingwX64()
 
     sourceSets {
+        all {
+            languageSettings.useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
+        }
+        val gen by creating { }
         val commonMain by getting {
+            dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
+                implementation("org.jetbrains:markdown:0.2.0.pre-mpp")
             }
         }
         val commonTest by getting {
             dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
                 implementation("io.kotest:kotest-assertions-core:4.3.0")
             }
         }
-        val gen by creating { }
         val jvmMain by getting {
-            dependsOn(gen)
             dependencies {
-                implementation("org.jetbrains:markdown:0.1.45")
             }
         }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
             }
+        }
+
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(nativeMain)
+        }
+        val linuxX64Main by getting {
+            dependsOn(nativeMain)
+        }
+        val mingwX64Main by getting {
+            dependsOn(nativeMain)
         }
     }
 }
