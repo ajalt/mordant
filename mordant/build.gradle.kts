@@ -12,6 +12,12 @@ kotlin {
     jvm()
 
     sourceSets {
+        all {
+            with(languageSettings) {
+                languageVersion = "1.4"
+                apiVersion = "1.4"
+            }
+        }
         val commonMain by getting {
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
