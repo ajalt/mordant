@@ -28,8 +28,7 @@ class BorderStyleSection(
     val e: String get() = corners[14].toString()
 
     fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
-        fun bit(it: Boolean, shift: Int) = (if (it) 1 else 0) shl shift
-        val i = bit(n, 3) or bit(e, 2) or bit(s, 1) or bit(w, 0)
+        val i = (if (n) 8 else 0) or (if (e) 4 else 0) or (if (s) 2 else 0) or (if (w) 1 else 0)
         return Span.word(array[i], textStyle)
     }
 }
