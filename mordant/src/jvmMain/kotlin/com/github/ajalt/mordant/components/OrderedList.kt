@@ -1,14 +1,14 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.internal.parseText
 import kotlin.math.log10
 
 class OrderedList(
-        private val listEntries: List<Renderable>,
-        private val numberStyle: TextStyle? = null,
-        private val numberSeparator: String? = null
+    private val listEntries: List<Renderable>,
+    private val numberStyle: TextStyle? = null,
+    private val numberSeparator: String? = null
 ) : Renderable {
     init {
         require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
@@ -18,8 +18,8 @@ class OrderedList(
         val text = numberSeparator ?: t.string("list.number.separator")
         require("\n" !in text) { "number separator cannot contain newlines" }
         return parseText(
-                text,
-                numberStyle ?: t.style("list.number")
+            text,
+            numberStyle ?: t.style("list.number")
         ).lines.firstOrNull() ?: EMPTY_LINE
     }
 
@@ -50,10 +50,10 @@ class OrderedList(
 
         for ((i, entry) in listEntries.withIndex()) {
             val bullet = flatLine(
-                    SINGLE_SPACE,
-                    Span.word("${i + 1}", style),
-                    sep,
-                    SINGLE_SPACE
+                SINGLE_SPACE,
+                Span.word("${i + 1}", style),
+                sep,
+                SINGLE_SPACE
             )
             for ((j, line) in entry.render(t, contentWidth).lines.withIndex()) {
                 val start = if (j == 0) bullet else continuationPadding(i, sepWidth)

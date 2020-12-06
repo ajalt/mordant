@@ -13,16 +13,16 @@ data class WidthRange(val min: Int, val max: Int) {
 }
 
 internal fun Iterable<Renderable>.maxWidthRange(
-        t: Terminal,
-        width: Int,
-        paddingWidth: Int = 0
+    t: Terminal,
+    width: Int,
+    paddingWidth: Int = 0
 ): WidthRange {
     return maxWidthRange(paddingWidth) { it.measure(t, width - paddingWidth) }
 }
 
 internal inline fun <T> Iterable<T>.maxWidthRange(
-        paddingWidth: Int = 0,
-        mapping: (T) -> WidthRange?
+    paddingWidth: Int = 0,
+    mapping: (T) -> WidthRange?
 ): WidthRange {
     var max = 0
     var min = 0

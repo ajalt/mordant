@@ -40,15 +40,16 @@ inline fun <T> Terminal.animation(crossinline draw: (T) -> Renderable): Animatio
 }
 
 inline fun <T> Terminal.textAnimation(
-        style: TextStyle = TextStyle(),
-        whitespace: Whitespace = Whitespace.PRE,
-        align: TextAlign = TextAlign.NONE,
-        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null,
-        tabWidth: Int? = null,
-        crossinline draw: (T) -> String,
+    style: TextStyle = TextStyle(),
+    whitespace: Whitespace = Whitespace.PRE,
+    align: TextAlign = TextAlign.NONE,
+    overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+    width: Int? = null,
+    tabWidth: Int? = null,
+    crossinline draw: (T) -> String,
 ): Animation<T> {
     return object : Animation<T>(this) {
-        override fun renderData(data: T): Renderable = Text(draw(data), style, whitespace, align, overflowWrap, width, tabWidth)
+        override fun renderData(data: T): Renderable =
+            Text(draw(data), style, whitespace, align, overflowWrap, width, tabWidth)
     }
 }

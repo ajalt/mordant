@@ -33,73 +33,73 @@ class Terminal(
     }
 
     fun danger(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         println(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
 
     fun warning(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         println(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
 
     fun renderWarning(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return render(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
 
     fun info(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         println(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
 
     fun muted(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         println(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
 
     fun print(
-            message: Any?,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         rawPrint(render(message, style, whitespace, align, overflowWrap, width))
     }
 
     fun println(
-            message: Any?,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         rawPrintln(render(message, style, whitespace, align, overflowWrap, width))
     }
@@ -113,52 +113,52 @@ class Terminal(
     }
 
     fun renderSuccess(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return render(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
 
     fun renderDanger(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return render(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
 
     fun renderInfo(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return render(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
 
     fun renderMuted(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return render(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
 
     fun render(
-            message: Any?,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): String {
         return when (message) {
             is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)

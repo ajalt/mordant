@@ -25,12 +25,12 @@ class RenderableBuilder {
     }
 
     fun appendln(
-            message: Any?,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ): RenderableBuilder = apply {
         if (message is Renderable) renderables += message
         else renderables += Text(message.toString(), style, whitespace, align, overflowWrap, width)

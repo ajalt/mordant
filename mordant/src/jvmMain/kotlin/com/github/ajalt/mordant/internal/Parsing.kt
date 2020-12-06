@@ -113,8 +113,8 @@ private fun updateStyleWithOsc(ansi: String, existingStyle: TextStyle, defaultSt
     val hyperlink = params.last().takeUnless { it.isBlank() }
     val id = if (hyperlink == null) defaultStyle.hyperlinkId else params.find { it.startsWith("id=") }?.drop(3)
     return existingStyle.copy(
-            hyperlink = hyperlink ?: defaultStyle.hyperlink,
-            hyperlinkId = id
+        hyperlink = hyperlink ?: defaultStyle.hyperlink,
+        hyperlinkId = id
     )
 }
 
@@ -123,7 +123,7 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
 
     // SGR sequences only contains numbers; anything else is malformed and we skip it.
     val codes = ansi.subSequence(2, ansi.length - 1)
-            .split(";").mapNotNull { if (it.isEmpty()) 0 else it.toIntOrNull() }
+        .split(";").mapNotNull { if (it.isEmpty()) 0 else it.toIntOrNull() }
 
     // Empty SGR is treated as reset
     if (codes.isEmpty()) return defaultStyle
@@ -204,16 +204,16 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
     }
 
     return TxtStyle(
-            color = color,
-            bgColor = bgColor,
-            bold = bold,
-            italic = italic,
-            underline = underline,
-            dim = dim,
-            inverse = inverse,
-            strikethrough = strikethrough,
-            hyperlink = existingStyle.hyperlink,
-            hyperlinkId = existingStyle.hyperlinkId
+        color = color,
+        bgColor = bgColor,
+        bold = bold,
+        italic = italic,
+        underline = underline,
+        dim = dim,
+        inverse = inverse,
+        strikethrough = strikethrough,
+        hyperlink = existingStyle.hyperlink,
+        hyperlinkId = existingStyle.hyperlinkId
     )
 }
 
@@ -221,7 +221,7 @@ private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
     return when (codes[i]) {
         AnsiCodes.selector256 -> {
             if (i + 1 > codes.lastIndex
-                    || codes[i + 1] !in 0..255
+                || codes[i + 1] !in 0..255
             ) {
                 null to 0
             } else {
@@ -230,9 +230,10 @@ private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
         }
         AnsiCodes.selectorRgb -> {
             if (i + 3 > codes.lastIndex
-                    || codes[i + 1] !in 0..255
-                    || codes[i + 2] !in 0..255
-                    || codes[i + 3] !in 0..255) {
+                || codes[i + 1] !in 0..255
+                || codes[i + 2] !in 0..255
+                || codes[i + 3] !in 0..255
+            ) {
                 null to 0
             } else {
                 RGB(codes[i + 1], codes[i + 2], codes[i + 3]) to 4

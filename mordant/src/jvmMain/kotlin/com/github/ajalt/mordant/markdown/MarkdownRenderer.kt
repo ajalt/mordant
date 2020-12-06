@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.components.*
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.BorderStyle.Companion.ASCII
 import com.github.ajalt.mordant.rendering.BorderStyle.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.table.SectionBuilder
@@ -47,15 +46,15 @@ private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
 }
 
 internal class MarkdownRenderer(
-        input: String,
-        private val theme: Theme,
-        private val showHtml: Boolean,
-        private val hyperlinks: Boolean
+    input: String,
+    private val theme: Theme,
+    private val showHtml: Boolean,
+    private val hyperlinks: Boolean
 ) {
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
 
-    private var linkMap : LinkMap? = null
+    private var linkMap: LinkMap? = null
 
     fun render(): MarkdownDocument {
         val flavour: MarkdownFlavourDescriptor = GFMFlavourDescriptor()
@@ -74,30 +73,36 @@ internal class MarkdownRenderer(
             // ElementTypes
             MarkdownElementTypes.UNORDERED_LIST -> {
                 UnorderedList(node.children
-                        .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                        .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
+                    .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+                    .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
                 )
             }
             MarkdownElementTypes.ORDERED_LIST -> {
                 OrderedList(node.children
-                        .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                        .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
+                    .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+                    .map { MarkdownDocument(it.children.drop(1).map { c -> parseStructure(c) }) }
                 )
             }
             MarkdownElementTypes.BLOCK_QUOTE -> {
                 BlockQuote(MarkdownDocument(node.children.drop(1)
-                        .filter { it.type != MarkdownTokenTypes.WHITE_SPACE }
-                        .map { parseStructure(it) }))
+                    .filter { it.type != MarkdownTokenTypes.WHITE_SPACE }
+                    .map { parseStructure(it) })
+                )
             }
             MarkdownElementTypes.CODE_FENCE -> {
                 val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
-                val lines = innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
+                val lines =
+                    innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
                 val content = Text(lines, whitespace = Whitespace.PRE_WRAP, style = theme.style("markdown.code.block"))
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
             MarkdownElementTypes.CODE_BLOCK -> {
-                val content = Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP, style = theme.style("markdown.code.block"))
+                val content = Text(
+                    innerInlines(node),
+                    whitespace = Whitespace.PRE_WRAP,
+                    style = theme.style("markdown.code.block")
+                )
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
             MarkdownElementTypes.HTML_BLOCK -> when {
@@ -114,12 +119,12 @@ internal class MarkdownRenderer(
 
             MarkdownElementTypes.SETEXT_1 -> setext(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
             MarkdownElementTypes.SETEXT_2 -> setext(theme.string("markdown.h2.rule"), theme.style("markdown.h2"), node)
-            MarkdownElementTypes.ATX_1 -> atxHorizRule(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
-            MarkdownElementTypes.ATX_2 -> atxHorizRule(theme.string("markdown.h2.rule"), theme.style("markdown.h2"), node)
-            MarkdownElementTypes.ATX_3 -> atxHorizRule(theme.string("markdown.h3.rule"), theme.style("markdown.h3"), node)
-            MarkdownElementTypes.ATX_4 -> atxHorizRule(theme.string("markdown.h4.rule"), theme.style("markdown.h4"), node)
-            MarkdownElementTypes.ATX_5 -> atxHorizRule(theme.string("markdown.h5.rule"), theme.style("markdown.h5"), node)
-            MarkdownElementTypes.ATX_6 -> atxHorizRule(theme.string("markdown.h6.rule"), theme.style("markdown.h6"), node)
+            MarkdownElementTypes.ATX_1 -> atxHr(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
+            MarkdownElementTypes.ATX_2 -> atxHr(theme.string("markdown.h2.rule"), theme.style("markdown.h2"), node)
+            MarkdownElementTypes.ATX_3 -> atxHr(theme.string("markdown.h3.rule"), theme.style("markdown.h3"), node)
+            MarkdownElementTypes.ATX_4 -> atxHr(theme.string("markdown.h4.rule"), theme.style("markdown.h4"), node)
+            MarkdownElementTypes.ATX_5 -> atxHr(theme.string("markdown.h5.rule"), theme.style("markdown.h5"), node)
+            MarkdownElementTypes.ATX_6 -> atxHr(theme.string("markdown.h6.rule"), theme.style("markdown.h6"), node)
 
             GFMTokenTypes.CHECK_BOX -> {
                 val content = CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
@@ -163,8 +168,12 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.CODE_SPAN -> {
                 // Trim the code as a kludge to prevent the background style from extending if the
                 // code ends with whitespace. It would be better to fix this in the text wrapping code.
-                parseText(input.substring(node.children[1].startOffset,
-                        node.children.last().startOffset).trim(), theme.style("markdown.code.span"))
+                parseText(
+                    input.substring(
+                        node.children[1].startOffset,
+                        node.children.last().startOffset
+                    ).trim(), theme.style("markdown.code.span")
+                )
             }
             MarkdownElementTypes.EMPH -> {
                 innerInlines(node, drop = 1).withStyle(theme.style("markdown.emph"))
@@ -183,7 +192,7 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.LINK_DESTINATION -> {
                 innerInlines(node, drop = if (node.children.firstOrNull()?.type == MarkdownTokenTypes.LT) 1 else 0)
-                        .replaceStyle(theme.style("markdown.link.destination")) // the child might be TEXT or GFM_AUTOLINK
+                    .replaceStyle(theme.style("markdown.link.destination")) // the child might be TEXT or GFM_AUTOLINK
             }
             MarkdownElementTypes.INLINE_LINK -> {
                 renderInlineLink(node)
@@ -244,10 +253,10 @@ internal class MarkdownRenderer(
 
     private fun innerInlines(node: ASTNode, drop: Int = 0, dropLast: Int = drop): Lines {
         return node.children.subList(drop, node.children.size - dropLast)
-                .foldLines { parseInlines(it) }
+            .foldLines { parseInlines(it) }
     }
 
-    private fun atxHorizRule(bar: String, style: TextStyle, node: ASTNode): Renderable {
+    private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
             else -> headerHr(Text(atxContent(node)), bar, style)
@@ -267,7 +276,7 @@ internal class MarkdownRenderer(
 
     private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
         return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor))
-                .withVerticalPadding(theme.dimension("markdown.header.padding"))
+            .withVerticalPadding(theme.dimension("markdown.header.padding"))
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
@@ -298,7 +307,9 @@ internal class MarkdownRenderer(
         val text = findLinkText(node)!!
         val dest = findLinkDest(node) ?: ""
         if (hyperlinks && dest.isNotBlank()) {
-            return text.replaceStyle(theme.style("markdown.link.text").copy(hyperlink = dest, hyperlinkId = generateHyperlinkId()))
+            return text.replaceStyle(
+                theme.style("markdown.link.text").copy(hyperlink = dest, hyperlinkId = generateHyperlinkId())
+            )
         }
 
         val parsedText = text.replaceStyle(theme.style("markdown.link.text"))
@@ -313,7 +324,8 @@ internal class MarkdownRenderer(
         return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
             null -> innerInlines(node)
             else -> {
-                val style = theme.style("markdown.link.text").copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId())
+                val style = theme.style("markdown.link.text")
+                    .copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId())
                 findLinkText(node)?.replaceStyle(style) ?: parseText(label, style)
             }
         }
@@ -321,9 +333,12 @@ internal class MarkdownRenderer(
 
     private fun renderImageLink(node: ASTNode): Lines {
         val text = findLinkText(node.firstChildOfType(MarkdownElementTypes.INLINE_LINK))
-                ?.takeUnless { it.isEmpty() }
-                ?: return EMPTY_LINES
-        return listOf(parseText("🖼️ ", DEFAULT_STYLE), text.replaceStyle(theme.style("markdown.img.alt-text"))).foldLines { it }
+            ?.takeUnless { it.isEmpty() }
+            ?: return EMPTY_LINES
+        return listOf(
+            parseText("🖼️ ", DEFAULT_STYLE),
+            text.replaceStyle(theme.style("markdown.img.alt-text"))
+        ).foldLines { it }
     }
 
     private fun findLinkLabel(node: ASTNode): String? {
@@ -332,13 +347,13 @@ internal class MarkdownRenderer(
 
     private fun findLinkDest(node: ASTNode): String? {
         return node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-                ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
-                ?.nodeText()
+            ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
+            ?.nodeText()
     }
 
     private fun findLinkText(node: ASTNode): Lines? {
         return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)
-                ?.let { innerInlines(it, drop = 1) }
+            ?.let { innerInlines(it, drop = 1) }
     }
 }
 

@@ -1,13 +1,13 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.internal.parseText
 
 class UnorderedList(
-        private val listEntries: List<Renderable>,
-        private val bulletText: String? = null,
-        private val bulletStyle: TextStyle? = null
+    private val listEntries: List<Renderable>,
+    private val bulletText: String? = null,
+    private val bulletStyle: TextStyle? = null
 ) : Renderable {
     init {
         require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
@@ -18,9 +18,9 @@ class UnorderedList(
         require("\n" !in text) { "bullet text cannot contain newlines" }
         if (text.isEmpty()) return EMPTY_LINE
         return flatLine(
-                SINGLE_SPACE,
-                parseText(text, bulletStyle ?: t.style("list.bullet")).lines.firstOrNull() ?: EMPTY_LINE,
-                SINGLE_SPACE
+            SINGLE_SPACE,
+            parseText(text, bulletStyle ?: t.style("list.bullet")).lines.firstOrNull() ?: EMPTY_LINE,
+            SINGLE_SPACE
         )
     }
 

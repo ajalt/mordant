@@ -15,9 +15,9 @@ import com.github.ajalt.mordant.terminal.Terminal
  *   terminal supports them.
  */
 class Markdown(
-        private val markdown: String,
-        private val showHtml: Boolean = false,
-        private val hyperlinks: Boolean? = null
+    private val markdown: String,
+    private val showHtml: Boolean = false,
+    private val hyperlinks: Boolean? = null
 ) : Renderable {
     private var document: MarkdownDocument? = null
     private fun document(t: Terminal): MarkdownDocument {

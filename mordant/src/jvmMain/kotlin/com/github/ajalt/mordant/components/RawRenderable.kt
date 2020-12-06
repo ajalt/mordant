@@ -6,7 +6,7 @@ import com.github.ajalt.mordant.rendering.Span
 import com.github.ajalt.mordant.rendering.WidthRange
 import com.github.ajalt.mordant.terminal.Terminal
 
-internal class RawRenderable(private val content: String): Renderable {
+internal class RawRenderable(private val content: String) : Renderable {
     override fun measure(t: Terminal, width: Int): WidthRange {
         return WidthRange(content.length, content.length)
     }

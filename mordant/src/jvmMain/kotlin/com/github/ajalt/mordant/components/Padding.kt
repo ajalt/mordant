@@ -12,7 +12,8 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
         fun none(): Padding = Padding(0)
         fun vertical(padding: Int = 0): Padding = Padding(padding, 0)
         fun horizontal(padding: Int = 0): Padding = Padding(0, padding)
-        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding = Padding(top, right, bottom, left)
+        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding =
+            Padding(top, right, bottom, left)
     }
 
     init {
@@ -25,18 +26,31 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
     val isEmpty get() = top == 0 && right == 0 && bottom == 0 && left == 0
 }
 
-fun Renderable.withPadding(padding: Padding, padEmptyLines: Boolean = true): Renderable = Padded.get(this, padding, padEmptyLines)
-fun Renderable.withPadding(all: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(all), padEmptyLines)
-fun Renderable.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(vertical, horizontal), padEmptyLines)
-fun Renderable.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, horizontal, bottom), padEmptyLines)
-fun Renderable.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Renderable = Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
-fun Renderable.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.vertical(padding), padEmptyLines)
-fun Renderable.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable = withPadding(Padding.horizontal(padding), padEmptyLines)
+fun Renderable.withPadding(padding: Padding, padEmptyLines: Boolean = true): Renderable =
+    Padded.get(this, padding, padEmptyLines)
+
+fun Renderable.withPadding(all: Int, padEmptyLines: Boolean = true): Renderable =
+    Padded.get(this, Padding(all), padEmptyLines)
+
+fun Renderable.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Renderable =
+    Padded.get(this, Padding(vertical, horizontal), padEmptyLines)
+
+fun Renderable.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Renderable =
+    Padded.get(this, Padding(top, horizontal, bottom), padEmptyLines)
+
+fun Renderable.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Renderable =
+    Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
+
+fun Renderable.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable =
+    withPadding(Padding.vertical(padding), padEmptyLines)
+
+fun Renderable.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable =
+    withPadding(Padding.horizontal(padding), padEmptyLines)
 
 private class Padded private constructor(
-        private val content: Renderable,
-        private val padding: Padding,
-        private val padEmptyLines: Boolean
+    private val content: Renderable,
+    private val padding: Padding,
+    private val padEmptyLines: Boolean
 ) : Renderable {
     companion object {
         fun get(content: Renderable, padding: Padding, padEmptyLines: Boolean): Renderable {

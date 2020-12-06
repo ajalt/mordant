@@ -38,7 +38,7 @@ enum class TextStyles(val style: TextStyle) {
 
 @Suppress("EnumEntryName")
 enum class TextColors(
-        private val textStyle: TextStyle,
+    private val textStyle: TextStyle,
 ) : Color by textStyle.color!!, TextStyle by textStyle {
     black(TextStyle(Ansi16(30))),
     red(TextStyle(Ansi16(31))),
@@ -99,7 +99,8 @@ enum class TextColors(
          * @param y The yellow amount, in the range \[0,100]
          * @param k The black amount, in the range \[0,100]
          */
-        fun cmyk(c: Int, m: Int, y: Int, k: Int, level: AnsiLevel = TRUECOLOR): TextStyle = color(CMYK(c, m, y, k), level)
+        fun cmyk(c: Int, m: Int, y: Int, k: Int, level: AnsiLevel = TRUECOLOR): TextStyle =
+            color(CMYK(c, m, y, k), level)
 
         /**
          * Create a grayscale color code from a fraction in the range \[0, 1].
@@ -143,12 +144,12 @@ enum class TextColors(
                 else -> color
             }
             return TextStyle(
-                    when (level) {
-                        NONE -> null
-                        ANSI16 -> c.toAnsi16()
-                        ANSI256 -> if (c is Ansi16) c else c.toAnsi256()
-                        TRUECOLOR -> c
-                    },
+                when (level) {
+                    NONE -> null
+                    ANSI16 -> c.toAnsi16()
+                    ANSI256 -> if (c is Ansi16) c else c.toAnsi256()
+                    TRUECOLOR -> c
+                },
             )
         }
     }

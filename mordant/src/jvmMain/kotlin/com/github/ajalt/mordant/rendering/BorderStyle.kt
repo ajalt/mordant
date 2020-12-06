@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 
 class BorderStyleSection(
-        private val corners: String
+    private val corners: String
 ) {
     init {
         require(corners.length == 15) { "string of corners must have length==15" }
@@ -35,25 +35,25 @@ class BorderStyleSection(
 }
 
 class BorderStyle(
-        val head: BorderStyleSection,
-        val headBottom: BorderStyleSection,
-        val body: BorderStyleSection,
-        val bodyBottom: BorderStyleSection,
-        val foot: BorderStyleSection
+    val head: BorderStyleSection,
+    val headBottom: BorderStyleSection,
+    val body: BorderStyleSection,
+    val bodyBottom: BorderStyleSection,
+    val foot: BorderStyleSection
 ) {
     companion object {
         fun build(
-                head: String,
-                headBottom: String = head,
-                body: String = head,
-                bodyBottom: String = body,
-                foot: String = body
+            head: String,
+            headBottom: String = head,
+            body: String = head,
+            bodyBottom: String = body,
+            foot: String = body
         ): BorderStyle = BorderStyle(
-                head = BorderStyleSection(head),
-                headBottom = BorderStyleSection(headBottom),
-                body = BorderStyleSection(body),
-                bodyBottom = BorderStyleSection(bodyBottom),
-                foot = BorderStyleSection(foot),
+            head = BorderStyleSection(head),
+            headBottom = BorderStyleSection(headBottom),
+            body = BorderStyleSection(body),
+            bodyBottom = BorderStyleSection(bodyBottom),
+            foot = BorderStyleSection(foot),
         )
 
         /**
@@ -72,7 +72,7 @@ class BorderStyle(
          * ```
          */
         val SQUARE = build(
-                "┌┬┐├┼┤└┴┘─│╷╵╴╶"
+            "┌┬┐├┼┤└┴┘─│╷╵╴╶"
         )
 
         /**
@@ -91,10 +91,10 @@ class BorderStyle(
          * ```
          */
         val SQUARE_DOUBLE_SECTION_SEPARATOR = build(
-                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
-                "╒╤╕╞╪╡╘╧╛═│╷╵  ",
-                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
-                "╒╤╕╞╪╡╘╧╛═│╷╵  ",
+            "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+            "╒╤╕╞╪╡╘╧╛═│╷╵  ",
+            "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+            "╒╤╕╞╪╡╘╧╛═│╷╵  ",
         )
 
         /**
@@ -113,7 +113,7 @@ class BorderStyle(
          * ```
          */
         val ROUNDED = build(
-                "╭┬╮├┼┤╰┴╯─│╷╵╴╶",
+            "╭┬╮├┼┤╰┴╯─│╷╵╴╶",
         )
 
         /**
@@ -132,7 +132,7 @@ class BorderStyle(
          * ```
          */
         val HEAVY = build(
-                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
+            "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
         )
 
         /**
@@ -151,7 +151,7 @@ class BorderStyle(
          * ```
          */
         val DOUBLE = build(
-                "╔╦╗╠╬╣╚╩╝═║    ",
+            "╔╦╗╠╬╣╚╩╝═║    ",
         )
 
         /**
@@ -170,11 +170,11 @@ class BorderStyle(
          * ```
          */
         val HEAVY_HEAD_FOOT = build(
-                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
-                "┍┯┑┡╇┩┗┻┛━╿╷╹╸╺",
-                "┌┬┐├┼┤└┴┘─│╷╵╴╶",
-                "┏┳┓┢╈┪┕┷┙━╽╻╵╸╺",
-                "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
+            "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
+            "┍┯┑┡╇┩┗┻┛━╿╷╹╸╺",
+            "┌┬┐├┼┤└┴┘─│╷╵╴╶",
+            "┏┳┓┢╈┪┕┷┙━╽╻╵╸╺",
+            "┏┳┓┣╋┫┗┻┛━┃╻╹╸╺",
         )
 
         /**
@@ -193,7 +193,7 @@ class BorderStyle(
          * ```
          */
         val ASCII = build(
-                "+++++++++-|    ",
+            "+++++++++-|    ",
         )
 
         /**
@@ -212,14 +212,14 @@ class BorderStyle(
          * ```
          */
         val ASCII_DOUBLE_SECTION_SEPARATOR = build(
-                "+++++++++-|    ",
-                "+++++++++=|    ",
-                "+++++++++-|    ",
-                "+++++++++=|    ",
+            "+++++++++-|    ",
+            "+++++++++=|    ",
+            "+++++++++-|    ",
+            "+++++++++=|    ",
         )
 
         val BLANK = build(
-                "               ",
+            "               ",
         )
     }
 }

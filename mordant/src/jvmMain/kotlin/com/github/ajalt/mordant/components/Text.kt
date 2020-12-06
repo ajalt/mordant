@@ -1,31 +1,31 @@
 package com.github.ajalt.mordant.components
 
-import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.internal.parseText
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.TextAlign.*
+import com.github.ajalt.mordant.terminal.Terminal
 
 internal const val NEL = "\u0085"
 internal const val LS = "\u2028"
 
 
 class Text internal constructor(
-        lines: Lines,
-        private val style: TextStyle = DEFAULT_STYLE,
-        private val whitespace: Whitespace = Whitespace.NORMAL,
-        private val align: TextAlign = NONE,
-        private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        private val width: Int? = null,
-        private val tabWidth: Int? = null
+    lines: Lines,
+    private val style: TextStyle = DEFAULT_STYLE,
+    private val whitespace: Whitespace = Whitespace.NORMAL,
+    private val align: TextAlign = NONE,
+    private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+    private val width: Int? = null,
+    private val tabWidth: Int? = null
 ) : Renderable {
     constructor(
-            text: String,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.NORMAL,
-            align: TextAlign = NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null,
-            tabWidth: Int? = null
+        text: String,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.NORMAL,
+        align: TextAlign = NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null,
+        tabWidth: Int? = null
     ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width, tabWidth)
 
     init {
@@ -115,7 +115,10 @@ class Text internal constructor(
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
                 var span = when {
                     pieceIsWhitespace && whitespace.collapseSpaces -> Span.space(1, piece.style)
-                    piece.isTab() -> if (tabWidth > 0) Span.space(tabWidth - (width % tabWidth), piece.style) else continue
+                    piece.isTab() -> if (tabWidth > 0) Span.space(
+                        tabWidth - (width % tabWidth),
+                        piece.style
+                    ) else continue
                     else -> piece
                 }
 

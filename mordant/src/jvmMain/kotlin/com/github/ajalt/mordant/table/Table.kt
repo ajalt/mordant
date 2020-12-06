@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 
 internal sealed class Cell {
     object Empty : Cell() {
@@ -14,27 +14,27 @@ internal sealed class Cell {
     }
 
     data class SpanRef(
-            val cell: Content,
-            override val borderLeft: Boolean?,
-            override val borderTop: Boolean?,
-            override val borderRight: Boolean?,
-            override val borderBottom: Boolean?,
+        val cell: Content,
+        override val borderLeft: Boolean?,
+        override val borderTop: Boolean?,
+        override val borderRight: Boolean?,
+        override val borderBottom: Boolean?,
     ) : Cell() {
         override val rowSpan: Int get() = cell.rowSpan
         override val columnSpan: Int get() = cell.columnSpan
     }
 
     data class Content(
-            val content: Renderable,
-            override val rowSpan: Int,
-            override val columnSpan: Int,
-            override val borderLeft: Boolean?,
-            override val borderTop: Boolean?,
-            override val borderRight: Boolean?,
-            override val borderBottom: Boolean?,
-            val style: TextStyle?,
-            val textAlign: TextAlign,
-            val verticalAlign: VerticalAlign,
+        val content: Renderable,
+        override val rowSpan: Int,
+        override val columnSpan: Int,
+        override val borderLeft: Boolean?,
+        override val borderTop: Boolean?,
+        override val borderRight: Boolean?,
+        override val borderBottom: Boolean?,
+        val style: TextStyle?,
+        val textAlign: TextAlign,
+        val verticalAlign: VerticalAlign,
     ) : Cell() {
         init {
             require(rowSpan > 0) { "rowSpan must be greater than 0" }
@@ -53,13 +53,13 @@ internal sealed class Cell {
 }
 
 internal class Table(
-        val rows: List<ImmutableRow>,
-        val borderStyle: BorderStyle,
-        val borderTextStyle: TextStyle,
-        val headerRowCount: Int,
-        val footerRowCount: Int,
-        val columnStyles: Map<Int, ColumnWidth>,
-        val outerBorder: Boolean
+    val rows: List<ImmutableRow>,
+    val borderStyle: BorderStyle,
+    val borderTextStyle: TextStyle,
+    val headerRowCount: Int,
+    val footerRowCount: Int,
+    val columnStyles: Map<Int, ColumnWidth>,
+    val outerBorder: Boolean
 ) : Renderable {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -85,23 +85,23 @@ internal class Table(
         val ranges = List(columnCount) { measureColumn(it, t, remainingWidth) }
 
         return WidthRange(
-                min = ranges.sumOf { it.min } + borderWidth,
-                max = ranges.sumOf { it.max } + borderWidth
+            min = ranges.sumOf { it.min } + borderWidth,
+            max = ranges.sumOf { it.max } + borderWidth
         )
     }
 
     override fun render(t: Terminal, width: Int): Lines {
         return TableRenderer(
-                rows = rows,
-                borderStyle = borderStyle,
-                borderTextStyle = borderTextStyle,
-                headerRowCount = headerRowCount,
-                footerRowCount = footerRowCount,
-                columnCount = columnCount,
-                columnWidths = calculateColumnWidths(t, width),
-                columnBorders = columnBorders,
-                rowBorders = rowBorders,
-                t = t
+            rows = rows,
+            borderStyle = borderStyle,
+            borderTextStyle = borderTextStyle,
+            headerRowCount = headerRowCount,
+            footerRowCount = footerRowCount,
+            columnCount = columnCount,
+            columnWidths = calculateColumnWidths(t, width),
+            columnBorders = columnBorders,
+            rowBorders = rowBorders,
+            t = t
         ).render()
     }
 
@@ -144,8 +144,8 @@ internal class Table(
         // Only shrink auto columns if shrinking is required to allow the flex columns to fit their
         // min. Never shrink auto columns below their min unless they wouldn't fit.
         val allocatedAutoWidth = (availableWidth - allocatedFixedWidth - minExpandWidth)
-                .coerceIn(minAutoWidth, maxAutoWidth)
-                .coerceAtMost(availableWidth - allocatedFixedWidth)
+            .coerceIn(minAutoWidth, maxAutoWidth)
+            .coerceAtMost(availableWidth - allocatedFixedWidth)
         // Expanding columns get whatever is left
         val allocatedExpandWidth = availableWidth - allocatedFixedWidth - allocatedAutoWidth
 
@@ -189,16 +189,16 @@ internal class Table(
 }
 
 private class TableRenderer(
-        val rows: List<ImmutableRow>,
-        val borderStyle: BorderStyle,
-        val borderTextStyle: TextStyle,
-        val headerRowCount: Int,
-        val footerRowCount: Int,
-        val columnCount: Int,
-        val columnWidths: List<Int>,
-        val columnBorders: List<Boolean>,
-        val rowBorders: List<Boolean>,
-        val t: Terminal
+    val rows: List<ImmutableRow>,
+    val borderStyle: BorderStyle,
+    val borderTextStyle: TextStyle,
+    val headerRowCount: Int,
+    val footerRowCount: Int,
+    val columnCount: Int,
+    val columnWidths: List<Int>,
+    val columnBorders: List<Boolean>,
+    val rowBorders: List<Boolean>,
+    val t: Terminal
 ) {
     private val rowCount get() = rows.size
     private val renderedRows = rows.map { r ->
@@ -218,7 +218,7 @@ private class TableRenderer(
     }
 
     private val tableLines: MutableList<MutableList<Span>> =
-            MutableList(rowHeights.sum() + rowBorders.count { it }) { mutableListOf() }
+        MutableList(rowHeights.sum() + rowBorders.count { it }) { mutableListOf() }
 
     fun render(): Lines {
         // Render in column-major order so that we can append the lines of cells with row spans
@@ -327,9 +327,9 @@ private class TableRenderer(
                 val cellHeight = (y until y + cell.rowSpan).sumOf { rowHeights[it] } +
                         ((y + 1) until (y + cell.rowSpan)).count { rowBorders[it + 1] }
                 cell.content.render(t, cellWidth)
-                        .withStyle(cell.style)
-                        .setSize(cellWidth, cellHeight, cell.verticalAlign, cell.textAlign)
-                        .lines
+                    .withStyle(cell.style)
+                    .setSize(cellWidth, cellHeight, cell.verticalAlign, cell.textAlign)
+                    .lines
             }
         }
     }
@@ -345,19 +345,19 @@ private class TableRenderer(
         // If all the cells around this corner have null borders, we're in the middle of a span, so
         // don't draw anything.
         if ((tl != null || tr != null || bl != null || br != null) &&
-                tl?.borderRight == null && tr?.borderLeft == null &&
-                tr?.borderBottom == null && br?.borderTop == null &&
-                bl?.borderRight == null && br?.borderLeft == null &&
-                tl?.borderBottom == null && bl?.borderTop == null
+            tl?.borderRight == null && tr?.borderLeft == null &&
+            tr?.borderBottom == null && br?.borderTop == null &&
+            bl?.borderRight == null && br?.borderLeft == null &&
+            tl?.borderBottom == null && bl?.borderTop == null
         ) {
             return null
         }
         return sectionOfRow(y).getCorner(
-                tl?.borderRight == true || tr?.borderLeft == true,
-                tr?.borderBottom == true || br?.borderTop == true,
-                bl?.borderRight == true || br?.borderLeft == true,
-                tl?.borderBottom == true || bl?.borderTop == true,
-                borderTextStyle
+            tl?.borderRight == true || tr?.borderLeft == true,
+            tr?.borderBottom == true || br?.borderTop == true,
+            bl?.borderRight == true || br?.borderLeft == true,
+            tl?.borderBottom == true || bl?.borderTop == true,
+            borderTextStyle
         )
     }
 

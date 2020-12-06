@@ -5,10 +5,10 @@ import com.github.ajalt.mordant.table.MordantDsl
 import com.github.ajalt.mordant.terminal.Terminal
 
 private class DefinitionList(
-        private val entries: List<Pair<Renderable, Renderable>>,
-        private val inline: Boolean,
-        private val descriptionSpacing: Int,
-        private val entrySpacing: Int,
+    private val entries: List<Pair<Renderable, Renderable>>,
+    private val inline: Boolean,
+    private val descriptionSpacing: Int,
+    private val entrySpacing: Int,
 ) : Renderable {
     init {
         require(descriptionSpacing >= 0) { "Spacing cannot be negative" }
@@ -131,12 +131,12 @@ class DefinitionListEntryBuilder {
     }
 
     fun term(
-            term: String,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.NORMAL,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        term: String,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.NORMAL,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         term(Text(term, style, whitespace, align, overflowWrap, width))
     }
@@ -146,19 +146,19 @@ class DefinitionListEntryBuilder {
     }
 
     fun description(
-            description: String,
-            style: TextStyle = DEFAULT_STYLE,
-            whitespace: Whitespace = Whitespace.NORMAL,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        description: String,
+        style: TextStyle = DEFAULT_STYLE,
+        whitespace: Whitespace = Whitespace.NORMAL,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         description(Text(description, style, whitespace, align, overflowWrap, width))
     }
 
     internal fun build(): Pair<Renderable, Renderable> = Pair(
-            requireNotNull(term) { "Must provide a term" },
-            requireNotNull(desc) { "Must provide a description" },
+        requireNotNull(term) { "Must provide a term" },
+        requireNotNull(desc) { "Must provide a description" },
     )
 }
 

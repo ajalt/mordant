@@ -15,15 +15,15 @@ interface CellStyleBuilder {
     var overflowWrap: OverflowWrap?
 
     fun style(
-            color: Color? = null,
-            bgColor: Color? = null,
-            bold: Boolean = false,
-            italic: Boolean = false,
-            underline: Boolean = false,
-            dim: Boolean = false,
-            inverse: Boolean = false,
-            strikethrough: Boolean = false,
-            hyperlink: String? = null
+        color: Color? = null,
+        bgColor: Color? = null,
+        bold: Boolean = false,
+        italic: Boolean = false,
+        underline: Boolean = false,
+        dim: Boolean = false,
+        inverse: Boolean = false,
+        strikethrough: Boolean = false,
+        hyperlink: String? = null
     ) {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
@@ -153,7 +153,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 
 @MordantDsl
 class RowBuilder internal constructor(
-        internal val cells: MutableList<CellBuilder>
+    internal val cells: MutableList<CellBuilder>
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
     fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit = {}) {
         cell(cell1, init)
@@ -172,9 +172,9 @@ class RowBuilder internal constructor(
 
 @MordantDsl
 class CellBuilder internal constructor(
-        internal val content: Renderable = Text(""),
-        rowSpan: Int = 1,
-        columnSpan: Int = 1,
+    internal val content: Renderable = Text(""),
+    rowSpan: Int = 1,
+    columnSpan: Int = 1,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
 
     var columnSpan = columnSpan

@@ -2,13 +2,13 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.terminal.TextColors.Companion.hsl
-import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.terminal.TextColors.Companion.hsl
+import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
 
 class TerminalColors internal constructor(
-        private val level: AnsiLevel
+    private val level: AnsiLevel
 ) {
     val black: TextStyle get() = downsample(TextColors.black)
     val red: TextStyle get() = downsample(TextColors.red)
@@ -148,5 +148,5 @@ class TerminalColors internal constructor(
     // All of the TextColors enums are already Ansi16, so there's no downsampling to do other
     // than turning them off entirely
     private fun downsample(style: TextStyle): TextStyle =
-            if (level == AnsiLevel.NONE) DEFAULT_STYLE else style
+        if (level == AnsiLevel.NONE) DEFAULT_STYLE else style
 }

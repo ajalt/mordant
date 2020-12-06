@@ -31,16 +31,16 @@ interface TextStyle {
             this === DEFAULT_STYLE -> other
             other === DEFAULT_STYLE -> this
             else -> TxtStyle(
-                    color = other.color ?: color,
-                    bgColor = other.bgColor ?: bgColor,
-                    bold = other.bold || bold,
-                    italic = other.italic || italic,
-                    underline = other.underline || underline,
-                    dim = other.dim || dim,
-                    inverse = other.inverse || inverse,
-                    strikethrough = other.strikethrough || strikethrough,
-                    hyperlink = other.hyperlink ?: hyperlink,
-                    hyperlinkId = other.hyperlinkId ?: hyperlinkId
+                color = other.color ?: color,
+                bgColor = other.bgColor ?: bgColor,
+                bold = other.bold || bold,
+                italic = other.italic || italic,
+                underline = other.underline || underline,
+                dim = other.dim || dim,
+                inverse = other.inverse || inverse,
+                strikethrough = other.strikethrough || strikethrough,
+                hyperlink = other.hyperlink ?: hyperlink,
+                hyperlinkId = other.hyperlinkId ?: hyperlinkId
             )
         }
     }
@@ -48,39 +48,39 @@ interface TextStyle {
 
 @Suppress("FunctionName")
 fun TextStyle(
-        color: Color? = null,
-        bgColor: Color? = null,
-        bold: Boolean = false,
-        italic: Boolean = false,
-        underline: Boolean = false,
-        dim: Boolean = false,
-        inverse: Boolean = false,
-        strikethrough: Boolean = false,
-        hyperlink: String? = null
+    color: Color? = null,
+    bgColor: Color? = null,
+    bold: Boolean = false,
+    italic: Boolean = false,
+    underline: Boolean = false,
+    dim: Boolean = false,
+    inverse: Boolean = false,
+    strikethrough: Boolean = false,
+    hyperlink: String? = null
 ): TextStyle = TxtStyle(
-        color = color,
-        bgColor = bgColor,
-        bold = bold,
-        italic = italic,
-        underline = underline,
-        dim = dim,
-        inverse = inverse,
-        strikethrough = strikethrough,
-        hyperlink = hyperlink,
-        hyperlinkId = hyperlink?.let { generateHyperlinkId() }
+    color = color,
+    bgColor = bgColor,
+    bold = bold,
+    italic = italic,
+    underline = underline,
+    dim = dim,
+    inverse = inverse,
+    strikethrough = strikethrough,
+    hyperlink = hyperlink,
+    hyperlinkId = hyperlink?.let { generateHyperlinkId() }
 )
 
 internal data class TxtStyle(
-        override val color: Color?,
-        override val bgColor: Color?,
-        override val bold: Boolean,
-        override val italic: Boolean,
-        override val underline: Boolean,
-        override val dim: Boolean,
-        override val inverse: Boolean,
-        override val strikethrough: Boolean,
-        override val hyperlink: String?,
-        override val hyperlinkId: String?
+    override val color: Color?,
+    override val bgColor: Color?,
+    override val bold: Boolean,
+    override val italic: Boolean,
+    override val underline: Boolean,
+    override val dim: Boolean,
+    override val inverse: Boolean,
+    override val strikethrough: Boolean,
+    override val hyperlink: String?,
+    override val hyperlinkId: String?
 ) : TextStyle {
     override infix fun on(bg: TextStyle): TextStyle {
         return copy(bgColor = bg.color)
@@ -90,12 +90,12 @@ internal data class TxtStyle(
 }
 
 internal fun TextStyle.copy(
-        fg: Color? = color,
-        bg: Color? = bgColor,
-        hyperlink: String? = this.hyperlink,
-        hyperlinkId: String? = this.hyperlinkId
+    fg: Color? = color,
+    bg: Color? = bgColor,
+    hyperlink: String? = this.hyperlink,
+    hyperlinkId: String? = this.hyperlinkId
 ) = TxtStyle(
-        fg, bg, bold, italic, underline, dim, inverse, strikethrough, hyperlink, hyperlinkId
+    fg, bg, bold, italic, underline, dim, inverse, strikethrough, hyperlink, hyperlinkId
 )
 
 internal fun foldStyles(vararg styles: TextStyle?): TextStyle? {

@@ -1,10 +1,10 @@
 package com.github.ajalt.mordant.rendering
 
 enum class Whitespace(
-        val collapseNewlines: Boolean,
-        val collapseSpaces: Boolean,
-        val wrap: Boolean,
-        val trimEol: Boolean
+    val collapseNewlines: Boolean,
+    val collapseSpaces: Boolean,
+    val wrap: Boolean,
+    val trimEol: Boolean
 ) {
     NORMAL(collapseNewlines = true, collapseSpaces = true, wrap = true, trimEol = true),
     NOWRAP(collapseNewlines = true, collapseSpaces = true, wrap = false, trimEol = true),

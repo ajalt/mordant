@@ -4,22 +4,22 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 class Caption(
-        val content: Renderable,
-        val top: Renderable? = null,
-        val bottom: Renderable? = null
+    val content: Renderable,
+    val top: Renderable? = null,
+    val bottom: Renderable? = null
 ) : Renderable {
     constructor(
-            content: Renderable,
-            top: String? = null,
-            bottom: String? = null,
-            topAlign: TextAlign = TextAlign.CENTER,
-            bottomAlign: TextAlign = TextAlign.CENTER,
-            topStyle: TextStyle = DEFAULT_STYLE,
-            bottomStyle: TextStyle = DEFAULT_STYLE
+        content: Renderable,
+        top: String? = null,
+        bottom: String? = null,
+        topAlign: TextAlign = TextAlign.CENTER,
+        bottomAlign: TextAlign = TextAlign.CENTER,
+        topStyle: TextStyle = DEFAULT_STYLE,
+        bottomStyle: TextStyle = DEFAULT_STYLE
     ) : this(
-            content,
-            top?.let { Text(it, topStyle, align = topAlign) },
-            bottom?.let { Text(it, bottomStyle, align = bottomAlign) },
+        content,
+        top?.let { Text(it, topStyle, align = topAlign) },
+        bottom?.let { Text(it, bottomStyle, align = bottomAlign) },
     )
 
     override fun measure(t: Terminal, width: Int): WidthRange {

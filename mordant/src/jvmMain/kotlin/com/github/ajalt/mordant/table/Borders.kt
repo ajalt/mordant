@@ -1,10 +1,10 @@
 package com.github.ajalt.mordant.table
 
 enum class Borders(
-        val left: Boolean,
-        val top: Boolean,
-        val right: Boolean,
-        val bottom: Boolean
+    val left: Boolean,
+    val top: Boolean,
+    val right: Boolean,
+    val bottom: Boolean
 ) {
     NONE(left = false, top = false, right = false, bottom = false),
     BOTTOM(left = false, top = false, right = false, bottom = true),

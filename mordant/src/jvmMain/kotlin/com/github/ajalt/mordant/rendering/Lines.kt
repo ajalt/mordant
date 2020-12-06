@@ -9,7 +9,7 @@ internal val EMPTY_LINES = Lines(emptyList())
 internal val EMPTY_LINE: Line = emptyList()
 
 class Lines(
-        val lines: List<Line>,
+    val lines: List<Line>,
 ) {
     val height: Int get() = lines.size
     val width: Int get() = lines.maxOfOrNull { it.lineWidth } ?: 0
@@ -35,11 +35,13 @@ class Lines(
             lines.isEmpty() -> other
             other.lines.isEmpty() -> this
             else -> {
-                Lines(listOf(
+                Lines(
+                    listOf(
                         lines.dropLast(1),
                         listOf(lines.last() + other.lines.first()),
                         other.lines.drop(1)
-                ).flatten())
+                    ).flatten()
+                )
             }
         }
     }
@@ -66,10 +68,10 @@ internal fun flatLine(vararg parts: Any): Line {
  * is exactly [newHeight]
  */
 internal fun Lines.setSize(
-        newWidth: Int,
-        newHeight: Int = lines.size,
-        verticalAlign: VerticalAlign = TOP,
-        textAlign: TextAlign = NONE
+    newWidth: Int,
+    newHeight: Int = lines.size,
+    verticalAlign: VerticalAlign = TOP,
+    textAlign: TextAlign = NONE
 ): Lines {
     if (newHeight == 0) return EMPTY_LINES
     if (newWidth == 0) return Lines(List(newHeight) { EMPTY_LINE })
@@ -114,13 +116,13 @@ internal fun Lines.setSize(
         if (remainingWidth > 0) {
             val beginStyle by lazy(NONE) {
                 (i downTo 0).firstOrNull { this.lines.getOrNull(it)?.isEmpty() == false }
-                        ?.let { this.lines[it].first().style } ?: DEFAULT_STYLE
+                    ?.let { this.lines[it].first().style } ?: DEFAULT_STYLE
             }
             val endStyle by lazy(NONE) {
                 (line.lastOrNull()?.style
-                        ?: (i..this.lines.lastIndex).firstOrNull { this.lines[it].isNotEmpty() }
-                                ?.let { this.lines[it].first().style })
-                        ?: DEFAULT_STYLE
+                    ?: (i..this.lines.lastIndex).firstOrNull { this.lines[it].isNotEmpty() }
+                        ?.let { this.lines[it].first().style })
+                    ?: DEFAULT_STYLE
             }
             when (textAlign) {
                 CENTER, JUSTIFY -> {

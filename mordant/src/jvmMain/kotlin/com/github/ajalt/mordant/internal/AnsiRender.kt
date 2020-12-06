@@ -3,11 +3,6 @@ package com.github.ajalt.mordant.internal
 import com.github.ajalt.colormath.Ansi16
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.mordant.terminal.AnsiLevel
-import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.copy
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorSelector
 import com.github.ajalt.mordant.internal.AnsiCodes.fgBgOffset
@@ -15,6 +10,11 @@ import com.github.ajalt.mordant.internal.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.internal.AnsiCodes.selectorRgb
+import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
+import com.github.ajalt.mordant.rendering.Lines
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.copy
+import com.github.ajalt.mordant.terminal.AnsiLevel
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {
@@ -58,22 +58,22 @@ private fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean):
     return if (style === DEFAULT_STYLE) style else when (level) {
         AnsiLevel.NONE -> DEFAULT_STYLE
         AnsiLevel.ANSI16 -> style.copy(
-                fg = style.color?.toAnsi16(),
-                bg = style.bgColor?.toAnsi16(),
-                hyperlink = style.hyperlink.takeIf { hyperlinks },
-                hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
+            fg = style.color?.toAnsi16(),
+            bg = style.bgColor?.toAnsi16(),
+            hyperlink = style.hyperlink.takeIf { hyperlinks },
+            hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
         AnsiLevel.ANSI256 -> style.copy(
-                fg = style.color?.let { if (it is Ansi16) it else it.toAnsi256() },
-                bg = style.bgColor?.let { if (it is Ansi16) it else it.toAnsi256() },
-                hyperlink = style.hyperlink.takeIf { hyperlinks },
-                hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
+            fg = style.color?.let { if (it is Ansi16) it else it.toAnsi256() },
+            bg = style.bgColor?.let { if (it is Ansi16) it else it.toAnsi256() },
+            hyperlink = style.hyperlink.takeIf { hyperlinks },
+            hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
         AnsiLevel.TRUECOLOR -> if (hyperlinks || style.hyperlink == null) style else style.copy(
-                fg = style.color,
-                bg = style.bgColor,
-                hyperlink = null,
-                hyperlinkId = null
+            fg = style.color,
+            bg = style.bgColor,
+            hyperlink = null,
+            hyperlinkId = null
         )
     }
 }

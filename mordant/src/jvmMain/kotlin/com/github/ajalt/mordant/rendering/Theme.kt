@@ -4,62 +4,62 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.mordant.terminal.TextColors.*
 
 sealed class Theme(
-        val styles: Map<String, TextStyle>,
-        val strings: Map<String, String>,
-        val flags: Map<String, Boolean>,
-        val dimensions: Map<String, Int>,
+    val styles: Map<String, TextStyle>,
+    val strings: Map<String, String>,
+    val flags: Map<String, Boolean>,
+    val dimensions: Map<String, Int>,
 ) {
     companion object {
         val Default: Theme = BuiltTheme(
-                mapOf(
-                        "success" to TextStyle(green),
-                        "danger" to TextStyle(red),
-                        "warning" to TextStyle(yellow),
-                        "info" to TextStyle(cyan),
-                        "muted" to TextStyle(dim = true),
+            mapOf(
+                "success" to TextStyle(green),
+                "danger" to TextStyle(red),
+                "warning" to TextStyle(yellow),
+                "info" to TextStyle(cyan),
+                "muted" to TextStyle(dim = true),
 
-                        "list.number" to DEFAULT_STYLE,
-                        "list.bullet" to DEFAULT_STYLE,
-                        "blockquote" to TextStyle(brightYellow),
-                        "hr.rule" to DEFAULT_STYLE,
-                        "hr.title" to DEFAULT_STYLE,
+                "list.number" to DEFAULT_STYLE,
+                "list.bullet" to DEFAULT_STYLE,
+                "blockquote" to TextStyle(brightYellow),
+                "hr.rule" to DEFAULT_STYLE,
+                "hr.title" to DEFAULT_STYLE,
 
-                        "markdown.emph" to TextStyle(italic = true),
-                        "markdown.strong" to TextStyle(bold = true),
-                        "markdown.stikethrough" to TextStyle(strikethrough = true),
-                        "markdown.code.block" to TextStyle(brightRed),
-                        "markdown.code.span" to TextStyle(brightRed, Ansi256(236)),
-                        "markdown.table.header" to TextStyle(bold = true),
-                        "markdown.table.body" to DEFAULT_STYLE,
-                        "markdown.link.text" to TextStyle(brightBlue),
-                        "markdown.link.destination" to TextStyle(blue),
-                        "markdown.img.alt-text" to TextStyle(dim = true),
-                        "markdown.h1" to TextStyle(magenta, bold = true),
-                        "markdown.h2" to TextStyle(magenta, bold = true),
-                        "markdown.h3" to TextStyle(magenta, bold = true, underline = true),
-                        "markdown.h4" to TextStyle(magenta, underline = true),
-                        "markdown.h5" to TextStyle(magenta, italic = true),
-                        "markdown.h6" to TextStyle(magenta, dim = true),
-                ),
-                mapOf(
-                        "list.number.separator" to ".",
-                        "list.bullet.text" to "•",
-                        "markdown.task.checked" to "☑",
-                        "markdown.task.unchecked" to "☐",
-                        "markdown.h1.rule" to "═",
-                        "markdown.h2.rule" to "─",
-                        "markdown.h3.rule" to " ",
-                        "markdown.h4.rule" to " ",
-                        "markdown.h5.rule" to " ",
-                        "markdown.h6.rule" to " ",
-                ),
-                mapOf(
-                        "markdown.code.block.border" to true,
-                        "markdown.table.ascii" to false,
-                ),
-                mapOf(
-                        "markdown.header.padding" to 1,
-                )
+                "markdown.emph" to TextStyle(italic = true),
+                "markdown.strong" to TextStyle(bold = true),
+                "markdown.stikethrough" to TextStyle(strikethrough = true),
+                "markdown.code.block" to TextStyle(brightRed),
+                "markdown.code.span" to TextStyle(brightRed, Ansi256(236)),
+                "markdown.table.header" to TextStyle(bold = true),
+                "markdown.table.body" to DEFAULT_STYLE,
+                "markdown.link.text" to TextStyle(brightBlue),
+                "markdown.link.destination" to TextStyle(blue),
+                "markdown.img.alt-text" to TextStyle(dim = true),
+                "markdown.h1" to TextStyle(magenta, bold = true),
+                "markdown.h2" to TextStyle(magenta, bold = true),
+                "markdown.h3" to TextStyle(magenta, bold = true, underline = true),
+                "markdown.h4" to TextStyle(magenta, underline = true),
+                "markdown.h5" to TextStyle(magenta, italic = true),
+                "markdown.h6" to TextStyle(magenta, dim = true),
+            ),
+            mapOf(
+                "list.number.separator" to ".",
+                "list.bullet.text" to "•",
+                "markdown.task.checked" to "☑",
+                "markdown.task.unchecked" to "☐",
+                "markdown.h1.rule" to "═",
+                "markdown.h2.rule" to "─",
+                "markdown.h3.rule" to " ",
+                "markdown.h4.rule" to " ",
+                "markdown.h5.rule" to " ",
+                "markdown.h6.rule" to " ",
+            ),
+            mapOf(
+                "markdown.code.block.border" to true,
+                "markdown.table.ascii" to false,
+            ),
+            mapOf(
+                "markdown.header.padding" to 1,
+            )
         )
 
         val Plain: Theme = BuiltTheme(emptyMap(), Default.strings, Default.flags, Default.dimensions)
@@ -89,10 +89,10 @@ sealed class Theme(
 }
 
 class ThemeBuilder internal constructor(
-        val styles: MutableMap<String, TextStyle>,
-        val strings: MutableMap<String, String>,
-        val flags: MutableMap<String, Boolean>,
-        val dimensions: MutableMap<String, Int>,
+    val styles: MutableMap<String, TextStyle>,
+    val strings: MutableMap<String, String>,
+    val flags: MutableMap<String, Boolean>,
+    val dimensions: MutableMap<String, Int>,
 ) {
     internal fun build(): Theme = BuiltTheme(styles, strings, flags, dimensions)
 }
@@ -101,16 +101,16 @@ class ThemeBuilder internal constructor(
 @Suppress("FunctionName")
 fun Theme(from: Theme = Theme.Default, init: ThemeBuilder.() -> Unit): Theme {
     return ThemeBuilder(
-            from.styles.toMutableMap(),
-            from.strings.toMutableMap(),
-            from.flags.toMutableMap(),
-            from.dimensions.toMutableMap(),
+        from.styles.toMutableMap(),
+        from.strings.toMutableMap(),
+        from.flags.toMutableMap(),
+        from.dimensions.toMutableMap(),
     ).apply(init).build()
 }
 
 private class BuiltTheme(
-        styles: Map<String, TextStyle>,
-        strings: Map<String, String>,
-        flags: Map<String, Boolean>,
-        dimensions: Map<String, Int>,
+    styles: Map<String, TextStyle>,
+    strings: Map<String, String>,
+    flags: Map<String, Boolean>,
+    dimensions: Map<String, Int>,
 ) : Theme(styles, strings, flags, dimensions)

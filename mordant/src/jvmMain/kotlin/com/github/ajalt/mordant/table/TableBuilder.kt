@@ -21,13 +21,13 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val footer = buildSection(table.footerSection, builderWidth)
 
         return Table(
-                rows = listOf(header, body, footer).flatten(),
-                borderStyle = table.borderStyle,
-                borderTextStyle = table.borderTextStyle,
-                headerRowCount = header.size,
-                footerRowCount = footer.size,
-                columnStyles = table.columns.mapValues { it.value.width },
-                outerBorder = table.outerBorder
+            rows = listOf(header, body, footer).flatten(),
+            borderStyle = table.borderStyle,
+            borderTextStyle = table.borderTextStyle,
+            headerRowCount = header.size,
+            footerRowCount = footer.size,
+            columnStyles = table.columns.mapValues { it.value.width },
+            outerBorder = table.outerBorder
         )
     }
 
@@ -47,12 +47,12 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
     }
 
     private fun insertCell(
-            cell: CellBuilder,
-            section: SectionBuilder,
-            rows: MutableList<MutableRow>,
-            startingX: Int,
-            startingY: Int,
-            builderWidth: Int
+        cell: CellBuilder,
+        section: SectionBuilder,
+        rows: MutableList<MutableRow>,
+        startingX: Int,
+        startingY: Int,
+        builderWidth: Int
     ) {
         val tableCol = table.columns[startingX]
         val sectionCol = section.columns[startingX]
@@ -60,7 +60,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
 
         // The W3 standard says that spans are truncated rather than increasing the size of the table
         val maxRowSize = (startingY until startingY + cell.rowSpan)
-                .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
+            .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
 
@@ -74,21 +74,30 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         val textAlign = getStyle(TextAlign.LEFT) { it.align }
         val verticalAlign = getStyle(VerticalAlign.TOP) { it.verticalAlign }
         val overflowWrap = getStyle(OverflowWrap.ELLIPSES) { it.overflowWrap }
-        val stripedStyle = if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
-        val style = foldStyles(cell.style, row.style, stripedStyle, sectionCol?.style, tableCol?.style, section.style, table.style)
+        val stripedStyle =
+            if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
+        val style = foldStyles(
+            cell.style,
+            row.style,
+            stripedStyle,
+            sectionCol?.style,
+            tableCol?.style,
+            section.style,
+            table.style
+        )
         val content = cell.content.withAlign(textAlign, overflowWrap).withPadding(padding)
 
         val builtCell = Cell.Content(
-                content = content,
-                rowSpan = rowSpan,
-                columnSpan = columnSpan,
-                borderLeft = borders.left,
-                borderTop = borders.top,
-                borderRight = borders.right.takeIf { columnSpan == 1 },
-                borderBottom = borders.bottom.takeIf { rowSpan == 1 },
-                style = style,
-                textAlign = textAlign,
-                verticalAlign = verticalAlign
+            content = content,
+            rowSpan = rowSpan,
+            columnSpan = columnSpan,
+            borderLeft = borders.left,
+            borderTop = borders.top,
+            borderRight = borders.right.takeIf { columnSpan == 1 },
+            borderBottom = borders.bottom.takeIf { rowSpan == 1 },
+            style = style,
+            textAlign = textAlign,
+            verticalAlign = verticalAlign
         )
 
         val lastX = startingX + columnSpan - 1
@@ -99,11 +108,11 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
                     builtCell
                 } else {
                     Cell.SpanRef(
-                            builtCell,
-                            borderLeft = borders.left.takeIf { x == startingX },
-                            borderTop = borders.top.takeIf { y == startingY },
-                            borderRight = borders.right.takeIf { x == lastX },
-                            borderBottom = borders.bottom.takeIf { y == lastY },
+                        builtCell,
+                        borderLeft = borders.left.takeIf { x == startingX },
+                        borderTop = borders.top.takeIf { y == startingY },
+                        borderRight = borders.right.takeIf { x == lastX },
+                        borderBottom = borders.bottom.takeIf { y == lastY },
                     )
                 }
                 val tableRow = rows.getRow(y)

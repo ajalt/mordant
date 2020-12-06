@@ -1,24 +1,24 @@
 package com.github.ajalt.mordant.components
 
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
+import com.github.ajalt.mordant.terminal.Terminal
 
 private val DEFAULT_PADDING = Padding(0)
 
 class Panel(
-        content: Renderable,
-        private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
-        private val expand: Boolean = false,
-        private val borderTextStyle: TextStyle = DEFAULT_STYLE,
-        padding: Padding = DEFAULT_PADDING
+    content: Renderable,
+    private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+    private val expand: Boolean = false,
+    private val borderTextStyle: TextStyle = DEFAULT_STYLE,
+    padding: Padding = DEFAULT_PADDING
 ) : Renderable {
     constructor(
-            content: String,
-            borderStyle: BorderStyle? = BorderStyle.ROUNDED,
-            expand: Boolean = false,
-            borderTextStyle: TextStyle = DEFAULT_STYLE,
-            padding: Padding = DEFAULT_PADDING
+        content: String,
+        borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+        expand: Boolean = false,
+        borderTextStyle: TextStyle = DEFAULT_STYLE,
+        padding: Padding = DEFAULT_PADDING
     ) : this(Text(content), borderStyle, expand, borderTextStyle, padding)
 
     private val content: Renderable = content.withPadding(padding)

@@ -7,24 +7,24 @@ import java.util.concurrent.TimeUnit
 
 internal object TerminalDetection {
     fun detectTerminal(
-            ansiLevel: AnsiLevel? = null,
-            width: Int? = null,
-            height: Int? = null,
-            hyperlinks: Boolean? = null
+        ansiLevel: AnsiLevel? = null,
+        width: Int? = null,
+        height: Int? = null,
+        hyperlinks: Boolean? = null
     ): TerminalInfo = TerminalInfo(
-            width = width ?: width() ?: 79,
-            height = height ?: height() ?: 24,
-            ansiLevel = ansiLevel ?: ansiLevel(),
-            ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
-            stdoutInteractive = stdoutInteractive(),
-            stdinInteractive = stdinInteractive()
+        width = width ?: width() ?: 79,
+        height = height ?: height() ?: 24,
+        ansiLevel = ansiLevel ?: ansiLevel(),
+        ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
+        stdoutInteractive = stdoutInteractive(),
+        stdinInteractive = stdinInteractive()
     )
 
     fun detectSize(timeoutMs: Long): Pair<Int, Int>? {
         val process = try {
             ProcessBuilder("stty", "size")
-                    .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                    .start()
+                .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                .start()
         } catch (e: IOException) {
             return null
         }
@@ -82,8 +82,8 @@ internal object TerminalDetection {
         }
 
         val (term, level) = getTerm()?.split("-")
-                ?.let { it.firstOrNull() to it.lastOrNull() }
-                ?: null to null
+            ?.let { it.firstOrNull() to it.lastOrNull() }
+            ?: null to null
 
         when (level) {
             "256", "256color", "256colors" -> return ANSI256

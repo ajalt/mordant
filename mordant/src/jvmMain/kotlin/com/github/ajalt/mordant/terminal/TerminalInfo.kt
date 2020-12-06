@@ -2,12 +2,12 @@ package com.github.ajalt.mordant.terminal
 
 
 class TerminalInfo(
-        width: Int,
-        height: Int,
-        val ansiLevel: AnsiLevel,
-        val ansiHyperLinks: Boolean,
-        val stdoutInteractive: Boolean,
-        val stdinInteractive: Boolean,
+    width: Int,
+    height: Int,
+    val ansiLevel: AnsiLevel,
+    val ansiHyperLinks: Boolean,
+    val stdoutInteractive: Boolean,
+    val stdinInteractive: Boolean,
 ) {
     var width: Int = width
         private set
