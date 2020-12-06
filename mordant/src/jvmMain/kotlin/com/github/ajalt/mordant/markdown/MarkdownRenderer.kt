@@ -321,7 +321,7 @@ internal class MarkdownRenderer(
 
     private fun renderImageLink(node: ASTNode): Lines {
         val text = findLinkText(node.firstChildOfType(MarkdownElementTypes.INLINE_LINK))
-                ?.takeUnless { it.lines.isEmpty() }
+                ?.takeUnless { it.isEmpty() }
                 ?: return EMPTY_LINES
         return listOf(parseText("🖼️ ", DEFAULT_STYLE), text.replaceStyle(theme.style("markdown.img.alt-text"))).foldLines { it }
     }

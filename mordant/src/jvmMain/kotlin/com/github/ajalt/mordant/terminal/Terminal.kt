@@ -4,19 +4,30 @@ import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.*
 
-interface Terminal {
-    val theme: Theme
-    val tabWidth: Int
-    val info: TerminalInfo
-    val colors: TerminalColors
-    val cursor: TerminalCursor
+class Terminal(
+    val theme: Theme = Theme.Default,
+    val tabWidth: Int = 8,
+    private val terminalInterface: TerminalInterface = StdoutTerminalInterface()
+) {
+    constructor(
+        ansiLevel: AnsiLevel? = null,
+        theme: Theme = Theme.Default,
+        width: Int? = null,
+        height: Int? = null,
+        hyperlinks: Boolean? = null,
+        tabWidth: Int = 8
+    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks))
+
+    val info: TerminalInfo = terminalInterface.info
+    val colors: TerminalColors = TerminalColors(info.ansiLevel)
+    val cursor: TerminalCursor = if (info.interactive) PrintTerminalCursor(this) else DisabledTerminalCursor
 
     fun success(
-            message: Any?,
-            whitespace: Whitespace = Whitespace.PRE,
-            align: TextAlign = TextAlign.NONE,
-            overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-            width: Int? = null
+        message: Any?,
+        whitespace: Whitespace = Whitespace.PRE,
+        align: TextAlign = TextAlign.NONE,
+        overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
+        width: Int? = null
     ) {
         println(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
@@ -160,19 +171,16 @@ interface Terminal {
         return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
     }
 
-    fun println()
-    fun rawPrintln(message: String)
-    fun rawPrint(message: String)
-}
+    fun println() {
+        terminalInterface.completePrintRequest(PrintRequest("", true))
+    }
 
-@Suppress("FunctionName")
-fun Terminal(
-        ansiLevel: AnsiLevel? = null,
-        theme: Theme = Theme.Default,
-        width: Int? = null,
-        height: Int? = null,
-        hyperlinks: Boolean? = null,
-        tabWidth: Int = 8
-): Terminal {
-    return AnsiTerminal(ansiLevel, theme, width, height, hyperlinks, tabWidth)
+    private fun rawPrintln(message: String) {
+        terminalInterface.completePrintRequest(PrintRequest(message, true))
+
+    }
+
+    private fun rawPrint(message: String) {
+        terminalInterface.completePrintRequest(PrintRequest(message, false))
+    }
 }

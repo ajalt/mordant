@@ -7,30 +7,32 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 private fun c(b: CursorMovements.() -> Unit): String {
-    val t = VirtualTerminal()
+    val vt = VirtualTerminalInterface()
+    val t = Terminal(terminalInterface = vt)
     t.cursor.move(b)
-    return t.buffer()
+    return vt.buffer()
 }
 
 class TerminalCursorTest {
     @Test
     fun `disabled commands`() {
-        val t = VirtualTerminal(AnsiLevel.NONE)
+        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
+        val t = Terminal(terminalInterface = vt)
         val c = t.cursor
         forAll(
-                row(c.move { up(1) }),
-                row(c.move { down(1) }),
-                row(c.move { right(1) }),
-                row(c.move { left(1) }),
-                row(c.move { startOfLine() }),
-                row(c.move { setPosition(1, 1) }),
-                row(c.show()),
-                row(c.hide(showOnExit = false)),
-                row(c.move { clearScreen() }),
-                row(c.move { clearScreenAfterCursor() }),
+            row(c.move { up(1) }),
+            row(c.move { down(1) }),
+            row(c.move { right(1) }),
+            row(c.move { left(1) }),
+            row(c.move { startOfLine() }),
+            row(c.move { setPosition(1, 1) }),
+            row(c.show()),
+            row(c.hide(showOnExit = false)),
+            row(c.move { clearScreen() }),
+            row(c.move { clearScreenAfterCursor() }),
         ) {
-            t.buffer() shouldBe ""
-            t.clearBuffer()
+            vt.buffer() shouldBe ""
+            vt.clearBuffer()
         }
     }
 
@@ -46,21 +48,23 @@ class TerminalCursorTest {
 
     @Test
     fun `cursor show and hide`() {
-        val t = VirtualTerminal()
+        val vt = VirtualTerminalInterface()
+        val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
-        t.buffer() shouldBe "$CSI?25l"
-        t.clearBuffer()
+        vt.buffer() shouldBe "$CSI?25l"
+        vt.clearBuffer()
         t.cursor.show()
-        t.buffer() shouldBe "$CSI?25h"
+        vt.buffer() shouldBe "$CSI?25h"
     }
 
     @Test
     fun `disabled cursor show and hide`() {
-        val t = VirtualTerminal(AnsiLevel.NONE)
+        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
+        val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
-        t.buffer() shouldBe ""
+        vt.buffer() shouldBe ""
         t.cursor.show()
-        t.buffer() shouldBe ""
+        vt.buffer() shouldBe ""
     }
 
     @Test
