@@ -21,6 +21,7 @@ class Terminal(
     val info: TerminalInfo = terminalInterface.info
     val colors: TerminalColors = TerminalColors(info.ansiLevel)
     val cursor: TerminalCursor = if (info.interactive) PrintTerminalCursor(this) else DisabledTerminalCursor
+    private val interceptors: MutableList<TerminalInterceptor> = mutableListOf()
 
     fun success(
         message: Any?,
@@ -172,15 +173,21 @@ class Terminal(
     }
 
     fun println() {
-        terminalInterface.completePrintRequest(PrintRequest("", true))
+        sendPrintRequest(PrintRequest("", true))
     }
 
     private fun rawPrintln(message: String) {
-        terminalInterface.completePrintRequest(PrintRequest(message, true))
+        sendPrintRequest(PrintRequest(message, true))
 
     }
 
     private fun rawPrint(message: String) {
-        terminalInterface.completePrintRequest(PrintRequest(message, false))
+        sendPrintRequest(PrintRequest(message, false))
+    }
+
+    private fun sendPrintRequest(request: PrintRequest) {
+        terminalInterface.completePrintRequest(
+            interceptors.fold(request) { acc, it -> it.intercept(acc) }
+        )
     }
 }
