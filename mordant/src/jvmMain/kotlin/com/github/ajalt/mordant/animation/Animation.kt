@@ -1,24 +1,53 @@
+package com.github.ajalt.mordant.animation
+
 import com.github.ajalt.mordant.components.RawRenderable
 import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.TerminalInterceptor
 
 abstract class Animation<T>(private val terminal: Terminal) {
     private var size: Pair<Int, Int>? = null
+    private var text: String? = null
+    // Don't clear the screen the first time the animation is drawn
+    private var needsClear = false
+
+    private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
+        text?.let { t ->
+            PrintRequest(text = buildString {
+                if (needsClear) {
+                    getClear(req.text.isNotEmpty())?.let { append(it) }
+                }
+                needsClear = true
+                if (req.text.isNotEmpty()) {
+                    appendLine(req.text)
+                }
+                append(t)
+            }, trailingLinebreak = true)
+        } ?: req
+    }
+
+    init {
+        terminal.addInterceptor(interceptor)
+    }
 
     protected abstract fun renderData(data: T): Renderable
 
     fun clear() {
-        getClear(0, 0)?.let { terminal.print(RawRenderable(it)) }
+        getClear(true)?.let {
+            text = null
+            terminal.print(RawRenderable(it))
+        }
     }
 
-    private fun getClear(renderedHeight: Int, renderedWidth: Int): String? {
-        val (height, width) = size ?: return null
+    private fun getClear(clearScreen: Boolean): String? {
+        val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
             up(height)
 
-            if (height > renderedHeight || width > renderedWidth) {
+            if (clearScreen) {
                 clearScreenAfterCursor()
             }
         }
@@ -26,10 +55,11 @@ abstract class Animation<T>(private val terminal: Terminal) {
 
     fun update(data: T) {
         val rendered = renderData(data).render(terminal)
+        // Only clear the screen if we've previously drawn our animation
         size = rendered.height to rendered.width
-        val codes = getClear(rendered.height, rendered.width)
-        val combined = RawRenderable(codes + terminal.render(rendered))
-        terminal.print(combined)
+        text = terminal.render(rendered)
+        // Print an empty renderable to trigger our interceptor, which will add the rendered text
+        terminal.print(EmptyRenderable)
     }
 }
 

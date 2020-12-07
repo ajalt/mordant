@@ -177,9 +177,16 @@ class Terminal(
         sendPrintRequest(PrintRequest("", true))
     }
 
+    internal fun addInterceptor(interceptor: TerminalInterceptor) {
+        interceptors += interceptor
+    }
+
+    internal fun removeInterceptor(interceptor: TerminalInterceptor) {
+        interceptors.remove(interceptor)
+    }
+
     private fun rawPrintln(message: String) {
         sendPrintRequest(PrintRequest(message, true))
-
     }
 
     private fun rawPrint(message: String) {
