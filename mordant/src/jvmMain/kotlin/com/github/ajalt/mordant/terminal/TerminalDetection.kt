@@ -144,20 +144,28 @@ internal object TerminalDetection {
         return ver != null && ver >= 3
     }
 
-    // Unfortunately, the JVM doesn't let us check stdin and stdout separately. The IntelliJ console
-    // is interactive even though it redirects stdin.
-    private fun stdoutInteractive(): Boolean = System.console() != null || isIntellijConsole()
-    private fun stdinInteractive(): Boolean = System.console() != null || isIntellijConsole()
+    // Unfortunately, the JVM doesn't let us check stdin and stdout separately.
+    private fun stdoutInteractive(): Boolean = System.console() != null
+    private fun stdinInteractive(): Boolean = System.console() != null
 
-    // Consoles built in to some IDEs/Editors support color, but always cause System.console() to
-    // return null
     private fun isIntellijConsole(): Boolean {
-        return try {
-            val bean = ManagementFactory.getRuntimeMXBean()
-            val jvmArgs = bean.inputArguments
-            jvmArgs.any { it.startsWith("-javaagent") && "idea_rt.jar" in it }
-        } catch (e: SecurityException) {
-            false
-        }
+        return hasIdeaEnvvar() || usingIdeaJavaAgent()
+    }
+
+    // Some versions of IntelliJ set various environment variables
+    private fun hasIdeaEnvvar(): Boolean {
+        return System.getenv("IDEA_INITIAL_DIRECTORY") != null
+                || System.getenv("__INTELLIJ_COMMAND_HISTFILE__") != null
+                || System.getenv("TERMINAL_EMULATOR")?.contains("jetbrains", ignoreCase = true) == true
+                || System.getProperty("sun.java.command", "").contains("idea", ignoreCase = true)
+    }
+
+    // Depending on how IntelliJ is configured, it might use its own Java agent
+    private fun usingIdeaJavaAgent() = try {
+        val bean = ManagementFactory.getRuntimeMXBean()
+        val jvmArgs = bean.inputArguments
+        jvmArgs.any { it.startsWith("-javaagent") && "idea_rt.jar" in it }
+    } catch (e: SecurityException) {
+        false
     }
 }
