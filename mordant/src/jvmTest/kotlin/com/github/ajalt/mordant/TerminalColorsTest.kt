@@ -2,12 +2,12 @@ package com.github.ajalt.mordant
 
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.AnsiLevel
-import com.github.ajalt.mordant.terminal.TerminalColors
+import com.github.ajalt.mordant.terminal.Terminal
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class TerminalColorsTest {
-    private val t = TerminalColors(AnsiLevel.TRUECOLOR)
+    private val t = Terminal(AnsiLevel.TRUECOLOR).colors
 
     @Test
     fun `empty string`() = doTest(

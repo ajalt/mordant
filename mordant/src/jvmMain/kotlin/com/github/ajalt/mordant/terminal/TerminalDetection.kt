@@ -7,17 +7,18 @@ import java.util.concurrent.TimeUnit
 
 internal object TerminalDetection {
     fun detectTerminal(
-        ansiLevel: AnsiLevel? = null,
-        width: Int? = null,
-        height: Int? = null,
-        hyperlinks: Boolean? = null
+        ansiLevel: AnsiLevel?,
+        width: Int?,
+        height: Int?,
+        hyperlinks: Boolean?,
+        interactive: Boolean?,
     ): TerminalInfo = TerminalInfo(
         width = width ?: width() ?: 79,
         height = height ?: height() ?: 24,
         ansiLevel = ansiLevel ?: ansiLevel(),
         ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
-        stdoutInteractive = stdoutInteractive(),
-        stdinInteractive = stdinInteractive()
+        stdoutInteractive = interactive ?: stdoutInteractive(),
+        stdinInteractive = interactive ?: stdinInteractive()
     )
 
     fun detectSize(timeoutMs: Long): Pair<Int, Int>? {

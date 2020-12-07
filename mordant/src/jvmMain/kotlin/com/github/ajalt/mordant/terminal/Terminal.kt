@@ -7,7 +7,7 @@ import com.github.ajalt.mordant.rendering.*
 class Terminal(
     val theme: Theme = Theme.Default,
     val tabWidth: Int = 8,
-    private val terminalInterface: TerminalInterface = StdoutTerminalInterface()
+    private val terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null)
 ) {
     constructor(
         ansiLevel: AnsiLevel? = null,
@@ -15,8 +15,9 @@ class Terminal(
         width: Int? = null,
         height: Int? = null,
         hyperlinks: Boolean? = null,
-        tabWidth: Int = 8
-    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks))
+        tabWidth: Int = 8,
+        interactive: Boolean? = null,
+    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks,interactive))
 
     val info: TerminalInfo = terminalInterface.info
     val colors: TerminalColors = TerminalColors(info.ansiLevel)

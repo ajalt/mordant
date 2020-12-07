@@ -1,12 +1,13 @@
 package com.github.ajalt.mordant.terminal
 
 internal class StdoutTerminalInterface(
-    ansiLevel: AnsiLevel? = null,
-    width: Int? = null,
-    height: Int? = null,
-    hyperlinks: Boolean? = null,
+    ansiLevel: AnsiLevel?,
+    width: Int?,
+    height: Int?,
+    hyperlinks: Boolean?,
+    interactive: Boolean?,
 ) : TerminalInterface {
-    override val info = TerminalDetection.detectTerminal(ansiLevel, width, height, hyperlinks)
+    override val info = TerminalDetection.detectTerminal(ansiLevel, width, height, hyperlinks, interactive)
 
     override fun completePrintRequest(request: PrintRequest) {
         if (request.trailingLinebreak) {
