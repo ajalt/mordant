@@ -29,7 +29,9 @@ abstract class Animation<T>(private val terminal: Terminal) {
     }
 
     init {
-        terminal.addInterceptor(interceptor)
+        if (terminal.info.stdoutInteractive) {
+            terminal.addInterceptor(interceptor)
+        }
     }
 
     protected abstract fun renderData(data: T): Renderable
@@ -37,6 +39,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
     fun clear() {
         getClear(true)?.let {
             text = null
+            terminal.removeInterceptor(interceptor)
             terminal.print(RawRenderable(it))
         }
     }
