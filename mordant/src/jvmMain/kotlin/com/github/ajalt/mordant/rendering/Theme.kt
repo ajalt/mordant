@@ -23,6 +23,10 @@ sealed class Theme(
                 "blockquote" to TextStyle(brightYellow),
                 "hr.rule" to DEFAULT_STYLE,
                 "hr.title" to DEFAULT_STYLE,
+                "progressbar.pending" to TextStyle(gray),
+                "progressbar.complete" to TextStyle(brightBlue),
+                "progressbar.separator" to DEFAULT_STYLE,
+                "progressbar.finished" to TextStyle(green),
 
                 "markdown.emph" to TextStyle(italic = true),
                 "markdown.strong" to TextStyle(bold = true),
@@ -44,6 +48,10 @@ sealed class Theme(
             mapOf(
                 "list.number.separator" to ".",
                 "list.bullet.text" to "•",
+                "progressbar.pending" to "━",
+                "progressbar.complete" to "━",
+                "progressbar.separator" to " ",
+
                 "markdown.task.checked" to "☑",
                 "markdown.task.unchecked" to "☐",
                 "markdown.h1.rule" to "═",
@@ -67,6 +75,10 @@ sealed class Theme(
         val PlainAscii: Theme = Theme(Plain) {
             strings["list.number.separator"] = "."
             strings["list.bullet.text"] = "*"
+            strings["progressbar.pending"] = " "
+            strings["progressbar.complete"] = "#"
+            strings["progressbar.separator"] = ">"
+
             strings["markdown.task.checked"] = "[x]"
             strings["markdown.task.unchecked"] = "[ ]"
             strings["markdown.h1.rule"] = "="
@@ -78,14 +90,26 @@ sealed class Theme(
     /** Return a style if defined, or [default] otherwise */
     fun style(style: String, default: TextStyle = DEFAULT_STYLE): TextStyle = styles.getOrDefault(style, default)
 
+    /** Return a style if defined, or `null` otherwise */
+    fun styleOrNull(style: String): TextStyle? = styles[style]
+
     /** Return a flag if defined, or [default] otherwise */
     fun flag(flag: String, default: Boolean = false): Boolean = flags.getOrDefault(flag, default)
+
+    /** Return a flag if defined, or `null` otherwise */
+    fun flagOrNull(flag: String): Boolean? = flags[flag]
 
     /** Return a string if defined, or [default] otherwise */
     fun string(string: String, default: String = "") = strings.getOrDefault(string, default)
 
+    /** Return a string if defined, or `null` otherwise */
+    fun stringOrNull(string: String): String? = strings[string]
+
     /** Return a dimension if defined, or [default] otherwise */
-    fun dimension(dimension: String, default: Int = 0) = dimensions.getOrDefault(dimension, default)
+    fun dimension(dimension: String, default: Int = 0): Int = dimensions.getOrDefault(dimension, default)
+
+    /** Return a dimension if defined, or `null` otherwise */
+    fun dimensionOrNull(dimension: String): Int? = dimensions[dimension]
 }
 
 class ThemeBuilder internal constructor(
