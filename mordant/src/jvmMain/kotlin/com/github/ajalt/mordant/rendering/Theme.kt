@@ -24,7 +24,7 @@ sealed class Theme(
                 "hr.rule" to DEFAULT_STYLE,
                 "hr.title" to DEFAULT_STYLE,
                 "progressbar.pending" to TextStyle(gray),
-                "progressbar.complete" to TextStyle(brightBlue),
+                "progressbar.complete" to TextStyle(magenta),
                 "progressbar.separator" to DEFAULT_STYLE,
                 "progressbar.finished" to TextStyle(green),
 
@@ -62,6 +62,7 @@ sealed class Theme(
                 "markdown.h6.rule" to " ",
             ),
             mapOf(
+                "progressbar.pulse" to true,
                 "markdown.code.block.border" to true,
                 "markdown.table.ascii" to false,
             ),
@@ -70,7 +71,11 @@ sealed class Theme(
             )
         )
 
-        val Plain: Theme = BuiltTheme(emptyMap(), Default.strings, Default.flags, Default.dimensions)
+        val Plain: Theme = Theme(
+            BuiltTheme(emptyMap(), Default.strings, Default.flags, Default.dimensions)
+        ) {
+            flags["progressbar.pulse"] = false
+        }
 
         val PlainAscii: Theme = Theme(Plain) {
             strings["list.number.separator"] = "."
