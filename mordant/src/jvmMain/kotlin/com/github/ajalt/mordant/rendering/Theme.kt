@@ -25,6 +25,7 @@ sealed class Theme(
                 "hr.title" to DEFAULT_STYLE,
                 "progressbar.pending" to TextStyle(gray),
                 "progressbar.complete" to TextStyle(magenta),
+                "progressbar.indeterminate" to TextStyle(magenta),
                 "progressbar.separator" to DEFAULT_STYLE,
                 "progressbar.finished" to TextStyle(green),
 

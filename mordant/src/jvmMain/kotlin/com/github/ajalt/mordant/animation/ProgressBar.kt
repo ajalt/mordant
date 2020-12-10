@@ -10,6 +10,7 @@ import kotlin.math.roundToInt
 class ProgressBar(
     private var total: Int = 100,
     private var completed: Int = 0,
+    private var indeterminate: Boolean = false,
     private val width: Int? = null,
     private val pulse: Boolean? = null,
     private val pendingChar: String? = null,
@@ -19,13 +20,27 @@ class ProgressBar(
     private val separatorStyle: TextStyle? = null,
     private val completeStyle: TextStyle? = null,
     private val finishedStyle: TextStyle? = null,
+    private val indeterminateStyle: TextStyle? = null,
     private val pulseDuration: Int = 10
 ) : Renderable {
     init {
         require(pulseDuration > 1) { "pulse duration must be greater than 1" }
     }
 
-    private class Cache(val width: Int, val completedLength: Int, val pulseFrame: Int, val lines: Lines)
+    private class Cache(
+        val width: Int,
+        val completedLength: Int,
+        val pulseFrame: Int,
+        val indeterminate: Boolean,
+        val lines: Lines
+    ) {
+        fun isFresh(width: Int, completedLength: Int, pulseFrame: Int, indeterminate: Boolean): Boolean {
+            return this.width == width
+                    && this.completedLength == completedLength
+                    && this.pulseFrame == pulseFrame
+                    && this.indeterminate == indeterminate
+        }
+    }
 
     fun update(completed: Int) {
         this.completed = completed
@@ -36,6 +51,10 @@ class ProgressBar(
         this.total = total
     }
 
+    fun indeterminate(indeterminate: Boolean) {
+        this.indeterminate = indeterminate
+    }
+
     fun advancePulse() {
         pulseFrame = (pulseFrame + 1) % (pulseDuration * 2)
     }
@@ -43,7 +62,7 @@ class ProgressBar(
     val percentComplete: Float get() = (completed.toFloat() / total).coerceIn(0f, 1f)
 
     // Cache output for performance since these will usually be rendered many times
-    private var cache = Cache(-1, -1, -1, EMPTY_LINES)
+    private var cache = Cache(-1, -1, -1, false, EMPTY_LINES)
     private var pulseFrame = 0
 
     private fun width(renderWidth: Int) = width ?: renderWidth
@@ -54,37 +73,32 @@ class ProgressBar(
 
     override fun render(t: Terminal, width: Int): Lines {
         val w = width(width)
-        val completedLength = (percentComplete * w).toInt()
+        val completedLength = if (indeterminate) w else (percentComplete * w).toInt()
 
-        if (w == cache.width &&
-            completedLength == cache.completedLength &&
-            pulseFrame == cache.pulseFrame
-        ) {
+        if (cache.isFresh(w, completedLength, pulseFrame, indeterminate)) {
             return cache.lines
         }
 
-
-        val cc = completeChar ?: t.theme.string("progressbar.complete")
         val pc = pendingChar ?: t.theme.string("progressbar.pending")
         val sc = separatorChar ?: t.theme.string("progressbar.separator")
+        val cc = completeChar ?: t.theme.string("progressbar.complete")
 
-        val cs = completeStyle ?: t.theme.style("progressbar.complete")
         val ps = pendingStyle ?: t.theme.style("progressbar.pending")
         val ss = separatorStyle ?: t.theme.style("progressbar.separator")
         val fs = finishedStyle ?: t.theme.style("progressbar.finished")
+        val cs = when {
+            indeterminate -> indeterminateStyle ?: t.theme.style("progressbar.indeterminate")
+            else -> completeStyle ?: t.theme.style("progressbar.complete")
+        }
 
-        if (completedLength == w) {
+        if (completedLength == w && !indeterminate) {
             return makeLines(w, completedLength, listOfNotNull(segmentText(cc, w, fs)))
         }
 
-        val sep = when {
-            completedLength > 0 -> segmentText(sc, 1, ss)
-            else -> null
-        }
+        val sep = if (completedLength in 1 until w) segmentText(sc, 1, ss) else null
         val sepLength = sep?.cellWidth ?: 0
         val complete = makeComplete(t, w, completedLength, cc, cs)
         val pending = segmentText(pc, w - completedLength - sepLength, ps)
-
 
         return makeLines(w, completedLength, (complete + listOfNotNull(sep, pending)))
     }
@@ -103,16 +117,16 @@ class ProgressBar(
             return color.l + ((100 - color.l) * lerp).roundToInt()
         }
 
-        // gaussian with σ²=0.1 and x scaled to ~20% of width
+        // gaussian with σ²=0.1 and x scaled to ~50% of width
         fun gauss(x: Double): Double {
-            return exp(-(x / (width * .2)).pow(2.0) * 5)
+            return exp(-(2 * x / width).pow(2.0) * 5)
         }
 
         val line = mutableListOf<Span>()
         for (it in 0 until barLength) {
             // x is offset left by half a period so that the pulse starts offscreen
             val x = it - pulseFrame.toDouble() * width / pulseDuration + pulseDuration / 2
-            line += Span.word(char, TextStyle(HSL(color.h, color.s, l(gauss(x.toDouble())))))
+            line += Span.word(char, TextStyle(HSL(color.h, color.s, l(gauss(x)))))
         }
 
         return line
@@ -120,7 +134,7 @@ class ProgressBar(
 
     private fun makeLines(width: Int, completedLength: Int, line: Line): Lines {
         return Lines(listOf(line)).also {
-            cache = Cache(width, completedLength, pulseFrame, it)
+            cache = Cache(width, completedLength, pulseFrame, indeterminate, it)
         }
     }
 
