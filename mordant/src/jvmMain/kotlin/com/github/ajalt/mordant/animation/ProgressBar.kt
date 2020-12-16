@@ -26,6 +26,7 @@ class ProgressBar(
 ) : Renderable {
     init {
         require(pulseDuration > 1) { "pulse duration must be greater than 1" }
+        require(width == null || width > 0) { "width must be greater than 0" }
     }
 
     private val pulseFrame = pulseFrame % (pulseDuration * 2)
@@ -35,7 +36,8 @@ class ProgressBar(
     private fun width(renderWidth: Int) = width ?: renderWidth
 
     override fun measure(t: Terminal, width: Int): WidthRange {
-        return WidthRange(width(width), width(width))
+        val w = width(width)
+        return WidthRange(w.coerceAtMost(4), w)
     }
 
     override fun render(t: Terminal, width: Int): Lines {

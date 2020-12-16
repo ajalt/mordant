@@ -14,18 +14,18 @@ abstract class Animation<T>(private val terminal: Terminal) {
     private var needsClear = false
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        text?.let { t ->
-            PrintRequest(text = buildString {
-                if (needsClear) {
-                    getClear(req.text.isNotEmpty())?.let { append(it) }
-                }
-                needsClear = true
-                if (req.text.isNotEmpty()) {
-                    appendLine(req.text)
-                }
-                append(t)
-            }, trailingLinebreak = true)
-        } ?: req
+            text?.let { t ->
+                PrintRequest(text = buildString {
+                    if (needsClear) {
+                        getClear()?.let { append(it) }
+                    }
+                    needsClear = true
+                    if (req.text.isNotEmpty()) {
+                        appendLine(req.text)
+                    }
+                    append(t)
+                }, trailingLinebreak = true)
+            } ?: req
     }
 
     init {
@@ -37,22 +37,19 @@ abstract class Animation<T>(private val terminal: Terminal) {
     protected abstract fun renderData(data: T): Renderable
 
     fun clear() {
-        getClear(true)?.let {
+        getClear()?.let {
             text = null
             terminal.removeInterceptor(interceptor)
             terminal.print(RawRenderable(it))
         }
     }
 
-    private fun getClear(clearScreen: Boolean): String? {
+    private fun getClear(): String? {
         val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
             up(height)
-
-            if (clearScreen) {
-                clearScreenAfterCursor()
-            }
+            clearScreenAfterCursor()
         }
     }
 

@@ -193,9 +193,12 @@ class Terminal(
         sendPrintRequest(PrintRequest(message, false))
     }
 
+    private val lock = Any()
     private fun sendPrintRequest(request: PrintRequest) {
-        terminalInterface.completePrintRequest(
-            interceptors.fold(request) { acc, it -> it.intercept(acc) }
-        )
+        synchronized(lock) {
+            terminalInterface.completePrintRequest(
+                interceptors.fold(request) { acc, it -> it.intercept(acc) }
+            )
+        }
     }
 }
