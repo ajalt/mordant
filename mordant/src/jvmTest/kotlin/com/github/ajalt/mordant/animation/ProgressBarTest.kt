@@ -3,8 +3,7 @@ package com.github.ajalt.mordant.animation
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.TextColors.brightBlue
-import com.github.ajalt.mordant.terminal.TextColors.gray
+import com.github.ajalt.mordant.terminal.TextColors.*
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
@@ -41,20 +40,9 @@ class ProgressBarTest {
         Terminal(AnsiLevel.TRUECOLOR, width = 5).render(
             ProgressBar(
                 completed = 40,
+                pulse = false
             )
-        ) shouldBe "${brightBlue("━━")} ${gray("━━")}"
-    }
-
-    @Test
-    fun update() {
-        val t = Terminal(theme = Theme.PlainAscii, width = 5)
-        val p = ProgressBar()
-        t.render(p) shouldBe "     "
-        p.update(20)
-        t.render(p) shouldBe "#>   "
-        p.update(1, 2)
-        t.render(p) shouldBe "##>  "
-        p.percentComplete shouldBe 0.5f
+        ) shouldBe "${magenta("━━")} ${gray("━━")}"
     }
 
     private fun doPercentTest(completed: Int, expected: String) {

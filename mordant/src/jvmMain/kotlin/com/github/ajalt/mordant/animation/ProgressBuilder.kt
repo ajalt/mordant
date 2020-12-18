@@ -129,7 +129,7 @@ internal class BarProgressCell(val width: Int?) : ProgressCell(
 }
 
 private fun formatFloats(decimals: Int, vararg nums: Double): Pair<List<String>, String> {
-    var n = nums.max()!!
+    var n = nums.maxOrNull()!!
     var suffix = ""
     for (c in SI_PREFIXES) {
         if (n < 1000) {

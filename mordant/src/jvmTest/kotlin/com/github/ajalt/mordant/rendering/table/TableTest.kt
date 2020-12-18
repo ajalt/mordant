@@ -1,19 +1,16 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.components.Padding
-import com.github.ajalt.mordant.components.Padding.Companion
-import com.github.ajalt.mordant.terminal.TextColors.blue
-import com.github.ajalt.mordant.terminal.TextColors.red
+import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.table.Borders.*
-import com.github.ajalt.mordant.table.SectionBuilder
-import com.github.ajalt.mordant.table.TableBuilder
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.TextColors.blue
+import com.github.ajalt.mordant.terminal.TextColors.red
 import org.junit.Test
 
 class TableTest : RenderingTest() {
@@ -413,13 +410,16 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun grid() = checkRender(com.github.ajalt.mordant.table.grid {
-        row(1, ".2.", 3)
-        row(4, 5, 6)
-    }, """
-    1 .2. 3
-    4 5   6
-    """)
+    fun grid() = checkRender(
+        grid {
+            column(0) { width = ColumnWidth.Fixed(3) }
+            row(1, ".2.", 3)
+            row(4, 5, 6)
+        }, """
+    1   .2. 3
+    4   5   6
+    """
+    )
 
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         checkRender(table(builder), expected.trimMargin(), trimIndent = false)

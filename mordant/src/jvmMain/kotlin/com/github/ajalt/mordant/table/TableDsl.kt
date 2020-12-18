@@ -108,7 +108,7 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
         captionBottom(Text(text, style, align = align))
     }
 
-    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, init)
+    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun header(init: SectionBuilder.() -> Unit) {
         headerSection.init()
@@ -127,10 +127,10 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
 @MordantDsl
 class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
     internal val rows = mutableListOf<RowBuilder>()
-    internal val columns = mutableMapOf<Int, ColumnBuilder>()
+    internal val columns = mutableMapOf<Int, CellStyleBuilder>()
     internal var rowStyles = listOf<TextStyle>()
 
-    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, init)
+    fun column(i: Int, init: CellStyleBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         rowStyles = listOf(style1, style2) + styles.asList()
@@ -150,6 +150,31 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     }
 }
 
+@MordantDsl
+class GridBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
+    internal val rows = mutableListOf<RowBuilder>()
+    internal val columns = mutableMapOf<Int, ColumnBuilder>()
+    internal var rowStyles = listOf<TextStyle>()
+
+    fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
+
+    fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
+        rowStyles = listOf(style1, style2) + styles.asList()
+    }
+
+    fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
+        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
+        rows += RowBuilder(cellBuilders).apply(init)
+    }
+
+    fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
+        rowFrom(cells.asList(), init)
+    }
+
+    fun row(init: RowBuilder.() -> Unit) {
+        rows += RowBuilder(mutableListOf()).apply(init)
+    }
+}
 
 @MordantDsl
 class RowBuilder internal constructor(
@@ -201,13 +226,18 @@ fun table(init: TableBuilder.() -> Unit): Renderable {
     }
 }
 
-fun grid(init: SectionBuilder.() -> Unit): Renderable {
+fun grid(init: GridBuilder.() -> Unit): Renderable {
     return table {
         borders = Borders.LEFT_RIGHT
         outerBorder = false
         borderStyle = BorderStyle.BLANK
         padding = Padding.none()
-        body(init)
+
+        val gb = GridBuilder()
+        gb.init()
+        columns.putAll(gb.columns)
+        bodySection.rows.addAll(gb.rows)
+        bodySection.rowStyles = gb.rowStyles
     }
 }
 
@@ -219,11 +249,11 @@ private fun getRenderable(content: Any?): Renderable {
     }
 }
 
-private fun initColumn(columns: MutableMap<Int, ColumnBuilder>, i: Int, init: ColumnBuilder.() -> Unit) {
+private fun <T : CellStyleBuilder> initColumn(columns: MutableMap<Int, T>, i: Int, def: T, init: T.() -> Unit) {
     require(i >= 0) { "column index cannot be negative" }
     var v = columns[i]
     if (v == null) {
-        v = ColumnBuilder()
+        v = def
         columns[i] = v
     }
     v.init()
