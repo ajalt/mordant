@@ -1,7 +1,9 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.components.Padding
 import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid
 import com.github.ajalt.mordant.terminal.Terminal
@@ -17,19 +19,19 @@ internal abstract class ProgressCell(
     val columnWidth: ColumnWidth,
     protected var renderable: Renderable = EmptyRenderable
 ) : Renderable {
-    abstract fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory)
+    abstract fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory)
     override fun measure(t: Terminal, width: Int): WidthRange = renderable.measure(t, width)
     override fun render(t: Terminal, width: Int): Lines = renderable.render(t, width)
 }
 
 internal class TextProgressCell(text: Text) : ProgressCell(ColumnWidth.Auto, text) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {}
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {}
 }
 
 
 internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell(ColumnWidth.Fixed(4)) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        if (ind) {
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+        if (indeterminate) {
             renderable = Text("", style)
             return
         }
@@ -38,14 +40,25 @@ internal class PercentageProgressCell(private val style: TextStyle) : ProgressCe
     }
 }
 
-// TODO: maybe change this to "1.1/2.0GB"
-internal class CompletedProgressCell(private val style: TextStyle) : ProgressCell(ColumnWidth.Fixed(5)) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        if (ind) {
-            renderable = Text("0", style)
+internal class CompletedProgressCell(
+    private val suffix: String,
+    private val includeTotal: Boolean,
+    private val style: TextStyle
+) : ProgressCell(ColumnWidth.Fixed(5)) {
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+        if (indeterminate) {
+            renderable = EmptyRenderable
             return
         }
-        renderable = Text(history.completed.toDouble().format(2), style, whitespace = Whitespace.PRE)
+
+        val complete = history.completed.toDouble()
+        val t = if (includeTotal) {
+            val (nums, unit) = formatFloats(1, complete, total.toDouble())
+            "${nums[0]}/${nums[1]}$unit"
+        } else {
+            complete.format(1)
+        } + suffix
+        renderable = Text(t, style, whitespace = Whitespace.PRE)
     }
 }
 
@@ -69,15 +82,15 @@ internal class SpeedProgressCell(
     frameRate: Int?,
     private val style: TextStyle
 ) : ThrottledProgressCell(frameRate, ColumnWidth.Fixed(5 + suffix.length)) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
         val speed = history.completedPerSecond ?: return
         if (history.completed == 0 || shouldSkipUpdate(frame, history.elapsed)) return
 
-        if (ind) {
+        if (indeterminate) {
             renderable = Text("--.--$suffix", style)
             return
         }
-        renderable = Text(speed.format(2) + suffix, style, whitespace = Whitespace.PRE)
+        renderable = Text(speed.format(1) + suffix, style, whitespace = Whitespace.PRE)
     }
 }
 
@@ -86,13 +99,13 @@ internal class EtaProgressCell(
     frameRate: Int?,
     private val style: TextStyle,
 ) : ThrottledProgressCell(frameRate, ColumnWidth.Auto) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
         val speed = history.completedPerSecond ?: return
         if (shouldSkipUpdate(frame, history.elapsed)) return
 
         val eta = (total - history.completed) / speed
 
-        if (ind || eta < 0) {
+        if (indeterminate || eta < 0) {
             renderable = EmptyRenderable
             return
         }
@@ -110,25 +123,33 @@ internal class BarProgressCell(val width: Int?) : ProgressCell(
     columnWidth = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand(),
     renderable = ProgressBar(width = width)
 ) {
-    override fun update(total: Int, ind: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        renderable = ProgressBar(total, history.completed, ind, width, pulseFrame = frame, pulseDuration = hz)
+    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+        renderable = ProgressBar(total, history.completed, indeterminate, width, pulseFrame = frame, pulseDuration = hz)
     }
 }
 
-
-private fun Double.format(decimals: Int): String {
-    var n = this
+private fun formatFloats(decimals: Int, vararg nums: Double): Pair<List<String>, String> {
+    var n = nums.max()!!
     var suffix = ""
     for (c in SI_PREFIXES) {
         if (n < 1000) {
             break
         }
         n /= 1000
+        for (i in nums.indices) {
+            nums[i] = nums[i] / 1000
+        }
         suffix = c.toString()
     }
-    val s = n.toString()
-    val len = s.indexOf('.').let { if (it >= 0) it + decimals else s.length }
-    return s.take(len) + suffix
+    return nums.map { num ->
+        val s = num.toString()
+        val len = s.indexOf('.').let { if (it >= 0) it + decimals + 1 else s.length }
+        s.take(len)
+    } to suffix
+}
+
+private fun Double.format(decimals: Int): String {
+    return formatFloats(decimals, this).let { it.first.first() + it.second }
 }
 
 
@@ -150,8 +171,8 @@ class ProgressBuilder {
         cells += BarProgressCell(width)
     }
 
-    fun completed(style: TextStyle = DEFAULT_STYLE) {
-        cells += CompletedProgressCell(style)
+    fun completed(suffix: String = "B", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
+        cells += CompletedProgressCell(suffix, includeTotal, style)
     }
 
     fun speed(suffix: String = "B/s", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
@@ -237,8 +258,16 @@ class ProgressTracker internal constructor(
     private val animation = t.animation<Unit> {
         grid {
             rowFrom(cells)
+            borders = Borders.NONE
             cells.forEachIndexed { i, it ->
-                column(i) { width = it.columnWidth }
+                column(i) {
+                    width = it.columnWidth
+                    padding = when (i) {
+                        0 -> Padding.of(right = 1)
+                        cells.lastIndex -> Padding.of(left = 1)
+                        else -> Padding.horizontal(1)
+                    }
+                }
             }
         }
     }
