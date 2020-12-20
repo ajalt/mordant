@@ -322,8 +322,9 @@ private class TableRenderer(
                 List(rowHeights[y]) { space }
             }
             is Cell.Content -> {
-                val cellWidth = (x until x + cell.columnSpan).sumOf { columnWidths[it] } +
+                val cellWidth = ((x until x + cell.columnSpan).sumOf { columnWidths[it] } +
                         ((x + 1) until (x + cell.columnSpan)).count { columnBorders[it + 1] }
+                        ).coerceAtLeast(0)
                 val cellHeight = (y until y + cell.rowSpan).sumOf { rowHeights[it] } +
                         ((y + 1) until (y + cell.rowSpan)).count { rowBorders[it + 1] }
                 cell.content.render(t, cellWidth)

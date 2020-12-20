@@ -35,7 +35,7 @@ class HorizontalRule internal constructor(
 
     override fun render(t: Terminal, width: Int): Lines {
         val minBarWidth = 6 // 2 for each of left bar, right bar, padding
-        val content = title.withAlign(NONE).render(t, width - minBarWidth)
+        val content = title.withAlign(NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
         val lines = if (content.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {

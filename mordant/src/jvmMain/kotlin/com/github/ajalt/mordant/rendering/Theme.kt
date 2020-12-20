@@ -72,12 +72,14 @@ sealed class Theme(
             )
         )
 
+        /** A theme that uses the same unicode characters as [Default], but uses no text colors or styles. */
         val Plain: Theme = Theme(
             BuiltTheme(emptyMap(), Default.strings, Default.flags, Default.dimensions)
         ) {
             flags["progressbar.pulse"] = false
         }
 
+        /** A theme that uses no text colors or styles, and uses only ASCII characters */
         val PlainAscii: Theme = Theme(Plain) {
             strings["list.number.separator"] = "."
             strings["list.bullet.text"] = "*"

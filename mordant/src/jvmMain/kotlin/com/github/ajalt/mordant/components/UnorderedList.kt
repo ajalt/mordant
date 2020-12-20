@@ -32,7 +32,7 @@ class UnorderedList(
     override fun render(t: Terminal, width: Int): Lines {
         val bullet = bullet(t.theme)
         val bulletWidth = bullet.sumOf { it.cellWidth }
-        val contentWidth = width - bulletWidth
+        val contentWidth = (width - bulletWidth).coerceAtLeast(0)
         val continuationPadding = when {
             bulletWidth > 0 -> listOf(Span.space(bulletWidth, bulletStyle ?: t.theme.style("list.bullet")))
             else -> EMPTY_LINE

@@ -153,11 +153,13 @@ private fun Double.format(decimals: Int): String {
 }
 
 
-// TODO: alignment
 // TODO: themes
-class ProgressBuilder {
+// TODO: move public classes to separate file
+class ProgressBuilder internal constructor() {
     var frameRate: Int = 10
     var historyLength: Float = 30f
+    var autoUpdate: Boolean = true
+    var padding: Int = 2
 
     fun text(text: String, style: TextStyle = DEFAULT_STYLE) {
         cells += TextProgressCell(Text(text, style))
@@ -184,7 +186,8 @@ class ProgressBuilder {
     }
 
     internal fun build(t: Terminal): ProgressTracker {
-        return ProgressTracker(t, cells, frameRate, historyLength)
+        val ticker = if (autoUpdate) ExecutorTicker(frameRate) else DisabledTicker()
+        return ProgressTracker(t, cells, frameRate, historyLength, ticker, padding)
     }
 
     private val cells = mutableListOf<ProgressCell>()
@@ -201,7 +204,6 @@ private class ProgressHistoryEntry(val timeNs: Long, val completed: Int)
 internal class ProgressHistory(lengthSeconds: Float) {
     private val samples = ArrayDeque<ProgressHistoryEntry>()
     private val lengthNs = (TimeUnit.SECONDS.toNanos(1) * lengthSeconds).toLong()
-    private var startTimeNs: Long = System.nanoTime()
 
     fun clear() {
         samples.clear()
@@ -209,7 +211,6 @@ internal class ProgressHistory(lengthSeconds: Float) {
 
     fun reset() {
         clear()
-        startTimeNs = System.nanoTime()
     }
 
     fun update(completed: Int) {
@@ -225,21 +226,48 @@ internal class ProgressHistory(lengthSeconds: Float) {
         get() = samples.lastOrNull()?.completed ?: 0
 
     val elapsed: Double
-        get() = samples.lastOrNull()?.let { nanosToSeconds(it.timeNs - startTimeNs) } ?: 0.0
+        get() {
+            if (samples.size < 2) return 0.0
+            return nanosToSeconds(samples.last().timeNs - samples.first().timeNs)
+        }
 
     val completedPerSecond: Double?
         get() {
-            if (samples.size < 10) return null
-
-            val first = samples.first()
-            val last = samples.last()
-
-            val duration = nanosToSeconds(last.timeNs - first.timeNs)
-            val complete = last.completed - first.completed
-            return complete.toDouble() / duration
+            val elapsed = elapsed
+            if (elapsed <= 0) return null
+            val complete = samples.last().completed - samples.first().completed
+            return complete.toDouble() / elapsed
         }
 }
 
+internal interface Ticker {
+    fun start(onTick: () -> Unit)
+    fun stop()
+}
+
+private class ExecutorTicker(
+    private val ticksPerSecond: Int,
+    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor {
+        Executors.defaultThreadFactory().newThread(it).apply { isDaemon = true }
+    },
+) : Ticker {
+    private var future: Future<*>? = null
+    override fun start(onTick: () -> Unit) {
+        if (future != null) return
+        val period = 1000L / ticksPerSecond
+        future = executor.scheduleAtFixedRate({ onTick() }, period, period, TimeUnit.MILLISECONDS)
+    }
+
+    override fun stop() {
+        future?.cancel(false)
+        future = null
+    }
+}
+
+private class DisabledTicker : Ticker {
+    override fun start(onTick: () -> Unit) {}
+    override fun stop() {}
+}
 
 // TODO: thread safety
 class ProgressTracker internal constructor(
@@ -247,14 +275,12 @@ class ProgressTracker internal constructor(
     private val cells: List<ProgressCell>,
     private val frameRate: Int,
     historyLength: Float,
-    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor {
-        Executors.defaultThreadFactory().newThread(it).apply { isDaemon = true }
-    },
+    private val ticker: Ticker,
+    private val paddingSize: Int,
 ) {
     private var total: Int? = null
-    private var elapsedMs = 0L
     private val history = ProgressHistory(historyLength)
-    private var future: Future<*>? = null
+    private var frame = 0
     private val animation = t.animation<Unit> {
         grid {
             rowFrom(cells)
@@ -263,27 +289,45 @@ class ProgressTracker internal constructor(
                 column(i) {
                     width = it.columnWidth
                     padding = when (i) {
-                        0 -> Padding.of(right = 1)
-                        cells.lastIndex -> Padding.of(left = 1)
-                        else -> Padding.horizontal(1)
+                        cells.lastIndex -> Padding.of(left = paddingSize)
+                        else -> Padding.of(right = paddingSize)
                     }
                 }
             }
         }
     }
 
+    fun update(advancePulse: Boolean = true) {
+        if (advancePulse) frame += 1
+        cells.forEach {
+            it.update(
+                this.total ?: 100,
+                this.total == null,
+                frame,
+                frameRate,
+                history
+            )
+        }
+        animation.update(Unit)
+    }
+
     fun update(completed: Int) {
-        update(completed, total)
+        history.update(completed)
+        update()
     }
 
     fun update(completed: Int, total: Int?) {
-        if (this.total != total) {
-            history.clear()
-        }
+        updateTotalWithoutAnimation(total)
+        update(completed)
+    }
 
+    fun updateTotal(total: Int?) {
+        updateTotalWithoutAnimation(total)
+        update()
+    }
+
+    private fun updateTotalWithoutAnimation(total: Int?) {
         this.total = total?.takeIf { it > 0 }
-        history.update(completed)
-        animation.update(Unit)
     }
 
     fun advance(amount: Int) {
@@ -291,38 +335,21 @@ class ProgressTracker internal constructor(
     }
 
     fun start() {
-        if (future != null) return // TODO: start after stop?
-        val t0 = System.nanoTime()
-        var frame = 0
-        val period = 1000L / frameRate
-        future = executor.scheduleAtFixedRate({
-            elapsedMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t0)
-            cells.forEach {
-                it.update(
-                    this.total ?: 100,
-                    this.total == null,
-                    frame,
-                    frameRate,
-                    history
-                )
-            }
-            animation.update(Unit)
-            frame += 1
-        }, period, period, TimeUnit.MILLISECONDS)
+        ticker.start { update() }
     }
 
     fun stop() {
-        future?.cancel(false)
-        future = null
+        ticker.stop()
     }
 
-    fun reset() {
+    fun restart() {
         stop()
         update(0)
         start()
     }
 
     fun clear() {
+        stop()
         animation.clear()
     }
 }

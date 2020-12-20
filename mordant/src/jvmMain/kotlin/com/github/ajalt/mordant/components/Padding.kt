@@ -65,7 +65,7 @@ private class Padded private constructor(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val lines = content.render(t, width - paddingWidth)
+        val lines = content.render(t, (width - paddingWidth).coerceAtLeast(0))
 
         val output = ArrayList<Line>(padding.top + lines.height + padding.bottom)
         val left = if (padding.left > 0) listOf(Span.space(padding.left)) else EMPTY_LINE

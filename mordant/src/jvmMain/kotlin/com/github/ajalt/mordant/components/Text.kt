@@ -58,7 +58,7 @@ class Text internal constructor(
     }
 
     private fun wrap(wrapWidth: Int, tabWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {
-        if (wrapWidth == 0 && overflowWrap != OverflowWrap.NORMAL) return EMPTY_LINES
+        if (wrapWidth <= 0 && overflowWrap != OverflowWrap.NORMAL) return EMPTY_LINES
 
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()

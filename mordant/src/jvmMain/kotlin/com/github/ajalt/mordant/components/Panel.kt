@@ -35,7 +35,7 @@ class Panel(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val maxContentWidth = width - borderWidth
+        val maxContentWidth = (width - borderWidth).coerceAtLeast(0)
         val measurement = content.measure(t, maxContentWidth)
 
         val contentWidth = when {
