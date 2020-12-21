@@ -7,9 +7,6 @@ import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid
 import com.github.ajalt.mordant.terminal.Terminal
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
-import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -27,7 +24,6 @@ internal abstract class ProgressCell(
 internal class TextProgressCell(text: Text) : ProgressCell(ColumnWidth.Auto, text) {
     override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {}
 }
-
 
 internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell(ColumnWidth.Fixed(4)) {
     override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
@@ -156,51 +152,6 @@ private fun Double.format(decimals: Int): String {
     return formatFloats(decimals, this).let { it.first.first() + it.second }
 }
 
-
-// TODO: themes
-// TODO: move public classes to separate file
-class ProgressBuilder internal constructor() {
-    var frameRate: Int = 10
-    var historyLength: Float = 30f
-    var autoUpdate: Boolean = true
-    var padding: Int = 2
-
-    fun text(text: String, style: TextStyle = DEFAULT_STYLE) {
-        cells += TextProgressCell(Text(text, style))
-    }
-
-    fun percentage(style: TextStyle = DEFAULT_STYLE) {
-        cells += PercentageProgressCell(style)
-    }
-
-    fun progressBar(width: Int? = null) {
-        cells += BarProgressCell(width)
-    }
-
-    fun completed(suffix: String = "B", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
-        cells += CompletedProgressCell(suffix, includeTotal, style)
-    }
-
-    fun speed(suffix: String = "B/s", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
-        cells += SpeedProgressCell(suffix, frameRate, style)
-    }
-
-    fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
-        cells += EtaProgressCell(prefix, frameRate, style)
-    }
-
-    internal fun build(t: Terminal): ProgressTracker {
-        val ticker = if (autoUpdate) ExecutorTicker(frameRate) else DisabledTicker()
-        return ProgressTracker(t, cells, frameRate, historyLength, ticker, padding)
-    }
-
-    private val cells = mutableListOf<ProgressCell>()
-}
-
-fun Terminal.progressTracker(init: ProgressBuilder.() -> Unit): ProgressTracker {
-    return ProgressBuilder().apply(init).build(this)
-}
-
 private fun nanosToSeconds(nanos: Double) = nanos / TimeUnit.SECONDS.toNanos(1)
 private fun nanosToSeconds(nanos: Long) = nanosToSeconds(nanos.toDouble())
 
@@ -242,35 +193,6 @@ internal class ProgressHistory(lengthSeconds: Float) {
             val complete = samples.last().completed - samples.first().completed
             return complete.toDouble() / elapsed
         }
-}
-
-internal interface Ticker {
-    fun start(onTick: () -> Unit)
-    fun stop()
-}
-
-private class ExecutorTicker(
-    private val ticksPerSecond: Int,
-    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor {
-        Executors.defaultThreadFactory().newThread(it).apply { isDaemon = true }
-    },
-) : Ticker {
-    private var future: Future<*>? = null
-    override fun start(onTick: () -> Unit) {
-        if (future != null) return
-        val period = 1000L / ticksPerSecond
-        future = executor.scheduleAtFixedRate({ onTick() }, period, period, TimeUnit.MILLISECONDS)
-    }
-
-    override fun stop() {
-        future?.cancel(false)
-        future = null
-    }
-}
-
-private class DisabledTicker : Ticker {
-    override fun start(onTick: () -> Unit) {}
-    override fun stop() {}
 }
 
 // TODO: thread safety
