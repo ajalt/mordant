@@ -44,7 +44,7 @@ internal class CompletedProgressCell(
     private val suffix: String,
     private val includeTotal: Boolean,
     private val style: TextStyle
-) : ProgressCell(ColumnWidth.Fixed(5)) {
+) : ProgressCell(ColumnWidth.Fixed((if (includeTotal) 11 else 5) + suffix.length)) {
     override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
         if (indeterminate) {
             renderable = EmptyRenderable
@@ -98,15 +98,15 @@ internal class EtaProgressCell(
     private val prefix: String,
     frameRate: Int?,
     private val style: TextStyle,
-) : ThrottledProgressCell(frameRate, ColumnWidth.Auto) {
+) : ThrottledProgressCell(frameRate, ColumnWidth.Fixed(7 + prefix.length)) {
     override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
         val speed = history.completedPerSecond ?: return
         if (shouldSkipUpdate(frame, history.elapsed)) return
 
         val eta = (total - history.completed) / speed
 
-        if (indeterminate || eta < 0) {
-            renderable = EmptyRenderable
+        if (indeterminate || eta < 0 || speed <= 0) {
+            renderable = Text("$prefix-:--:--", style, whitespace = Whitespace.PRE)
             return
         }
 
@@ -114,7 +114,11 @@ internal class EtaProgressCell(
         val m = (eta / 60 % 60).roundToInt()
         val s = (eta % 60).roundToInt().coerceAtLeast(if (h == 0 && m == 0) 1 else 0)
 
-        renderable = Text("$prefix$h:$m:$s", style, whitespace = Whitespace.PRE)
+        renderable = Text(
+            "$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}",
+            style,
+            whitespace = Whitespace.PRE
+        )
     }
 }
 
@@ -284,6 +288,7 @@ class ProgressTracker internal constructor(
     private val animation = t.animation<Unit> {
         grid {
             rowFrom(cells)
+            align = TextAlign.RIGHT
             borders = Borders.NONE
             cells.forEachIndexed { i, it ->
                 column(i) {

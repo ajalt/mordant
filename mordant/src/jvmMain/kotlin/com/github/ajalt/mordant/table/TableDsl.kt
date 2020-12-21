@@ -151,28 +151,25 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 }
 
 @MordantDsl
-class GridBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
-    internal val rows = mutableListOf<RowBuilder>()
+class GridBuilder internal constructor(private val section: SectionBuilder) : CellStyleBuilder by section {
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
-    internal var rowStyles = listOf<TextStyle>()
 
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
-        rowStyles = listOf(style1, style2) + styles.asList()
+        section.rowStyles(style1, style2, *styles)
     }
 
     fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
-        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
-        rows += RowBuilder(cellBuilders).apply(init)
+        section.rowFrom(cells, init)
     }
 
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
-        rowFrom(cells.asList(), init)
+        section.row(*cells, init)
     }
 
     fun row(init: RowBuilder.() -> Unit) {
-        rows += RowBuilder(mutableListOf()).apply(init)
+        section.row(init)
     }
 }
 
@@ -233,11 +230,9 @@ fun grid(init: GridBuilder.() -> Unit): Renderable {
         borderStyle = BorderStyle.BLANK
         padding = Padding.none()
 
-        val gb = GridBuilder()
+        val gb = GridBuilder(bodySection)
         gb.init()
         columns.putAll(gb.columns)
-        bodySection.rows.addAll(gb.rows)
-        bodySection.rowStyles = gb.rowStyles
     }
 }
 
