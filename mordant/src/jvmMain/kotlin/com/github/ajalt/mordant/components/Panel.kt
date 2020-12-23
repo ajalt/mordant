@@ -13,13 +13,13 @@ private fun titleRenderable(title: String?, titleTextStyle: TextStyle): Text? {
 }
 
 // TODO: theme
-//TODO: titleAlign
 class Panel(
     content: Renderable,
     private val title: Renderable? = null,
     private val expand: Boolean = false,
     padding: Padding = DEFAULT_PADDING,
     private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+    private val titleAlign: TextAlign = CENTER,
     private val borderTextStyle: TextStyle = DEFAULT_STYLE,
     private val titleTextStyle: TextStyle = borderTextStyle
 ) : Renderable {
@@ -29,6 +29,7 @@ class Panel(
         expand: Boolean = false,
         padding: Padding = DEFAULT_PADDING,
         borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+        titleAlign: TextAlign = CENTER,
         borderTextStyle: TextStyle = DEFAULT_STYLE,
         titleTextStyle: TextStyle = borderTextStyle
     ) : this(
@@ -37,6 +38,7 @@ class Panel(
         expand,
         padding,
         borderStyle,
+        titleAlign,
         borderTextStyle,
         titleTextStyle
     )
@@ -72,7 +74,8 @@ class Panel(
             title ?: EmptyRenderable,
             borderStyle?.body?.ew ?: " ",
             borderTextStyle,
-            titleTextStyle
+            titleTextStyle,
+            titleAlign
         ).render(t, contentWidth)
 
         if (borderStyle == null) {

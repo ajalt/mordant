@@ -22,19 +22,32 @@ class HorizontalRuleTest : RenderingTest() {
     }
 
     @Test
+    fun `title align left`() {
+        checkRender(HorizontalRule("title", titleAlign = TextAlign.LEFT), "─ title ────", width = 12)
+    }
+
+    @Test
+    fun `title align right`() {
+        checkRender(HorizontalRule("title", titleAlign = TextAlign.RIGHT), "──── title ─", width = 12)
+    }
+
+    @Test
     fun `multiline title`() {
-        checkRender(HorizontalRule(title = Text("Multiline\nHeader Text", whitespace = Whitespace.PRE_WRAP)),
-                """
-                     Multiline     ⏎
-                ─── Header Text ───⏎
-                """,
-                width = 19
+        checkRender(
+            HorizontalRule(title = Text("Multiline\nHeader Text", whitespace = Whitespace.PRE_WRAP)),
+            """
+                 Multiline     ⏎
+            ─── Header Text ───⏎
+            """,
+            width = 19
         )
     }
 
     @Test
     fun `styled title and rule`() {
-        checkRender(HorizontalRule(title = "title", ruleStyle = TextStyle(red), titleStyle = TextStyle(red)),
-                red("─── title ───"), width = 13)
+        checkRender(
+            HorizontalRule(title = "title", ruleStyle = TextStyle(red), titleStyle = TextStyle(red)),
+            red("─── title ───"), width = 13
+        )
     }
 }
