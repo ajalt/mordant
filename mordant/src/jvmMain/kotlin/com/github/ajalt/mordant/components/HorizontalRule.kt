@@ -18,7 +18,7 @@ class HorizontalRule internal constructor(
         ruleStyle: TextStyle? = null,
         titleStyle: TextStyle? = null
     ) : this(
-        title = Text(parseText(title, DEFAULT_STYLE)),
+        title = if (title.isEmpty()) EmptyRenderable else Text(parseText(title, DEFAULT_STYLE)),
         ruleCharacter = ruleCharacter,
         ruleStyle = ruleStyle,
         titleStyle = titleStyle

@@ -26,4 +26,11 @@ class PanelTest : RenderingTest(width = 20) {
     |text  ⏎
     |line 2⏎
     """.trimMargin())
+
+    @Test
+    fun `default title`() = checkRender(Panel("text content", title="title"), """
+    ╭── title ───╮
+    │text content│
+    ╰────────────╯
+    """)
 }

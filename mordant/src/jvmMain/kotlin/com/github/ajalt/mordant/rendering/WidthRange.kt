@@ -7,9 +7,9 @@ data class WidthRange(val min: Int, val max: Int) {
         require(min <= max) { "Range min cannot be larger than max" }
     }
 
-    operator fun plus(extra: Int) = WidthRange(min + extra, max + extra)
+    operator fun plus(extra: Int) = if (extra == 0) this else WidthRange(min + extra, max + extra)
     operator fun plus(other: WidthRange) = WidthRange(min + other.min, max + other.max)
-    operator fun div(divisor: Int) = WidthRange(min / divisor, max / divisor)
+    operator fun div(divisor: Int) = if (divisor == 1) this else WidthRange(min / divisor, max / divisor)
 }
 
 internal fun Iterable<Renderable>.maxWidthRange(
