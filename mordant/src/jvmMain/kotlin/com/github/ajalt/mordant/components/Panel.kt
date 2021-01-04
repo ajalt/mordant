@@ -66,7 +66,7 @@ class Panel(
 
         val contentWidth = when {
             expand -> maxContentWidth
-            else -> measurement.max.coerceAtMost(maxContentWidth) - borderWidth
+            else -> (measurement.max - borderWidth).coerceAtMost(maxContentWidth)
         }
 
         val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
