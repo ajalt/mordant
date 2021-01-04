@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.internal.parseText
@@ -11,7 +12,8 @@ class HorizontalRule private constructor(
     private val ruleCharacter: ThemeString,
     private val ruleStyle: ThemeStyle,
     private val titleStyle: ThemeStyle,
-    private val titleAlign: TextAlign = TextAlign.CENTER,
+    private val titleAlign: TextAlign,
+    private val titlePadding: ThemeDimension,
 ) : Renderable {
     constructor(
         title: Renderable = EmptyRenderable,
@@ -19,12 +21,14 @@ class HorizontalRule private constructor(
         ruleStyle: TextStyle? = null,
         titleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
+        titlePadding: Int? = null,
     ) : this(
         title = title,
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         titleStyle = ThemeStyle.of("hr.title", titleStyle),
-        titleAlign = titleAlign
+        titleAlign = titleAlign,
+        titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
     )
 
     constructor(
@@ -33,12 +37,14 @@ class HorizontalRule private constructor(
         ruleStyle: TextStyle? = null,
         titleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
+        titlePadding: Int? = null,
     ) : this(
         title = if (title.isEmpty()) EmptyRenderable else Text(parseText(title, DEFAULT_STYLE)),
         ruleCharacter = ruleCharacter,
         ruleStyle = ruleStyle,
         titleStyle = titleStyle,
-        titleAlign = titleAlign
+        titleAlign = titleAlign,
+        titlePadding = titlePadding,
     )
 
     override fun measure(t: Terminal, width: Int): WidthRange {
@@ -46,14 +52,16 @@ class HorizontalRule private constructor(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val minBarWidth = 6 // 2 for each of left bar, right bar, padding
+        val padding = titlePadding[t.theme]
+        val totalPadding = 2 * padding
+        val minBarWidth = 4 + totalPadding // 2 for each of left bar and right bar
         val content = title.withAlign(TextAlign.NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
         val lines = if (content.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {
             val renderedTitle = content.withStyle(titleStyle[t.theme])
             val lastLine = renderedTitle.lines.last()
-            val ruleWidth = width - lastLine.sumOf { it.cellWidth } - 2 // -2 for padding
+            val ruleWidth = width - lastLine.sumOf { it.cellWidth } - totalPadding
             val leftRuleWidth = when (titleAlign) {
                 TextAlign.LEFT -> 1
                 TextAlign.RIGHT -> ruleWidth - 1
@@ -63,7 +71,7 @@ class HorizontalRule private constructor(
             }
             val leftRule = rule(t.theme, leftRuleWidth)
             val rightRule = rule(t.theme, ruleWidth - leftRuleWidth)
-            val space = SINGLE_SPACE.withStyle(ruleStyle[t.theme])
+            val space = if (padding > 0) Span.space(padding, ruleStyle[t.theme]) else null
             val rule = flatLine(leftRule, space, lastLine, space, rightRule)
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))

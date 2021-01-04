@@ -49,12 +49,14 @@ class Lines(
 
 internal val Line.lineWidth get() = sumOf { it.cellWidth }
 
-/** Equivalent to `listOf(...).flatten(), but doesn't require wrapping single items in a list */
-internal fun flatLine(vararg parts: Any): Line {
+/** Equivalent to `listOf(...).flatten(), but ignores nulls and doesn't require wrapping single items in a list */
+internal fun flatLine(vararg parts: Any?): Line {
     val size = parts.sumOf { if (it is Collection<*>) it.size else 1 }
     val line = ArrayList<Span>(size)
     for (part in parts) {
         when (part) {
+            null -> {
+            }
             is Collection<*> -> part.mapTo(line) { it as Span }
             is Span -> line.add(part)
             else -> error("not a span: $part")

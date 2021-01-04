@@ -71,6 +71,7 @@ sealed class Theme(
                 "markdown.table.ascii" to false,
             ),
             mapOf(
+                "hr.title.padding" to 1,
                 "markdown.header.padding" to 1,
             )
         )
