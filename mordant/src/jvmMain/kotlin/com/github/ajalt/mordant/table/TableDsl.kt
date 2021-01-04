@@ -165,7 +165,7 @@ class GridBuilder internal constructor(private val section: SectionBuilder) : Ce
     }
 
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
-        section.row(*cells, init)
+        section.row(*cells, init = init)
     }
 
     fun row(init: RowBuilder.() -> Unit) {
