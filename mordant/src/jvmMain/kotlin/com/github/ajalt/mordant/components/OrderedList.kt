@@ -1,25 +1,37 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.ThemeString
+import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.math.log10
 
-class OrderedList(
+class OrderedList private constructor(
     private val listEntries: List<Renderable>,
-    private val numberStyle: TextStyle? = null,
-    private val numberSeparator: String? = null
+    private val numberStyle: ThemeStyle,
+    private val numberSeparator: ThemeString
 ) : Renderable {
+    constructor(
+        listEntries: List<Renderable>,
+        numberStyle: TextStyle? = null,
+        numberSeparator: String? = null
+    ) : this(
+        listEntries,
+        ThemeStyle.of("list.number", numberStyle),
+        ThemeString.of("list.number.separator", numberSeparator)
+    )
+
     init {
         require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
     }
 
     private fun sep(t: Theme): Line {
-        val text = numberSeparator ?: t.string("list.number.separator")
+        val text = numberSeparator[t]
         require("\n" !in text) { "number separator cannot contain newlines" }
         return parseText(
             text,
-            numberStyle ?: t.style("list.number")
+            numberStyle[t]
         ).lines.firstOrNull() ?: EMPTY_LINE
     }
 
@@ -44,7 +56,7 @@ class OrderedList(
     override fun render(t: Terminal, width: Int): Lines {
         val contentWidth = width - maxBulletWidth
         val lines = mutableListOf<Line>()
-        val style = numberStyle ?: t.theme.style("list.number")
+        val style = numberStyle[t.theme]
         val sep = sep(t.theme)
         val sepWidth = sep.lineWidth
 

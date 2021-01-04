@@ -1,20 +1,35 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.ThemeString
+import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-class HorizontalRule internal constructor(
+class HorizontalRule private constructor(
     private val title: Renderable,
-    private val ruleCharacter: String = "─",
-    private val ruleStyle: TextStyle? = null,
-    private val titleStyle: TextStyle? = null,
+    private val ruleCharacter: ThemeString,
+    private val ruleStyle: ThemeStyle,
+    private val titleStyle: ThemeStyle,
     private val titleAlign: TextAlign = TextAlign.CENTER,
 ) : Renderable {
-    constructor() : this(EmptyRenderable)
     constructor(
-        title: String = "",
-        ruleCharacter: String = "─",
+        title: Renderable = EmptyRenderable,
+        ruleCharacter: String? = null,
+        ruleStyle: TextStyle? = null,
+        titleStyle: TextStyle? = null,
+        titleAlign: TextAlign = TextAlign.CENTER,
+    ) : this(
+        title = title,
+        ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
+        ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
+        titleStyle = ThemeStyle.of("hr.title", titleStyle),
+        titleAlign = titleAlign
+    )
+
+    constructor(
+        title: String,
+        ruleCharacter: String? = null,
         ruleStyle: TextStyle? = null,
         titleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
@@ -26,11 +41,6 @@ class HorizontalRule internal constructor(
         titleAlign = titleAlign
     )
 
-    init {
-        require("\n" !in ruleCharacter) { "Rule characters cannot contain line breaks" }
-        require(ruleCharacter.isNotEmpty()) { "Rule characters cannot be empty." }
-    }
-
     override fun measure(t: Terminal, width: Int): WidthRange {
         return WidthRange(width, width)
     }
@@ -41,7 +51,7 @@ class HorizontalRule internal constructor(
         val lines = if (content.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {
-            val renderedTitle = content.withStyle(this.titleStyle ?: t.theme.style("hr.title"))
+            val renderedTitle = content.withStyle(titleStyle[t.theme])
             val lastLine = renderedTitle.lines.last()
             val ruleWidth = width - lastLine.sumOf { it.cellWidth } - 2 // -2 for padding
             val leftRuleWidth = when (titleAlign) {
@@ -53,7 +63,7 @@ class HorizontalRule internal constructor(
             }
             val leftRule = rule(t.theme, leftRuleWidth)
             val rightRule = rule(t.theme, ruleWidth - leftRuleWidth)
-            val space = SINGLE_SPACE.withStyle(ruleStyle ?: t.theme.style("hr.rule"))
+            val space = SINGLE_SPACE.withStyle(ruleStyle[t.theme])
             val rule = flatLine(leftRule, space, lastLine, space, rightRule)
             if (renderedTitle.lines.size > 1) {
                 val firstLines = Lines(renderedTitle.lines.dropLast(1))
@@ -68,14 +78,19 @@ class HorizontalRule internal constructor(
 
     private fun rule(t: Theme, width: Int): Line {
         if (width <= 0) return EMPTY_LINE
-        val style = ruleStyle ?: t.style("hr.rule")
-        val ruleWidth = width / ruleCharacter.length
-        val rule = parseText(ruleCharacter.repeat(ruleWidth), style).lines.single()
-        val remaining = width % ruleCharacter.length
+        val style = ruleStyle[t]
+        val c = ruleCharacter[t]
+
+        require("\n" !in c) { "Rule characters cannot contain line breaks" }
+        require(c.isNotEmpty()) { "Rule characters cannot be empty." }
+
+        val ruleWidth = width / c.length
+        val rule = parseText(c.repeat(ruleWidth), style).lines.single()
+        val remaining = width % c.length
 
         if (remaining == 0) return rule
 
-        val extraRule = Span.word(ruleCharacter.take(remaining), style)
+        val extraRule = Span.word(c.take(remaining), style)
         return rule + extraRule
     }
 }

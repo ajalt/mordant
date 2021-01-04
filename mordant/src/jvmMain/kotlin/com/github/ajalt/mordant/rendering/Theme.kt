@@ -20,7 +20,6 @@ sealed class Theme(
 
                 "list.number" to DEFAULT_STYLE,
                 "list.bullet" to DEFAULT_STYLE,
-                "blockquote" to TextStyle(brightYellow),
                 "hr.rule" to DEFAULT_STYLE,
                 "hr.title" to DEFAULT_STYLE,
                 "progressbar.pending" to TextStyle(gray),
@@ -29,6 +28,7 @@ sealed class Theme(
                 "progressbar.separator" to DEFAULT_STYLE,
                 "progressbar.finished" to TextStyle(green),
 
+                "markdown.blockquote" to TextStyle(brightYellow),
                 "markdown.emph" to TextStyle(italic = true),
                 "markdown.strong" to TextStyle(bold = true),
                 "markdown.stikethrough" to TextStyle(strikethrough = true),
@@ -52,6 +52,8 @@ sealed class Theme(
                 "progressbar.pending" to "━",
                 "progressbar.complete" to "━",
                 "progressbar.separator" to " ",
+                "hr.rule" to "─",
+
 
                 "markdown.task.checked" to "☑",
                 "markdown.task.unchecked" to "☐",
@@ -61,6 +63,7 @@ sealed class Theme(
                 "markdown.h4.rule" to " ",
                 "markdown.h5.rule" to " ",
                 "markdown.h6.rule" to " ",
+                "markdown.blockquote.bar" to "▎",
             ),
             mapOf(
                 "progressbar.pulse" to true,
@@ -91,6 +94,8 @@ sealed class Theme(
             strings["markdown.task.unchecked"] = "[ ]"
             strings["markdown.h1.rule"] = "="
             strings["markdown.h2.rule"] = "-"
+            strings["markdown.blockquote.bar"] = "|"
+
             flags["markdown.table.ascii"] = true
         }
     }

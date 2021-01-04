@@ -1,25 +1,37 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.ThemeString
+import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-class UnorderedList(
+class UnorderedList private constructor(
     private val listEntries: List<Renderable>,
-    private val bulletText: String? = null,
-    private val bulletStyle: TextStyle? = null
+    private val bulletText: ThemeString,
+    private val bulletStyle: ThemeStyle
 ) : Renderable {
+    constructor(
+        listEntries: List<Renderable>,
+        bulletText: String? = null,
+        bulletStyle: TextStyle? = null
+    ) : this(
+        listEntries,
+        ThemeString.of("list.bullet.text", bulletText),
+        ThemeStyle.of("list.bullet", bulletStyle)
+    )
+
     init {
         require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
     }
 
     private fun bullet(t: Theme): Line {
-        val text = bulletText ?: t.string("list.bullet.text")
+        val text = bulletText[t]
         require("\n" !in text) { "bullet text cannot contain newlines" }
         if (text.isEmpty()) return EMPTY_LINE
         return flatLine(
             SINGLE_SPACE,
-            parseText(text, bulletStyle ?: t.style("list.bullet")).lines.firstOrNull() ?: EMPTY_LINE,
+            parseText(text, bulletStyle[t]).lines.firstOrNull() ?: EMPTY_LINE,
             SINGLE_SPACE
         )
     }
@@ -34,7 +46,7 @@ class UnorderedList(
         val bulletWidth = bullet.sumOf { it.cellWidth }
         val contentWidth = (width - bulletWidth).coerceAtLeast(0)
         val continuationPadding = when {
-            bulletWidth > 0 -> listOf(Span.space(bulletWidth, bulletStyle ?: t.theme.style("list.bullet")))
+            bulletWidth > 0 -> listOf(Span.space(bulletWidth, bulletStyle[t.theme]))
             else -> EMPTY_LINE
         }
 

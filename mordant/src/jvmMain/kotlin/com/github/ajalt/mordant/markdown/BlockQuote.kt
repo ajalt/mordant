@@ -12,10 +12,10 @@ internal class BlockQuote(private val content: Renderable) : Renderable {
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val bar = Span.word("▎", t.theme.style("blockquote"))
+        val bar = Span.word(t.theme.string("markdown.blockquote.bar"), t.theme.style("markdown.blockquote"))
         val justBar = listOf(bar)
-        val paddedBar = listOf(bar, Span.space(style = t.theme.style("blockquote")))
-        val lines = content.render(t, width).withStyle(t.theme.style("blockquote")).lines
+        val paddedBar = listOf(bar, Span.space(style = t.theme.style("markdown.blockquote")))
+        val lines = content.render(t, width).withStyle(t.theme.style("markdown.blockquote")).lines
         return Lines(lines.map { if (it.isEmpty()) justBar else paddedBar + it })
     }
 }
