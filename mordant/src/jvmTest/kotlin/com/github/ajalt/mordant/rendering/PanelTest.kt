@@ -3,6 +3,8 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.components.Panel
 import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
+import com.github.ajalt.mordant.terminal.TextColors
+import com.github.ajalt.mordant.terminal.TextColors.*
 import org.junit.Test
 
 class PanelTest : RenderingTest(width = 20) {
@@ -74,5 +76,20 @@ class PanelTest : RenderingTest(width = 20) {
         │text content│
         ╰────────────╯
         """
+    )
+
+    @Test
+    fun `themed panel`() = checkRender(
+        Panel("text content", title = "title"),
+        """
+        ${red("╭───${blue("title")}────╮")}
+        ${red("│")}text content${red("│")}
+        ${red("╰────────────╯")}
+        """,
+        theme = Theme {
+            styles["panel.border"] = red
+            styles["panel.title"] = blue
+            dimensions["panel.title.padding"] = 0
+        }
     )
 }

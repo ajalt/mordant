@@ -7,11 +7,11 @@ import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-class HorizontalRule private constructor(
+class HorizontalRule internal constructor(
     private val title: Renderable,
     private val ruleCharacter: ThemeString,
     private val ruleStyle: ThemeStyle,
-    private val titleStyle: ThemeStyle,
+    private val titleStyle: ThemeStyle?,
     private val titleAlign: TextAlign,
     private val titlePadding: ThemeDimension,
 ) : Renderable {
@@ -19,14 +19,13 @@ class HorizontalRule private constructor(
         title: Renderable = EmptyRenderable,
         ruleCharacter: String? = null,
         ruleStyle: TextStyle? = null,
-        titleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
     ) : this(
         title = title,
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
-        titleStyle = ThemeStyle.of("hr.title", titleStyle),
+        titleStyle = null,
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
     )
@@ -39,12 +38,14 @@ class HorizontalRule private constructor(
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
     ) : this(
-        title = if (title.isEmpty()) EmptyRenderable else Text(parseText(title, DEFAULT_STYLE)),
-        ruleCharacter = ruleCharacter,
-        ruleStyle = ruleStyle,
-        titleStyle = titleStyle,
+        title = if (title.isEmpty()) EmptyRenderable else Text(title, titleStyle ?: DEFAULT_STYLE),
+        ruleCharacter =  ThemeString.of("hr.rule", ruleCharacter, " "),
+        ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
+        // The explicit style is baked in to the Text object, so only override the rendered style if
+        // we need it from the theme.
+        titleStyle = ThemeStyle.of("hr.title", null).takeIf { titleStyle == null },
         titleAlign = titleAlign,
-        titlePadding = titlePadding,
+        titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
     )
 
     override fun measure(t: Terminal, width: Int): WidthRange {
@@ -59,7 +60,7 @@ class HorizontalRule private constructor(
         val lines = if (content.isEmpty()) {
             listOf(rule(t.theme, width))
         } else {
-            val renderedTitle = content.withStyle(titleStyle[t.theme])
+            val renderedTitle = content.withStyle(titleStyle?.let { it[t.theme] })
             val lastLine = renderedTitle.lines.last()
             val ruleWidth = width - lastLine.sumOf { it.cellWidth } - totalPadding
             val leftRuleWidth = when (titleAlign) {

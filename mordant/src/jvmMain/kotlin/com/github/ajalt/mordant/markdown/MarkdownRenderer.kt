@@ -259,7 +259,7 @@ internal class MarkdownRenderer(
     private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Renderable {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> headerHr(Text(atxContent(node)), bar, style)
+            else -> headerHr(Text(atxContent(node), style), bar, style)
         }
     }
 
@@ -271,11 +271,11 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode): Renderable {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return headerHr(Text(content), bar, style)
+        return headerHr(Text(content, style), bar, style)
     }
 
     private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
-        return HorizontalRule(content, bar, titleStyle = style, ruleStyle = TextStyle(style.color, style.bgColor))
+        return HorizontalRule(content, ruleCharacter = bar, ruleStyle = TextStyle(style.color, style.bgColor))
             .withVerticalPadding(theme.dimension("markdown.header.padding"))
     }
 

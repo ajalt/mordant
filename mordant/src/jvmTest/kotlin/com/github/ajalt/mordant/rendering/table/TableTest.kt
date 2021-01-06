@@ -401,7 +401,7 @@ class TableTest : RenderingTest() {
     |!
     """) {
         val r = object : Renderable {
-            override fun measure(t: Terminal, width: Int)=WidthRange(1,1)
+            override fun measure(t: Terminal, width: Int) = WidthRange(1, 1)
             override fun render(t: Terminal, width: Int) = Lines(listOf(listOf(Span.word("!"))))
         }
         captionTop(r)

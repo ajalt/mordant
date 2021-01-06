@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.internal.ThemeDimension
+import com.github.ajalt.mordant.internal.ThemeString
+import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.OverflowWrap.ELLIPSES
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
@@ -8,21 +11,45 @@ import com.github.ajalt.mordant.rendering.Whitespace.NOWRAP
 import com.github.ajalt.mordant.terminal.Terminal
 
 private val DEFAULT_PADDING = Padding.none()
-private fun titleRenderable(title: String?, titleTextStyle: TextStyle): Text? {
-    return title?.let { Text(it, titleTextStyle, overflowWrap = ELLIPSES, whitespace = NOWRAP) }
+private fun titleRenderable(title: String?, titleTextStyle: TextStyle?): Text? {
+    return title?.let {
+        Text(it, titleTextStyle ?: DEFAULT_STYLE, overflowWrap = ELLIPSES, whitespace = NOWRAP)
+    }
 }
 
-// TODO: theme
-class Panel(
+
+class Panel private constructor(
     content: Renderable,
-    private val title: Renderable? = null,
-    private val expand: Boolean = false,
-    padding: Padding = DEFAULT_PADDING,
-    private val borderStyle: BorderStyle? = BorderStyle.ROUNDED,
-    private val titleAlign: TextAlign = CENTER,
-    private val borderTextStyle: TextStyle = DEFAULT_STYLE,
-    private val titleTextStyle: TextStyle = borderTextStyle
+    private val title: Renderable?,
+    private val expand: Boolean,
+    padding: Padding,
+    private val borderStyle: BorderStyle?,
+    private val titleAlign: TextAlign,
+    private val borderTextStyle: ThemeStyle,
+    private val titleTextStyle: ThemeStyle?,
+    private val titlePadding: ThemeDimension,
 ) : Renderable {
+    constructor(
+        content: Renderable,
+        title: Renderable? = null,
+        expand: Boolean = false,
+        padding: Padding = DEFAULT_PADDING,
+        borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+        titleAlign: TextAlign = CENTER,
+        borderTextStyle: TextStyle? = null,
+        titlePadding: Int? = null,
+    ) : this(
+        content = content,
+        title = title,
+        expand = expand,
+        padding = padding,
+        borderStyle = borderStyle,
+        titleAlign = titleAlign,
+        borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
+        titleTextStyle = null,
+        titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
+    )
+
     constructor(
         content: String,
         title: String? = null,
@@ -30,29 +57,35 @@ class Panel(
         padding: Padding = DEFAULT_PADDING,
         borderStyle: BorderStyle? = BorderStyle.ROUNDED,
         titleAlign: TextAlign = CENTER,
-        borderTextStyle: TextStyle = DEFAULT_STYLE,
-        titleTextStyle: TextStyle = borderTextStyle
+        borderTextStyle: TextStyle? = null,
+        titleTextStyle: TextStyle? = borderTextStyle,
+        titlePadding: Int? = null,
     ) : this(
-        Text(content),
-        titleRenderable(title, titleTextStyle),
-        expand,
-        padding,
-        borderStyle,
-        titleAlign,
-        borderTextStyle,
-        titleTextStyle
+        content = Text(content),
+        title = titleRenderable(title, titleTextStyle),
+        expand = expand,
+        padding = padding,
+        borderStyle = borderStyle,
+        titleAlign = titleAlign,
+        borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
+        // The explicit style is baked in to the Text object, so only override the rendered style if
+        // we need it from the theme.
+        titleTextStyle = ThemeStyle.of("panel.title", null).takeIf { titleTextStyle == null },
+        titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
     private val content: Renderable = content.withPadding(padding)
     private val borderWidth get() = if (borderStyle == null) 0 else 2
-    private val titlePadding = 2
 
     private fun maxContentWidth(width: Int) = (width - borderWidth).coerceAtLeast(0)
-    private fun maxTitleWidth(width: Int) = (maxContentWidth(width) - titlePadding).coerceAtLeast(0)
+    private fun maxTitleWidth(titlePadding: Int, width: Int): Int {
+        return (maxContentWidth(width) - titlePadding * 2).coerceAtLeast(0)
+    }
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         val contentWidth = content.measure(t, maxContentWidth(width)) + borderWidth
-        val titleWidth = title?.measure(t, maxTitleWidth(width))?.plus(borderWidth + titlePadding)
+        val titlePadding = titlePadding[t.theme]
+        val titleWidth = title?.measure(t, maxTitleWidth(width, titlePadding))?.plus(borderWidth + titlePadding * 2)
 
         return listOf(
             if (expand) contentWidth.copy(min = contentWidth.max) else contentWidth,
@@ -63,6 +96,7 @@ class Panel(
     override fun render(t: Terminal, width: Int): Lines {
         val measurement = measure(t, width)
         val maxContentWidth = maxContentWidth(width)
+        val borderTextStyle = borderTextStyle[t.theme]
 
         val contentWidth = when {
             expand -> maxContentWidth
@@ -72,18 +106,21 @@ class Panel(
         val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
         val renderedTitle = HorizontalRule(
             title ?: EmptyRenderable,
-            borderStyle?.body?.ew ?: " ",
-            borderTextStyle,
-            titleTextStyle,
-            titleAlign
+            ThemeString.Explicit(borderStyle?.body?.ew ?: " "),
+            this.borderTextStyle,
+            this.titleTextStyle,
+            titleAlign,
+            titlePadding
         ).render(t, contentWidth)
 
         if (borderStyle == null) {
-            if (title == null) return renderedContent
-            return Lines(renderedTitle.lines + renderedContent.lines)
+            return when (title) {
+                null -> renderedContent
+                else -> Lines(renderedTitle.lines + renderedContent.lines)
+            }
         }
 
-        val lines = ArrayList<Line>(renderedContent.lines.size + borderWidth)
+        val lines = ArrayList<Line>(renderedContent.height + renderedTitle.height + borderWidth)
         val b = borderStyle.body
         val horizontalBorder = Span.word(b.ew.repeat(contentWidth), borderTextStyle)
 

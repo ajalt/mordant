@@ -22,6 +22,9 @@ sealed class Theme(
                 "list.bullet" to DEFAULT_STYLE,
                 "hr.rule" to DEFAULT_STYLE,
                 "hr.title" to DEFAULT_STYLE,
+                "panel.border" to DEFAULT_STYLE,
+                "panel.title" to DEFAULT_STYLE,
+
                 "progressbar.pending" to TextStyle(gray),
                 "progressbar.complete" to TextStyle(magenta),
                 "progressbar.indeterminate" to TextStyle(magenta),
@@ -54,7 +57,6 @@ sealed class Theme(
                 "progressbar.separator" to " ",
                 "hr.rule" to "─",
 
-
                 "markdown.task.checked" to "☑",
                 "markdown.task.unchecked" to "☐",
                 "markdown.h1.rule" to "═",
@@ -67,11 +69,14 @@ sealed class Theme(
             ),
             mapOf(
                 "progressbar.pulse" to true,
+
                 "markdown.code.block.border" to true,
                 "markdown.table.ascii" to false,
             ),
             mapOf(
                 "hr.title.padding" to 1,
+                "panel.title.padding" to 1,
+
                 "markdown.header.padding" to 1,
             )
         )

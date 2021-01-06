@@ -50,4 +50,18 @@ class HorizontalRuleTest : RenderingTest() {
             red("─── title ───"), width = 13
         )
     }
+
+    @Test
+    fun `themed title and rule`() {
+        checkRender(
+            HorizontalRule(title = "title"),
+            red("──  title  ──"),
+            width = 13,
+            theme = Theme {
+                styles["hr.rule"] = red
+                styles["hr.title"] = red
+                dimensions["hr.title.padding"] = 2
+            }
+        )
+    }
 }
