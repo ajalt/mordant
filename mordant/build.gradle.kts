@@ -38,6 +38,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13") // TODO: remove
             }
         }
     }

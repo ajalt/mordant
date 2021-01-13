@@ -12,6 +12,8 @@ class ProgressBuilder internal constructor() {
     var autoUpdate: Boolean = true
     var padding: Int = 2
 
+    internal var timeSource: () -> Long = { System.nanoTime() }
+
     fun text(text: String, style: TextStyle = DEFAULT_STYLE) {
         cells += TextProgressCell(Text(text, style))
     }
@@ -24,11 +26,11 @@ class ProgressBuilder internal constructor() {
         cells += BarProgressCell(width)
     }
 
-    fun completed(suffix: String = "B", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
+    fun completed(suffix: String = "", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
         cells += CompletedProgressCell(suffix, includeTotal, style)
     }
 
-    fun speed(suffix: String = "B/s", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
+    fun speed(suffix: String = "it/s", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
         cells += SpeedProgressCell(suffix, frameRate, style)
     }
 
@@ -37,7 +39,8 @@ class ProgressBuilder internal constructor() {
     }
 
     internal fun build(t: Terminal): ProgressTracker {
-        return ProgressTracker(t, cells, frameRate, historyLength, getTicker(frameRate.takeIf { autoUpdate }), padding)
+        val ticker = getTicker(frameRate.takeIf { autoUpdate })
+        return ProgressTracker(t, cells, frameRate, historyLength, ticker, padding, timeSource)
     }
 
     private val cells = mutableListOf<ProgressCell>()

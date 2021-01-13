@@ -31,7 +31,7 @@ class ProgressBar(
 
     private val pulseFrame = pulseFrame % (pulseDuration * 2)
 
-    val percentComplete: Float get() = (completed.toFloat() / total).coerceIn(0f, 1f)
+    val percentComplete: Float get() = if (total == 0) 0f else (completed.toFloat() / total).coerceIn(0f, 1f)
 
     private fun width(renderWidth: Int) = width ?: renderWidth
 

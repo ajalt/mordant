@@ -14,6 +14,7 @@ internal fun getTicker(ticksPerSecond: Int?): Ticker {
     return if (ticksPerSecond == null) DisabledTicker() else ExecutorTicker(ticksPerSecond)
 }
 
+//TODO: fixedRateTimer()
 private class ExecutorTicker(
     private val ticksPerSecond: Int,
     private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor {

@@ -12,27 +12,43 @@ import kotlin.math.roundToInt
 
 private const val SI_PREFIXES = "KMGTEPZY"
 
-internal abstract class ProgressCell(
-    val columnWidth: ColumnWidth,
-    protected var renderable: Renderable = EmptyRenderable
-) : Renderable {
-    abstract fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory)
-    override fun measure(t: Terminal, width: Int): WidthRange = renderable.measure(t, width)
-    override fun render(t: Terminal, width: Int): Lines = renderable.render(t, width)
+data class ProgressState(
+    val completed: Int,
+    val total: Int?,
+    val completedPerSecond: Double, // 0 if [completed] == 0
+    val elapsedSeconds: Double,
+    val frameRate: Int,
+) {
+    init {
+        require(completed >= 0) { "completed cannot be negative" }
+        require(total == null || total >= 0) { "total cannot be negative" }
+        require(elapsedSeconds >= 0) { "elapsedSeconds cannot be negative" }
+        require(completedPerSecond >= 0) { "completedPerSecond cannot be negative" }
+    }
+
+    val indeterminate: Boolean get() = total == null
 }
 
-internal class TextProgressCell(text: Text) : ProgressCell(ColumnWidth.Auto, text) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {}
+interface ProgressCell {
+    val columnWidth: ColumnWidth
+
+    fun ProgressState.makeRenderable(): Renderable
 }
 
-internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell(ColumnWidth.Fixed(4)) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        if (indeterminate) {
-            renderable = Text("", style)
-            return
+private fun ProgressCell.makeRenderable(state: ProgressState): Renderable = state.makeRenderable()
+
+internal class TextProgressCell(private val text: Text) : ProgressCell {
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
+    override fun ProgressState.makeRenderable(): Renderable = text
+}
+
+internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell {
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
+    override fun ProgressState.makeRenderable(): Renderable {
+        return when (total) {
+            null -> Text("", style)
+            else -> Text("${(100 * completed / total)}%", style)
         }
-
-        renderable = Text("${(100 * history.completed / total)}%", style)
     }
 }
 
@@ -40,53 +56,60 @@ internal class CompletedProgressCell(
     private val suffix: String,
     private val includeTotal: Boolean,
     private val style: TextStyle
-) : ProgressCell(ColumnWidth.Fixed((if (includeTotal) 11 else 5) + suffix.length)) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
+) : ProgressCell {
+    override val columnWidth: ColumnWidth
+        get() = ColumnWidth.Fixed((if (includeTotal) 11 else 5) + suffix.length)
+
+    override fun ProgressState.makeRenderable(): Renderable {
         if (indeterminate) {
-            renderable = EmptyRenderable
-            return
+            return EmptyRenderable
         }
 
-        val complete = history.completed.toDouble()
-        val t = if (includeTotal) {
+        val complete = completed.toDouble()
+        val t = if (includeTotal && total != null) {
             val (nums, unit) = formatFloats(1, complete, total.toDouble())
             "${nums[0]}/${nums[1]}$unit"
         } else {
             complete.format(1)
         } + suffix
-        renderable = Text(t, style, whitespace = Whitespace.PRE)
+        return Text(t, style, whitespace = Whitespace.PRE)
     }
 }
 
-internal abstract class ThrottledProgressCell(
-    frameRate: Int?,
-    columnWidth: ColumnWidth,
-    renderable: Renderable = EmptyRenderable
-) : ProgressCell(columnWidth, renderable) {
+// TODO: this isn't thread safe
+internal abstract class ThrottledProgressCell(frameRate: Int?) : ProgressCell {
     private var lastFrameTime = 0.0
     private val frameDuration = frameRate?.let { 1.0 / it }
-    protected fun shouldSkipUpdate(frame: Int, elapsed: Double): Boolean {
-        if (frameDuration == null || frame == 0) return false
+    private fun shouldSkipUpdate(elapsed: Double): Boolean {
+        if (frameDuration == null) return false
         if ((elapsed - lastFrameTime) < frameDuration) return true
         lastFrameTime = elapsed
         return false
     }
+
+    private var renderable: Renderable? = null
+    final override fun ProgressState.makeRenderable(): Renderable {
+        var r = renderable
+        if (r != null && shouldSkipUpdate(elapsedSeconds)) return r
+        r = makeFreshRenderable()
+        return r
+    }
+
+    protected abstract fun ProgressState.makeFreshRenderable(): Renderable
 }
 
 internal class SpeedProgressCell(
     private val suffix: String,
     frameRate: Int?,
     private val style: TextStyle
-) : ThrottledProgressCell(frameRate, ColumnWidth.Fixed(5 + suffix.length)) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        val speed = history.completedPerSecond ?: return
-        if (history.completed == 0 || shouldSkipUpdate(frame, history.elapsed)) return
+) : ThrottledProgressCell(frameRate) {
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(5 + suffix.length)
 
-        if (indeterminate) {
-            renderable = Text("--.--$suffix", style)
-            return
+    override fun ProgressState.makeFreshRenderable(): Renderable {
+        return when {
+            indeterminate || completedPerSecond <= 0 -> Text(" --.-$suffix", style)
+            else -> Text(completedPerSecond.format(1) + suffix, style, whitespace = Whitespace.PRE)
         }
-        renderable = Text(speed.format(1) + suffix, style, whitespace = Whitespace.PRE)
     }
 }
 
@@ -94,37 +117,33 @@ internal class EtaProgressCell(
     private val prefix: String,
     frameRate: Int?,
     private val style: TextStyle,
-) : ThrottledProgressCell(frameRate, ColumnWidth.Fixed(7 + prefix.length)) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        val speed = history.completedPerSecond ?: return
-        if (shouldSkipUpdate(frame, history.elapsed)) return
+) : ThrottledProgressCell(frameRate) {
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(7 + prefix.length)
 
-        val eta = (total - history.completed) / speed
-
-        if (indeterminate || eta < 0 || speed <= 0) {
-            renderable = Text("$prefix-:--:--", style, whitespace = Whitespace.PRE)
-            return
+    override fun ProgressState.makeFreshRenderable(): Renderable {
+        val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond
+        if (indeterminate || eta < 0 || completedPerSecond == 0.0) {
+            return text("$prefix-:--:--")
         }
 
-        val h = (eta / (60 * 60)).roundToInt()
-        val m = (eta / 60 % 60).roundToInt()
-        val s = (eta % 60).roundToInt().coerceAtLeast(if (h == 0 && m == 0) 1 else 0)
+        val h = (eta / (60 * 60)).toInt()
+        val m = (eta / 60 % 60).toInt()
+        val s = (eta % 60).roundToInt()
 
-        renderable = Text(
-            "$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}",
-            style,
-            whitespace = Whitespace.PRE
-        )
+        return text("$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
     }
+
+    private fun text(s: String) = Text(s, style, whitespace = Whitespace.PRE)
 }
 
 // TODO arguments to ProgressBar constructor
-internal class BarProgressCell(val width: Int?) : ProgressCell(
-    columnWidth = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand(),
-    renderable = ProgressBar(width = width)
-) {
-    override fun update(total: Int, indeterminate: Boolean, frame: Int, hz: Int, history: ProgressHistory) {
-        renderable = ProgressBar(total, history.completed, indeterminate, width, pulseFrame = frame, pulseDuration = hz)
+internal class BarProgressCell(val width: Int?) : ProgressCell {
+    override val columnWidth: ColumnWidth
+        get() = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand()
+
+    override fun ProgressState.makeRenderable(): Renderable {
+        val frame = (elapsedSeconds * frameRate).toInt()
+        return ProgressBar(total ?: 100, completed, indeterminate, width, pulseFrame = frame, pulseDuration = frameRate)
     }
 }
 
@@ -156,42 +175,52 @@ private fun nanosToSeconds(nanos: Double) = nanos / TimeUnit.SECONDS.toNanos(1)
 private fun nanosToSeconds(nanos: Long) = nanosToSeconds(nanos.toDouble())
 
 private class ProgressHistoryEntry(val timeNs: Long, val completed: Int)
-internal class ProgressHistory(lengthSeconds: Float) {
+private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
+    private var startTime: Long = -1
     private val samples = ArrayDeque<ProgressHistoryEntry>()
-    private val lengthNs = (TimeUnit.SECONDS.toNanos(1) * lengthSeconds).toLong()
+    private val windowLengthNs = (TimeUnit.SECONDS.toNanos(1) * windowLengthSeconds).toLong()
+
+    fun start() {
+        if (startTime < 0) {
+            startTime = timeSource()
+        }
+    }
 
     fun clear() {
+        startTime = -1
         samples.clear()
     }
 
-    fun reset() {
-        clear()
-    }
-
     fun update(completed: Int) {
-        val now = System.nanoTime()
-        val keepTime = now - lengthNs
+        start()
+        val now = timeSource()
+        val keepTime = now - windowLengthNs
         while (samples.firstOrNull().let { it != null && it.timeNs < keepTime }) {
             samples.removeFirst()
         }
         samples.addLast(ProgressHistoryEntry(now, completed))
     }
 
+    fun makeState(total: Int?, frameRate: Int) = ProgressState(
+        completed = completed,
+        total = total,
+        completedPerSecond = completedPerSecond,
+        elapsedSeconds = elapsedSeconds,
+        frameRate = frameRate,
+    )
+
     val completed: Int
         get() = samples.lastOrNull()?.completed ?: 0
 
-    val elapsed: Double
-        get() {
-            if (samples.size < 2) return 0.0
-            return nanosToSeconds(samples.last().timeNs - samples.first().timeNs)
-        }
+    private val elapsedSeconds: Double
+        get() = if (startTime >= 0) nanosToSeconds(timeSource() - startTime) else 0.0
 
-    val completedPerSecond: Double?
+    private val completedPerSecond: Double
         get() {
-            val elapsed = elapsed
-            if (elapsed <= 0) return null
+            if (startTime < 0 || samples.size < 2) return 0.0
+            val sampleTimespan = nanosToSeconds(samples.last().timeNs - samples.first().timeNs)
             val complete = samples.last().completed - samples.first().completed
-            return complete.toDouble() / elapsed
+            return if (complete <= 0 || sampleTimespan <= 0) 0.0 else complete / sampleTimespan
         }
 }
 
@@ -203,13 +232,14 @@ class ProgressTracker internal constructor(
     historyLength: Float,
     private val ticker: Ticker,
     private val paddingSize: Int,
+    timeSource: () -> Long
 ) {
     private var total: Int? = null
-    private val history = ProgressHistory(historyLength)
-    private var frame = 0
+    private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
         grid {
-            rowFrom(cells)
+            val state = history.makeState(total, frameRate)
+            rowFrom(cells.map { it.makeRenderable(state) })
             align = TextAlign.RIGHT
             borders = Borders.NONE
             cells.forEachIndexed { i, it ->
@@ -224,23 +254,13 @@ class ProgressTracker internal constructor(
         }
     }
 
-    fun update(advancePulse: Boolean = true) {
-        if (advancePulse) frame += 1
-        cells.forEach {
-            it.update(
-                this.total ?: 100,
-                this.total == null,
-                frame,
-                frameRate,
-                history
-            )
-        }
-        animation.update(Unit)
+    fun update() {
+        update(history.completed)
     }
 
     fun update(completed: Int) {
         history.update(completed)
-        update()
+        animation.update(Unit)
     }
 
     fun update(completed: Int, total: Int?) {
@@ -257,11 +277,12 @@ class ProgressTracker internal constructor(
         this.total = total?.takeIf { it > 0 }
     }
 
-    fun advance(amount: Int) {
+    fun advance(amount: Int = 1) {
         update(history.completed + amount)
     }
 
     fun start() {
+        history.start()
         ticker.start { update() }
     }
 
@@ -277,6 +298,8 @@ class ProgressTracker internal constructor(
 
     fun clear() {
         stop()
+        history.clear()
         animation.clear()
     }
 }
+

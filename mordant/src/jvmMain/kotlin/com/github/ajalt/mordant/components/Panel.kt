@@ -9,6 +9,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.Whitespace.NOWRAP
 import com.github.ajalt.mordant.terminal.Terminal
+import kotlin.time.measureTimedValue
 
 private val DEFAULT_PADDING = Padding.none()
 private fun titleRenderable(title: String?, titleTextStyle: TextStyle?): Text? {
