@@ -90,8 +90,10 @@ internal abstract class ThrottledProgressCell(frameRate: Int?) : ProgressCell {
     private var renderable: Renderable? = null
     final override fun ProgressState.makeRenderable(): Renderable {
         var r = renderable
-        if (r != null && shouldSkipUpdate(elapsedSeconds)) return r
+        val shouldSkipUpdate = shouldSkipUpdate(elapsedSeconds)
+        if (r != null && shouldSkipUpdate) return r
         r = makeFreshRenderable()
+        renderable = r
         return r
     }
 
@@ -302,4 +304,3 @@ class ProgressTracker internal constructor(
         animation.clear()
     }
 }
-

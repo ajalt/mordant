@@ -12,6 +12,7 @@ class ProgressBuilder internal constructor() {
     var autoUpdate: Boolean = true
     var padding: Int = 2
 
+    // for testing
     internal var timeSource: () -> Long = { System.nanoTime() }
 
     fun text(text: String, style: TextStyle = DEFAULT_STYLE) {

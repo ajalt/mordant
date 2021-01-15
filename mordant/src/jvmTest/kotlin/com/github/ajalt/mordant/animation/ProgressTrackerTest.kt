@@ -12,6 +12,41 @@ class ProgressTrackerTest {
     var now = 0.0
 
     @Test
+    fun throttling() {
+        val vt = VirtualTerminalInterface()
+        val t = Terminal(terminalInterface = vt)
+        val pt = t.progressTracker {
+            timeSource = { (now * TimeUnit.SECONDS.toNanos(1)).toLong() }
+            padding = 0
+            autoUpdate = false
+            speed(frameRate = 1)
+            text("|")
+            timeRemaining(frameRate = 1)
+        }
+
+        pt.update(0, 1000)
+        now = 0.5
+        vt.clearBuffer()
+        pt.update(40)
+        vt.normalizedBuffer() shouldBe " --.-it/s|eta -:--:--"
+
+        now = 0.6
+        vt.clearBuffer()
+        pt.update()
+        vt.normalizedBuffer() shouldBe " --.-it/s|eta -:--:--"
+
+        now = 1.0
+        vt.clearBuffer()
+        pt.update()
+        vt.normalizedBuffer() shouldBe " 40.0it/s|eta 0:00:24"
+
+        now = 1.9
+        vt.clearBuffer()
+        pt.update()
+        vt.normalizedBuffer() shouldBe " 40.0it/s|eta 0:00:24"
+    }
+
+    @Test
     fun allCells() {
         val vt = VirtualTerminalInterface(width = 56)
         val t = Terminal(
