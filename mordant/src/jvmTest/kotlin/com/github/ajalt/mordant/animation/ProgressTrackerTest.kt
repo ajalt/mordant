@@ -15,7 +15,7 @@ class ProgressTrackerTest {
     fun throttling() {
         val vt = VirtualTerminalInterface()
         val t = Terminal(terminalInterface = vt)
-        val pt = t.progressTracker {
+        val pt = t.progressAnimation {
             timeSource = { (now * TimeUnit.SECONDS.toNanos(1)).toLong() }
             padding = 0
             autoUpdate = false
@@ -53,7 +53,7 @@ class ProgressTrackerTest {
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
             terminalInterface = vt
         )
-        val pt = t.progressTracker {
+        val pt =t.progressAnimation {
             timeSource = { (now * TimeUnit.SECONDS.toNanos(1)).toLong() }
             padding = 0
             autoUpdate = false

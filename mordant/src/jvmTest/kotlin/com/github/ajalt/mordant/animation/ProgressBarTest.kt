@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.components.ProgressBar
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal

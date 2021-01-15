@@ -1,19 +1,17 @@
-package com.github.ajalt.mordant.animation
+package com.github.ajalt.mordant.components
 
-import com.github.ajalt.mordant.components.Padding
-import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
-import com.github.ajalt.mordant.internal.nanosToSeconds
-import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.rendering.EmptyRenderable
+import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.table.grid
-import com.github.ajalt.mordant.terminal.Terminal
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
-data class ProgressState(
+
+// TODO: make completed and total Doubles?
+internal data class ProgressState(
     val completed: Int,
     val total: Int?,
     val completedPerSecond: Double, // 0 if [completed] == 0
@@ -30,13 +28,12 @@ data class ProgressState(
     val indeterminate: Boolean get() = total == null
 }
 
-interface ProgressCell {
+internal interface ProgressCell {
     val columnWidth: ColumnWidth
 
     fun ProgressState.makeRenderable(): Renderable
 }
 
-private fun ProgressCell.makeRenderable(state: ProgressState): Renderable = state.makeRenderable()
 
 internal class TextProgressCell(private val text: Text) : ProgressCell {
     override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
@@ -56,7 +53,7 @@ internal class PercentageProgressCell(private val style: TextStyle) : ProgressCe
 internal class CompletedProgressCell(
     private val suffix: String,
     private val includeTotal: Boolean,
-    private val style: TextStyle
+    private val style: TextStyle,
 ) : ProgressCell {
     override val columnWidth: ColumnWidth
         get() = ColumnWidth.Fixed((if (includeTotal) 11 else 5) + suffix.length)
@@ -104,7 +101,7 @@ internal abstract class ThrottledProgressCell(frameRate: Int?) : ProgressCell {
 internal class SpeedProgressCell(
     private val suffix: String,
     frameRate: Int?,
-    private val style: TextStyle
+    private val style: TextStyle,
 ) : ThrottledProgressCell(frameRate) {
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(5 + suffix.length)
 
@@ -147,136 +144,5 @@ internal class BarProgressCell(val width: Int?) : ProgressCell {
     override fun ProgressState.makeRenderable(): Renderable {
         val frame = (elapsedSeconds * frameRate).toInt()
         return ProgressBar(total ?: 100, completed, indeterminate, width, pulseFrame = frame, pulseDuration = frameRate)
-    }
-}
-
-
-
-private class ProgressHistoryEntry(val timeNs: Long, val completed: Int)
-private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
-    private var startTime: Long = -1
-    private val samples = ArrayDeque<ProgressHistoryEntry>()
-    private val windowLengthNs = (TimeUnit.SECONDS.toNanos(1) * windowLengthSeconds).toLong()
-
-    fun start() {
-        if (startTime < 0) {
-            startTime = timeSource()
-        }
-    }
-
-    fun clear() {
-        startTime = -1
-        samples.clear()
-    }
-
-    fun update(completed: Int) {
-        start()
-        val now = timeSource()
-        val keepTime = now - windowLengthNs
-        while (samples.firstOrNull().let { it != null && it.timeNs < keepTime }) {
-            samples.removeFirst()
-        }
-        samples.addLast(ProgressHistoryEntry(now, completed))
-    }
-
-    fun makeState(total: Int?, frameRate: Int) = ProgressState(
-        completed = completed,
-        total = total,
-        completedPerSecond = completedPerSecond,
-        elapsedSeconds = elapsedSeconds,
-        frameRate = frameRate,
-    )
-
-    val completed: Int
-        get() = samples.lastOrNull()?.completed ?: 0
-
-    private val elapsedSeconds: Double
-        get() = if (startTime >= 0) nanosToSeconds(timeSource() - startTime) else 0.0
-
-    private val completedPerSecond: Double
-        get() {
-            if (startTime < 0 || samples.size < 2) return 0.0
-            val sampleTimespan = nanosToSeconds(samples.last().timeNs - samples.first().timeNs)
-            val complete = samples.last().completed - samples.first().completed
-            return if (complete <= 0 || sampleTimespan <= 0) 0.0 else complete / sampleTimespan
-        }
-}
-
-// TODO: thread safety
-class ProgressTracker internal constructor(
-    t: Terminal,
-    private val cells: List<ProgressCell>,
-    private val frameRate: Int,
-    historyLength: Float,
-    private val ticker: Ticker,
-    private val paddingSize: Int,
-    timeSource: () -> Long
-) {
-    private var total: Int? = null
-    private val history = ProgressHistory(historyLength, timeSource)
-    private val animation = t.animation<Unit> {
-        grid {
-            val state = history.makeState(total, frameRate)
-            rowFrom(cells.map { it.makeRenderable(state) })
-            align = TextAlign.RIGHT
-            borders = Borders.NONE
-            cells.forEachIndexed { i, it ->
-                column(i) {
-                    width = it.columnWidth
-                    padding = when (i) {
-                        cells.lastIndex -> Padding.of(left = paddingSize)
-                        else -> Padding.of(right = paddingSize)
-                    }
-                }
-            }
-        }
-    }
-
-    fun update() {
-        update(history.completed)
-    }
-
-    fun update(completed: Int) {
-        history.update(completed)
-        animation.update(Unit)
-    }
-
-    fun update(completed: Int, total: Int?) {
-        updateTotalWithoutAnimation(total)
-        update(completed)
-    }
-
-    fun updateTotal(total: Int?) {
-        updateTotalWithoutAnimation(total)
-        update()
-    }
-
-    private fun updateTotalWithoutAnimation(total: Int?) {
-        this.total = total?.takeIf { it > 0 }
-    }
-
-    fun advance(amount: Int = 1) {
-        update(history.completed + amount)
-    }
-
-    fun start() {
-        history.start()
-        ticker.start { update() }
-    }
-
-    fun stop() {
-        ticker.stop()
-    }
-
-    fun restart() {
-        stop()
-        update(0)
-        start()
-    }
-
-    fun clear() {
-        stop()
-        history.clear()
-        animation.clear()
     }
 }
