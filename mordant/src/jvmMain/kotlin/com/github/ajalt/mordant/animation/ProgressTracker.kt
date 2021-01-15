@@ -2,6 +2,9 @@ package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.components.Padding
 import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
+import com.github.ajalt.mordant.internal.formatWithSiSuffix
+import com.github.ajalt.mordant.internal.nanosToSeconds
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
@@ -9,8 +12,6 @@ import com.github.ajalt.mordant.table.grid
 import com.github.ajalt.mordant.terminal.Terminal
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
-
-private const val SI_PREFIXES = "KMGTEPZY"
 
 data class ProgressState(
     val completed: Int,
@@ -67,10 +68,10 @@ internal class CompletedProgressCell(
 
         val complete = completed.toDouble()
         val t = if (includeTotal && total != null) {
-            val (nums, unit) = formatFloats(1, complete, total.toDouble())
+            val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total.toDouble())
             "${nums[0]}/${nums[1]}$unit"
         } else {
-            complete.format(1)
+            complete.formatWithSiSuffix(1)
         } + suffix
         return Text(t, style, whitespace = Whitespace.PRE)
     }
@@ -110,7 +111,7 @@ internal class SpeedProgressCell(
     override fun ProgressState.makeFreshRenderable(): Renderable {
         return when {
             indeterminate || completedPerSecond <= 0 -> Text(" --.-$suffix", style)
-            else -> Text(completedPerSecond.format(1) + suffix, style, whitespace = Whitespace.PRE)
+            else -> Text(completedPerSecond.formatWithSiSuffix(1) + suffix, style, whitespace = Whitespace.PRE)
         }
     }
 }
@@ -149,32 +150,7 @@ internal class BarProgressCell(val width: Int?) : ProgressCell {
     }
 }
 
-private fun formatFloats(decimals: Int, vararg nums: Double): Pair<List<String>, String> {
-    var n = nums.maxOrNull()!!
-    var suffix = ""
-    for (c in SI_PREFIXES) {
-        if (n < 1000) {
-            break
-        }
-        n /= 1000
-        for (i in nums.indices) {
-            nums[i] = nums[i] / 1000
-        }
-        suffix = c.toString()
-    }
-    return nums.map { num ->
-        val s = num.toString()
-        val len = s.indexOf('.').let { if (it >= 0) it + decimals + 1 else s.length }
-        s.take(len)
-    } to suffix
-}
 
-private fun Double.format(decimals: Int): String {
-    return formatFloats(decimals, this).let { it.first.first() + it.second }
-}
-
-private fun nanosToSeconds(nanos: Double) = nanos / TimeUnit.SECONDS.toNanos(1)
-private fun nanosToSeconds(nanos: Long) = nanosToSeconds(nanos.toDouble())
 
 private class ProgressHistoryEntry(val timeNs: Long, val completed: Int)
 private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
