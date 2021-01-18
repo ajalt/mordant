@@ -131,7 +131,7 @@ class Text internal constructor(
                 }
 
                 // overflow wrap
-                if (span.cellWidth > wrapWidth) {
+                if (cellWidth > wrapWidth) {
                     when (overflowWrap) {
                         OverflowWrap.NORMAL -> {
                         }

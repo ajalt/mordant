@@ -5,8 +5,8 @@ import com.github.ajalt.mordant.rendering.Renderable
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid
-import com.github.ajalt.mordant.terminal.Terminal
 
 open class ProgressBuilder internal constructor() {
     /** The maximum number of times per second to update idle animations like the progress bar pulse. */
@@ -72,10 +72,16 @@ class ProgressLayout internal constructor(
             borders = Borders.NONE
             cells.forEachIndexed { i, it ->
                 column(i) {
-                    width = it.columnWidth
                     padding = when (i) {
-                        cells.lastIndex -> Padding.of(left = paddingSize)
+                        cells.lastIndex -> Padding.none()
                         else -> Padding.of(right = paddingSize)
+                    }
+                    // Expand fixed columns to account for padding
+                    width = when (i) {
+                        cells.lastIndex -> it.columnWidth
+                        else -> (it.columnWidth as? ColumnWidth.Fixed)
+                            ?.let { ColumnWidth.Fixed(it.width + paddingSize) }
+                            ?: it.columnWidth
                     }
                 }
             }

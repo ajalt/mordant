@@ -106,10 +106,11 @@ internal class SpeedProgressCell(
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(5 + suffix.length)
 
     override fun ProgressState.makeFreshRenderable(): Renderable {
-        return when {
-            indeterminate || completedPerSecond <= 0 -> Text(" --.-$suffix", style)
-            else -> Text(completedPerSecond.formatWithSiSuffix(1) + suffix, style, whitespace = Whitespace.PRE)
+        val t = when {
+            indeterminate || completedPerSecond <= 0 -> " --.-"
+            else -> completedPerSecond.formatWithSiSuffix(1)
         }
+        return Text(t + suffix, style, whitespace = Whitespace.PRE)
     }
 }
 
