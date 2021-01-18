@@ -43,10 +43,11 @@ internal class TextProgressCell(private val text: Text) : ProgressCell {
 internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell {
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
     override fun ProgressState.makeRenderable(): Renderable {
-        return when (total) {
-            null -> Text("", style)
-            else -> Text("${(100 * completed / total)}%", style)
+        val percent = when {
+            total == null || total <= 0 -> 0
+            else -> (100.0 * completed / total).toInt()
         }
+        return Text("$percent%", style)
     }
 }
 
@@ -56,19 +57,16 @@ internal class CompletedProgressCell(
     private val style: TextStyle,
 ) : ProgressCell {
     override val columnWidth: ColumnWidth
-        get() = ColumnWidth.Fixed((if (includeTotal) 11 else 5) + suffix.length)
+        get() = ColumnWidth.Fixed((if (includeTotal) 12 else 6) + suffix.length)
 
     override fun ProgressState.makeRenderable(): Renderable {
-        if (indeterminate) {
-            return EmptyRenderable
-        }
-
         val complete = completed.toDouble()
-        val t = if (includeTotal && total != null) {
-            val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total.toDouble())
-            "${nums[0]}/${nums[1]}$unit"
-        } else {
-            complete.formatWithSiSuffix(1)
+        val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total?.toDouble() ?: 0.0)
+
+        val t = nums[0] + when {
+            includeTotal && total != null -> "/${nums[1]}$unit"
+            includeTotal && total == null -> "/---.-"
+            else -> ""
         } + suffix
         return Text(t, style, whitespace = Whitespace.PRE)
     }
@@ -103,7 +101,7 @@ internal class SpeedProgressCell(
     frameRate: Int?,
     private val style: TextStyle,
 ) : ThrottledProgressCell(frameRate) {
-    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(5 + suffix.length)
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(6 + suffix.length)
 
     override fun ProgressState.makeFreshRenderable(): Renderable {
         val t = when {
@@ -123,7 +121,8 @@ internal class EtaProgressCell(
 
     override fun ProgressState.makeFreshRenderable(): Renderable {
         val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond
-        if (indeterminate || eta < 0 || completedPerSecond == 0.0) {
+        val maxEta = 35_999 // 9:59:59
+        if (indeterminate || eta < 0 || completedPerSecond == 0.0 || eta > maxEta) {
             return text("$prefix-:--:--")
         }
 
