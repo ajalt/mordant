@@ -78,6 +78,7 @@ class ProgressAnimation internal constructor(
         update(history.completed)
     }
 
+    // TODO: don't update animation when started
     fun update(completed: Int) {
         history.update(completed)
         animation.update(Unit)

@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.components.progressLayout
 import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
@@ -8,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-class ProgressTrackerTest {
+class ProgressAnimationTest : RenderingTest() {
     var now = 0.0
 
     @Test
@@ -47,7 +50,41 @@ class ProgressTrackerTest {
     }
 
     @Test
-    fun allCells() {
+    fun `default theme`() {
+        val pl = progressLayout {
+            text("text.txt")
+            percentage()
+            progressBar()
+            completed()
+            speed()
+            timeRemaining()
+        }
+
+        fun doTest(renderable: Renderable, expected: String) {
+            checkRender(
+                renderable,
+                expected,
+                width = 57,
+                theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
+            )
+        }
+
+        doTest(
+            pl.build(0, 1),
+            "text.txt    0%  ....      0.0/1.0  ---.-it/s  eta -:--:--"
+        )
+        doTest(
+            pl.build(1, 2, 3.0, 4.0),
+            "text.txt   50%  ##>.      1.0/2.0    4.0it/s  eta 0:00:00"
+        )
+        doTest(
+            pl.build(888, 888, 111.1, 222.2),
+            "text.txt  100%  ####  888.0/888.0  222.2it/s  eta 0:00:00"
+        )
+    }
+
+    @Test
+    fun animation() {
         val vt = VirtualTerminalInterface(width = 56)
         val t = Terminal(
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
@@ -86,7 +123,7 @@ class ProgressTrackerTest {
 
         vt.clearBuffer()
         pt.restart()
-        vt.normalizedBuffer() shouldBe "text.txt|  0%|........|  0.0/200.0| --.-it/s|eta -:--:--"
+        vt.normalizedBuffer() shouldBe "text.txt|  0%|........|  0.0/200.0|---.-it/s|eta -:--:--"
 
         vt.clearBuffer()
         pt.clear()

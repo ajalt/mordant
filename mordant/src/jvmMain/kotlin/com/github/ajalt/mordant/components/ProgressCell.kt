@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import kotlin.math.roundToInt
 
 
-// TODO: make completed and total Doubles?
+// TODO: make completed and total Doubles, or at least Longs
 internal data class ProgressState(
     val completed: Int,
     val total: Int?,
@@ -107,7 +107,7 @@ internal class SpeedProgressCell(
 
     override fun ProgressState.makeFreshRenderable(): Renderable {
         val t = when {
-            indeterminate || completedPerSecond <= 0 -> " --.-"
+            indeterminate || completedPerSecond <= 0 -> "---.-"
             else -> completedPerSecond.formatWithSiSuffix(1)
         }
         return Text(t + suffix, style, whitespace = Whitespace.PRE)
