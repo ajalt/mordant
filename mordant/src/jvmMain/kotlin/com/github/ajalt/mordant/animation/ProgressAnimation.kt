@@ -8,7 +8,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import java.util.concurrent.TimeUnit
 
 
-private class ProgressHistoryEntry(val timeNs: Long, val completed: Int)
+private class ProgressHistoryEntry(val timeNs: Long, val completed: Long)
 private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
     private var startTime: Long = -1
     private val samples = ArrayDeque<ProgressHistoryEntry>()
@@ -25,7 +25,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         samples.clear()
     }
 
-    fun update(completed: Int) {
+    fun update(completed: Long) {
         start()
         val now = timeSource()
         val keepTime = now - windowLengthNs
@@ -35,7 +35,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         samples.addLast(ProgressHistoryEntry(now, completed))
     }
 
-    fun makeState(total: Int?, frameRate: Int) = ProgressState(
+    fun makeState(total: Long?, frameRate: Int) = ProgressState(
         completed = completed,
         total = total,
         completedPerSecond = completedPerSecond,
@@ -43,7 +43,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         frameRate = frameRate,
     )
 
-    val completed: Int
+    val completed: Long
         get() = samples.lastOrNull()?.completed ?: 0
 
     private val elapsedSeconds: Double
@@ -67,7 +67,7 @@ class ProgressAnimation internal constructor(
     private val ticker: Ticker,
     timeSource: () -> Long,
 ) {
-    private var total: Int? = null
+    private var total: Long? = null
     private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
             val state = history.makeState(total, frameRate)
@@ -79,26 +79,26 @@ class ProgressAnimation internal constructor(
     }
 
     // TODO: don't update animation when started
-    fun update(completed: Int) {
+    fun update(completed: Long) {
         history.update(completed)
         animation.update(Unit)
     }
 
-    fun update(completed: Int, total: Int?) {
+    fun update(completed: Long, total: Long?) {
         updateTotalWithoutAnimation(total)
         update(completed)
     }
 
-    fun updateTotal(total: Int?) {
+    fun updateTotal(total: Long?) {
         updateTotalWithoutAnimation(total)
         update()
     }
 
-    private fun updateTotalWithoutAnimation(total: Int?) {
+    private fun updateTotalWithoutAnimation(total: Long?) {
         this.total = total?.takeIf { it > 0 }
     }
 
-    fun advance(amount: Int = 1) {
+    fun advance(amount: Long = 1) {
         update(history.completed + amount)
     }
 

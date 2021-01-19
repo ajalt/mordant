@@ -10,10 +10,9 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import kotlin.math.roundToInt
 
 
-// TODO: make completed and total Doubles, or at least Longs
 internal data class ProgressState(
-    val completed: Int,
-    val total: Int?,
+    val completed: Long,
+    val total: Long?,
     val completedPerSecond: Double, // 0 if [completed] == 0
     val elapsedSeconds: Double,
     val frameRate: Int,

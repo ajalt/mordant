@@ -50,8 +50,8 @@ class ProgressLayout internal constructor(
     private val paddingSize: Int,
 ) {
     fun build(
-        completed: Int,
-        total: Int? = null,
+        completed: Long,
+        total: Long? = null,
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
     ): Renderable {

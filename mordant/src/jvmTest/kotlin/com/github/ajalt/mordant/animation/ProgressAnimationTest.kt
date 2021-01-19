@@ -49,8 +49,8 @@ class ProgressAnimationTest : RenderingTest() {
     }
 
     private fun doDefaultTest(
-        completed: Int,
-        total: Int? = null,
+        completed: Long,
+        total: Long? = null,
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
         expected: String,

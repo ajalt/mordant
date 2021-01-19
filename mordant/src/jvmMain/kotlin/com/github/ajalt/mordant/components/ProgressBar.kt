@@ -8,8 +8,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class ProgressBar(
-    private var total: Int = 100,
-    private var completed: Int = 0,
+    private var total: Long = 100,
+    private var completed: Long = 0,
     private var indeterminate: Boolean = false,
     private val width: Int? = null,
     private val pulse: Boolean? = null,
@@ -31,7 +31,7 @@ class ProgressBar(
 
     private val pulseFrame = pulseFrame % (pulseDuration * 2)
 
-    val percentComplete: Float get() = if (total == 0) 0f else (completed.toFloat() / total).coerceIn(0f, 1f)
+    val percentComplete: Double get() = if (total == 0L) 0.0 else (completed.toDouble() / total).coerceIn(0.0, 1.0)
 
     private fun width(renderWidth: Int) = width ?: renderWidth
 
