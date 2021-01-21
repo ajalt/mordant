@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.components
 import com.github.ajalt.colormath.HSL
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
+import kotlin.math.absoluteValue
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -12,9 +13,7 @@ class ProgressBar(
     private var completed: Long = 0,
     private var indeterminate: Boolean = false,
     private val width: Int? = null,
-    private val pulse: Boolean? = null,
-    private val pulseDuration: Int = 10,
-    pulseFrame: Int = 0,
+    private val pulsePosition: Float? = null,
     private val pendingChar: String? = null,
     private val separatorChar: String? = null,
     private val completeChar: String? = null,
@@ -25,11 +24,8 @@ class ProgressBar(
     private val indeterminateStyle: TextStyle? = null,
 ) : Renderable {
     init {
-        require(pulseDuration > 1) { "pulse duration must be greater than 1" }
         require(width == null || width > 0) { "width must be greater than 0" }
     }
-
-    private val pulseFrame = pulseFrame % (pulseDuration * 2)
 
     val percentComplete: Double get() = if (total == 0L) 0.0 else (completed.toDouble() / total).coerceIn(0.0, 1.0)
 
@@ -62,24 +58,23 @@ class ProgressBar(
 
         val sep = if (completedLength in 1 until w) segmentText(sc, 1, ss) else null
         val sepLength = sep?.cellWidth ?: 0
-        val complete = makeComplete(t, w, completedLength, cc, cs)
+        val complete = makeComplete(w, completedLength, cc, cs)
         val pending = segmentText(pc, w - completedLength - sepLength, ps)
 
         return makeLine(complete + listOfNotNull(sep, pending))
     }
 
-    private fun makeComplete(t: Terminal, width: Int, barLength: Int, char: String, style: TextStyle): Line {
+    private fun makeComplete(width: Int, barLength: Int, char: String, style: TextStyle): Line {
         if (barLength == 0) return emptyList()
 
-        val pulse = this.pulse ?: t.theme.flag("progressbar.pulse")
         val color = style.color?.toHSL()
 
-        if (color == null || !pulse) {
+        if (color == null || pulsePosition == null) {
             return listOfNotNull(segmentText(char, barLength, style))
         }
 
         // x is offset left by half a period so that the pulse starts offscreen
-        val offset = pulseFrame.toDouble() * width / pulseDuration - width / 2f
+        val offset = 2 * (pulsePosition % 1.0).absoluteValue * width - width / 2f
         return List(barLength) {
             // gaussian with σ²=0.1 and x scaled to ~50% of width
             val x = 2 * (it - offset) / width

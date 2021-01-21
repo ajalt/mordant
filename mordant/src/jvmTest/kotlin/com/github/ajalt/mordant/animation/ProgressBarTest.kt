@@ -1,14 +1,15 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.components.ProgressBar
+import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
-import com.github.ajalt.mordant.terminal.AnsiLevel
-import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.TextColors.*
-import io.kotest.matchers.shouldBe
+import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
+import com.github.ajalt.mordant.terminal.TextColors.gray
+import com.github.ajalt.mordant.terminal.TextColors.magenta
 import org.junit.Test
 
-class ProgressBarTest {
+class ProgressBarTest : RenderingTest() {
     @Test
     fun `0 percent complete`() = doPercentTest(0, "     ")
 
@@ -37,19 +38,53 @@ class ProgressBarTest {
     fun `100 percent complete`() = doPercentTest(100, "#####")
 
     @Test
-    fun `default theme`() {
-        Terminal(AnsiLevel.TRUECOLOR, width = 5).render(
-            ProgressBar(
-                completed = 40,
-                pulse = false
-            )
-        ) shouldBe "${magenta("━━")} ${gray("━━")}"
+    fun `default theme`() = doPercentTest(40, "${magenta("━━")} ${gray("━━")}", theme = Theme.Default)
+
+    @Test
+    fun `pulse initial`() = doPulseTest(
+        pulsePosition = 0f,
+        "${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━━━━━━${CSI}39m"
+    )
+
+    @Test
+    fun `pulse 25`() = doPulseTest(
+        pulsePosition = .25f,
+        "${CSI}38;2;255;255;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;46;255m━${CSI}38;2;189;0;189m━${CSI}38;2;143;0;143m━${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━${CSI}39m"
+    )
+
+    @Test
+    fun `pulse 50`() = doPulseTest(
+        pulsePosition = .50f,
+        "${CSI}38;2;133;0;133m━${CSI}38;2;143;0;143m━${CSI}38;2;189;0;189m━${CSI}38;2;255;46;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;255;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;46;255m━${CSI}38;2;189;0;189m━${CSI}38;2;143;0;143m━${CSI}39m"
+    )
+
+    @Test
+    fun `pulse 75`() = doPulseTest(
+        pulsePosition = .75f,
+        "${CSI}38;2;128;0;128m━━━━━${CSI}38;2;133;0;133m━${CSI}38;2;143;0;143m━${CSI}38;2;189;0;189m━${CSI}38;2;255;46;255m━${CSI}38;2;255;184;255m━${CSI}39m"
+    )
+
+    @Test
+    fun `pulse 100`() = doPulseTest(
+        pulsePosition = 1f,
+        "${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━━━━━━${CSI}39m"
+    )
+
+    private fun doPulseTest(pulsePosition: Float, expected: String) {
+        checkRender(
+            ProgressBar(indeterminate = true, pulsePosition = pulsePosition),
+            expected,
+            width = 10
+        )
     }
 
-    private fun doPercentTest(completed: Int, expected: String) {
-        val t = Terminal(theme = Theme.PlainAscii, width = 5)
-        t.render(
-            ProgressBar(completed = completed)
-        ) shouldBe expected
+    private fun doPercentTest(completed: Long, expected: String, theme: Theme = Theme.PlainAscii) {
+        checkRender(
+            ProgressBar(completed = completed),
+            expected,
+            theme = theme,
+            width = 5,
+            trimIndent = false,
+        )
     }
 }

@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.components
 
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
-import com.github.ajalt.mordant.rendering.EmptyRenderable
 import com.github.ajalt.mordant.rendering.Renderable
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
@@ -141,7 +140,9 @@ internal class BarProgressCell(val width: Int?) : ProgressCell {
         get() = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand()
 
     override fun ProgressState.makeRenderable(): Renderable {
-        val frame = (elapsedSeconds * frameRate).toInt()
-        return ProgressBar(total ?: 100, completed, indeterminate, width, pulseFrame = frame, pulseDuration = frameRate)
+        val period = 2 // this could be configurable
+        val pulsePosition = ((elapsedSeconds % period) / period)
+
+        return ProgressBar(total ?: 100, completed, indeterminate, width, pulsePosition.toFloat())
     }
 }
