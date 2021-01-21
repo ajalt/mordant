@@ -78,13 +78,14 @@ class ProgressBar(
             return listOfNotNull(segmentText(char, barLength, style))
         }
 
+        // x is offset left by half a period so that the pulse starts offscreen
+        val offset = pulseFrame.toDouble() * width / pulseDuration - width / 2f
         return List(barLength) {
-            // x is offset left by half a period so that the pulse starts offscreen
-            val x = it - pulseFrame.toDouble() * width / pulseDuration + pulseDuration / 2
             // gaussian with σ²=0.1 and x scaled to ~50% of width
-            val lerp = exp(-(2 * x / width).pow(2.0) * 5)
+            val x = 2 * (it - offset) / width
+            val gauss = exp(-x.pow(2.0) * 5)
             // linear interpolate the luminosity between the original and white
-            val l = color.l + ((100 - color.l) * lerp).roundToInt()
+            val l = color.l + ((100 - color.l) * gauss).roundToInt()
             Span.word(char, TextStyle(HSL(color.h, color.s, l)))
         }
     }

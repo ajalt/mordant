@@ -70,7 +70,7 @@ class ProgressAnimation internal constructor(
     private var total: Long? = null
     private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
-            val state = history.makeState(total, frameRate)
+        val state = history.makeState(total, frameRate)
         layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
     }
 
@@ -136,7 +136,8 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
 fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
 
-    return ProgressAnimation(this,
+    return ProgressAnimation(
+        t = this,
         layout = builder.build(),
         frameRate = builder.frameRate,
         historyLength = builder.historyLength,
