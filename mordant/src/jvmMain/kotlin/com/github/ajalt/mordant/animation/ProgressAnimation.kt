@@ -15,7 +15,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
     private val windowLengthNs = (TimeUnit.SECONDS.toNanos(1) * windowLengthSeconds).toLong()
 
     fun start() {
-        if (startTime < 0) {
+        if (!started) {
             startTime = timeSource()
         }
     }
@@ -43,6 +43,8 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         frameRate = frameRate,
     )
 
+    val started: Boolean get() = startTime >= 0
+
     val completed: Long
         get() = samples.lastOrNull()?.completed ?: 0
 
@@ -58,7 +60,6 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         }
 }
 
-// TODO: thread safety
 class ProgressAnimation internal constructor(
     t: Terminal,
     private val layout: ProgressLayout,
@@ -74,14 +75,18 @@ class ProgressAnimation internal constructor(
         layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
     }
 
-    fun update() {
-        update(history.completed)
+    fun update(completed: Long) {
+        synchronized(history) {
+            val started = history.started
+            history.update(completed)
+            if (!started) {
+                animation.update(Unit)
+            }
+        }
     }
 
-    // TODO: don't update animation when started
-    fun update(completed: Long) {
-        history.update(completed)
-        animation.update(Unit)
+    fun update() {
+        update(history.completed)
     }
 
     fun update(completed: Long, total: Long?) {
@@ -104,7 +109,10 @@ class ProgressAnimation internal constructor(
 
     fun start() {
         history.start()
-        ticker.start { update() }
+        ticker.start {
+            update()
+            animation.update(Unit)
+        }
     }
 
     fun stop() {
