@@ -35,12 +35,11 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         samples.addLast(ProgressHistoryEntry(now, completed))
     }
 
-    fun makeState(total: Long?, frameRate: Int) = ProgressState(
+    fun makeState(total: Long?) = ProgressState(
         completed = completed,
         total = total,
         completedPerSecond = completedPerSecond,
         elapsedSeconds = elapsedSeconds,
-        frameRate = frameRate,
     )
 
     val started: Boolean get() = startTime >= 0
@@ -63,7 +62,6 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
 class ProgressAnimation internal constructor(
     t: Terminal,
     private val layout: ProgressLayout,
-    private val frameRate: Int,
     historyLength: Float,
     private val ticker: Ticker,
     timeSource: () -> Long,
@@ -71,7 +69,7 @@ class ProgressAnimation internal constructor(
     private var total: Long? = null
     private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
-        val state = history.makeState(total, frameRate)
+        val state = history.makeState(total)
         layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
     }
 
@@ -133,6 +131,8 @@ class ProgressAnimation internal constructor(
 }
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
+    /** The maximum number of times per second to update idle animations like the progress bar pulse. */
+    var frameRate: Int = 10
     var historyLength: Float = 30f
     var autoUpdate: Boolean = true
 
@@ -147,7 +147,6 @@ fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): Progr
     return ProgressAnimation(
         t = this,
         layout = builder.build(),
-        frameRate = builder.frameRate,
         historyLength = builder.historyLength,
         ticker = getTicker(builder.frameRate),
         timeSource = builder.timeSource

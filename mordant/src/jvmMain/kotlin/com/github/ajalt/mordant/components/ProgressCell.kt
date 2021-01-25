@@ -14,7 +14,6 @@ internal data class ProgressState(
     val total: Long?,
     val completedPerSecond: Double, // 0 if [completed] == 0
     val elapsedSeconds: Double,
-    val frameRate: Int,
 ) {
     init {
         require(completed >= 0) { "completed cannot be negative" }
@@ -70,7 +69,6 @@ internal class CompletedProgressCell(
     }
 }
 
-// TODO: this isn't thread safe
 internal abstract class ThrottledProgressCell(frameRate: Int?) : ProgressCell {
     private var lastFrameTime = 0.0
     private val frameDuration = frameRate?.let { 1.0 / it }

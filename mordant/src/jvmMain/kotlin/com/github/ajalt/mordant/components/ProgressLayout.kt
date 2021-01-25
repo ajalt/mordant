@@ -9,8 +9,6 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid
 
 open class ProgressBuilder internal constructor() {
-    /** The maximum number of times per second to update idle animations like the progress bar pulse. */
-    var frameRate: Int = 10
     var padding: Int = 2
 
     fun text(text: String, style: TextStyle = DEFAULT_STYLE) {
@@ -38,7 +36,7 @@ open class ProgressBuilder internal constructor() {
     }
 
     internal fun build(): ProgressLayout {
-        return ProgressLayout(cells, frameRate, padding)
+        return ProgressLayout(cells, padding)
     }
 
     private val cells = mutableListOf<ProgressCell>()
@@ -46,7 +44,6 @@ open class ProgressBuilder internal constructor() {
 
 class ProgressLayout internal constructor(
     private val cells: List<ProgressCell>,
-    private val frameRate: Int,
     private val paddingSize: Int,
 ) {
     fun build(
@@ -64,7 +61,6 @@ class ProgressLayout internal constructor(
             total = total,
             completedPerSecond = cps,
             elapsedSeconds = elapsedSeconds,
-            frameRate = frameRate,
         )
         return grid {
             rowFrom(cells.map { it.makeRenderable(state) })
