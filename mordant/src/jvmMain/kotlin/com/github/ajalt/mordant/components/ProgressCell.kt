@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.components
 
+import com.github.ajalt.mordant.components.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
 import com.github.ajalt.mordant.rendering.Renderable
@@ -26,18 +27,25 @@ internal data class ProgressState(
 }
 
 internal interface ProgressCell {
+    enum class AnimationRate {
+        STATIC, ANIMATION, TEXT
+    }
+
     val columnWidth: ColumnWidth
+    val animationRate: AnimationRate
 
     fun ProgressState.makeRenderable(): Renderable
 }
 
 
 internal class TextProgressCell(private val text: Text) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.STATIC
     override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
     override fun ProgressState.makeRenderable(): Renderable = text
 }
 
 internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
     override fun ProgressState.makeRenderable(): Renderable {
         val percent = when {
@@ -53,6 +61,7 @@ internal class CompletedProgressCell(
     private val includeTotal: Boolean,
     private val style: TextStyle,
 ) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth
         get() = ColumnWidth.Fixed((if (includeTotal) 12 else 6) + suffix.length)
 
@@ -69,37 +78,14 @@ internal class CompletedProgressCell(
     }
 }
 
-internal abstract class ThrottledProgressCell(frameRate: Int?) : ProgressCell {
-    private var lastFrameTime = 0.0
-    private val frameDuration = frameRate?.let { 1.0 / it }
-    private fun shouldSkipUpdate(elapsed: Double): Boolean {
-        if (frameDuration == null) return false
-        if ((elapsed - lastFrameTime) < frameDuration) return true
-        lastFrameTime = elapsed
-        return false
-    }
-
-    private var renderable: Renderable? = null
-    final override fun ProgressState.makeRenderable(): Renderable {
-        var r = renderable
-        val shouldSkipUpdate = shouldSkipUpdate(elapsedSeconds)
-        if (r != null && shouldSkipUpdate) return r
-        r = makeFreshRenderable()
-        renderable = r
-        return r
-    }
-
-    protected abstract fun ProgressState.makeFreshRenderable(): Renderable
-}
-
 internal class SpeedProgressCell(
     private val suffix: String,
-    frameRate: Int?,
     private val style: TextStyle,
-) : ThrottledProgressCell(frameRate) {
+) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(6 + suffix.length)
 
-    override fun ProgressState.makeFreshRenderable(): Renderable {
+    override fun ProgressState.makeRenderable(): Renderable {
         val t = when {
             indeterminate || completedPerSecond <= 0 -> "---.-"
             else -> completedPerSecond.formatWithSiSuffix(1)
@@ -110,12 +96,12 @@ internal class SpeedProgressCell(
 
 internal class EtaProgressCell(
     private val prefix: String,
-    frameRate: Int?,
     private val style: TextStyle,
-) : ThrottledProgressCell(frameRate) {
+) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(7 + prefix.length)
 
-    override fun ProgressState.makeFreshRenderable(): Renderable {
+    override fun ProgressState.makeRenderable(): Renderable {
         val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond
         val maxEta = 35_999 // 9:59:59
         if (indeterminate || eta < 0 || completedPerSecond == 0.0 || eta > maxEta) {
@@ -134,6 +120,7 @@ internal class EtaProgressCell(
 
 // TODO arguments to ProgressBar constructor
 internal class BarProgressCell(val width: Int?) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.ANIMATION
     override val columnWidth: ColumnWidth
         get() = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand()
 

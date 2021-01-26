@@ -27,23 +27,23 @@ open class ProgressBuilder internal constructor() {
         cells += CompletedProgressCell(suffix, includeTotal, style)
     }
 
-    fun speed(suffix: String = "it/s", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
-        cells += SpeedProgressCell(suffix, frameRate, style)
+    fun speed(suffix: String = "it/s", style: TextStyle = DEFAULT_STYLE) {
+        cells += SpeedProgressCell(suffix, style)
     }
 
-    fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE, frameRate: Int? = 1) {
-        cells += EtaProgressCell(prefix, frameRate, style)
+    fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE) {
+        cells += EtaProgressCell(prefix, style)
     }
 
     internal fun build(): ProgressLayout {
         return ProgressLayout(cells, padding)
     }
 
-    private val cells = mutableListOf<ProgressCell>()
+    internal val cells = mutableListOf<ProgressCell>()
 }
 
 class ProgressLayout internal constructor(
-    private val cells: List<ProgressCell>,
+    internal val cells: List<ProgressCell>,
     private val paddingSize: Int,
 ) {
     fun build(
@@ -63,7 +63,7 @@ class ProgressLayout internal constructor(
             elapsedSeconds = elapsedSeconds,
         )
         return grid {
-            rowFrom(cells.map { it.makeRenderable(state) })
+            rowFrom(cells.map { it.run { state.run { makeRenderable() } } })
             align = TextAlign.RIGHT
             borders = Borders.NONE
             cells.forEachIndexed { i, it ->
@@ -83,8 +83,6 @@ class ProgressLayout internal constructor(
             }
         }
     }
-
-    private fun ProgressCell.makeRenderable(state: ProgressState): Renderable = state.makeRenderable()
 }
 
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
