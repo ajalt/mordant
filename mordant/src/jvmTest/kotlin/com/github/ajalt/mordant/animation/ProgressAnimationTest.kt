@@ -48,58 +48,6 @@ class ProgressAnimationTest : RenderingTest() {
         vt.normalizedBuffer() shouldBe "  40.0it/s|eta 0:00:24"
     }
 
-    private fun doDefaultTest(
-        completed: Long,
-        total: Long? = null,
-        elapsedSeconds: Double = 0.0,
-        completedPerSecond: Double? = null,
-        expected: String,
-    ) {
-        checkRender(
-            progressLayout {
-                text("text.txt")
-                percentage()
-                progressBar()
-                completed(suffix = "B")
-                speed()
-                timeRemaining()
-            }.build(completed, total, elapsedSeconds, completedPerSecond),
-            expected,
-            width = 60,
-            theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
-        )
-    }
-
-    @Test
-    fun indeterminate() = doDefaultTest(
-        0,
-        expected = "text.txt    0%  ####     0.0/---.-B   ---.-it/s  eta -:--:--"
-    )
-
-    @Test
-    fun `no progress`() = doDefaultTest(
-        0, 0,
-        expected = "text.txt    0%  ....       0.0/0.0B   ---.-it/s  eta -:--:--"
-    )
-
-    @Test
-    fun `large values`() = doDefaultTest(
-        150_000_000, 300_000_000, 1.5, 100_000_000.0,
-        expected = "text.txt   50%  ##>.  150.0/300.0MB  100.0Mit/s  eta 0:00:02"
-    )
-
-    @Test
-    fun `short eta`() = doDefaultTest(
-        1, 2, 3.0, 4.0,
-        expected = "text.txt   50%  ##>.       1.0/2.0B     4.0it/s  eta 0:00:00"
-    )
-
-    @Test
-    fun `long eta`() = doDefaultTest(
-        150_000_000, 300_000_000, 1.5, 2.0,
-        expected = "text.txt   50%  ##>.  150.0/300.0MB     2.0it/s  eta -:--:--"
-    )
-
     @Test
     fun animation() {
         val vt = VirtualTerminalInterface(width = 56)
