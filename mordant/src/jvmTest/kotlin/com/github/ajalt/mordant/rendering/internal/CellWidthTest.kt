@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.rendering.internal
 
+import com.github.ajalt.mordant.internal.cellWidth
+import com.github.ajalt.mordant.internal.stringCellWidth
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
@@ -22,7 +24,7 @@ internal class CellWidthTest {
             row("ぁ", 2), // HIRAGANA LETTER SMALL A
             row("💯", 2), // HUNDRED POINTS SYMBOL
     ) { char, width ->
-        com.github.ajalt.mordant.internal.cellWidth(char.codePointAt(0)) shouldBe width
+        cellWidth(char.codePointAt(0)) shouldBe width
     }
 
     @Test
@@ -36,6 +38,6 @@ internal class CellWidthTest {
             row("🙊🙉🙈", 6),
             row("en\u0303e", 3),
     ) { str, width ->
-        com.github.ajalt.mordant.internal.stringCellWidth(str) shouldBe width
+        stringCellWidth(str) shouldBe width
     }
 }

@@ -1,10 +1,8 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.rendering.components
 
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
@@ -14,6 +12,7 @@ import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST
+import com.github.ajalt.mordant.rendering.*
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import org.junit.Test

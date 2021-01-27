@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.animation
+package com.github.ajalt.mordant.components
 
 import com.github.ajalt.mordant.components.ProgressBar
 import com.github.ajalt.mordant.internal.CSI

@@ -1,8 +1,7 @@
-package com.github.ajalt.mordant
+package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.AnsiLevel
-import com.github.ajalt.mordant.terminal.Terminal
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
