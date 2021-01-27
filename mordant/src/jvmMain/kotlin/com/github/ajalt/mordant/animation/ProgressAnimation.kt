@@ -1,14 +1,14 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.nanosToSeconds
+import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.table.ColumnWidth
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressCell
 import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.widgets.ProgressLayout
 import com.github.ajalt.mordant.widgets.ProgressState
-import com.github.ajalt.mordant.internal.nanosToSeconds
-import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.terminal.Terminal
 import java.util.concurrent.TimeUnit
 
 

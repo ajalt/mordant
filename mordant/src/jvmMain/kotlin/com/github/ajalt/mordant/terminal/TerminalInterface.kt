@@ -8,5 +8,5 @@ interface TerminalInterface {
 
 data class PrintRequest(
     val text: String,
-    val trailingLinebreak: Boolean
+    val trailingLinebreak: Boolean,
 )

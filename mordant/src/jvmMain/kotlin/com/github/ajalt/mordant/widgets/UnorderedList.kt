@@ -9,12 +9,12 @@ import com.github.ajalt.mordant.terminal.Terminal
 class UnorderedList private constructor(
     private val listEntries: List<Widget>,
     private val bulletText: ThemeString,
-    private val bulletStyle: ThemeStyle
+    private val bulletStyle: ThemeStyle,
 ) : Widget {
     constructor(
         listEntries: List<Widget>,
         bulletText: String? = null,
-        bulletStyle: TextStyle? = null
+        bulletStyle: TextStyle? = null,
     ) : this(
         listEntries,
         ThemeString.of("list.bullet.text", bulletText),

@@ -39,7 +39,7 @@ class HorizontalRule internal constructor(
         titlePadding: Int? = null,
     ) : this(
         title = if (title.isEmpty()) EmptyWidget else Text(title, titleStyle ?: DEFAULT_STYLE),
-        ruleCharacter =  ThemeString.of("hr.rule", ruleCharacter, " "),
+        ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         // The explicit style is baked in to the Text object, so only override the rendered style if
         // we need it from the theme.
@@ -68,7 +68,8 @@ class HorizontalRule internal constructor(
                 TextAlign.RIGHT -> ruleWidth - 1
                 TextAlign.CENTER,
                 TextAlign.JUSTIFY,
-                TextAlign.NONE -> ruleWidth / 2
+                TextAlign.NONE,
+                -> ruleWidth / 2
             }
             val leftRule = rule(t.theme, leftRuleWidth)
             val rightRule = rule(t.theme, ruleWidth - leftRuleWidth)

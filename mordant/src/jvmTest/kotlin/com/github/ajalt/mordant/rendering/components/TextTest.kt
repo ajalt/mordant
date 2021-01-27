@@ -2,17 +2,17 @@ package com.github.ajalt.mordant.rendering.components
 
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
-import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
-import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.widgets.LS
-import com.github.ajalt.mordant.widgets.NEL
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
+import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.Whitespace.PRE
+import com.github.ajalt.mordant.widgets.LS
+import com.github.ajalt.mordant.widgets.NEL
+import com.github.ajalt.mordant.widgets.Text
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import org.junit.Test
@@ -42,11 +42,11 @@ class TextTest : RenderingTest() {
 
     @Test
     fun tabs() = forAll(
-            row("\t.",/*   */ "    ."),
-            row(".\t.",/*  */ ".   ."),
-            row("..\t.",/*  */"..  ."),
-            row("...\t.",/* */"... ."),
-            row("....\t.",/**/"....    ."),
+        row("\t.",/*   */ "    ."),
+        row(".\t.",/*  */ ".   ."),
+        row("..\t.",/*  */"..  ."),
+        row("...\t.",/* */"... ."),
+        row("....\t.",/**/"....    ."),
     ) { text, expected ->
         checkRender(Text(text, whitespace = PRE), expected, tabWidth = 4, trimIndent = false)
     }
@@ -64,14 +64,14 @@ class TextTest : RenderingTest() {
 
     @Test
     fun `ansi parsing 256`() = checkRender(Text(
-            (TextColors.color(Ansi256(111)) on TextColors.color(Ansi256(222)))("red")),
-            "${CSI}38;5;111;48;5;222mred${CSI}39;49m"
+        (TextColors.color(Ansi256(111)) on TextColors.color(Ansi256(222)))("red")),
+        "${CSI}38;5;111;48;5;222mred${CSI}39;49m"
     )
 
     @Test
     fun `ansi parsing truecolor`() = checkRender(Text(
-            (TextColors.rgb("#ff0000") on TextColors.rgb("#00ff00"))("red")),
-            "${CSI}38;2;255;0;0;48;2;0;255;0mred${CSI}39;49m"
+        (TextColors.rgb("#ff0000") on TextColors.rgb("#00ff00"))("red")),
+        "${CSI}38;2;255;0;0;48;2;0;255;0mred${CSI}39;49m"
     )
 
     @Test
@@ -85,31 +85,32 @@ class TextTest : RenderingTest() {
 
     @Test
     fun `hyperlink one line`() = doHyperlinkTest("This is a link",
-            "${OSC}8;id=x;http://example.com${ST}This is a link${OSC}8;;$ST"
+        "${OSC}8;id=x;http://example.com${ST}This is a link${OSC}8;;$ST"
     )
 
     @Test
     fun `hyperlink word wrap`() = doHyperlinkTest("This is a link",
-            """
+        """
             ${OSC}8;id=x;http://example.com${ST}This is${OSC}8;;$ST
             ${OSC}8;id=x;http://example.com${ST}a link${OSC}8;;$ST
             """,
-            width = 8
+        width = 8
     )
 
     @Test
     fun `hyperlink break word`() = doHyperlinkTest("This_is_a_link",
-            """
+        """
             ${OSC}8;id=x;http://example.com${ST}This_is_${OSC}8;;$ST
             ${OSC}8;id=x;http://example.com${ST}a_link${OSC}8;;$ST
             """,
-            overflowWrap = BREAK_WORD,
-            width = 8
+        overflowWrap = BREAK_WORD,
+        width = 8
     )
 
-    private fun doHyperlinkTest(text: String, expected: String, overflowWrap: OverflowWrap = NORMAL, width: Int = 79) = checkRender(
+    private fun doHyperlinkTest(text: String, expected: String, overflowWrap: OverflowWrap = NORMAL, width: Int = 79) =
+        checkRender(
             Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
             expected,
             width = width
-    )
+        )
 }

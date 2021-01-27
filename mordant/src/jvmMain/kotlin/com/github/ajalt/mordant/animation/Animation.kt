@@ -1,31 +1,32 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.widgets.RawWidget
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalInterceptor
+import com.github.ajalt.mordant.widgets.RawWidget
+import com.github.ajalt.mordant.widgets.Text
 
 abstract class Animation<T>(private val terminal: Terminal) {
     private var size: Pair<Int, Int>? = null
     private var text: String? = null
+
     // Don't clear the screen the first time the animation is drawn
     private var needsClear = false
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-            text?.let { t ->
-                PrintRequest(text = buildString {
-                    if (needsClear) {
-                        getClear()?.let { append(it) }
-                    }
-                    needsClear = true
-                    if (req.text.isNotEmpty()) {
-                        appendLine(req.text)
-                    }
-                    append(t)
-                }, trailingLinebreak = true)
-            } ?: req
+        text?.let { t ->
+            PrintRequest(text = buildString {
+                if (needsClear) {
+                    getClear()?.let { append(it) }
+                }
+                needsClear = true
+                if (req.text.isNotEmpty()) {
+                    appendLine(req.text)
+                }
+                append(t)
+            }, trailingLinebreak = true)
+        } ?: req
     }
 
     init {

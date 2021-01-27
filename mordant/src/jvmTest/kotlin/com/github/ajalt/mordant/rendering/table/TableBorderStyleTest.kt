@@ -1,11 +1,11 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
-import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.widgets.Padding
 import org.junit.Test
 
 class TableBorderStyleTest : RenderingTest() {
@@ -108,6 +108,7 @@ class TableBorderStyleTest : RenderingTest() {
         ║118║119║120 121 122 123 124 125 126 127 128 129 130 
         ╚═══╩═══╝                                            
         """)
+
     @Test
     fun heavy_head_foot() = doTest(BorderStyle.HEAVY_HEAD_FOOT, """
         ┏━━━┳━━━┓                   ┏━━━┳━━━┓   ╻   ╻   ╻   ╻

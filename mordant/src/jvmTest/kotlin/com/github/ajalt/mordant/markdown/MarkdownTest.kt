@@ -1,16 +1,16 @@
 package com.github.ajalt.mordant.markdown
 
 import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.mordant.widgets.LS
-import com.github.ajalt.mordant.widgets.NEL
 import com.github.ajalt.mordant.internal.generateHyperlinkId
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.AnsiLevel
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
+import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.LS
+import com.github.ajalt.mordant.widgets.NEL
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.intellij.markdown.ast.ASTNode
@@ -667,7 +667,7 @@ LS
 """)
 
     @Test
-    fun `indented code block`()= doTest("""
+    fun `indented code block`() = doTest("""
     foo {
         bar
         
@@ -774,7 +774,7 @@ A span and some
 code.
 
 link(c.com)
-""", theme=Theme.Plain, width = 15)
+""", theme = Theme.Plain, width = 15)
 
     @Test
     fun `ascii theme`() = doTest("""
@@ -804,20 +804,20 @@ link(c.com)
 """, theme = Theme.PlainAscii, width = 10)
 
     private fun doTest(
-            @Language("markdown") markdown: String,
-            expected: String,
-            width: Int = 79,
-            showHtml: Boolean = false,
-            theme: Theme = Theme.Default,
-            hyperlinks: Boolean = false
+        @Language("markdown") markdown: String,
+        expected: String,
+        width: Int = 79,
+        showHtml: Boolean = false,
+        theme: Theme = Theme.Default,
+        hyperlinks: Boolean = false,
     ) {
         val md = markdown.replace("⏎", "")
         try {
             val terminal = Terminal(
-                    ansiLevel = AnsiLevel.TRUECOLOR,
-                    width = width,
-                    theme = theme,
-                    hyperlinks = hyperlinks
+                ansiLevel = AnsiLevel.TRUECOLOR,
+                width = width,
+                theme = theme,
+                hyperlinks = hyperlinks
             )
             val actual = terminal.render(Markdown(md, showHtml))
             try {
@@ -841,11 +841,11 @@ private fun StringBuilder.printNode(text: String, node: ASTNode, indent: Int = 0
     append(node.type)
     if (node is LeafASTNode) {
         append(" \'").append(text.substring(node.startOffset, node.endOffset)
-                .replace("\r", "␍")
-                .replace("\n", "␊")
-                .replace(" ", "·")
-                .replace("\t", "␉")
-                .take(30)
+            .replace("\r", "␍")
+            .replace("\n", "␊")
+            .replace(" ", "·")
+            .replace("\t", "␉")
+            .take(30)
         )
         if (node.endOffset - node.startOffset > 30) append("…")
         append("\'")

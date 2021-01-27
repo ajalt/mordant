@@ -1,11 +1,11 @@
 package com.github.ajalt.mordant.rendering.components
 
+import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.widgets.DefinitionListBuilder
 import com.github.ajalt.mordant.widgets.Panel
 import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.widgets.definitionList
-import com.github.ajalt.mordant.rendering.RenderingTest
-import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import org.junit.Test
 
 class DefinitionListTest : RenderingTest() {
@@ -116,7 +116,7 @@ term 3:
 desc 3 consectetur
 adipiscing elit
 """, width = 21) {
-        entry("term 1:" , "desc 1")
+        entry("term 1:", "desc 1")
         entry {
             term(Text("term 2 lorem ipsum dolor sit amet:"))
             description(Text("desc 2"))
@@ -141,9 +141,9 @@ desc 3
    """, width = 21) {
         entrySpacing = 0
         descriptionSpacing = 1
-        entry("term 1:" , "desc 1")
-        entry("term 2:" , "desc 2")
-        entry("term 3:" , "desc 3")
+        entry("term 1:", "desc 1")
+        entry("term 2:", "desc 2")
+        entry("term 3:", "desc 3")
     }
 
     private fun doTest(expected: String, width: Int = 79, init: DefinitionListBuilder.() -> Unit) {

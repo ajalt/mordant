@@ -1,12 +1,13 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.mordant.widgets.Panel
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.blue
+import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.rendering.Whitespace.PRE
+import com.github.ajalt.mordant.widgets.Panel
+import com.github.ajalt.mordant.widgets.Text
 import org.junit.Test
 
 class PanelTest : RenderingTest(width = 20) {

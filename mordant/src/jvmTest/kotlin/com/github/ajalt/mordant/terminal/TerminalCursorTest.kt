@@ -39,10 +39,10 @@ class TerminalCursorTest {
 
     @Test
     fun `cursor directions 0 count`() = forAll(
-            row(c { up(0) }),
-            row(c { down(0) }),
-            row(c { left(0) }),
-            row(c { right(0) }),
+        row(c { up(0) }),
+        row(c { down(0) }),
+        row(c { left(0) }),
+        row(c { right(0) }),
     ) { actual ->
         actual shouldBe ""
     }
@@ -70,20 +70,20 @@ class TerminalCursorTest {
 
     @Test
     fun `cursor commands`() = forAll(
-            row(c { up(2) }, "${CSI}2A"),
-            row(c { down(3) }, "${CSI}3B"),
-            row(c { right(4) }, "${CSI}4C"),
-            row(c { left(5) }, "${CSI}5D"),
-            row(c { startOfLine() }, "\r"),
-            row(c { setPosition(6, 7) }, "${CSI}8;7H"),
-            row(c { clearScreen() }, "${CSI}2J"),
-            row(c { clearScreenBeforeCursor() }, "${CSI}1J"),
-            row(c { clearScreenAfterCursor() }, "${CSI}0J"),
-            row(c { clearLine() }, "${CSI}2K"),
-            row(c { clearLineBeforeCursor() }, "${CSI}1K"),
-            row(c { clearLineAfterCursor() }, "${CSI}0K"),
-            row(c { savePosition() }, "${CSI}s"),
-            row(c { restorePosition() }, "${CSI}u"),
+        row(c { up(2) }, "${CSI}2A"),
+        row(c { down(3) }, "${CSI}3B"),
+        row(c { right(4) }, "${CSI}4C"),
+        row(c { left(5) }, "${CSI}5D"),
+        row(c { startOfLine() }, "\r"),
+        row(c { setPosition(6, 7) }, "${CSI}8;7H"),
+        row(c { clearScreen() }, "${CSI}2J"),
+        row(c { clearScreenBeforeCursor() }, "${CSI}1J"),
+        row(c { clearScreenAfterCursor() }, "${CSI}0J"),
+        row(c { clearLine() }, "${CSI}2K"),
+        row(c { clearLineBeforeCursor() }, "${CSI}1K"),
+        row(c { clearLineAfterCursor() }, "${CSI}0K"),
+        row(c { savePosition() }, "${CSI}s"),
+        row(c { restorePosition() }, "${CSI}u"),
     ) { actual, expected ->
         actual shouldBe expected
     }
@@ -91,10 +91,10 @@ class TerminalCursorTest {
     @Test
     fun `cursor commands negative count`() {
         forAll(
-                row(c { up(-1) }, c { down(1) }),
-                row(c { down(-2) }, c { up(2) }),
-                row(c { left(-3) }, c { right(3) }),
-                row(c { right(-4) }, c { left(4) }),
+            row(c { up(-1) }, c { down(1) }),
+            row(c { down(-2) }, c { up(2) }),
+            row(c { left(-3) }, c { right(3) }),
+            row(c { right(-4) }, c { left(4) }),
         ) { actual, expected ->
             actual shouldBe expected
         }

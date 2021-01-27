@@ -17,7 +17,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 class Markdown(
     private val markdown: String,
     private val showHtml: Boolean = false,
-    private val hyperlinks: Boolean? = null
+    private val hyperlinks: Boolean? = null,
 ) : Widget {
     private var document: MarkdownDocument? = null
     private fun document(t: Terminal): MarkdownDocument {

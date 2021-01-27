@@ -73,7 +73,7 @@ internal fun Lines.setSize(
     newWidth: Int,
     newHeight: Int = lines.size,
     verticalAlign: VerticalAlign = TOP,
-    textAlign: TextAlign = NONE
+    textAlign: TextAlign = NONE,
 ): Lines {
     if (newHeight == 0) return EMPTY_LINES
     if (newWidth == 0) return Lines(List(newHeight) { EMPTY_LINE })

@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.mordant.widgets.HorizontalRule
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextColors.red
+import com.github.ajalt.mordant.widgets.HorizontalRule
+import com.github.ajalt.mordant.widgets.Text
 import org.junit.Test
 
 class HorizontalRuleTest : RenderingTest() {

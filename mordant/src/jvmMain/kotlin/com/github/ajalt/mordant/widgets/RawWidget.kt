@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.Span
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.WidthRange
 import com.github.ajalt.mordant.terminal.Terminal
 

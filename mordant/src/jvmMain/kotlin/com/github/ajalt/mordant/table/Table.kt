@@ -59,7 +59,7 @@ internal class Table(
     val headerRowCount: Int,
     val footerRowCount: Int,
     val columnStyles: Map<Int, ColumnWidth>,
-    val outerBorder: Boolean
+    val outerBorder: Boolean,
 ) : Widget {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -198,7 +198,7 @@ private class TableRenderer(
     val columnWidths: List<Int>,
     val columnBorders: List<Boolean>,
     val rowBorders: List<Boolean>,
-    val t: Terminal
+    val t: Terminal,
 ) {
     private val rowCount get() = rows.size
     private val renderedRows = rows.map { r ->

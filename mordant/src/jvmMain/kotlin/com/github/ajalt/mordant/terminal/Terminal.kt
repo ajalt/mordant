@@ -1,13 +1,13 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.widgets.Text
 
 class Terminal(
     val theme: Theme = Theme.Default,
     val tabWidth: Int = 8,
-    private val terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null)
+    private val terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null),
 ) {
     constructor(
         ansiLevel: AnsiLevel? = null,
@@ -17,7 +17,7 @@ class Terminal(
         hyperlinks: Boolean? = null,
         tabWidth: Int = 8,
         interactive: Boolean? = null,
-    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks,interactive))
+    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive))
 
     val info: TerminalInfo = terminalInterface.info
     val colors: TerminalColors = TerminalColors(info.ansiLevel)
@@ -29,7 +29,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         println(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
@@ -39,7 +39,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         println(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
@@ -49,7 +49,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         println(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
@@ -59,7 +59,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return render(message, theme.style("warning"), whitespace, align, overflowWrap, width)
     }
@@ -69,7 +69,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         println(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
@@ -79,7 +79,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         println(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
@@ -90,7 +90,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         rawPrint(render(message, style, whitespace, align, overflowWrap, width))
     }
@@ -101,7 +101,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         rawPrintln(render(message, style, whitespace, align, overflowWrap, width))
     }
@@ -119,7 +119,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return render(message, theme.style("success"), whitespace, align, overflowWrap, width)
     }
@@ -129,7 +129,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return render(message, theme.style("danger"), whitespace, align, overflowWrap, width)
     }
@@ -139,7 +139,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return render(message, theme.style("info"), whitespace, align, overflowWrap, width)
     }
@@ -149,7 +149,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return render(message, theme.style("muted"), whitespace, align, overflowWrap, width)
     }
@@ -160,7 +160,7 @@ class Terminal(
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): String {
         return when (message) {
             is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)

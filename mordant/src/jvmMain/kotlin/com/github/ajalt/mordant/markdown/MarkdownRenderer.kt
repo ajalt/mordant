@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.widgets.*
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
@@ -9,6 +8,7 @@ import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SE
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.*
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
@@ -49,7 +49,7 @@ internal class MarkdownRenderer(
     input: String,
     private val theme: Theme,
     private val showHtml: Boolean,
-    private val hyperlinks: Boolean
+    private val hyperlinks: Boolean,
 ) {
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
@@ -198,7 +198,8 @@ internal class MarkdownRenderer(
                 renderInlineLink(node)
             }
             MarkdownElementTypes.FULL_REFERENCE_LINK,
-            MarkdownElementTypes.SHORT_REFERENCE_LINK -> {
+            MarkdownElementTypes.SHORT_REFERENCE_LINK,
+            -> {
                 renderReferenceLink(node)
             }
             MarkdownElementTypes.IMAGE -> {
@@ -208,7 +209,8 @@ internal class MarkdownRenderer(
             // up rendering the surrounding <>.
             MarkdownTokenTypes.EMAIL_AUTOLINK,
             GFMTokenTypes.GFM_AUTOLINK,
-            MarkdownTokenTypes.AUTOLINK -> parseText(node.nodeText(), theme.style("markdown.link.text"))
+            MarkdownTokenTypes.AUTOLINK,
+            -> parseText(node.nodeText(), theme.style("markdown.link.text"))
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
 
             MarkdownTokenTypes.HTML_TAG -> when {
@@ -237,7 +239,8 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.SINGLE_QUOTE,
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.URL,
-            MarkdownTokenTypes.WHITE_SPACE -> {
+            MarkdownTokenTypes.WHITE_SPACE,
+            -> {
                 parseText(node.nodeText(), DEFAULT_STYLE)
             }
             MarkdownTokenTypes.EOL -> {

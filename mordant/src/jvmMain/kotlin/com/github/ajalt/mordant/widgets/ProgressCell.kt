@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
-import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
+import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import kotlin.math.roundToInt
 
 

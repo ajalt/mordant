@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.Text
 
 private class Concatenate(private val widgets: List<Widget>) : Widget {
     init {
@@ -30,7 +30,7 @@ class WidgetBuilder {
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ): WidgetBuilder = apply {
         if (message is Widget) widgets += message
         else widgets += Text(message.toString(), style, whitespace, align, overflowWrap, width)

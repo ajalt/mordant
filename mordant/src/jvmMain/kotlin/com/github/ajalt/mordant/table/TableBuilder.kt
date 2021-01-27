@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.widgets.Padding
-import com.github.ajalt.mordant.widgets.withAlign
-import com.github.ajalt.mordant.widgets.withPadding
 import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.VerticalAlign
 import com.github.ajalt.mordant.rendering.foldStyles
+import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.withAlign
+import com.github.ajalt.mordant.widgets.withPadding
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
@@ -52,7 +52,7 @@ internal class TableBuilderLayout(private val table: TableBuilder) {
         rows: MutableList<MutableRow>,
         startingX: Int,
         startingY: Int,
-        builderWidth: Int
+        builderWidth: Int,
     ) {
         val tableCol = table.columns[startingX]
         val sectionCol = section.columns[startingX]

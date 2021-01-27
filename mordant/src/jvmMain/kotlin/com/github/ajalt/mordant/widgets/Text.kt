@@ -16,7 +16,7 @@ class Text internal constructor(
     private val align: TextAlign = NONE,
     private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
     private val width: Int? = null,
-    private val tabWidth: Int? = null
+    private val tabWidth: Int? = null,
 ) : Widget {
     constructor(
         text: String,
@@ -25,7 +25,7 @@ class Text internal constructor(
         align: TextAlign = NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
-        tabWidth: Int? = null
+        tabWidth: Int? = null,
     ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width, tabWidth)
 
     init {

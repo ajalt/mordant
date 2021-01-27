@@ -50,7 +50,7 @@ fun Widget.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): W
 private class Padded private constructor(
     private val content: Widget,
     private val padding: Padding,
-    private val padEmptyLines: Boolean
+    private val padEmptyLines: Boolean,
 ) : Widget {
     companion object {
         fun get(content: Widget, padding: Padding, padEmptyLines: Boolean): Widget {

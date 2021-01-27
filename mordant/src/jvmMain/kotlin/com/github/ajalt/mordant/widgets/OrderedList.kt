@@ -10,12 +10,12 @@ import kotlin.math.log10
 class OrderedList private constructor(
     private val listEntries: List<Widget>,
     private val numberStyle: ThemeStyle,
-    private val numberSeparator: ThemeString
+    private val numberSeparator: ThemeString,
 ) : Widget {
     constructor(
         listEntries: List<Widget>,
         numberStyle: TextStyle? = null,
-        numberSeparator: String? = null
+        numberSeparator: String? = null,
     ) : this(
         listEntries,
         ThemeStyle.of("list.number", numberStyle),

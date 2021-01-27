@@ -1,10 +1,10 @@
 package com.github.ajalt.mordant.table
 
 import com.github.ajalt.colormath.Color
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
-import com.github.ajalt.mordant.rendering.*
 
 interface CellStyleBuilder {
     var padding: Padding?
@@ -23,7 +23,7 @@ interface CellStyleBuilder {
         dim: Boolean = false,
         inverse: Boolean = false,
         strikethrough: Boolean = false,
-        hyperlink: String? = null
+        hyperlink: String? = null,
     ) {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
@@ -175,7 +175,7 @@ class GridBuilder internal constructor(private val section: SectionBuilder) : Ce
 
 @MordantDsl
 class RowBuilder internal constructor(
-    internal val cells: MutableList<CellBuilder>
+    internal val cells: MutableList<CellBuilder>,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
     fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit = {}) {
         cell(cell1, init)

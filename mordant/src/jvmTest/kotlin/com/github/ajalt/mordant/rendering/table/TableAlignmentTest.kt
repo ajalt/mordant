@@ -1,18 +1,18 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.Text
 import org.junit.Test
 
 class TableAlignmentTest : RenderingTest() {
     @Test
     fun `top none`() = doTextTest(TOP, NONE,
-            """
+        """
             ┌─────────┬───┐
             │ 1 2     │ · │
             │         │ · │
@@ -25,7 +25,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top left`() = doTextTest(TOP, LEFT,
-            """
+        """
             ┌─────────┬───┐
             │ 1 2     │ · │
             │         │ · │
@@ -38,7 +38,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top center`() = doTextTest(TOP, CENTER,
-            """
+        """
             ┌─────────┬───┐
             │   1 2   │ · │
             │         │ · │
@@ -51,7 +51,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top justify`() = doTextTest(TOP, JUSTIFY,
-            """
+        """
             ┌─────────┬───┐
             │ 1     2 │ · │
             │         │ · │
@@ -64,7 +64,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top right`() = doTextTest(TOP, RIGHT,
-            """
+        """
             ┌─────────┬───┐
             │     1 2 │ · │
             │         │ · │
@@ -77,7 +77,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle none`() = doTextTest(MIDDLE, NONE,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │ 1 2     │ · │
@@ -90,7 +90,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle left`() = doTextTest(MIDDLE, LEFT,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │ 1 2     │ · │
@@ -103,7 +103,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle center`() = doTextTest(MIDDLE, CENTER,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │   1 2   │ · │
@@ -116,7 +116,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle justify`() = doTextTest(MIDDLE, JUSTIFY,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │ 1     2 │ · │
@@ -129,7 +129,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle right`() = doTextTest(MIDDLE, RIGHT,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │     1 2 │ · │
@@ -142,7 +142,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom none`() = doTextTest(BOTTOM, NONE,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │         │ · │
@@ -155,7 +155,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom left`() = doTextTest(BOTTOM, LEFT,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │         │ · │
@@ -168,7 +168,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom center`() = doTextTest(BOTTOM, CENTER,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │         │ · │
@@ -181,7 +181,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom justify`() = doTextTest(BOTTOM, JUSTIFY,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │         │ · │
@@ -194,7 +194,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom right`() = doTextTest(BOTTOM, RIGHT,
-            """
+        """
             ┌─────────┬───┐
             │         │ · │
             │         │ · │
@@ -207,7 +207,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top none widget`() = doWidgetTest(TOP, NONE,
-            """
+        """
             ┌──────┬───┐
             │ ×    │ · │
             │      │ · │
@@ -220,7 +220,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top left widget`() = doWidgetTest(TOP, LEFT,
-            """
+        """
             ┌──────┬───┐
             │ ×    │ · │
             │      │ · │
@@ -233,7 +233,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top center widget`() = doWidgetTest(TOP, CENTER,
-            """
+        """
             ┌──────┬───┐
             │  ×   │ · │
             │      │ · │
@@ -246,7 +246,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top justify widget`() = doWidgetTest(TOP, JUSTIFY,
-            """
+        """
             ┌──────┬───┐
             │  ×   │ · │
             │      │ · │
@@ -259,7 +259,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `top right widget`() = doWidgetTest(TOP, RIGHT,
-            """
+        """
             ┌──────┬───┐
             │    × │ · │
             │      │ · │
@@ -272,7 +272,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle none widget`() = doWidgetTest(MIDDLE, NONE,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │ ×    │ · │
@@ -285,7 +285,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle left widget`() = doWidgetTest(MIDDLE, LEFT,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │ ×    │ · │
@@ -298,7 +298,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle center widget`() = doWidgetTest(MIDDLE, CENTER,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │  ×   │ · │
@@ -311,7 +311,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle justify widget`() = doWidgetTest(MIDDLE, JUSTIFY,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │  ×   │ · │
@@ -324,7 +324,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `middle right widget`() = doWidgetTest(MIDDLE, RIGHT,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │    × │ · │
@@ -337,7 +337,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom none widget`() = doWidgetTest(BOTTOM, NONE,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │      │ · │
@@ -350,7 +350,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom left widget`() = doWidgetTest(BOTTOM, LEFT,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │      │ · │
@@ -363,7 +363,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom center widget`() = doWidgetTest(BOTTOM, CENTER,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │      │ · │
@@ -376,7 +376,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom justify widget`() = doWidgetTest(BOTTOM, JUSTIFY,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │      │ · │
@@ -389,7 +389,7 @@ class TableAlignmentTest : RenderingTest() {
 
     @Test
     fun `bottom right widget`() = doWidgetTest(BOTTOM, RIGHT,
-            """
+        """
             ┌──────┬───┐
             │      │ · │
             │      │ · │

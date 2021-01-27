@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 
 class BorderStyleSection(
-    private val corners: String
+    private val corners: String,
 ) {
     init {
         require(corners.length == 15) { "string of corners must have length==15" }
@@ -38,7 +38,7 @@ class BorderStyle(
     val headBottom: BorderStyleSection,
     val body: BorderStyleSection,
     val bodyBottom: BorderStyleSection,
-    val foot: BorderStyleSection
+    val foot: BorderStyleSection,
 ) {
     companion object {
         fun build(
@@ -46,7 +46,7 @@ class BorderStyle(
             headBottom: String = head,
             body: String = head,
             bodyBottom: String = body,
-            foot: String = body
+            foot: String = body,
         ): BorderStyle = BorderStyle(
             head = BorderStyleSection(head),
             headBottom = BorderStyleSection(headBottom),

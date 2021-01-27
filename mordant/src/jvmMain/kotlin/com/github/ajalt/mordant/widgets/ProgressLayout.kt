@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.grid

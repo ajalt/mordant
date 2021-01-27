@@ -10,11 +10,7 @@ import com.github.ajalt.mordant.internal.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.internal.AnsiCodes.selectorRgb
-import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.copy
-import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.*
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {

@@ -136,7 +136,7 @@ internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 internal val CELL_WIDTH_TABLE : Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>('''
           )
     for low, high, width, desc in parse_all():
-        print(f"        '{hex(low)}'..'{hex(high)}',// {desc}".replace('0x', '\\u'))
+        print(f"    '{hex(low)}'..'{hex(high)}',// {desc}".replace('0x', '\\u'))
     print(')')
 
 

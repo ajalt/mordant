@@ -3,7 +3,6 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.invokeStyle
-import com.github.ajalt.mordant.rendering.TextStyles
 
 internal val DEFAULT_STYLE = TextStyle()
 
@@ -56,7 +55,7 @@ fun TextStyle(
     dim: Boolean = false,
     inverse: Boolean = false,
     strikethrough: Boolean = false,
-    hyperlink: String? = null
+    hyperlink: String? = null,
 ): TextStyle = TxtStyle(
     color = color,
     bgColor = bgColor,
@@ -80,7 +79,7 @@ internal data class TxtStyle(
     override val inverse: Boolean,
     override val strikethrough: Boolean,
     override val hyperlink: String?,
-    override val hyperlinkId: String?
+    override val hyperlinkId: String?,
 ) : TextStyle {
     override infix fun on(bg: TextStyle): TextStyle {
         return copy(bgColor = bg.color)
@@ -93,7 +92,7 @@ internal fun TextStyle.copy(
     fg: Color? = color,
     bg: Color? = bgColor,
     hyperlink: String? = this.hyperlink,
-    hyperlinkId: String? = this.hyperlinkId
+    hyperlinkId: String? = this.hyperlinkId,
 ) = TxtStyle(
     fg, bg, bold, italic, underline, dim, inverse, strikethrough, hyperlink, hyperlinkId
 )

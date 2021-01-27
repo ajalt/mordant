@@ -1,7 +1,5 @@
 package com.github.ajalt.mordant.internal
 
-import java.util.concurrent.TimeUnit
-
 private const val SI_PREFIXES = "KMGTEPZY"
 
 /**

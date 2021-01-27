@@ -136,7 +136,7 @@ class DefinitionListEntryBuilder {
         whitespace: Whitespace = Whitespace.NORMAL,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         term(Text(term, style, whitespace, align, overflowWrap, width))
     }
@@ -151,7 +151,7 @@ class DefinitionListEntryBuilder {
         whitespace: Whitespace = Whitespace.NORMAL,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
-        width: Int? = null
+        width: Int? = null,
     ) {
         description(Text(description, style, whitespace, align, overflowWrap, width))
     }
