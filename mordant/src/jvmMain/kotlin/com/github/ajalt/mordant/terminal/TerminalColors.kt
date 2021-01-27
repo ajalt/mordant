@@ -2,10 +2,9 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.terminal.TextColors.Companion.hsl
-import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.TextColors.Companion.hsl
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 
 class TerminalColors internal constructor(
     private val level: AnsiLevel

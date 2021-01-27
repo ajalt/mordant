@@ -9,8 +9,8 @@ import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.TextColors.blue
-import com.github.ajalt.mordant.terminal.TextColors.red
+import com.github.ajalt.mordant.rendering.TextColors.blue
+import com.github.ajalt.mordant.rendering.TextColors.red
 import org.junit.Test
 
 class TableTest : RenderingTest() {

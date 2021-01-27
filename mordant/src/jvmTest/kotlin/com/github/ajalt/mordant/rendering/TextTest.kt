@@ -2,9 +2,9 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.terminal.TextColors
-import com.github.ajalt.mordant.terminal.TextColors.*
-import com.github.ajalt.mordant.terminal.TextStyles
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE

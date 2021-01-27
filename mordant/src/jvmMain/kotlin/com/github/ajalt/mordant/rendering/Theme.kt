@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.*
 
 sealed class Theme(
     val styles: Map<String, TextStyle>,

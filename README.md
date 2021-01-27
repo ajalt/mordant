@@ -19,8 +19,8 @@ Create a `Terminal` instance, and import any enum entries you want from `TextCol
 capabilities and automatically downsample ANSI codes if necessary.
 
 ```kotlin
-import com.github.ajalt.mordant.terminal.TextColors.*
-import com.github.ajalt.mordant.terminal.TextStyles.*
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.*
 
 val t = Terminal()
 t.println(red("This text will be red on terminals that support color"))
@@ -31,7 +31,7 @@ t.println(red("This text will be red on terminals that support color"))
 #### Multiple styles
 
 ```kotlin
-import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.*
 val t = Terminal()
 t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 ```
@@ -75,7 +75,7 @@ t.println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} 
 #### True color and other color spaces
 
 ```kotlin
-import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 
 t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
 ```

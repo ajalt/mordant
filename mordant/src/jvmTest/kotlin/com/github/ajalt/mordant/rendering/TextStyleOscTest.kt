@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.terminal.TextStyles.Companion.hyperlink
+import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST
 import com.github.ajalt.mordant.internal.generateHyperlinkId

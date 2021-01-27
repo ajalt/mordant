@@ -1,13 +1,12 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.terminal.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(
-        private val level: AnsiLevel = AnsiLevel.TRUECOLOR,
-        private val width: Int = 79
+    private val level: AnsiLevel = AnsiLevel.TRUECOLOR,
+    private val width: Int = 79
 ) {
     init {
         generateHyperlinkId = { "x" }

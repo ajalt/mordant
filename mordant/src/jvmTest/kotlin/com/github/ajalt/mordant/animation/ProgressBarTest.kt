@@ -4,9 +4,9 @@ import com.github.ajalt.mordant.components.ProgressBar
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
-import com.github.ajalt.mordant.terminal.TextColors.Companion.rgb
-import com.github.ajalt.mordant.terminal.TextColors.gray
-import com.github.ajalt.mordant.terminal.TextColors.magenta
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextColors.gray
+import com.github.ajalt.mordant.rendering.TextColors.magenta
 import org.junit.Test
 
 class ProgressBarTest : RenderingTest() {

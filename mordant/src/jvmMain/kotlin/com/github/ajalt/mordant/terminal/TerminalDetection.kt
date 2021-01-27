@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.terminal.AnsiLevel.*
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.AnsiLevel.*
 import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit

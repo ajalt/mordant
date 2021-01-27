@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.invokeStyle
-import com.github.ajalt.mordant.terminal.TextStyles
+import com.github.ajalt.mordant.rendering.TextStyles
 
 internal val DEFAULT_STYLE = TextStyle()
 

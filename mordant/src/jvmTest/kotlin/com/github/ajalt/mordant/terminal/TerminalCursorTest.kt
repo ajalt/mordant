@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.rendering.AnsiLevel
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe

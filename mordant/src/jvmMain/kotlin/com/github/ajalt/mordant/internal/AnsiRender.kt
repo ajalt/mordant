@@ -14,7 +14,7 @@ import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.copy
-import com.github.ajalt.mordant.terminal.AnsiLevel
+import com.github.ajalt.mordant.rendering.AnsiLevel
 
 internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {

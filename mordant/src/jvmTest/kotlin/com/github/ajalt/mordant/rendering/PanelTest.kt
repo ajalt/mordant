@@ -3,8 +3,8 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.components.Panel
 import com.github.ajalt.mordant.components.Text
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.terminal.TextColors
-import com.github.ajalt.mordant.terminal.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.*
 import org.junit.Test
 
 class PanelTest : RenderingTest(width = 20) {
