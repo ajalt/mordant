@@ -1,9 +1,7 @@
 package com.github.ajalt.mordant.animation
 
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
+import java.util.*
+import kotlin.concurrent.timer
 
 internal interface Ticker {
     fun start(onTick: () -> Unit)
@@ -11,26 +9,20 @@ internal interface Ticker {
 }
 
 internal fun getTicker(ticksPerSecond: Int?): Ticker {
-    return if (ticksPerSecond == null) DisabledTicker() else ExecutorTicker(ticksPerSecond)
+    return if (ticksPerSecond == null) DisabledTicker() else JvmTicker(ticksPerSecond)
 }
 
-//TODO: fixedRateTimer()
-private class ExecutorTicker(
-    private val ticksPerSecond: Int,
-    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor {
-        Executors.defaultThreadFactory().newThread(it).apply { isDaemon = true }
-    },
-) : Ticker {
-    private var future: Future<*>? = null
+private class JvmTicker(private val ticksPerSecond: Int) : Ticker {
+    private var timer: Timer? = null
     override fun start(onTick: () -> Unit) {
-        if (future != null) return
+        if (timer != null) return
         val period = 1000L / ticksPerSecond
-        future = executor.scheduleAtFixedRate({ onTick() }, period, period, TimeUnit.MILLISECONDS)
+        timer = timer(startAt = Date(0), period = period) { onTick() }
     }
 
     override fun stop() {
-        future?.cancel(false)
-        future = null
+        timer?.cancel()
+        timer = null
     }
 }
 
