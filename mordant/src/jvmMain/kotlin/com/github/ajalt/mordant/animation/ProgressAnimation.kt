@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.components.ProgressBuilder
-import com.github.ajalt.mordant.components.ProgressCell
-import com.github.ajalt.mordant.components.ProgressCell.AnimationRate
-import com.github.ajalt.mordant.components.ProgressLayout
-import com.github.ajalt.mordant.components.ProgressState
+import com.github.ajalt.mordant.widgets.ProgressBuilder
+import com.github.ajalt.mordant.widgets.ProgressCell
+import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
+import com.github.ajalt.mordant.widgets.ProgressLayout
+import com.github.ajalt.mordant.widgets.ProgressState
 import com.github.ajalt.mordant.internal.nanosToSeconds
-import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.terminal.Terminal
 import java.util.concurrent.TimeUnit
@@ -174,11 +174,11 @@ private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?
     override val animationRate: AnimationRate get() = cell.animationRate
     private val frameDuration = frameRate?.let { 1.0 / it }
 
-    private var renderable: Renderable? = null
+    private var widget: Widget? = null
     private var lastFrameTime = 0.0
 
     fun clear() {
-        renderable = null
+        widget = null
         lastFrameTime = 0.0
     }
 
@@ -189,12 +189,12 @@ private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?
         return false
     }
 
-    override fun ProgressState.makeRenderable(): Renderable {
-        var r = renderable
+    override fun ProgressState.makeWidget(): Widget {
+        var r = widget
         val shouldSkipUpdate = shouldSkipUpdate(elapsedSeconds)
         if (r != null && shouldSkipUpdate) return r
-        r = cell.run { makeRenderable() }
-        renderable = r
+        r = cell.run { makeWidget() }
+        widget = r
         return r
     }
 }

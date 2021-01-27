@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
@@ -26,34 +26,34 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
     val isEmpty get() = top == 0 && right == 0 && bottom == 0 && left == 0
 }
 
-fun Renderable.withPadding(padding: Padding, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withPadding(padding: Padding, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, padding, padEmptyLines)
 
-fun Renderable.withPadding(all: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withPadding(all: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(all), padEmptyLines)
 
-fun Renderable.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(vertical, horizontal), padEmptyLines)
 
-fun Renderable.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(top, horizontal, bottom), padEmptyLines)
 
-fun Renderable.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
 
-fun Renderable.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
     withPadding(Padding.vertical(padding), padEmptyLines)
 
-fun Renderable.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Renderable =
+fun Widget.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
     withPadding(Padding.horizontal(padding), padEmptyLines)
 
 private class Padded private constructor(
-    private val content: Renderable,
+    private val content: Widget,
     private val padding: Padding,
     private val padEmptyLines: Boolean
-) : Renderable {
+) : Widget {
     companion object {
-        fun get(content: Renderable, padding: Padding, padEmptyLines: Boolean): Renderable {
+        fun get(content: Widget, padding: Padding, padEmptyLines: Boolean): Widget {
             return if (padding.isEmpty) content else Padded(content, padding, padEmptyLines)
         }
     }

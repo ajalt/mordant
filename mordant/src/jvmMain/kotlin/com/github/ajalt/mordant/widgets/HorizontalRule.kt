@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
@@ -8,15 +8,15 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 class HorizontalRule internal constructor(
-    private val title: Renderable,
+    private val title: Widget,
     private val ruleCharacter: ThemeString,
     private val ruleStyle: ThemeStyle,
     private val titleStyle: ThemeStyle?,
     private val titleAlign: TextAlign,
     private val titlePadding: ThemeDimension,
-) : Renderable {
+) : Widget {
     constructor(
-        title: Renderable = EmptyRenderable,
+        title: Widget = EmptyWidget,
         ruleCharacter: String? = null,
         ruleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
@@ -38,7 +38,7 @@ class HorizontalRule internal constructor(
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
     ) : this(
-        title = if (title.isEmpty()) EmptyRenderable else Text(title, titleStyle ?: DEFAULT_STYLE),
+        title = if (title.isEmpty()) EmptyWidget else Text(title, titleStyle ?: DEFAULT_STYLE),
         ruleCharacter =  ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         // The explicit style is baked in to the Text object, so only override the rendered style if

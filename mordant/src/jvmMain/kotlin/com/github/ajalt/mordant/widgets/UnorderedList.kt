@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -7,12 +7,12 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 class UnorderedList private constructor(
-    private val listEntries: List<Renderable>,
+    private val listEntries: List<Widget>,
     private val bulletText: ThemeString,
     private val bulletStyle: ThemeStyle
-) : Renderable {
+) : Widget {
     constructor(
-        listEntries: List<Renderable>,
+        listEntries: List<Widget>,
         bulletText: String? = null,
         bulletStyle: TextStyle? = null
     ) : this(

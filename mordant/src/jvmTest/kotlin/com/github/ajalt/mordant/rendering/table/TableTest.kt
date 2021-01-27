@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
-import com.github.ajalt.mordant.components.Padding
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE
@@ -393,14 +393,14 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    fun `caption renderables`() = doTest("""
+    fun `caption widgets`() = doTest("""
     |!
     |┌───┬───┬───┐
     |│ 1 │ 2 │ 3 │
     |└───┴───┴───┘
     |!
     """) {
-        val r = object : Renderable {
+        val r = object : Widget {
             override fun measure(t: Terminal, width: Int) = WidthRange(1, 1)
             override fun render(t: Terminal, width: Int) = Lines(listOf(listOf(Span.word("!"))))
         }

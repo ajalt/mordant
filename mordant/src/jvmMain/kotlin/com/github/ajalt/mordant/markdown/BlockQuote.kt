@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.markdown
 
 import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.Span
 import com.github.ajalt.mordant.rendering.WidthRange
 import com.github.ajalt.mordant.terminal.Terminal
 
-internal class BlockQuote(private val content: Renderable) : Renderable {
+internal class BlockQuote(private val content: Widget) : Widget {
     override fun measure(t: Terminal, width: Int): WidthRange {
         return content.measure(t, width - 2) + 2
     }

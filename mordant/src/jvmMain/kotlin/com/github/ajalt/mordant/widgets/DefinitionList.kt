@@ -1,15 +1,15 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.MordantDsl
 import com.github.ajalt.mordant.terminal.Terminal
 
 private class DefinitionList(
-    private val entries: List<Pair<Renderable, Renderable>>,
+    private val entries: List<Pair<Widget, Widget>>,
     private val inline: Boolean,
     private val descriptionSpacing: Int,
     private val entrySpacing: Int,
-) : Renderable {
+) : Widget {
     init {
         require(descriptionSpacing >= 0) { "Spacing cannot be negative" }
     }
@@ -73,7 +73,7 @@ private class DefinitionList(
 
 @MordantDsl
 class DefinitionListBuilder {
-    private val items = mutableListOf<Pair<Renderable, Renderable>>()
+    private val items = mutableListOf<Pair<Widget, Widget>>()
 
     var inline: Boolean = false
 
@@ -103,15 +103,15 @@ class DefinitionListBuilder {
         entry(Text(term), Text(description))
     }
 
-    fun entry(term: Renderable, description: String) {
+    fun entry(term: Widget, description: String) {
         entry(term, Text(description))
     }
 
-    fun entry(term: String, description: Renderable) {
+    fun entry(term: String, description: Widget) {
         entry(Text(term), description)
     }
 
-    fun entry(term: Renderable, description: Renderable) {
+    fun entry(term: Widget, description: Widget) {
         items += term to description
     }
 
@@ -119,14 +119,14 @@ class DefinitionListBuilder {
         items += DefinitionListEntryBuilder().apply(init).build()
     }
 
-    internal fun build(): Renderable = DefinitionList(items, inline, descriptionSpacing, entrySpacing)
+    internal fun build(): Widget = DefinitionList(items, inline, descriptionSpacing, entrySpacing)
 }
 
 @MordantDsl
 class DefinitionListEntryBuilder {
-    private var term: Renderable? = null
-    private var desc: Renderable? = null
-    fun term(term: Renderable) {
+    private var term: Widget? = null
+    private var desc: Widget? = null
+    fun term(term: Widget) {
         this.term = term
     }
 
@@ -141,7 +141,7 @@ class DefinitionListEntryBuilder {
         term(Text(term, style, whitespace, align, overflowWrap, width))
     }
 
-    fun description(description: Renderable) {
+    fun description(description: Widget) {
         this.desc = description
     }
 
@@ -156,12 +156,12 @@ class DefinitionListEntryBuilder {
         description(Text(description, style, whitespace, align, overflowWrap, width))
     }
 
-    internal fun build(): Pair<Renderable, Renderable> = Pair(
+    internal fun build(): Pair<Widget, Widget> = Pair(
         requireNotNull(term) { "Must provide a term" },
         requireNotNull(desc) { "Must provide a description" },
     )
 }
 
-fun definitionList(init: DefinitionListBuilder.() -> Unit): Renderable {
+fun definitionList(init: DefinitionListBuilder.() -> Unit): Widget {
     return DefinitionListBuilder().apply(init).build()
 }

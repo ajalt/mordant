@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.mordant.components.Panel
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Panel
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Whitespace.PRE

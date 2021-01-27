@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.components.Padding
-import com.github.ajalt.mordant.components.withAlign
-import com.github.ajalt.mordant.components.withPadding
+import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.withAlign
+import com.github.ajalt.mordant.widgets.withPadding
 import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.VerticalAlign

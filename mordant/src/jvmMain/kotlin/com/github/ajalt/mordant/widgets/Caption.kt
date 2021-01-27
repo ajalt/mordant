@@ -1,21 +1,22 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
+/** Add a top and/or bottom caption to [content] */
 class Caption(
-    val content: Renderable,
-    val top: Renderable? = null,
-    val bottom: Renderable? = null
-) : Renderable {
+    val content: Widget,
+    val top: Widget? = null,
+    val bottom: Widget? = null,
+) : Widget {
     constructor(
-        content: Renderable,
+        content: Widget,
         top: String? = null,
         bottom: String? = null,
         topAlign: TextAlign = TextAlign.CENTER,
         bottomAlign: TextAlign = TextAlign.CENTER,
         topStyle: TextStyle = DEFAULT_STYLE,
-        bottomStyle: TextStyle = DEFAULT_STYLE
+        bottomStyle: TextStyle = DEFAULT_STYLE,
     ) : this(
         content,
         top?.let { Text(it, topStyle, align = topAlign) },

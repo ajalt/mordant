@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.components.*
+import com.github.ajalt.mordant.widgets.*
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
@@ -22,7 +22,7 @@ import org.intellij.markdown.parser.LinkMap
 import org.intellij.markdown.parser.MarkdownParser
 
 
-internal class MarkdownDocument(private val parts: List<Renderable>) : Renderable {
+internal class MarkdownDocument(private val parts: List<Widget>) : Widget {
     override fun measure(t: Terminal, width: Int): WidthRange {
         // This isn't measure isn't correct in some cases, e.g. task lists that place renderables on
         // the same line. We use a RenderableBuilder instead of this class to get accurate
@@ -68,7 +68,7 @@ internal class MarkdownRenderer(
         return MarkdownDocument(node.children.map { parseStructure(it) })
     }
 
-    private fun parseStructure(node: ASTNode): Renderable {
+    private fun parseStructure(node: ASTNode): Widget {
         return when (node.type) {
             // ElementTypes
             MarkdownElementTypes.UNORDERED_LIST -> {
@@ -113,7 +113,7 @@ internal class MarkdownRenderer(
                 Text(innerInlines(node))
             }
             MarkdownElementTypes.LINK_DEFINITION -> {
-                if (hyperlinks) EmptyRenderable
+                if (hyperlinks) EmptyWidget
                 else Text(parseText(node.nodeText(), theme.style("markdown.link.destination")))
             }
 
@@ -256,7 +256,7 @@ internal class MarkdownRenderer(
             .foldLines { parseInlines(it) }
     }
 
-    private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Renderable {
+    private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Widget {
         return when {
             node.children.size <= 1 -> EOL_TEXT
             else -> headerHr(Text(atxContent(node), style), bar, style)
@@ -268,13 +268,13 @@ internal class MarkdownRenderer(
         return innerInlines(node.children[1], drop = drop, dropLast = dropLast)
     }
 
-    private fun setext(bar: String, style: TextStyle, node: ASTNode): Renderable {
+    private fun setext(bar: String, style: TextStyle, node: ASTNode): Widget {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
         return headerHr(Text(content, style), bar, style)
     }
 
-    private fun headerHr(content: Renderable, bar: String, style: TextStyle): Renderable {
+    private fun headerHr(content: Widget, bar: String, style: TextStyle): Widget {
         return HorizontalRule(content, ruleCharacter = bar, ruleStyle = TextStyle(style.color, style.bgColor))
             .withVerticalPadding(theme.dimension("markdown.header.padding"))
     }

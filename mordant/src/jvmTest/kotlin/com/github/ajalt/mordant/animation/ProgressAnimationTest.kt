@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.components.progressLayout
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme

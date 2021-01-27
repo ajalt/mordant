@@ -1,13 +1,13 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.TextColors.red
 import org.junit.Test
 
-class RenderableBuilderTest : RenderingTest() {
+class WidgetBuilderTest : RenderingTest() {
     @Test
-    fun `renderable builder`() = checkRender(
-            buildRenderable {
+    fun `widget builder`() = checkRender(
+            buildWidget {
                 appendln("1")
                 appendln()
                 appendAll(listOf(Text("2"), Text("3")))

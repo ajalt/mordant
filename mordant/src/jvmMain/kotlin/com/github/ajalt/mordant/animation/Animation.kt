@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.components.RawRenderable
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.RawWidget
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
@@ -34,13 +34,13 @@ abstract class Animation<T>(private val terminal: Terminal) {
         }
     }
 
-    protected abstract fun renderData(data: T): Renderable
+    protected abstract fun renderData(data: T): Widget
 
     fun clear() {
         getClear()?.let {
             text = null
             terminal.removeInterceptor(interceptor)
-            terminal.print(RawRenderable(it))
+            terminal.print(RawWidget(it))
         }
     }
 
@@ -59,13 +59,13 @@ abstract class Animation<T>(private val terminal: Terminal) {
         size = rendered.height to rendered.width
         text = terminal.render(rendered)
         // Print an empty renderable to trigger our interceptor, which will add the rendered text
-        terminal.print(EmptyRenderable)
+        terminal.print(EmptyWidget)
     }
 }
 
-inline fun <T> Terminal.animation(crossinline draw: (T) -> Renderable): Animation<T> {
+inline fun <T> Terminal.animation(crossinline draw: (T) -> Widget): Animation<T> {
     return object : Animation<T>(this) {
-        override fun renderData(data: T): Renderable = draw(data)
+        override fun renderData(data: T): Widget = draw(data)
     }
 }
 
@@ -79,7 +79,7 @@ inline fun <T> Terminal.textAnimation(
     crossinline draw: (T) -> String,
 ): Animation<T> {
     return object : Animation<T>(this) {
-        override fun renderData(data: T): Renderable =
+        override fun renderData(data: T): Widget =
             Text(draw(data), style, whitespace, align, overflowWrap, width, tabWidth)
     }
 }

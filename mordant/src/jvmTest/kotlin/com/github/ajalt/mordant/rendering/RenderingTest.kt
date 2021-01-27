@@ -13,18 +13,18 @@ abstract class RenderingTest(
     }
 
     protected fun checkRender(
-            renderable: Renderable,
-            expected: String,
-            trimIndent: Boolean = true,
-            width: Int = this.width,
-            height: Int = 24,
-            tabWidth: Int = 8,
-            hyperlinks: Boolean = true,
-            theme: Theme = Theme.Default,
-            transformActual: (String) -> String = { it }
+        widget: Widget,
+        expected: String,
+        trimIndent: Boolean = true,
+        width: Int = this.width,
+        height: Int = 24,
+        tabWidth: Int = 8,
+        hyperlinks: Boolean = true,
+        theme: Theme = Theme.Default,
+        transformActual: (String) -> String = { it }
     ) {
         val t = Terminal(level, theme, width, height, hyperlinks, tabWidth)
-        val actual = transformActual(t.render(renderable))
+        val actual = transformActual(t.render(widget))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
             actual shouldBe trimmed.replace("⏎", "")

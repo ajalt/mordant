@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
@@ -17,7 +17,7 @@ class Text internal constructor(
     private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
     private val width: Int? = null,
     private val tabWidth: Int? = null
-) : Renderable {
+) : Widget {
     constructor(
         text: String,
         style: TextStyle = DEFAULT_STYLE,
@@ -229,6 +229,6 @@ class Text internal constructor(
     }
 }
 
-internal fun Renderable.withAlign(align: TextAlign, overflowWrap: OverflowWrap? = null): Renderable {
+internal fun Widget.withAlign(align: TextAlign, overflowWrap: OverflowWrap? = null): Widget {
     return if (this is Text) this.withAlign(align, overflowWrap) else this
 }

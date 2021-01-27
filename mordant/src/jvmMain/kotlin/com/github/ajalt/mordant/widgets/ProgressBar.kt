@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.colormath.HSL
 import com.github.ajalt.mordant.rendering.*
@@ -22,7 +22,7 @@ class ProgressBar(
     private val completeStyle: TextStyle? = null,
     private val finishedStyle: TextStyle? = null,
     private val indeterminateStyle: TextStyle? = null,
-) : Renderable {
+) : Widget {
     init {
         require(width == null || width > 0) { "width must be greater than 0" }
     }

@@ -25,7 +25,7 @@ internal sealed class Cell {
     }
 
     data class Content(
-        val content: Renderable,
+        val content: Widget,
         override val rowSpan: Int,
         override val columnSpan: Int,
         override val borderLeft: Boolean?,
@@ -60,7 +60,7 @@ internal class Table(
     val footerRowCount: Int,
     val columnStyles: Map<Int, ColumnWidth>,
     val outerBorder: Boolean
-) : Renderable {
+) : Widget {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
     }

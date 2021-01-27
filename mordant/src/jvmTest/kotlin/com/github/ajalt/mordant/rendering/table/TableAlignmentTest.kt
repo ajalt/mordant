@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.table.table
 import org.junit.Test
 
@@ -206,7 +206,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `top none renderable`() = doRenderableTest(TOP, NONE,
+    fun `top none widget`() = doWidgetTest(TOP, NONE,
             """
             ┌──────┬───┐
             │ ×    │ · │
@@ -219,7 +219,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `top left renderable`() = doRenderableTest(TOP, LEFT,
+    fun `top left widget`() = doWidgetTest(TOP, LEFT,
             """
             ┌──────┬───┐
             │ ×    │ · │
@@ -232,7 +232,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `top center renderable`() = doRenderableTest(TOP, CENTER,
+    fun `top center widget`() = doWidgetTest(TOP, CENTER,
             """
             ┌──────┬───┐
             │  ×   │ · │
@@ -245,7 +245,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `top justify renderable`() = doRenderableTest(TOP, JUSTIFY,
+    fun `top justify widget`() = doWidgetTest(TOP, JUSTIFY,
             """
             ┌──────┬───┐
             │  ×   │ · │
@@ -258,7 +258,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `top right renderable`() = doRenderableTest(TOP, RIGHT,
+    fun `top right widget`() = doWidgetTest(TOP, RIGHT,
             """
             ┌──────┬───┐
             │    × │ · │
@@ -271,7 +271,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `middle none renderable`() = doRenderableTest(MIDDLE, NONE,
+    fun `middle none widget`() = doWidgetTest(MIDDLE, NONE,
             """
             ┌──────┬───┐
             │      │ · │
@@ -284,7 +284,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `middle left renderable`() = doRenderableTest(MIDDLE, LEFT,
+    fun `middle left widget`() = doWidgetTest(MIDDLE, LEFT,
             """
             ┌──────┬───┐
             │      │ · │
@@ -297,7 +297,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `middle center renderable`() = doRenderableTest(MIDDLE, CENTER,
+    fun `middle center widget`() = doWidgetTest(MIDDLE, CENTER,
             """
             ┌──────┬───┐
             │      │ · │
@@ -310,7 +310,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `middle justify renderable`() = doRenderableTest(MIDDLE, JUSTIFY,
+    fun `middle justify widget`() = doWidgetTest(MIDDLE, JUSTIFY,
             """
             ┌──────┬───┐
             │      │ · │
@@ -323,7 +323,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `middle right renderable`() = doRenderableTest(MIDDLE, RIGHT,
+    fun `middle right widget`() = doWidgetTest(MIDDLE, RIGHT,
             """
             ┌──────┬───┐
             │      │ · │
@@ -336,7 +336,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `bottom none renderable`() = doRenderableTest(BOTTOM, NONE,
+    fun `bottom none widget`() = doWidgetTest(BOTTOM, NONE,
             """
             ┌──────┬───┐
             │      │ · │
@@ -349,7 +349,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `bottom left renderable`() = doRenderableTest(BOTTOM, LEFT,
+    fun `bottom left widget`() = doWidgetTest(BOTTOM, LEFT,
             """
             ┌──────┬───┐
             │      │ · │
@@ -362,7 +362,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `bottom center renderable`() = doRenderableTest(BOTTOM, CENTER,
+    fun `bottom center widget`() = doWidgetTest(BOTTOM, CENTER,
             """
             ┌──────┬───┐
             │      │ · │
@@ -375,7 +375,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `bottom justify renderable`() = doRenderableTest(BOTTOM, JUSTIFY,
+    fun `bottom justify widget`() = doWidgetTest(BOTTOM, JUSTIFY,
             """
             ┌──────┬───┐
             │      │ · │
@@ -388,7 +388,7 @@ class TableAlignmentTest : RenderingTest() {
     )
 
     @Test
-    fun `bottom right renderable`() = doRenderableTest(BOTTOM, RIGHT,
+    fun `bottom right widget`() = doWidgetTest(BOTTOM, RIGHT,
             """
             ┌──────┬───┐
             │      │ · │
@@ -415,13 +415,13 @@ class TableAlignmentTest : RenderingTest() {
         }, expected)
     }
 
-    private fun doRenderableTest(verticalAlign: VerticalAlign, align: TextAlign, expected: String) {
+    private fun doWidgetTest(verticalAlign: VerticalAlign, align: TextAlign, expected: String) {
         checkRender(table {
             this.align = align
             this.verticalAlign = verticalAlign
             body {
                 row {
-                    cell(object : Renderable {
+                    cell(object : Widget {
                         override fun measure(t: Terminal, width: Int): WidthRange {
                             return WidthRange(1, 1)
                         }

@@ -1,9 +1,9 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.components.ProgressCell.AnimationRate
+import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
-import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
@@ -34,20 +34,20 @@ internal interface ProgressCell {
     val columnWidth: ColumnWidth
     val animationRate: AnimationRate
 
-    fun ProgressState.makeRenderable(): Renderable
+    fun ProgressState.makeWidget(): Widget
 }
 
 
 internal class TextProgressCell(private val text: Text) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.STATIC
     override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
-    override fun ProgressState.makeRenderable(): Renderable = text
+    override fun ProgressState.makeWidget(): Widget = text
 }
 
 internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
-    override fun ProgressState.makeRenderable(): Renderable {
+    override fun ProgressState.makeWidget(): Widget {
         val percent = when {
             total == null || total <= 0 -> 0
             else -> (100.0 * completed / total).toInt()
@@ -65,7 +65,7 @@ internal class CompletedProgressCell(
     override val columnWidth: ColumnWidth
         get() = ColumnWidth.Fixed((if (includeTotal) 12 else 6) + suffix.length)
 
-    override fun ProgressState.makeRenderable(): Renderable {
+    override fun ProgressState.makeWidget(): Widget {
         val complete = completed.toDouble()
         val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total?.toDouble() ?: 0.0)
 
@@ -85,7 +85,7 @@ internal class SpeedProgressCell(
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(6 + suffix.length)
 
-    override fun ProgressState.makeRenderable(): Renderable {
+    override fun ProgressState.makeWidget(): Widget {
         val t = when {
             indeterminate || completedPerSecond <= 0 -> "---.-"
             else -> completedPerSecond.formatWithSiSuffix(1)
@@ -101,7 +101,7 @@ internal class EtaProgressCell(
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(7 + prefix.length)
 
-    override fun ProgressState.makeRenderable(): Renderable {
+    override fun ProgressState.makeWidget(): Widget {
         val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond
         val maxEta = 35_999 // 9:59:59
         if (indeterminate || eta < 0 || completedPerSecond == 0.0 || eta > maxEta) {
@@ -124,7 +124,7 @@ internal class BarProgressCell(val width: Int?) : ProgressCell {
     override val columnWidth: ColumnWidth
         get() = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand()
 
-    override fun ProgressState.makeRenderable(): Renderable {
+    override fun ProgressState.makeWidget(): Widget {
         val period = 2 // this could be configurable
         val pulsePosition = ((elapsedSeconds % period) / period)
 

@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.table
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.mordant.components.Caption
-import com.github.ajalt.mordant.components.Padding
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Caption
+import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.*
 
 interface CellStyleBuilder {
@@ -89,19 +89,19 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
     internal val headerSection = SectionBuilder()
     internal val bodySection = SectionBuilder()
     internal val footerSection = SectionBuilder()
-    internal var captionTop: Renderable? = null
-    internal var captionBottom: Renderable? = null
+    internal var captionTop: Widget? = null
+    internal var captionBottom: Widget? = null
 
-    fun captionTop(renderable: Renderable) {
-        captionTop = renderable
+    fun captionTop(widget: Widget) {
+        captionTop = widget
     }
 
     fun captionTop(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
         captionTop(Text(text, style, align = align))
     }
 
-    fun captionBottom(renderable: Renderable) {
-        captionBottom = renderable
+    fun captionBottom(widget: Widget) {
+        captionBottom = widget
     }
 
     fun captionBottom(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
@@ -137,7 +137,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     }
 
     fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
-        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getRenderable(it)) }
+        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getWidget(it)) }
         rows += RowBuilder(cellBuilders).apply(init)
     }
 
@@ -184,17 +184,17 @@ class RowBuilder internal constructor(
     }
 
     fun cells(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
-        cells.mapTo(this.cells) { CellBuilder(getRenderable(it)).apply(init) }
+        cells.mapTo(this.cells) { CellBuilder(getWidget(it)).apply(init) }
     }
 
     fun cell(content: Any?, init: CellBuilder.() -> Unit = {}) {
-        cells += CellBuilder(getRenderable(content)).apply(init)
+        cells += CellBuilder(getWidget(content)).apply(init)
     }
 }
 
 @MordantDsl
 class CellBuilder internal constructor(
-    internal val content: Renderable = Text(""),
+    internal val content: Widget = Text(""),
     rowSpan: Int = 1,
     columnSpan: Int = 1,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
@@ -212,7 +212,7 @@ class CellBuilder internal constructor(
         }
 }
 
-fun table(init: TableBuilder.() -> Unit): Renderable {
+fun table(init: TableBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilder().apply(init)
     val table = TableBuilderLayout(tableBuilder).buildTable()
     return when {
@@ -223,7 +223,7 @@ fun table(init: TableBuilder.() -> Unit): Renderable {
     }
 }
 
-fun grid(init: GridBuilder.() -> Unit): Renderable {
+fun grid(init: GridBuilder.() -> Unit): Widget {
     return table {
         borders = Borders.LEFT_RIGHT
         outerBorder = false
@@ -236,10 +236,10 @@ fun grid(init: GridBuilder.() -> Unit): Renderable {
     }
 }
 
-private fun getRenderable(content: Any?): Renderable {
-    if (content is Renderable) return content
+private fun getWidget(content: Any?): Widget {
+    if (content is Widget) return content
     return when (val string = content.toString()) {
-        "" -> EmptyRenderable
+        "" -> EmptyWidget
         else -> Text(string)
     }
 }

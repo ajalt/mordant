@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -8,12 +8,12 @@ import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.math.log10
 
 class OrderedList private constructor(
-    private val listEntries: List<Renderable>,
+    private val listEntries: List<Widget>,
     private val numberStyle: ThemeStyle,
     private val numberSeparator: ThemeString
-) : Renderable {
+) : Widget {
     constructor(
-        listEntries: List<Renderable>,
+        listEntries: List<Widget>,
         numberStyle: TextStyle? = null,
         numberSeparator: String? = null
     ) : this(

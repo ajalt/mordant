@@ -12,7 +12,7 @@ data class WidthRange(val min: Int, val max: Int) {
     operator fun div(divisor: Int) = if (divisor == 1) this else WidthRange(min / divisor, max / divisor)
 }
 
-internal fun Iterable<Renderable>.maxWidthRange(
+internal fun Iterable<Widget>.maxWidthRange(
     t: Terminal,
     width: Int,
     paddingWidth: Int = 0

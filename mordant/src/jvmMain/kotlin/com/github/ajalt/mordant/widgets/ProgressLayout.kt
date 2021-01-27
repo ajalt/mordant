@@ -1,7 +1,7 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.Renderable
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.Borders
@@ -51,7 +51,7 @@ class ProgressLayout internal constructor(
         total: Long? = null,
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
-    ): Renderable {
+    ): Widget {
         val cps = completedPerSecond ?: when {
             completed <= 0 || elapsedSeconds <= 0 -> 0.0
             else -> completed.toDouble() / elapsedSeconds
@@ -63,7 +63,7 @@ class ProgressLayout internal constructor(
             elapsedSeconds = elapsedSeconds,
         )
         return grid {
-            rowFrom(cells.map { it.run { state.run { makeRenderable() } } })
+            rowFrom(cells.map { it.run { state.run { makeWidget() } } })
             align = TextAlign.RIGHT
             borders = Borders.NONE
             cells.forEachIndexed { i, it ->

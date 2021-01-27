@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.*
 
@@ -106,12 +106,12 @@ class Terminal(
         rawPrintln(render(message, style, whitespace, align, overflowWrap, width))
     }
 
-    fun print(renderable: Renderable) {
-        rawPrint(render(renderable))
+    fun print(widget: Widget) {
+        rawPrint(render(widget))
     }
 
-    fun println(renderable: Renderable) {
-        rawPrintln(render(renderable))
+    fun println(widget: Widget) {
+        rawPrintln(render(widget))
     }
 
     fun renderSuccess(
@@ -164,13 +164,13 @@ class Terminal(
     ): String {
         return when (message) {
             is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)
-            is Renderable -> render(message)
+            is Widget -> render(message)
             else -> render(Text(message.toString(), style, whitespace, align, overflowWrap, width))
         }
     }
 
-    fun render(renderable: Renderable): String {
-        return renderLinesAnsi(renderable.render(this), info.ansiLevel, info.ansiHyperLinks)
+    fun render(widget: Widget): String {
+        return renderLinesAnsi(widget.render(this), info.ansiLevel, info.ansiHyperLinks)
     }
 
     fun println() {

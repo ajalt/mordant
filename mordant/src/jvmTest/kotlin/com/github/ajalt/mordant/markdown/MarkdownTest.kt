@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.markdown
 
 import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.mordant.components.LS
-import com.github.ajalt.mordant.components.NEL
+import com.github.ajalt.mordant.widgets.LS
+import com.github.ajalt.mordant.widgets.NEL
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Theme

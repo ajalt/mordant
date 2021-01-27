@@ -6,9 +6,9 @@ import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
-import com.github.ajalt.mordant.components.LS
-import com.github.ajalt.mordant.components.NEL
-import com.github.ajalt.mordant.components.Text
+import com.github.ajalt.mordant.widgets.LS
+import com.github.ajalt.mordant.widgets.NEL
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST

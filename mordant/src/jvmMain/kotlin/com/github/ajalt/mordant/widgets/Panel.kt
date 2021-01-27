@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
@@ -9,10 +9,9 @@ import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.Whitespace.NOWRAP
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.time.measureTimedValue
 
 private val DEFAULT_PADDING = Padding.none()
-private fun titleRenderable(title: String?, titleTextStyle: TextStyle?): Text? {
+private fun titleWidget(title: String?, titleTextStyle: TextStyle?): Text? {
     return title?.let {
         Text(it, titleTextStyle ?: DEFAULT_STYLE, overflowWrap = ELLIPSES, whitespace = NOWRAP)
     }
@@ -20,8 +19,8 @@ private fun titleRenderable(title: String?, titleTextStyle: TextStyle?): Text? {
 
 
 class Panel private constructor(
-    content: Renderable,
-    private val title: Renderable?,
+    content: Widget,
+    private val title: Widget?,
     private val expand: Boolean,
     padding: Padding,
     private val borderStyle: BorderStyle?,
@@ -29,10 +28,10 @@ class Panel private constructor(
     private val borderTextStyle: ThemeStyle,
     private val titleTextStyle: ThemeStyle?,
     private val titlePadding: ThemeDimension,
-) : Renderable {
+) : Widget {
     constructor(
-        content: Renderable,
-        title: Renderable? = null,
+        content: Widget,
+        title: Widget? = null,
         expand: Boolean = false,
         padding: Padding = DEFAULT_PADDING,
         borderStyle: BorderStyle? = BorderStyle.ROUNDED,
@@ -63,7 +62,7 @@ class Panel private constructor(
         titlePadding: Int? = null,
     ) : this(
         content = Text(content),
-        title = titleRenderable(title, titleTextStyle),
+        title = titleWidget(title, titleTextStyle),
         expand = expand,
         padding = padding,
         borderStyle = borderStyle,
@@ -75,7 +74,7 @@ class Panel private constructor(
         titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
-    private val content: Renderable = content.withPadding(padding)
+    private val content: Widget = content.withPadding(padding)
     private val borderWidth get() = if (borderStyle == null) 0 else 2
 
     private fun maxContentWidth(width: Int) = (width - borderWidth).coerceAtLeast(0)
@@ -106,7 +105,7 @@ class Panel private constructor(
 
         val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
         val renderedTitle = HorizontalRule(
-            title ?: EmptyRenderable,
+            title ?: EmptyWidget,
             ThemeString.Explicit(borderStyle?.body?.ew ?: " "),
             this.borderTextStyle,
             this.titleTextStyle,
