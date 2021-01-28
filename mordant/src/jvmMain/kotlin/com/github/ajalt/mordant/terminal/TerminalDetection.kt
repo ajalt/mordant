@@ -13,14 +13,20 @@ internal object TerminalDetection {
         height: Int?,
         hyperlinks: Boolean?,
         interactive: Boolean?,
-    ): TerminalInfo = TerminalInfo(
-        width = width ?: width() ?: 79,
-        height = height ?: height() ?: 24,
-        ansiLevel = ansiLevel ?: ansiLevel(),
-        ansiHyperLinks = hyperlinks ?: ansiHyperLinks(),
-        stdoutInteractive = interactive ?: stdoutInteractive(),
-        stdinInteractive = interactive ?: stdinInteractive()
-    )
+    ): TerminalInfo {
+        val stdoutInteractive = interactive ?: stdoutInteractive()
+        val stdinInteractive = interactive ?: stdinInteractive()
+        val level = ansiLevel ?: ansiLevel(stdoutInteractive)
+        val ansiHyperLinks = hyperlinks ?: (stdoutInteractive && level != NONE && ansiHyperLinks())
+        return TerminalInfo(
+            width = width ?: width() ?: 79,
+            height = height ?: height() ?: 24,
+            ansiLevel = level,
+            ansiHyperLinks = ansiHyperLinks,
+            stdoutInteractive = stdoutInteractive,
+            stdinInteractive = stdinInteractive
+        )
+    }
 
     fun detectSize(timeoutMs: Long): Pair<Int, Int>? {
         val process = try {
@@ -57,7 +63,7 @@ internal object TerminalDetection {
     }
 
 
-    private fun ansiLevel(): AnsiLevel {
+    private fun ansiLevel(stdoutInteractive: Boolean): AnsiLevel {
         forcedColor()?.let { return it }
 
         // Terminals embedded in some IDEs support color even though stdout isn't interactive. Check
@@ -65,7 +71,7 @@ internal object TerminalDetection {
         if (isIntellijConsole() || isVsCodeTerminal()) return TRUECOLOR
 
         // If stdout isn't interactive, never output colors, since we might be redirected to a file etc.
-        if (!stdoutInteractive()) return NONE
+        if (!stdoutInteractive) return NONE
 
         // Otherwise check the large variety of environment variables set by various terminal
         // emulators to detect color support
