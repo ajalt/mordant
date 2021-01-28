@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
+@ExperimentalTerminalApi
 internal class StdoutTerminalInterface(
     ansiLevel: AnsiLevel?,
     width: Int?,

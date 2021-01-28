@@ -1,12 +1,14 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalInterceptor
 import com.github.ajalt.mordant.widgets.RawWidget
 import com.github.ajalt.mordant.widgets.Text
 
+@OptIn(ExperimentalTerminalApi::class)
 abstract class Animation<T>(private val terminal: Terminal) {
     private var size: Pair<Int, Int>? = null
     private var text: String? = null

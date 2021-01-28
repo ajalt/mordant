@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Text
 
+@OptIn(ExperimentalTerminalApi::class)
 class Terminal(
     val theme: Theme = Theme.Default,
     val tabWidth: Int = 8,

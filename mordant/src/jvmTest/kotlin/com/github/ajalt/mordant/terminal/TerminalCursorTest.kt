@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTerminalApi::class)
+
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.internal.CSI

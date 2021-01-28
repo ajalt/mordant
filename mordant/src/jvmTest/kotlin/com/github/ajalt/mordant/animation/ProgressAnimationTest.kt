@@ -3,12 +3,14 @@ package com.github.ajalt.mordant.animation
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
+@OptIn(ExperimentalTerminalApi::class)
 class ProgressAnimationTest : RenderingTest() {
     var now = 0.0
 

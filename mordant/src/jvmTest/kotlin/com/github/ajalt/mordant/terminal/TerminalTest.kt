@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.rendering.Whitespace
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
+@OptIn(ExperimentalTerminalApi::class)
 class TerminalTest {
     private val vt = VirtualTerminalInterface(width = 8)
     private val t = Terminal(terminalInterface = vt)
@@ -60,7 +61,7 @@ class TerminalTest {
 
     @Test
     fun `print customized`() {
-        t.print("print with a wrap", style=cyan, whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
+        t.print("print with a wrap", style = cyan, whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
         vt.buffer() shouldBe """
         |${cyan("  print")}
         |${cyan(" with a")}

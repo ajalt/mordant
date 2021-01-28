@@ -16,6 +16,7 @@ kotlin {
             with(languageSettings) {
                 languageVersion = "1.4"
                 apiVersion = "1.4"
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
             }
         }
         val commonMain by getting {

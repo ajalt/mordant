@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
-
+@ExperimentalTerminalApi
 class VirtualTerminalInterface(
     ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
     width: Int = 79,
