@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
 import com.github.ajalt.mordant.widgets.Padded
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.widgets.withAlign
 
 enum class CsvQuoting {
@@ -77,7 +78,7 @@ fun Table.contentToCsv(
                     (escapeChar == null || doubleQuote) && quoteChar in cell
                             || escapable.containsMatchIn(cell)
                 }
-                CsvQuoting.NONNUMERIC -> cell.any { !it.isDigit() }
+                CsvQuoting.NONNUMERIC -> cell.any { it !in '0'..'9' }
                 CsvQuoting.NONE -> false
             }
             if (needsQuote) "\"$allEscaped\"" else allEscaped
@@ -96,8 +97,8 @@ private fun Table.getContentRows(): List<List<String>> {
     val t = Terminal(
         terminalInterface = VirtualTerminalInterface(
             ansiLevel = AnsiLevel.NONE,
-            width = 10000,
-            height = 10000,
+            width = Int.MAX_VALUE,
+            height = Int.MAX_VALUE,
             hyperlinks = false,
             stdoutInteractive = false,
             stdinInteractive = false
@@ -111,6 +112,7 @@ private fun Table.getContentRows(): List<List<String>> {
                 is Cell.SpanRef -> ""
                 is Cell.Content -> {
                     val widget = cell.content.let { if (it is Padded) it.content else it }
+                    require(widget is Text) { "Only Text widgets can be rendered as csv" }
                     t.render(widget.withAlign(TextAlign.NONE))
                 }
             }
