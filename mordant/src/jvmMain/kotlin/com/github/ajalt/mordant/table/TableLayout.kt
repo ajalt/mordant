@@ -11,7 +11,7 @@ import com.github.ajalt.mordant.widgets.withPadding
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
 
-internal class TableBuilderLayout(private val table: TableBuilder) {
+internal class TableLayout(private val table: TableBuilder) {
     fun buildTable(): Table {
         val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
             it.rows.maxOfOrNull { r -> r.cells.size } ?: 0

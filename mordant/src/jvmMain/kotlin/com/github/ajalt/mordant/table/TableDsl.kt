@@ -212,9 +212,28 @@ class CellBuilder internal constructor(
         }
 }
 
+/**
+ * Build a table widget.
+ *
+ * Tables have three optional sections: the [header][TableBuilder.header], the
+ * [body][TableBuilder.body], and the [footer][TableBuilder.footer].
+ *
+ * Within each section, you can add entire [rows][SectionBuilder.row] of cells at once, or one at a
+ * time with the [cell][RowBuilder.cell] builder.
+ *
+ * You can customize the table's styles at a number of levels, with more specific styles overriding
+ * less specific styles. The places you can customize are, from least-specific to most-specific:
+ *
+ * 1. Table, applies to every cell
+ * 2. Section, applies to all cells in the header, body, or footer
+ * 3. Table Column, applies to all cells in a column
+ * 4. Section Column, applies to all cells in a column for a single section
+ * 5. Row, applies to all cells in a row
+ * 6. Cell, applies to a single cell
+ */
 fun table(init: TableBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilder().apply(init)
-    val table = TableBuilderLayout(tableBuilder).buildTable()
+    val table = TableLayout(tableBuilder).buildTable()
     return when {
         tableBuilder.captionTop != null || tableBuilder.captionBottom != null -> {
             Caption(table, tableBuilder.captionTop, tableBuilder.captionBottom)
@@ -223,6 +242,15 @@ fun table(init: TableBuilder.() -> Unit): Widget {
     }
 }
 
+/**
+ * Build a grid widget that can be used to lay out text and other widgets.
+ *
+ * This builder functions like a [table] builder, but has no sections and no borders.
+ *
+ * By default, there is one space between cells in a row. You can increase this by adding
+ * [padding][TableBuilder.padding], or remove it by setting [borders][TableBuilder.borders] to
+ * [NONE][Borders.NONE].
+ */
 fun grid(init: GridBuilder.() -> Unit): Widget {
     return table {
         borders = Borders.LEFT_RIGHT
