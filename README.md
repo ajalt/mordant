@@ -83,17 +83,6 @@ t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't supp
 ![](.github/example_rgb.png)
 <p></p>
 
-```kotlin
-for (v in 0..100 step 4) {
-    for (h in 0..360 step 4) {
-        t.print(hsv(h, 100, 100 - v).bg(" "))
-    }
-    t.println()
-}
-```
-
-![](.github/example_hsv.png)
-
 ### Terminal color support detection
 
 By default, `Terminal()` will try to detect ANSI support in the current stdout stream. If you'd
@@ -212,6 +201,27 @@ repeat(120) {
 ``` 
 
 ![](.github/animation.svg)
+
+## Progress bars
+
+You can create customizable progress bars that automatically compute speed and time remaining.
+
+```kotlin
+val t = Terminal()
+val progress = t.progressAnimation {
+    text("my-file.iso")
+    percentage()
+    progressBar()
+    completed()
+    speed("B/s")
+    timeRemaining()
+}
+```
+
+![](.github/example_progress.png)
+
+Call `progress.start` to animate the progress, and `progress.update` or `progress.advance` as your
+task completes.
 
 ## Installation
 

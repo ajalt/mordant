@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClass.set( "com.github.ajalt.mordant.samples.MainKt")
+    mainClass.set("com.github.ajalt.mordant.samples.MainKt")
 }
 
 dependencies {
