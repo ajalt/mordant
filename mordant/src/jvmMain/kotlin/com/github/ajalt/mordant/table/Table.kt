@@ -4,6 +4,10 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 internal sealed class Cell {
+    /**
+     * Empty cell placeholder used to avoid null checks during layout. Never part of the table
+     * builder rows.
+     */
     object Empty : Cell() {
         override val rowSpan: Int get() = 1
         override val columnSpan: Int get() = 1
@@ -13,6 +17,7 @@ internal sealed class Cell {
         override val borderBottom: Boolean get() = false
     }
 
+    /** Non-content cell that's part of a spanned cell. [cell] contains the content */
     data class SpanRef(
         val cell: Content,
         override val borderLeft: Boolean?,
@@ -24,6 +29,7 @@ internal sealed class Cell {
         override val columnSpan: Int get() = cell.columnSpan
     }
 
+    /** Regular cell with [content] */
     data class Content(
         val content: Widget,
         override val rowSpan: Int,
@@ -52,7 +58,14 @@ internal sealed class Cell {
     abstract val borderBottom: Boolean?
 }
 
-internal class Table(
+sealed class Table : Widget
+
+internal class TableWithCaption(
+    val table: TableImpl,
+    private val widget: Widget,
+) : Table(), Widget by widget
+
+internal class TableImpl(
     val rows: List<ImmutableRow>,
     val borderStyle: BorderStyle,
     val borderTextStyle: TextStyle,
@@ -60,7 +73,7 @@ internal class Table(
     val footerRowCount: Int,
     val columnStyles: Map<Int, ColumnWidth>,
     val outerBorder: Boolean,
-) : Widget {
+) : Table() {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
     }

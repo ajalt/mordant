@@ -231,12 +231,15 @@ class CellBuilder internal constructor(
  * 5. Row, applies to all cells in a row
  * 6. Cell, applies to a single cell
  */
-fun table(init: TableBuilder.() -> Unit): Widget {
+fun table(init: TableBuilder.() -> Unit): Table {
     val tableBuilder = TableBuilder().apply(init)
     val table = TableLayout(tableBuilder).buildTable()
     return when {
         tableBuilder.captionTop != null || tableBuilder.captionBottom != null -> {
-            Caption(table, tableBuilder.captionTop, tableBuilder.captionBottom)
+            TableWithCaption(
+                table,
+                Caption(table, tableBuilder.captionTop, tableBuilder.captionBottom),
+            )
         }
         else -> table
     }

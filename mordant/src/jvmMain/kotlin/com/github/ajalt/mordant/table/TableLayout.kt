@@ -12,7 +12,7 @@ internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
 
 internal class TableLayout(private val table: TableBuilder) {
-    fun buildTable(): Table {
+    fun buildTable(): TableImpl {
         val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
             it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
         }
@@ -20,7 +20,7 @@ internal class TableLayout(private val table: TableBuilder) {
         val body = buildSection(table.bodySection, builderWidth)
         val footer = buildSection(table.footerSection, builderWidth)
 
-        return Table(
+        return TableImpl(
             rows = listOf(header, body, footer).flatten(),
             borderStyle = table.borderStyle,
             borderTextStyle = table.borderTextStyle,

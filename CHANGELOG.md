@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- `Table.contentToCsv` to render a table's cells to csv format
+
 ## 2.0.0-alpha2
 _2021-02-02_
 

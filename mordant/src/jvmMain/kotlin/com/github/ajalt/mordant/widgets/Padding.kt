@@ -47,8 +47,8 @@ fun Widget.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Wid
 fun Widget.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
     withPadding(Padding.horizontal(padding), padEmptyLines)
 
-private class Padded private constructor(
-    private val content: Widget,
+internal class Padded private constructor(
+    internal val content: Widget,
     private val padding: Padding,
     private val padEmptyLines: Boolean,
 ) : Widget {
