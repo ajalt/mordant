@@ -1,7 +1,7 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-    kotlin("jvm").version("1.4.21")
+    kotlin("jvm").version("1.4.30")
     id("org.jetbrains.dokka").version("0.10.1")
 }
 
