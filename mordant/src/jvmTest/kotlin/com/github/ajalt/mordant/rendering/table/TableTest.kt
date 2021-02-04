@@ -11,6 +11,7 @@ import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
+import io.kotest.data.row
 import org.junit.Test
 
 class TableTest : RenderingTest() {

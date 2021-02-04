@@ -28,10 +28,14 @@ internal object TerminalDetection {
         )
     }
 
+    /** Returns pair of [width, height], or null if it can't be detected */
     fun detectSize(timeoutMs: Long): Pair<Int, Int>? {
         val process = try {
-            ProcessBuilder("stty", "size")
-                .redirectInput(ProcessBuilder.Redirect.INHERIT)
+            val cmd = when {
+                isWindows() -> ProcessBuilder("powershell.exe", "-noprofile", "-command", "\$host.ui.rawui")
+                else -> ProcessBuilder("stty", "size")
+            }
+            cmd.redirectInput(ProcessBuilder.Redirect.INHERIT)
                 .start()
         } catch (e: IOException) {
             return null
@@ -44,8 +48,20 @@ internal object TerminalDetection {
             return null
         }
 
-        val output = process.inputStream.bufferedReader().readText()
-        val dimens = output.trim().split(" ").mapNotNull { it.toIntOrNull() }
+        val output = process.inputStream.bufferedReader().readText().trim()
+        return when {
+            isWindows() -> parseWindowsPowershellSize(output)
+            else -> parseSttySize(output)
+        }
+    }
+
+    private fun parseWindowsPowershellSize(output: String): Pair<Int, Int>? {
+        val groups = Regex("""[Ww]window[Ss]ize\s+:?\s+(\d+),(\d+)""").find(output)?.groupValues ?: return null
+        return groups[1].toInt() to groups[2].toInt()
+    }
+
+    private fun parseSttySize(output: String): Pair<Int, Int>? {
+        val dimens = output.split(" ").mapNotNull { it.toIntOrNull() }
         if (dimens.size != 2) return null
         return dimens[1] to dimens[0]
     }
@@ -175,4 +191,6 @@ internal object TerminalDetection {
     } catch (e: SecurityException) {
         false
     }
+
+    private fun isWindows() = "win" in System.getProperty("os.name").toLowerCase()
 }
