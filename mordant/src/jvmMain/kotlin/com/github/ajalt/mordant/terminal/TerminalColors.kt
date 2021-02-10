@@ -3,8 +3,6 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.TextColors.Companion.hsl
-import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 
 class TerminalColors internal constructor(
     private val info: TerminalInfo,
