@@ -6,8 +6,8 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 class TerminalInfo(
     width: Int,
     height: Int,
-    val ansiLevel: AnsiLevel,
-    val ansiHyperLinks: Boolean,
+    var ansiLevel: AnsiLevel,
+    var ansiHyperLinks: Boolean,
     val stdoutInteractive: Boolean,
     val stdinInteractive: Boolean,
 ) {

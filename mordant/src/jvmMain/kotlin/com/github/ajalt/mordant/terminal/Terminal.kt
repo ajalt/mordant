@@ -21,7 +21,7 @@ class Terminal(
     ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive))
 
     val info: TerminalInfo = terminalInterface.info
-    val colors: TerminalColors = TerminalColors(info.ansiLevel)
+    val colors: TerminalColors = TerminalColors(info)
     val cursor: TerminalCursor = if (info.interactive) PrintTerminalCursor(this) else DisabledTerminalCursor
     private val interceptors: MutableList<TerminalInterceptor> = mutableListOf()
 

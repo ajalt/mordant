@@ -7,7 +7,7 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.hsl
 import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 
 class TerminalColors internal constructor(
-    private val level: AnsiLevel,
+    private val info: TerminalInfo,
 ) {
     val black: TextStyle get() = downsample(TextColors.black)
     val red: TextStyle get() = downsample(TextColors.red)
@@ -148,4 +148,6 @@ class TerminalColors internal constructor(
     // than turning them off entirely
     private fun downsample(style: TextStyle): TextStyle =
         if (level == AnsiLevel.NONE) DEFAULT_STYLE else style
+
+    private val level get() = info.ansiLevel
 }
