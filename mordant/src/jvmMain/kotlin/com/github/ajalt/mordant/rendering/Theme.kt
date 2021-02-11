@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.colormath.RGB
+import com.github.ajalt.mordant.rendering.TextColors.magenta
 
 sealed class Theme(
     val styles: Map<String, TextStyle>,
@@ -10,12 +10,19 @@ sealed class Theme(
     val dimensions: Map<String, Int>,
 ) {
     companion object {
+        private val DEFAULT_BRIGHT = RGB("#e4f9f5")
+        private val DEFAULT_MEDIUM = RGB("#30e3ca")
+        private val DEFAULT_DARK = RGB("#11999e")
+        private val DEFAULT_GRAY = RGB("#40514e")
+        private val DEFAULT_RED = RGB("#f38181")
+        private val DEFAULT_YELLOW = RGB("#fce38a")
+
         val Default: Theme = BuiltTheme(
             mapOf(
-                "success" to TextStyle(green),
-                "danger" to TextStyle(red),
-                "warning" to TextStyle(yellow),
-                "info" to TextStyle(cyan),
+                "success" to TextStyle(DEFAULT_MEDIUM),
+                "danger" to TextStyle(DEFAULT_RED),
+                "warning" to TextStyle(DEFAULT_YELLOW),
+                "info" to TextStyle(DEFAULT_DARK),
                 "muted" to TextStyle(dim = true),
 
                 "list.number" to DEFAULT_STYLE,
@@ -25,29 +32,29 @@ sealed class Theme(
                 "panel.border" to DEFAULT_STYLE,
                 "panel.title" to DEFAULT_STYLE,
 
-                "progressbar.pending" to TextStyle(gray),
-                "progressbar.complete" to TextStyle(magenta),
-                "progressbar.indeterminate" to TextStyle(magenta),
+                "progressbar.pending" to TextStyle(DEFAULT_GRAY),
+                "progressbar.complete" to TextStyle(DEFAULT_DARK),
+                "progressbar.indeterminate" to TextStyle(DEFAULT_DARK),
                 "progressbar.separator" to DEFAULT_STYLE,
-                "progressbar.finished" to TextStyle(green),
+                "progressbar.finished" to TextStyle(DEFAULT_GRAY),
 
-                "markdown.blockquote" to TextStyle(brightYellow),
+                "markdown.blockquote" to TextStyle(DEFAULT_YELLOW),
                 "markdown.emph" to TextStyle(italic = true),
                 "markdown.strong" to TextStyle(bold = true),
                 "markdown.stikethrough" to TextStyle(strikethrough = true),
-                "markdown.code.block" to TextStyle(brightRed),
-                "markdown.code.span" to TextStyle(brightRed, Ansi256(236)),
+                "markdown.code.block" to TextStyle(DEFAULT_DARK),
+                "markdown.code.span" to TextStyle(DEFAULT_BRIGHT, DEFAULT_GRAY),
                 "markdown.table.header" to TextStyle(bold = true),
                 "markdown.table.body" to DEFAULT_STYLE,
-                "markdown.link.text" to TextStyle(brightBlue),
-                "markdown.link.destination" to TextStyle(blue),
+                "markdown.link.text" to TextStyle(DEFAULT_DARK),
+                "markdown.link.destination" to TextStyle(DEFAULT_DARK, dim = true),
                 "markdown.img.alt-text" to TextStyle(dim = true),
-                "markdown.h1" to TextStyle(magenta, bold = true),
-                "markdown.h2" to TextStyle(magenta, bold = true),
-                "markdown.h3" to TextStyle(magenta, bold = true, underline = true),
-                "markdown.h4" to TextStyle(magenta, underline = true),
-                "markdown.h5" to TextStyle(magenta, italic = true),
-                "markdown.h6" to TextStyle(magenta, dim = true),
+                "markdown.h1" to TextStyle(DEFAULT_MEDIUM, bold = true),
+                "markdown.h2" to TextStyle(DEFAULT_MEDIUM, bold = true),
+                "markdown.h3" to TextStyle(DEFAULT_MEDIUM, bold = true, underline = true),
+                "markdown.h4" to TextStyle(DEFAULT_MEDIUM, underline = true),
+                "markdown.h5" to TextStyle(DEFAULT_MEDIUM, italic = true),
+                "markdown.h6" to TextStyle(DEFAULT_MEDIUM, dim = true),
             ),
             mapOf(
                 "list.number.separator" to ".",
