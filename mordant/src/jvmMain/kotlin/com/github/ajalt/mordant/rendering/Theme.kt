@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.RGB
-import com.github.ajalt.mordant.rendering.TextColors.magenta
 
 sealed class Theme(
     val styles: Map<String, TextStyle>,
@@ -16,10 +15,11 @@ sealed class Theme(
         private val DEFAULT_GRAY = RGB("#40514e")
         private val DEFAULT_RED = RGB("#f38181")
         private val DEFAULT_YELLOW = RGB("#fce38a")
+        private val DEFAULT_GREEN = RGB("#30e378")
 
         val Default: Theme = BuiltTheme(
             mapOf(
-                "success" to TextStyle(DEFAULT_MEDIUM),
+                "success" to TextStyle(DEFAULT_GREEN),
                 "danger" to TextStyle(DEFAULT_RED),
                 "warning" to TextStyle(DEFAULT_YELLOW),
                 "info" to TextStyle(DEFAULT_DARK),
@@ -36,7 +36,7 @@ sealed class Theme(
                 "progressbar.complete" to TextStyle(DEFAULT_DARK),
                 "progressbar.indeterminate" to TextStyle(DEFAULT_DARK),
                 "progressbar.separator" to DEFAULT_STYLE,
-                "progressbar.finished" to TextStyle(DEFAULT_GRAY),
+                "progressbar.finished" to TextStyle(DEFAULT_GREEN),
 
                 "markdown.blockquote" to TextStyle(DEFAULT_YELLOW),
                 "markdown.emph" to TextStyle(italic = true),
@@ -112,6 +112,12 @@ sealed class Theme(
             flags["markdown.table.ascii"] = true
         }
     }
+
+    val success get(): TextStyle = style("success")
+    val danger get(): TextStyle = style("danger")
+    val warning get(): TextStyle = style("warning")
+    val info get(): TextStyle = style("info")
+    val muted: TextStyle get() = style("muted")
 
     /** Return a style if defined, or [default] otherwise */
     fun style(style: String, default: TextStyle = DEFAULT_STYLE): TextStyle = styles.getOrDefault(style, default)
