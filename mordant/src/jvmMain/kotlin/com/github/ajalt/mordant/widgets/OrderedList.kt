@@ -56,7 +56,7 @@ class OrderedList private constructor(
     override fun render(t: Terminal, width: Int): Lines {
         val contentWidth = width - maxBulletWidth
         val lines = mutableListOf<Line>()
-        val style = numberStyle[t.theme]
+        val style = numberStyle[t]
         val sep = sep(t.theme)
         val sepWidth = sep.lineWidth
 

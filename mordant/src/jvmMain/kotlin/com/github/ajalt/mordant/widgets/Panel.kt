@@ -84,7 +84,7 @@ class Panel private constructor(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         val contentWidth = content.measure(t, maxContentWidth(width)) + borderWidth
-        val titlePadding = titlePadding[t.theme]
+        val titlePadding = titlePadding[t]
         val titleWidth = title?.measure(t, maxTitleWidth(width, titlePadding))?.plus(borderWidth + titlePadding * 2)
 
         return listOf(
@@ -96,7 +96,7 @@ class Panel private constructor(
     override fun render(t: Terminal, width: Int): Lines {
         val measurement = measure(t, width)
         val maxContentWidth = maxContentWidth(width)
-        val borderTextStyle = borderTextStyle[t.theme]
+        val borderTextStyle = borderTextStyle[t]
 
         val contentWidth = when {
             expand -> maxContentWidth
