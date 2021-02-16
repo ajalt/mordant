@@ -19,8 +19,28 @@ open class ProgressBuilder internal constructor() {
         cells += PercentageProgressCell(style)
     }
 
-    fun progressBar(width: Int? = null) {
-        cells += BarProgressCell(width)
+    fun progressBar(
+        width: Int? = null,
+        pendingChar: String? = null,
+        separatorChar: String? = null,
+        completeChar: String? = null,
+        pendingStyle: TextStyle? = null,
+        separatorStyle: TextStyle? = null,
+        completeStyle: TextStyle? = null,
+        finishedStyle: TextStyle? = null,
+        indeterminateStyle: TextStyle? = null,
+    ) {
+        cells += BarProgressCell(
+            width,
+            pendingChar,
+            separatorChar,
+            completeChar,
+            pendingStyle,
+            separatorStyle,
+            completeStyle,
+            finishedStyle,
+            indeterminateStyle
+        )
     }
 
     fun completed(suffix: String = "", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {

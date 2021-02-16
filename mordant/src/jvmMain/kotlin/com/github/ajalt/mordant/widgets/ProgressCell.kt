@@ -118,8 +118,18 @@ internal class EtaProgressCell(
     private fun text(s: String) = Text(s, style, whitespace = Whitespace.PRE)
 }
 
-// TODO arguments to ProgressBar constructor
-internal class BarProgressCell(val width: Int?) : ProgressCell {
+internal class BarProgressCell(
+    val width: Int?,
+    private val pendingChar: String? = null,
+    private val separatorChar: String? = null,
+    private val completeChar: String? = null,
+    private val pendingStyle: TextStyle? = null,
+    private val separatorStyle: TextStyle? = null,
+    private val completeStyle: TextStyle? = null,
+    private val finishedStyle: TextStyle? = null,
+    private val indeterminateStyle: TextStyle? = null,
+    private val pulse: Boolean? = null,
+) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.ANIMATION
     override val columnWidth: ColumnWidth
         get() = width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand()
@@ -128,6 +138,21 @@ internal class BarProgressCell(val width: Int?) : ProgressCell {
         val period = 2 // this could be configurable
         val pulsePosition = ((elapsedSeconds % period) / period)
 
-        return ProgressBar(total ?: 100, completed, indeterminate, width, pulsePosition.toFloat())
+        return ProgressBar(
+            total ?: 100,
+            completed,
+            indeterminate,
+            width,
+            pulsePosition.toFloat(),
+            pulse,
+            pendingChar,
+            separatorChar,
+            completeChar,
+            pendingStyle,
+            separatorStyle,
+            completeStyle,
+            finishedStyle,
+            indeterminateStyle
+        )
     }
 }

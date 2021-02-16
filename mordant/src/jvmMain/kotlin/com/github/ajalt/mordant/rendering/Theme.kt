@@ -75,7 +75,7 @@ sealed class Theme(
                 "markdown.blockquote.bar" to "▎",
             ),
             mapOf(
-                "progressbar.pulse" to true, // TODO: read this from progresslayout
+                "progressbar.pulse" to true,
 
                 "markdown.code.block.border" to true,
                 "markdown.table.ascii" to false,
