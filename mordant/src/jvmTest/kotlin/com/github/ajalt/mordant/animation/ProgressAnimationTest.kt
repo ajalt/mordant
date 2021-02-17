@@ -7,7 +7,7 @@ import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
 import io.kotest.matchers.shouldBe
-import org.junit.Test
+import kotlin.test.Test
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalTerminalApi::class)
