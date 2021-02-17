@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.rendering.TextColors.red
+import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.test.Test
 
 class WidgetBuilderTest : RenderingTest() {

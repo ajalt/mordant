@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.CSI
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal

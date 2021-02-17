@@ -1,11 +1,13 @@
-package com.github.ajalt.mordant.rendering
+package com.github.ajalt.mordant.test
 
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.internal.generateHyperlinkId
-import io.kotest.matchers.shouldBe
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.terminal.Terminal
+import kotlin.test.assertEquals
 
 abstract class RenderingTest(
-    private val level: AnsiLevel = AnsiLevel.TRUECOLOR,
     private val width: Int = 79,
 ) {
     init {
@@ -22,12 +24,12 @@ abstract class RenderingTest(
         hyperlinks: Boolean = true,
         theme: Theme = Theme.Default,
         transformActual: (String) -> String = { it },
-    ) {
-        val t = Terminal(level, theme, width, height, hyperlinks, tabWidth)
+    ) = threadedTest {
+        val t = Terminal(AnsiLevel.TRUECOLOR, theme, width, height, hyperlinks, tabWidth)
         val actual = transformActual(t.render(widget))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
-            actual shouldBe trimmed.replace("⏎", "")
+            assertEquals(actual, trimmed.replace("⏎", ""))
         } catch (e: Throwable) {
             println(actual)
             throw e

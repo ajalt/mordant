@@ -10,6 +10,7 @@ import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.LS
 import com.github.ajalt.mordant.widgets.NEL
 import com.github.ajalt.mordant.widgets.Text

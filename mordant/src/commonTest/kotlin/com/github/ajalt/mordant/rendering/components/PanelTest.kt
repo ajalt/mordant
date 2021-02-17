@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.blue
 import com.github.ajalt.mordant.rendering.TextColors.red

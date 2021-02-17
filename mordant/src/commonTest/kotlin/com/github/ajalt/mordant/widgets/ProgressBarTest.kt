@@ -2,7 +2,7 @@ package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.internal.CSI
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.TextColors.gray
 import com.github.ajalt.mordant.rendering.TextColors.magenta
 import com.github.ajalt.mordant.rendering.TextStyle

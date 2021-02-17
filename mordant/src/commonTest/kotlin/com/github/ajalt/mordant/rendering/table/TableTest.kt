@@ -9,9 +9,9 @@ import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
-import io.kotest.data.row
 import kotlin.test.Test
 
 class TableTest : RenderingTest() {

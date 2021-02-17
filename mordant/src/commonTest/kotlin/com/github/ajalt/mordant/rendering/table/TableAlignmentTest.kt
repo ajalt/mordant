@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.rendering.VerticalAlign.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.test.Test
 

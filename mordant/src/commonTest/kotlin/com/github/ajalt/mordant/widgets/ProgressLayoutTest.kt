@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
 import kotlin.test.Test
 

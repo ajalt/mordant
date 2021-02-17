@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.widgets.DefinitionListBuilder
 import com.github.ajalt.mordant.widgets.Panel

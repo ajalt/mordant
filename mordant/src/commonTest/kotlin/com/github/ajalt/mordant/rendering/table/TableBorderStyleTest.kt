@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
-import com.github.ajalt.mordant.rendering.RenderingTest
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.table
