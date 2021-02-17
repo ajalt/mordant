@@ -108,6 +108,7 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
         captionBottom(Text(text, style, align = align))
     }
 
+    /** Configure a single column, which the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun header(init: SectionBuilder.() -> Unit) {
@@ -130,6 +131,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     internal val columns = mutableMapOf<Int, CellStyleBuilder>()
     internal var rowStyles = listOf<TextStyle>()
 
+    /** Configure a single column, which the first column at index 0. */
     fun column(i: Int, init: CellStyleBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
@@ -154,6 +156,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 class GridBuilder internal constructor(private val section: SectionBuilder) : CellStyleBuilder by section {
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
 
+    /** Configure a single column, which the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {

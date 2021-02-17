@@ -7,11 +7,6 @@ plugins {
     id("signing")
 }
 
-repositories {
-    // TODO: Remove
-    maven { setUrl("https://dl.bintray.com/drewcarlson/mordant") }
-}
-
 kotlin {
     jvm()
 
