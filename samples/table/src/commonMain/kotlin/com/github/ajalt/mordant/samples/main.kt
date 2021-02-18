@@ -33,11 +33,11 @@ fun main() {
         body {
             borders = TOM_BOTTOM
             column(0) {
-                style = TextStyle(dim = true)
+                style = TextStyle(bold = true)
                 borders = ALL
             }
             column(3) {
-                style = TextStyle(dim = true)
+                style = TextStyle(bold = true)
                 borders = ALL
             }
             rowStyles(blue, brightBlue)

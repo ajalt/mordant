@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.table
 
+import com.github.ajalt.mordant.internal.EMPTY_LINES
+import com.github.ajalt.mordant.internal.SINGLE_SPACE
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 

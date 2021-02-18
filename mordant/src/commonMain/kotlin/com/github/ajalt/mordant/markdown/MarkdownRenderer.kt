@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.markdown
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.EMPTY_LINE
+import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
@@ -20,7 +23,6 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.LinkMap
 import org.intellij.markdown.parser.MarkdownParser
-import kotlin.native.concurrent.SharedImmutable
 
 
 internal class MarkdownDocument(private val parts: List<Widget>) : Widget {
@@ -37,18 +39,6 @@ internal class MarkdownDocument(private val parts: List<Widget>) : Widget {
     }
 }
 
-@SharedImmutable
-private val EOL_LINES = Lines(listOf(EMPTY_LINE, EMPTY_LINE))
-
-@SharedImmutable
-private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
-
-@SharedImmutable
-private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
-
-@SharedImmutable
-private val CHECK_BOX_REGEX = Regex("""\[[^]]]""")
-
 private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
     return fold(EMPTY_LINES) { l, r -> l + transform(r) }
 }
@@ -59,6 +49,11 @@ internal class MarkdownRenderer(
     private val showHtml: Boolean,
     private val hyperlinks: Boolean,
 ) {
+    private val EOL_LINES = Lines(listOf(EMPTY_LINE, EMPTY_LINE))
+    private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
+    private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
+    private val CHECK_BOX_REGEX = Regex("""\[[^]]]""")
+
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
 

@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
 
 class TerminalColors internal constructor(

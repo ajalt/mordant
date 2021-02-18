@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.makePrintingTerminalCursor
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.internal.sendInterceptedPrintRequest

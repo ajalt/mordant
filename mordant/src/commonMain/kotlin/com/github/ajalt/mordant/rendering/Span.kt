@@ -1,12 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.native.concurrent.SharedImmutable
-
-@SharedImmutable
-internal val SINGLE_SPACE = Span.space(1)
 
 class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
     internal companion object {

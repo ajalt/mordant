@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.EMPTY_LINE
+import com.github.ajalt.mordant.internal.SINGLE_SPACE
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.internal.parseText

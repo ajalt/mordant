@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.terminal.Terminal
 
 interface Widget {

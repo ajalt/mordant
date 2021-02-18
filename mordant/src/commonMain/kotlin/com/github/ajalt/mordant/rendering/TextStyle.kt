@@ -1,12 +1,9 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.invokeStyle
-import kotlin.native.concurrent.SharedImmutable
-
-@SharedImmutable
-internal val DEFAULT_STYLE = TextStyle()
 
 interface TextStyle {
     val color: Color?

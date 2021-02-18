@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.*

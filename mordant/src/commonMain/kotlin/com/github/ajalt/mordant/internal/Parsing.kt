@@ -5,10 +5,7 @@ import com.github.ajalt.colormath.Ansi256
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.rendering.*
-import kotlin.native.concurrent.SharedImmutable
 
-@SharedImmutable
-internal val ANSI_RE = Regex("""$OSC[^$ESC]*$ESC\\|$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 private const val NEL = '\u0085'
 private const val LS = '\u2028'
 

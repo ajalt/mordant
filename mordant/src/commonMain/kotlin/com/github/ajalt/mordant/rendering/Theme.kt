@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.RGB
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 
 sealed class Theme(
     val styles: Map<String, TextStyle>,

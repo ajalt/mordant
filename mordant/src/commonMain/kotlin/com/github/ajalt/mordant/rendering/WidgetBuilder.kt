@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Text
 

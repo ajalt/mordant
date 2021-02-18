@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.DEFAULT_PADDING
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -9,10 +11,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.Whitespace.NOWRAP
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.native.concurrent.SharedImmutable
 
-@SharedImmutable
-private val DEFAULT_PADDING = Padding.none()
 private fun titleWidget(title: String?, titleTextStyle: TextStyle?): Text? {
     return title?.let {
         Text(it, titleTextStyle ?: DEFAULT_STYLE, overflowWrap = ELLIPSES, whitespace = NOWRAP)

@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.table
 
 import com.github.ajalt.colormath.Color
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding

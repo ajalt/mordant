@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.*
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 import kotlin.math.roundToInt
 

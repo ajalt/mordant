@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.AnsiLevel
-import com.github.ajalt.mordant.rendering.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row

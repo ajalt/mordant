@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.EMPTY_LINE
+import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.MordantDsl
 import com.github.ajalt.mordant.terminal.Terminal

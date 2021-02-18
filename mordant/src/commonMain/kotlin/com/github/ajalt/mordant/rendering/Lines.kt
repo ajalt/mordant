@@ -1,16 +1,12 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.EMPTY_LINE
+import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
-import kotlin.native.concurrent.SharedImmutable
 
 typealias Line = List<Span>
-
-@SharedImmutable
-internal val EMPTY_LINES = Lines(emptyList())
-
-@SharedImmutable
-internal val EMPTY_LINE: Line = emptyList()
 
 class Lines(
     val lines: List<Line>,
