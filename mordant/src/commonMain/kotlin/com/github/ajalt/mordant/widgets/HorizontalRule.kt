@@ -43,8 +43,9 @@ class HorizontalRule internal constructor(
         title = if (title.isEmpty()) EmptyWidget else Text(title, titleStyle ?: DEFAULT_STYLE),
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
-        // The explicit style is baked in to the Text object, so only override the rendered style if
-        // we need it from the theme.
+        // titleStyle is applied by rendering the title widget and replacing the spans' styles. If
+        // titleStyle isn't null here, we avoid the extra copies by passing it to the Text widget
+        // we create above
         titleStyle = ThemeStyle.of("hr.title", null).takeIf { titleStyle == null },
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),

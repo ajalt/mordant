@@ -15,36 +15,36 @@ class TerminalTest {
     @Test
     fun success() {
         t.success("success")
-        vt.buffer() shouldBe green("success") + "\n"
-        t.renderSuccess("success") shouldBe green("success")
+        vt.buffer() shouldBe t.theme.success("success") + "\n"
+        t.renderSuccess("success") shouldBe t.theme.success("success")
     }
 
     @Test
     fun danger() {
         t.danger("danger")
-        vt.buffer() shouldBe red("danger") + "\n"
-        t.renderDanger("danger") shouldBe red("danger")
+        vt.buffer() shouldBe t.theme.danger("danger") + "\n"
+        t.renderDanger("danger") shouldBe t.theme.danger("danger")
     }
 
     @Test
     fun warning() {
         t.warning("warning")
-        vt.buffer() shouldBe yellow("warning") + "\n"
-        t.renderWarning("warning") shouldBe yellow("warning")
+        vt.buffer() shouldBe t.theme.warning("warning") + "\n"
+        t.renderWarning("warning") shouldBe t.theme.warning("warning")
     }
 
     @Test
     fun info() {
         t.info("info")
-        vt.buffer() shouldBe cyan("info") + "\n"
-        t.renderInfo("info") shouldBe cyan("info")
+        vt.buffer() shouldBe t.theme.info("info") + "\n"
+        t.renderInfo("info") shouldBe t.theme.info("info")
     }
 
     @Test
     fun muted() {
         t.muted("muted")
-        vt.buffer() shouldBe dim("muted") + "\n"
-        t.renderMuted("muted") shouldBe dim("muted")
+        vt.buffer() shouldBe t.theme.muted("muted") + "\n"
+        t.renderMuted("muted") shouldBe t.theme.muted("muted")
     }
 
     @Test

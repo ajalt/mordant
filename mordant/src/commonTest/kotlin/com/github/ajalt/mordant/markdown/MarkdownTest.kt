@@ -1,9 +1,8 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.AnsiLevel
-import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
@@ -11,7 +10,10 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.LS
 import com.github.ajalt.mordant.widgets.NEL
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.ast.LeafASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
@@ -19,12 +21,43 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import kotlin.test.Test
 
-private val code = (brightRed on TextStyle(Ansi256(236)))
+// Header rules are styled by removing the bold from the theme style
+private val TextStyle.colorOnly get() = TextStyle(color, bgColor)
 
 class MarkdownTest {
     init {
         generateHyperlinkId = { "x" }
     }
+
+    private val quote = Theme.Default.style("markdown.blockquote")
+    private val code = Theme.Default.style("markdown.code.span")
+    private val codeBlock = Theme.Default.style("markdown.code.block")
+    private val h1 = Theme.Default.style("markdown.h1")
+    private val h2 = Theme.Default.style("markdown.h2")
+    private val h3 = Theme.Default.style("markdown.h3")
+    private val h4 = Theme.Default.style("markdown.h4")
+    private val h5 = Theme.Default.style("markdown.h5")
+    private val h6 = Theme.Default.style("markdown.h6")
+    private val linkText = Theme.Default.style("markdown.link.text")
+    private val linkDest = Theme.Default.style("markdown.link.destination")
+    private val imgAlt = Theme.Default.style("markdown.img.alt-text")
+
+    @Test
+    fun `default style is colored`() = forAll(
+        row(quote),
+        row(quote),
+        row(code),
+        row(codeBlock),
+        row(h1),
+        row(h2),
+        row(h3),
+        row(h4),
+        row(h5),
+        row(h6),
+        row(linkText),
+        row(linkDest),
+        row(imgAlt),
+    ) { it shouldNotBe DEFAULT_STYLE }
 
     @Test
     fun `test paragraphs`() = doTest("""
@@ -216,9 +249,9 @@ A ${strikethrough("strikethrough span")}.
 >
 > line 3
 """, """
-${brightYellow("▎ line 1 line 2")}
-${brightYellow("▎")}
-${brightYellow("▎ line 3")}
+${quote("▎ line 1 line 2")}
+${quote("▎")}
+${quote("▎ line 3")}
 """)
 
 
@@ -229,10 +262,10 @@ ${brightYellow("▎ line 3")}
 >bar
 > baz
 """, """
-${brightYellow("▎")}
-${brightYellow("▎ ══ ${bold("Foo")} ═══")}
-${brightYellow("▎")}
-${brightYellow("▎ bar baz")}
+${quote("▎")}
+${quote("▎ ══ ${bold("Foo")} ═══")}
+${quote("▎")}
+${quote("▎ bar baz")}
 """, width = 10)
 
     // https://github.github.com/gfm/#example-208
@@ -242,10 +275,10 @@ ${brightYellow("▎ bar baz")}
    > bar
  > baz
 """, """
-${brightYellow("▎")}
-${brightYellow("▎ ══ ${(bold)("Foo")} ═══")}
-${brightYellow("▎")}
-${brightYellow("▎ bar baz")}
+${quote("▎")}
+${quote("▎ ══ ${(bold)("Foo")} ═══")}
+${quote("▎")}
+${quote("▎ bar baz")}
 """, width = 10)
 
 
@@ -274,27 +307,27 @@ www.example.com/url
 
 [a link]: example.com
 """, """
-${blue("${brightBlue("a reference link")}[a link]")}
+${linkText("a reference link${linkDest("[a link]")}")}
 
-${blue("[a link]")}
+${linkDest("[a link]")}
 
-${blue("${brightBlue("inline link 1")}(example.com)")}
+${linkText("inline link 1${linkDest("(example.com)")}")}
 
-${blue("${brightBlue("inline link 2")}(http://www.example.com)")}
+${linkText("inline link 2${linkDest("(http://www.example.com)")}")}
 
-${blue("${brightBlue("inline link 3")}()")}
+${linkText("inline link 3${linkDest("()")}")}
 
-${blue("${brightBlue("inline link 4")}()")}
+${linkText("inline link 4${linkDest("()")}")}
 
-${blue("${brightBlue("inline link 5")}(/my uri)")}
+${linkText("inline link 5${linkDest("(/my uri)")}")}
 
-${brightBlue("https://example.com/autolink")}
+${linkText("https://example.com/autolink")}
 
-${brightBlue("www.example.com/url")}
+${linkText("www.example.com/url")}
 
-<${brightBlue("autolink@example.com")}>
+<${linkText("autolink@example.com")}>
 
-${blue("[a link]: example.com")}
+${linkDest("[a link]: example.com")}
 """)
 
     @Suppress("MarkdownUnresolvedFileReference")
@@ -324,27 +357,27 @@ www.example.com/url
 
 [a link]: example.com/4
 """, """
-${(brightBlue + hyperlink("example.com/4"))("a reference link")}
+${(linkText + hyperlink("example.com/4"))("a reference link")}
 
-${(brightBlue + hyperlink("example.com/4"))("a link")}
+${(linkText + hyperlink("example.com/4"))("a link")}
 
-${(brightBlue + hyperlink("example.com/4"))("a link")}
+${(linkText + hyperlink("example.com/4"))("a link")}
 
-${(brightBlue + hyperlink("example.com/1"))("inline link 1")}
+${(linkText + hyperlink("example.com/1"))("inline link 1")}
 
-${(brightBlue + hyperlink("http://www.example.com/2"))("inline link 2")}
+${(linkText + hyperlink("http://www.example.com/2"))("inline link 2")}
 
-${blue("${brightBlue("inline link 3")}()")}
+${linkText("inline link 3${linkDest("()")}")}
 
-${blue("${brightBlue("inline link 4")}()")}
+${linkText("inline link 4${linkDest("()")}")}
 
-${(brightBlue + hyperlink("/my uri"))("inline link 5")}
+${(linkText + hyperlink("/my uri"))("inline link 5")}
 
-${brightBlue("https://example.com/autolink")}
+${linkText("https://example.com/autolink")}
 
-${brightBlue("www.example.com/url")}
+${linkText("www.example.com/url")}
 
-<${brightBlue("autolink@example.com")}>
+<${linkText("autolink@example.com")}>
 
 
 """, hyperlinks = true)
@@ -359,11 +392,11 @@ ${brightBlue("www.example.com/url")}
 
 ![](example.png)
 """, """
-🖼️ ${dim("an image")}
+🖼️ ${imgAlt("an image")}
 
 
 
-🖼️ ${dim("an image")}
+🖼️ ${imgAlt("an image")}
 
 
 """)
@@ -374,9 +407,9 @@ ${brightBlue("www.example.com/url")}
 
 [![an image](img.png)](example.com/2)
 """, """
-${(brightBlue + hyperlink("example.com/1"))("code")}
+${(linkText + hyperlink("example.com/1"))("code")}
 
-${(brightBlue + hyperlink("example.com/2"))("🖼️ an image")}
+${(linkText + hyperlink("example.com/2"))("🖼️ an image")}
 """, hyperlinks = true)
 
     @Test
@@ -438,7 +471,7 @@ Hello <b>world</b>.
 """, """
 
 
-${magenta("═══ ${bold("Header Text")} ═══")}
+${h1.colorOnly.colorOnly("═══ ${bold("Header Text")} ═══")}
 
 
 """, width = 19, theme = Theme {
@@ -450,7 +483,7 @@ ${magenta("═══ ${bold("Header Text")} ═══")}
 # Header Text
 """, """
 
-${magenta("═══ ${bold("Header Text")} ═══")}
+${h1.colorOnly("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -459,7 +492,7 @@ ${magenta("═══ ${bold("Header Text")} ═══")}
 ## Header Text
 """, """
 
-${magenta("─── ${bold("Header Text")} ───")}
+${h2.colorOnly("─── ${bold("Header Text")} ───")}
 
 """, width = 19)
 
@@ -468,7 +501,7 @@ ${magenta("─── ${bold("Header Text")} ───")}
 ### Header Text
 """, """
 
-${magenta("    ${(bold + underline)("Header Text")}    ")}
+${h3.colorOnly("    ${(bold + underline)("Header Text")}    ")}
 
 """, width = 19)
 
@@ -477,7 +510,7 @@ ${magenta("    ${(bold + underline)("Header Text")}    ")}
 #### Header Text
 """, """
 
-${magenta("    ${underline("Header Text")}    ")}
+${h4.colorOnly("    ${underline("Header Text")}    ")}
 
 """, width = 19)
 
@@ -486,7 +519,7 @@ ${magenta("    ${underline("Header Text")}    ")}
 ##### Header Text
 """, """
 
-${magenta("    ${italic("Header Text")}    ")}
+${h5.colorOnly("    ${italic("Header Text")}    ")}
 
 """, width = 19)
 
@@ -495,7 +528,7 @@ ${magenta("    ${italic("Header Text")}    ")}
 ###### Header Text
 """, """
 
-${magenta("    ${dim("Header Text")}    ")}
+${h6.colorOnly("    ${dim("Header Text")}    ")}
 
 """, width = 19)
 
@@ -504,7 +537,7 @@ ${magenta("    ${dim("Header Text")}    ")}
 # Header Text ##
 """, """
 
-${magenta("═══ ${bold("Header Text")} ═══")}
+${h1.colorOnly("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -514,7 +547,7 @@ Header Text
 ===========
 """, """
 
-${magenta("═══ ${bold("Header Text")} ═══")}
+${h1.colorOnly("═══ ${bold("Header Text")} ═══")}
 
 """, width = 19)
 
@@ -524,7 +557,7 @@ ${magenta("═══ ${bold("Header Text")} ═══")}
 ---
 """, """
 
-${magenta("─── ${bold("Header Text")} ───")}
+${h2.colorOnly("─── ${bold("Header Text")} ───")}
 
 """, width = 19)
 
@@ -676,13 +709,13 @@ LS
     }
 """, """
 ╭───────╮
-│${brightRed("foo {  ")}│
-│${brightRed("    bar")}│
-│${brightRed("       ")}│
-│${brightRed("       ")}│
-│${brightRed("       ")}│
-│${brightRed("    baz")}│
-│${brightRed("}      ")}│
+│${codeBlock("foo {  ")}│
+│${codeBlock("    bar")}│
+│${codeBlock("       ")}│
+│${codeBlock("       ")}│
+│${codeBlock("       ")}│
+│${codeBlock("    baz")}│
+│${codeBlock("}      ")}│
 ╰───────╯
 """)
 
@@ -699,13 +732,13 @@ foo {
 ```
 """, """
 ╭───────╮
-│${brightRed("foo {  ")}│
-│${brightRed("    bar")}│
-│${brightRed("       ")}│
-│${brightRed("       ")}│
-│${brightRed("       ")}│
-│${brightRed("    baz")}│
-│${brightRed("}      ")}│
+│${codeBlock("foo {  ")}│
+│${codeBlock("    bar")}│
+│${codeBlock("       ")}│
+│${codeBlock("       ")}│
+│${codeBlock("       ")}│
+│${codeBlock("    baz")}│
+│${codeBlock("}      ")}│
 ╰───────╯
 """)
 
@@ -719,9 +752,9 @@ end
 ~~~~~~~
 """, """
 ╭──────────╮
-│${brightRed("def foo(x)")}│
-│${brightRed("  return 3")}│
-│${brightRed("end       ")}│
+│${codeBlock("def foo(x)")}│
+│${codeBlock("  return 3")}│
+│${codeBlock("end       ")}│
 ╰──────────╯
 """)
 
@@ -734,7 +767,7 @@ foo${nbsp}bar baz
 ```
 """, """
 ╭───────────╮
-│${brightRed("foo${nbsp}bar baz")}│
+│${codeBlock("foo${nbsp}bar baz")}│
 ╰───────────╯
 """)
     }
@@ -745,7 +778,7 @@ foo${nbsp}bar baz
 foo  bar
 ```
 """, """
-${brightRed("foo  bar")}
+${codeBlock("foo  bar")}
 """, theme = Theme {
         flags["markdown.code.block.border"] = false
     })
@@ -754,7 +787,7 @@ ${brightRed("foo  bar")}
     fun `indented code block with no border in theme`() = doTest("""
     foo  bar
 """, """
-${brightRed("foo  bar")}
+${codeBlock("foo  bar")}
 """, theme = Theme {
         flags["markdown.code.block.border"] = false
     })

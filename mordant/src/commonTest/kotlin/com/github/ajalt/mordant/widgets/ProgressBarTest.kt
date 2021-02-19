@@ -1,9 +1,11 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.RenderingTest
 import com.github.ajalt.mordant.rendering.TextColors.gray
 import com.github.ajalt.mordant.rendering.TextColors.magenta
+import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Theme
 import kotlin.test.Test
 
@@ -36,36 +38,40 @@ class ProgressBarTest : RenderingTest() {
     fun `100 percent complete`() = doPercentTest(100, "#####")
 
     @Test
-    fun `default theme`() = doPercentTest(40, "${magenta("━━")} ${gray("━━")}", theme = Theme.Default)
+    fun `default theme`() = doPercentTest(
+        40,
+        "${CSI}38;2;16;152;157m━━${CSI}39m ${CSI}38;2;64;81;78m━━${CSI}39m",
+        theme = Theme.Default
+    )
 
     @Test
     fun `pulse initial`() = doPulseTest(
         pulsePosition = 0f,
-        "${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━━━━━━${CSI}39m"
+        "${CSI}38;2;16;152;157m━━━━━━━━━━${CSI}39m"
     )
 
     @Test
     fun `pulse 25`() = doPulseTest(
         pulsePosition = .25f,
-        "${CSI}38;2;255;255;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;46;255m━${CSI}38;2;189;0;189m━${CSI}38;2;143;0;143m━${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━${CSI}39m"
+        "${CSI}38;2;255;255;255m━${CSI}38;2;200;248;249m━${CSI}38;2;89;233;238m━${CSI}38;2;22;202;208m━${CSI}38;2;18;166;171m━${CSI}38;2;16;152;157m━━━━━${CSI}39m"
     )
 
     @Test
     fun `pulse 50`() = doPulseTest(
         pulsePosition = .50f,
-        "${CSI}38;2;133;0;133m━${CSI}38;2;143;0;143m━${CSI}38;2;189;0;189m━${CSI}38;2;255;46;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;255;255m━${CSI}38;2;255;184;255m━${CSI}38;2;255;46;255m━${CSI}38;2;189;0;189m━${CSI}38;2;143;0;143m━${CSI}39m"
+        "${CSI}38;2;16;152;157m━${CSI}38;2;18;166;171m━${CSI}38;2;22;202;208m━${CSI}38;2;89;233;238m━${CSI}38;2;200;248;249m━${CSI}38;2;255;255;255m━${CSI}38;2;200;248;249m━${CSI}38;2;89;233;238m━${CSI}38;2;22;202;208m━${CSI}38;2;18;166;171m━${CSI}39m"
     )
 
     @Test
     fun `pulse 75`() = doPulseTest(
         pulsePosition = .75f,
-        "${CSI}38;2;128;0;128m━━━━━${CSI}38;2;133;0;133m━${CSI}38;2;143;0;143m━${CSI}38;2;189;0;189m━${CSI}38;2;255;46;255m━${CSI}38;2;255;184;255m━${CSI}39m"
+        "${CSI}38;2;16;152;157m━━━━━━${CSI}38;2;18;166;171m━${CSI}38;2;22;202;208m━${CSI}38;2;89;233;238m━${CSI}38;2;200;248;249m━${CSI}39m"
     )
 
     @Test
     fun `pulse 100`() = doPulseTest(
         pulsePosition = 1f,
-        "${CSI}38;2;133;0;133m━${CSI}38;2;128;0;128m━━━━━━━━━${CSI}39m"
+        "${CSI}38;2;16;152;157m━━━━━━━━━━${CSI}39m"
     )
 
     private fun doPulseTest(pulsePosition: Float, expected: String) {
