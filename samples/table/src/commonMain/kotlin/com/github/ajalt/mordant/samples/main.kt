@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.samples
 
-import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
@@ -13,7 +12,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 
 
 fun main() {
-    val terminal = Terminal(AnsiLevel.TRUECOLOR)
+    val terminal = Terminal()
 
     val table = table {
         outerBorder = false
@@ -59,5 +58,5 @@ fun main() {
         captionBottom("Budget courtesy @dril", TextStyle(dim = true))
     }
 
-    terminal.print(table)
+    terminal.println(table)
 }
