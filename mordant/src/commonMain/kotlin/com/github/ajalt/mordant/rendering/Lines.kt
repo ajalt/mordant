@@ -116,30 +116,30 @@ internal fun Lines.setSize(
 
         val remainingWidth = newWidth - width
         if (remainingWidth > 0) {
-            val beginStyle by lazy(NONE) {
+            fun beginStyle() =
                 (i downTo 0).firstOrNull { this.lines.getOrNull(it)?.isEmpty() == false }
                     ?.let { this.lines[it].first().style } ?: DEFAULT_STYLE
-            }
-            val endStyle by lazy(NONE) {
+
+            fun endStyle() =
                 (line.lastOrNull()?.style
                     ?: (i..this.lines.lastIndex).firstOrNull { this.lines[it].isNotEmpty() }
                         ?.let { this.lines[it].first().style })
                     ?: DEFAULT_STYLE
-            }
+
             when (textAlign) {
                 CENTER, JUSTIFY -> {
-                    val l = Span.space(remainingWidth / 2, beginStyle)
-                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
+                    val l = Span.space(remainingWidth / 2, beginStyle())
+                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle())
                     lines.add(listOf(listOf(l), line, listOf(r)).flatten())
                 }
                 LEFT -> {
-                    lines.add(line + Span.space(remainingWidth, endStyle))
+                    lines.add(line + Span.space(remainingWidth, endStyle()))
                 }
                 NONE -> {
                     lines.add(line + Span.space(remainingWidth)) // No style spaces in this alignment
                 }
                 RIGHT -> {
-                    lines.add(listOf(Span.space(remainingWidth, beginStyle)) + line)
+                    lines.add(listOf(Span.space(remainingWidth, beginStyle())) + line)
                 }
             }
         } else {

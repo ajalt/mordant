@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
     internal companion object {
@@ -21,7 +22,7 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
         fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 
-    internal val cellWidth: Int by lazy(NONE) { stringCellWidth(text) }
+    internal val cellWidth: Int by lazy(PUBLICATION) { stringCellWidth(text) }
     internal fun take(n: Int): Span = Span(text.take(n), style)
 
     internal fun isWhitespace(): Boolean = text[0].isWhitespace()
