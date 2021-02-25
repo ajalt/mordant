@@ -5,12 +5,16 @@ import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
+import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.test.normalizeHyperlinks
 import com.github.ajalt.mordant.widgets.LS
 import com.github.ajalt.mordant.widgets.NEL
 import com.github.ajalt.mordant.widgets.Text
@@ -81,19 +85,19 @@ class TextTest : RenderingTest() {
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
     ${CSI}38;2;255;0;0;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}38;2;255;0;0;47m red${CSI}39;49m
-    ${OSC}8;id=x;foo.com${ST}foo.${OSC}8;id=x;bar.com${ST}bar${OSC}8;id=x;foo.com$ST.com${OSC}8;;$ST/baz
-    """, width = 79)
+    ${OSC}8;id=1;foo.com${ST}foo.${OSC}8;id=2;bar.com${ST}bar${OSC}8;id=1;foo.com$ST.com${OSC}8;;$ST/baz
+    """, width = 79) { it.normalizeHyperlinks() }
 
     @Test
     fun `hyperlink one line`() = doHyperlinkTest("This is a link",
-        "${OSC}8;id=x;http://example.com${ST}This is a link${OSC}8;;$ST"
+        "${OSC}8;id=1;http://example.com${ST}This is a link${OSC}8;;$ST"
     )
 
     @Test
     fun `hyperlink word wrap`() = doHyperlinkTest("This is a link",
         """
-            ${OSC}8;id=x;http://example.com${ST}This is${OSC}8;;$ST
-            ${OSC}8;id=x;http://example.com${ST}a link${OSC}8;;$ST
+            ${OSC}8;id=1;http://example.com${ST}This is${OSC}8;;$ST
+            ${OSC}8;id=1;http://example.com${ST}a link${OSC}8;;$ST
             """,
         width = 8
     )
@@ -101,17 +105,21 @@ class TextTest : RenderingTest() {
     @Test
     fun `hyperlink break word`() = doHyperlinkTest("This_is_a_link",
         """
-            ${OSC}8;id=x;http://example.com${ST}This_is_${OSC}8;;$ST
-            ${OSC}8;id=x;http://example.com${ST}a_link${OSC}8;;$ST
+            ${OSC}8;id=1;http://example.com${ST}This_is_${OSC}8;;$ST
+            ${OSC}8;id=1;http://example.com${ST}a_link${OSC}8;;$ST
             """,
         overflowWrap = BREAK_WORD,
         width = 8
     )
 
-    private fun doHyperlinkTest(text: String, expected: String, overflowWrap: OverflowWrap = NORMAL, width: Int = 79) =
-        checkRender(
-            Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
-            expected,
-            width = width
-        )
+    private fun doHyperlinkTest(
+        text: String,
+        expected: String,
+        overflowWrap: OverflowWrap = NORMAL,
+        width: Int = 79,
+    ) = checkRender(
+        Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
+        expected,
+        width = width
+    ) { it.normalizeHyperlinks() }
 }

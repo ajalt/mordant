@@ -8,6 +8,7 @@ import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.test.normalizeHyperlinks
 import com.github.ajalt.mordant.widgets.LS
 import com.github.ajalt.mordant.widgets.NEL
 import io.kotest.data.blocking.forAll
@@ -25,10 +26,6 @@ import kotlin.test.Test
 private val TextStyle.colorOnly get() = TextStyle(color, bgColor)
 
 class MarkdownTest {
-    init {
-        generateHyperlinkId = { "x" }
-    }
-
     private val quote = Theme.Default.style("markdown.blockquote")
     private val code = Theme.Default.style("markdown.code.span")
     private val codeBlock = Theme.Default.style("markdown.code.block")
@@ -410,7 +407,7 @@ ${linkText("www.example.com/url")}
 ${(linkText + hyperlink("example.com/1"))("code")}
 
 ${(linkText + hyperlink("example.com/2"))("🖼️ an image")}
-""", hyperlinks = true)
+""".normalizeHyperlinks(), hyperlinks = true)
 
     @Test
     @Suppress("HtmlRequiredAltAttribute", "HtmlDeprecatedAttribute", "HtmlUnknownTarget")
@@ -851,7 +848,7 @@ link(c.com)
                 theme = theme,
                 hyperlinks = hyperlinks
             )
-            val actual = terminal.render(Markdown(md, showHtml))
+            val actual = terminal.render(Markdown(md, showHtml)).normalizeHyperlinks()
             try {
                 actual shouldBe expected.replace("⏎", "")
             } catch (e: Throwable) {

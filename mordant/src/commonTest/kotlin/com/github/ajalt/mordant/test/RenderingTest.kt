@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.test
 
-import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Widget
@@ -10,10 +9,6 @@ import kotlin.test.assertEquals
 abstract class RenderingTest(
     private val width: Int = 79,
 ) {
-    init {
-        generateHyperlinkId = { "x" }
-    }
-
     protected fun checkRender(
         widget: Widget,
         expected: String,
