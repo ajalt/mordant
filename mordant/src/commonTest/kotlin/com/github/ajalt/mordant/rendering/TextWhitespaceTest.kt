@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.NONE
 import com.github.ajalt.mordant.rendering.Whitespace.*
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.js.JsName
 import kotlin.test.Test
 
 
@@ -52,6 +53,7 @@ class TextWhitespaceTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("consecutive_whitespace_spans")
     fun `consecutive whitespace spans`() {
         val line1 = Line(listOf("a", "   ", " ").map { Span.word(it) })
         val line2 = Line(listOf(" ", "b").map { Span.word(it) })

@@ -12,6 +12,7 @@ internal expect fun getJavaProperty(key: String): String?
 
 internal expect fun terminalSizeDetectionIsFast(): Boolean
 
+/** Returns pair of [width, height], or null if it can't be detected */
 internal expect fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>?
 
 internal expect fun isWindows(): Boolean

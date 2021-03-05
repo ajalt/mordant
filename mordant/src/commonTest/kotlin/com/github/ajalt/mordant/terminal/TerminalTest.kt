@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyles.dim
 import com.github.ajalt.mordant.rendering.Whitespace
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 
 @OptIn(ExperimentalTerminalApi::class)
@@ -55,6 +56,7 @@ class TerminalTest {
     }
 
     @Test
+    @JsName("print_customized")
     fun `print customized`() {
         t.print(cyan("print with a wrap"), whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
         vt.buffer() shouldBe """

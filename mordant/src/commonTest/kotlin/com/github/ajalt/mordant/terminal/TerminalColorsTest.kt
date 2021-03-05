@@ -8,60 +8,70 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class TerminalColorsTest {
     private val c = Terminal(AnsiLevel.TRUECOLOR).colors
 
     @Test
+    @JsName("empty_string")
     fun `empty string`() = doTest(
         c.blue(""),
         ""
     )
 
     @Test
+    @JsName("one_level_nesting")
     fun `one level nesting`() = doTest(
         c.blue("A${c.red("B")}C"),
         "<34>A<31>B<34>C<39>"
     )
 
     @Test
+    @JsName("one_level_nesting_start_of_string")
     fun `one level nesting start of string`() = doTest(
         (c.blue on c.green)("${c.red("A")}B"),
         "<31;42>A<34>B<39;49>"
     )
 
     @Test
+    @JsName("one_level_nesting_end_of_string")
     fun `one level nesting end of string`() = doTest(
         c.red("A${c.green("B")}"),
         "<31>A<32>B<39>"
     )
 
     @Test
+    @JsName("two_level_nesting")
     fun `two level nesting`() = doTest(
         c.blue("A${c.red("B${c.green("C")}D")}E"),
         "<34>A<31>B<32>C<31>D<34>E<39>"
     )
 
     @Test
+    @JsName("two_level_nesting_end_of_string")
     fun `two level nesting end of string`() = doTest(
         c.red("A${c.green("B${c.yellow("C")}")}"),
         "<31>A<32>B<33>C<39>"
     )
 
     @Test
+    @JsName("two_level_nesting_styles")
     fun `two level nesting styles`() = doTest(
         c.red("A${c.bold("B${c.green("C")}D")}E"),
         "<31>A<1>B<32>C<31>D<22>E<39>"
     )
 
     @Test
+    @JsName("three_level_nesting_styles_and_bg")
     fun `three level nesting styles and bg`() = doTest(
         c.run { (red on red)("A${(green on green)("B${(yellow.bg + underline)("C")}D")}E") },
         "<31;41>A<32;42>B<43;4>C<42;24>D<31;41>E<39;49>"
     )
 
     @Test
+    @JsName("all_ansi16_colors")
     fun `all ansi16 colors`() = forAll(
         row(c.black, 30),
         row(c.red, 31),
@@ -84,6 +94,7 @@ class TerminalColorsTest {
     }
 
     @Test
+    @JsName("all_24bit_colors")
     fun `all 24bit colors`() = forAll(
         row(c.rgb("#ff00ff"), RGB("#ff00ff")),
         row(c.rgb(11, 22, 33), RGB(11, 22, 33)),
@@ -98,6 +109,7 @@ class TerminalColorsTest {
     }
 
     @Test
+    @JsName("all_styles")
     fun `all styles`() {
         assertSoftly {
             c.bold.bold shouldBe true
@@ -111,6 +123,7 @@ class TerminalColorsTest {
     }
 
     @Test
+    @JsName("all_colors_and_styles_downsampled")
     fun `all colors and styles downsampled`() {
         val colorNone = Terminal(ansiLevel = AnsiLevel.NONE).colors
         val colorRgb = Terminal(ansiLevel = AnsiLevel.TRUECOLOR).colors

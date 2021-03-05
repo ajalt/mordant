@@ -5,11 +5,13 @@ import com.github.ajalt.mordant.rendering.TextColors.blue
 import com.github.ajalt.mordant.rendering.TextColors.white
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.js.JsName
 import kotlin.test.Test
 
 
 class TextAlignmentTest : RenderingTest() {
     @Test
+    @JsName("align_none")
     fun `align none`() = doTest(NONE, 79, """
     |one_word
     |
@@ -20,6 +22,7 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("align_left")
     fun `align left`() = doTest(LEFT, 15, """
     |one_word       ⏎
     |               ⏎
@@ -30,6 +33,7 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("align_right")
     fun `align right`() = doTest(RIGHT, 15, """
     |       one_word⏎
     |               ⏎
@@ -40,6 +44,7 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("align_center")
     fun `align center`() = doTest(CENTER, 15, """
     |   one_word    ⏎
     |               ⏎
@@ -50,6 +55,7 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("align_justify")
     fun `align justify`() = doTest(JUSTIFY, 15, """
     |   one_word    ⏎
     |               ⏎
@@ -60,6 +66,7 @@ class TextAlignmentTest : RenderingTest() {
     """)
 
     @Test
+    @JsName("align_justify_wide")
     fun `align justify wide`() = doTest(JUSTIFY, 21, """
     |      one_word       ⏎
     |                     ⏎

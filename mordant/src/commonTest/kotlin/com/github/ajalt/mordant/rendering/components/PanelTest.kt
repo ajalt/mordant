@@ -8,11 +8,13 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.widgets.Panel
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class PanelTest : RenderingTest(width = 20) {
 
     @Test
+    @JsName("no_expand")
     fun `no expand`() = checkRender(
         Panel(Text("text"), expand = false),
         """
@@ -33,6 +35,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("no_border")
     fun `no border`() = checkRender(
         Panel(Text("text\nline 2", whitespace = PRE), borderStyle = null),
         """
@@ -42,6 +45,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("default_title")
     fun `default title`() = checkRender(
         Panel("text content", title = "title"),
         """
@@ -52,6 +56,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("long_title")
     fun `long title`() = checkRender(
         Panel("content", title = "title title"),
         """
@@ -62,6 +67,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("title_align_left")
     fun `title align left`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.LEFT),
         """
@@ -72,6 +78,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("title_align_right")
     fun `title align right`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.RIGHT),
         """
@@ -82,6 +89,7 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("themed_panel")
     fun `themed panel`() = checkRender(
         Panel("text content", title = "title"),
         """

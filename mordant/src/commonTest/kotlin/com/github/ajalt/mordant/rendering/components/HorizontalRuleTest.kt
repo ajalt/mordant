@@ -5,35 +5,42 @@ import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class HorizontalRuleTest : RenderingTest() {
     @Test
+    @JsName("no_title")
     fun `no title`() {
         checkRender(HorizontalRule(), "──────────", width = 10)
     }
 
     @Test
+    @JsName("multiple_character_rules")
     fun `multiple character rules`() {
         checkRender(HorizontalRule(title = "title", ruleCharacter = "1234"), "123412 title 1234123", width = 20)
     }
 
     @Test
+    @JsName("rule_with_whitespace")
     fun `rule with whitespace`() {
         checkRender(HorizontalRule(ruleCharacter = "- -"), "- -- -", width = 6)
     }
 
     @Test
+    @JsName("title_align_left")
     fun `title align left`() {
         checkRender(HorizontalRule("title", titleAlign = TextAlign.LEFT), "─ title ────", width = 12)
     }
 
     @Test
+    @JsName("title_align_right")
     fun `title align right`() {
         checkRender(HorizontalRule("title", titleAlign = TextAlign.RIGHT), "──── title ─", width = 12)
     }
 
     @Test
+    @JsName("multiline_title")
     fun `multiline title`() {
         checkRender(
             HorizontalRule(title = Text("Multiline\nHeader Text", whitespace = Whitespace.PRE_WRAP)),
@@ -46,6 +53,7 @@ class HorizontalRuleTest : RenderingTest() {
     }
 
     @Test
+    @JsName("styled_title_and_rule")
     fun `styled title and rule`() {
         checkRender(
             HorizontalRule(title = "title", ruleStyle = blue, titleStyle = blue),
@@ -54,6 +62,7 @@ class HorizontalRuleTest : RenderingTest() {
     }
 
     @Test
+    @JsName("themed_title_and_rule")
     fun `themed title and rule`() {
         checkRender(
             HorizontalRule(title = "title"),

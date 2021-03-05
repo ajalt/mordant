@@ -20,11 +20,13 @@ import com.github.ajalt.mordant.widgets.NEL
 import com.github.ajalt.mordant.widgets.Text
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
+import kotlin.js.JsName
 import kotlin.test.Test
 
 
 class TextTest : RenderingTest() {
     @Test
+    @JsName("override_width")
     fun `override width`() = checkRender(Text("""
     Lorem ipsum dolor
     sit amet
@@ -35,6 +37,7 @@ class TextTest : RenderingTest() {
     """, width = 79)
 
     @Test
+    @JsName("hard_line_breaks")
     fun `hard line breaks`() = checkRender(Text("""
     Lorem${NEL}ipsum dolor $LS
     sit $LS  amet
@@ -57,6 +60,7 @@ class TextTest : RenderingTest() {
     }
 
     @Test
+    @JsName("ansi_parsing")
     fun `ansi parsing`() = checkRender(Text("""
     ${(red on white)("red ${blue("blue ${gray.bg("gray.bg")}")} red")}
     ${CSI}255munknown
@@ -68,18 +72,21 @@ class TextTest : RenderingTest() {
     """, width = 79)
 
     @Test
+    @JsName("ansi_parsing_256")
     fun `ansi parsing 256`() = checkRender(Text(
         (TextColors.color(Ansi256(111)) on TextColors.color(Ansi256(222)))("red")),
         "${CSI}38;5;111;48;5;222mred${CSI}39;49m"
     )
 
     @Test
+    @JsName("ansi_parsing_truecolor")
     fun `ansi parsing truecolor`() = checkRender(Text(
         (TextColors.rgb("#ff0000") on TextColors.rgb("#00ff00"))("red")),
         "${CSI}38;2;255;0;0;48;2;0;255;0mred${CSI}39;49m"
     )
 
     @Test
+    @JsName("ansi_parsing_with_styles")
     fun `ansi parsing with styles`() = checkRender(Text("""
     ${TextStyle(RGB(255, 0, 0), white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor = gray)("gray.bg")}")} red")}
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
@@ -89,11 +96,13 @@ class TextTest : RenderingTest() {
     """, width = 79) { it.normalizeHyperlinks() }
 
     @Test
+    @JsName("hyperlink_one_line")
     fun `hyperlink one line`() = doHyperlinkTest("This is a link",
         "${OSC}8;id=1;http://example.com${ST}This is a link${OSC}8;;$ST"
     )
 
     @Test
+    @JsName("hyperlink_word_wrap")
     fun `hyperlink word wrap`() = doHyperlinkTest("This is a link",
         """
             ${OSC}8;id=1;http://example.com${ST}This is${OSC}8;;$ST
@@ -103,6 +112,7 @@ class TextTest : RenderingTest() {
     )
 
     @Test
+    @JsName("hyperlink_break_word")
     fun `hyperlink break word`() = doHyperlinkTest("This_is_a_link",
         """
             ${OSC}8;id=1;http://example.com${ST}This_is_${OSC}8;;$ST

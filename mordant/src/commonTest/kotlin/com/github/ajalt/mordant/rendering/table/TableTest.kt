@@ -12,10 +12,12 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class TableTest : RenderingTest() {
     @Test
+    @JsName("empty_cell")
     fun `empty cell`() = doBodyTest("""
     |┌┐
     |││
@@ -26,6 +28,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_top")
     fun `border top`() = doBodyTest("""
     |───
     | 1 ⏎
@@ -38,6 +41,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_right")
     fun `border right`() = doBodyTest("""
     | 1 │
     """) {
@@ -49,6 +53,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_bottom")
     fun `border bottom`() = doBodyTest("""
     | 1 ⏎
     |───
@@ -61,6 +66,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_left")
     fun `border left`() = doBodyTest("""
     |│ 1 ⏎
     """) {
@@ -72,6 +78,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_top_with_corners")
     fun `border top with corners`() = doBodyTest("""
     |╶───╴
     |  1  ⏎
@@ -88,6 +95,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_right_with_corners")
     fun `border right with corners`() = doBodyTest("""
     |┌───┐   ╷
     |│ 1 │ 2 │
@@ -102,6 +110,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_bottom_with_corners")
     fun `border bottom with corners`() = doBodyTest("""
     |┌───┐
     |│ 1 │
@@ -118,6 +127,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("border_left_with_corners")
     fun `border left with corners`() = doBodyTest("""
     |╷   ┌───┐
     |│ 1 │ 2 │
@@ -132,6 +142,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("inside_borders")
     fun `inside borders`() = doBodyTest("""
     | 1 │ 2 ⏎
     |───┼───⏎
@@ -157,6 +168,7 @@ class TableTest : RenderingTest() {
 
 
     @Test
+    @JsName("empty_row")
     fun `empty row`() = doBodyTest("""
     |┌───┐
     |│ 1 │
@@ -172,6 +184,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("non_rectangular_table")
     fun `non-rectangular table`() = doBodyTest("""
     |┌───┐       ⏎
     |│ 1 │       ⏎
@@ -190,6 +203,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("preformatted_text_content")
     fun `preformatted text content`() = doBodyTest("""
     |┌────────────────┬─┐
     |│line 1          │2│
@@ -211,6 +225,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("wide_unicode_characters")
     fun `wide unicode characters`() = doBodyTest("""
     |┌──────────┐
     |│ 모ㄹ단ㅌ │
@@ -230,6 +245,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("striped_row_styles")
     fun `striped row styles`() = doBodyTest("""
     |┌─────┐
     |│${red("row 1")}│
@@ -250,6 +266,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("row_and_column_span_no_borders")
     fun `row and column span no borders`() = doBodyTest("""
     |span1
     |    2
@@ -269,6 +286,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("row_and_column_span")
     fun `row and column span`() = doBodyTest("""
     |┌───────────┬───┐
     |│           │ 1 │
@@ -295,6 +313,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("nested_tables")
     fun `nested tables`() = doBodyTest("""
     |┌───────────┬───┐
     |│ ┌───┬───┐ │ 5 │
@@ -321,6 +340,7 @@ class TableTest : RenderingTest() {
 
 
     @Test
+    @JsName("outer_border")
     fun `outer border`() = doTest("""
     | 1  │ 2  │ 3  
     |────┼────┼────
@@ -342,6 +362,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("section_column_builders")
     fun `section column builders`() = doTest("""
     |┌─────┬─────┐
     |│   1 │  2  │
@@ -394,6 +415,7 @@ class TableTest : RenderingTest() {
     }
 
     @Test
+    @JsName("caption_widgets")
     fun `caption widgets`() = doTest("""
     |!
     |┌───┬───┬───┐

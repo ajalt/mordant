@@ -20,8 +20,8 @@ internal fun formatMultipleWithSiSuffixes(decimals: Int, vararg nums: Double): P
     }
     return nums.map { num ->
         val s = num.toString()
-        val len = s.indexOf('.').let { if (it >= 0) it + decimals + 1 else s.length }
-        s.take(len)
+        val i = s.indexOf('.')
+        if (i >= 0) s.take(i + decimals + 1) else "$s.0"
     } to suffix
 }
 

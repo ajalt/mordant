@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 
 private fun c(b: CursorMovements.() -> Unit): String {
@@ -18,6 +19,7 @@ private fun c(b: CursorMovements.() -> Unit): String {
 
 class TerminalCursorTest {
     @Test
+    @JsName("disabled_commands")
     fun `disabled commands`() {
         val vt = VirtualTerminalInterface(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
@@ -40,6 +42,7 @@ class TerminalCursorTest {
     }
 
     @Test
+    @JsName("cursor_directions_0_count")
     fun `cursor directions 0 count`() = forAll(
         row(c { up(0) }),
         row(c { down(0) }),
@@ -50,6 +53,7 @@ class TerminalCursorTest {
     }
 
     @Test
+    @JsName("cursor_show_and_hide")
     fun `cursor show and hide`() {
         val vt = VirtualTerminalInterface()
         val t = Terminal(terminalInterface = vt)
@@ -61,6 +65,7 @@ class TerminalCursorTest {
     }
 
     @Test
+    @JsName("disabled_cursor_show_and_hide")
     fun `disabled cursor show and hide`() {
         val vt = VirtualTerminalInterface(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
@@ -71,6 +76,7 @@ class TerminalCursorTest {
     }
 
     @Test
+    @JsName("cursor_commands")
     fun `cursor commands`() = forAll(
         row(c { up(2) }, "${CSI}2A"),
         row(c { down(3) }, "${CSI}3B"),
@@ -91,6 +97,7 @@ class TerminalCursorTest {
     }
 
     @Test
+    @JsName("cursor_commands_negative_count")
     fun `cursor commands negative count`() {
         forAll(
             row(c { up(-1) }, c { down(1) }),

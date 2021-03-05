@@ -9,10 +9,14 @@ plugins {
 
 kotlin {
     jvm()
+    js {
+        nodejs()
+        browser()
+    }
 
-    macosX64()
+//    macosX64()
     linuxX64()
-    mingwX64()
+//    mingwX64()
 
     sourceSets {
         all {
@@ -27,7 +31,7 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
-                implementation("org.jetbrains:markdown:0.2.0.pre-mpp") // TODO: switch to official publication when it's ready
+                implementation("org.jetbrains:markdown:0.2.0") // TODO: switch to official publication when it's ready
             }
         }
         val commonTest by getting {
@@ -47,31 +51,37 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
+        val jsTest by getting {
+            dependencies {
+                api(kotlin("test-js"))
+            }
+        }
+
         val nativeMain by creating {
             dependsOn(commonMain)
         }
-        val macosX64Main by getting {
-            dependsOn(nativeMain)
-        }
+//        val macosX64Main by getting {
+//            dependsOn(nativeMain)
+//        }
         val linuxX64Main by getting {
             dependsOn(nativeMain)
         }
-        val mingwX64Main by getting {
-            dependsOn(nativeMain)
-        }
+//        val mingwX64Main by getting {
+//            dependsOn(nativeMain)
+//        }
 
         val nativeTest by creating {
             dependsOn(commonTest)
         }
-        val macosX64Test by getting {
-            dependsOn(nativeTest)
-        }
+//        val macosX64Test by getting {
+//            dependsOn(nativeTest)
+//        }
         val linuxX64Test by getting {
             dependsOn(nativeTest)
         }
-        val mingwX64Test by getting {
-            dependsOn(nativeTest)
-        }
+//        val mingwX64Test by getting {
+//            dependsOn(nativeTest)
+//        }
     }
 }
 

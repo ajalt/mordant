@@ -5,16 +5,19 @@ import com.github.ajalt.mordant.internal.ST
 import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.test.normalizeHyperlinks
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class TextStyleOscTest {
     @Test
+    @JsName("single_hyperlink")
     fun `single hyperlink`() = doTest(
         hyperlink("foo.com")("bar"),
         "<;id=1;foo.com>bar<;;>"
     )
 
     @Test
+    @JsName("nested_hyperlink")
     fun `nested hyperlink`() = doTest(
         hyperlink("foo")("bar${hyperlink("baz")("qux")}qor"),
         "<;id=1;foo>bar<;id=2;baz>qux<;id=1;foo>qor<;;>"

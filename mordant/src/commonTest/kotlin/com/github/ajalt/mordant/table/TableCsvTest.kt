@@ -6,6 +6,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,11 +16,13 @@ class TableCsvTest {
     }
 
     @Test
+    @JsName("empty_table")
     fun `empty table`() {
         t(emptyList()).contentToCsv() shouldBe "\n"
     }
 
     @Test
+    @JsName("single_cell_table")
     fun `single cell table`() {
         t(listOf(1)).contentToCsv() shouldBe "1\n"
     }
@@ -41,6 +44,7 @@ class TableCsvTest {
     }
 
     @Test
+    @JsName("escape_error")
     fun `escape error`() {
         shouldThrow<IllegalArgumentException> {
             t(listOf("a", 1, "p,\"q\"")).contentToCsv(
@@ -61,6 +65,7 @@ class TableCsvTest {
     }
 
     @Test
+    @JsName("quoting_none")
     fun `quoting none`() {
         shouldThrow<IllegalArgumentException> {
             t(listOf("a", 1, "p,q")).contentToCsv(quoting = CsvQuoting.NONE)
@@ -68,6 +73,7 @@ class TableCsvTest {
     }
 
     @Test
+    @JsName("column_span")
     fun `column span`() {
         table {
             body {
@@ -85,6 +91,7 @@ class TableCsvTest {
     }
 
     @Test
+    @JsName("row_span")
     fun `row span`() {
         table {
             body {

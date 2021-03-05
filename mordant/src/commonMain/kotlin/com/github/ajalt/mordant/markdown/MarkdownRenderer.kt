@@ -65,7 +65,8 @@ internal class MarkdownRenderer(
     private val EOL_LINES = Lines(listOf(EMPTY_LINE, EMPTY_LINE))
     private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
     private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
-    private val CHECK_BOX_REGEX = Regex("""\[[^]]]""")
+    @Suppress("RegExpRedundantEscape") // extra escape required on js
+    private val CHECK_BOX_REGEX = Regex("""\[[^\]]]""")
 
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")
@@ -145,6 +146,7 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_6 -> atxHr(theme.string("markdown.h6.rule"), theme.style("markdown.h6"), node)
 
             GFMTokenTypes.CHECK_BOX -> {
+                println(node.nodeText())
                 val content = CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
                 val checkbox = when {
                     content.isBlank() -> theme.string("markdown.task.unchecked")
