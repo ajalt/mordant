@@ -67,6 +67,10 @@ internal object TerminalDetection {
             "24bit", "24bits", "truecolor" -> return TRUECOLOR
         }
 
+        if (isCI()) {
+            return if (ciSupportsColor()) ANSI256 else NONE
+        }
+
         when (getTermProgram()) {
             "hyper" -> return TRUECOLOR
             "apple_terminal" -> return ANSI256
@@ -134,6 +138,22 @@ internal object TerminalDetection {
     private fun isRecentITerm(): Boolean {
         val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.firstOrNull()?.toIntOrNull()
         return ver != null && ver >= 3
+    }
+
+    private fun isCI(): Boolean {
+        return getEnv("CI") != null
+    }
+
+    private fun ciSupportsColor(): Boolean {
+        return listOf(
+            "APPVEYOR",
+            "BUILDKITE",
+            "CIRCLECI",
+            "DRONE",
+            "GITHUB_ACTIONS",
+            "GITLAB_CI",
+            "TRAVIS",
+        ).any { getEnv(it) != null }
     }
 
     private fun isIntellijConsole(): Boolean {
