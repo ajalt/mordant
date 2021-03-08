@@ -3,10 +3,21 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.RGB
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.internal.downsample
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.rendering.Theme
 
+/**
+ * TextStyles that are automatically downsampled to the level supported by the current terminal.
+ *
+ * Strings decorated with these styles will be downsampled correctly even if they are printed
+ * directly rather than through [Terminal.print].
+ */
 class TerminalColors internal constructor(
-    private val info: TerminalInfo,
+    private val terminalInfo: TerminalInfo,
+    private val theme: Theme,
 ) {
     val black: TextStyle get() = downsample(TextColors.black)
     val red: TextStyle get() = downsample(TextColors.red)
@@ -25,6 +36,22 @@ class TerminalColors internal constructor(
     val brightMagenta: TextStyle get() = downsample(TextColors.brightMagenta)
     val brightCyan: TextStyle get() = downsample(TextColors.brightCyan)
     val brightWhite: TextStyle get() = downsample(TextColors.brightWhite)
+
+    /** Render text with the [success][Theme.success] style from the current theme */
+    val success get(): TextStyle = downsample(theme.success)
+
+    /** Render text with the [danger][Theme.danger] style from the current theme */
+    val danger get(): TextStyle = downsample(theme.danger)
+
+    /** Render text with the [warning][Theme.warning] style from the current theme */
+    val warning get(): TextStyle = downsample(theme.warning)
+
+    /** Render text with the [info][Theme.info] style from the current theme */
+    val info get(): TextStyle = downsample(theme.info)
+
+    /** Render text with the [muted][Theme.muted] style from the current theme */
+    val muted: TextStyle get() = downsample(theme.muted)
+
 
     /**
      * Render text as bold or increased intensity.
@@ -143,10 +170,8 @@ class TerminalColors internal constructor(
      */
     fun color(color: Color): TextStyle = TextColors.color(color, level)
 
-    // All of the TextColors enums are already Ansi16, so there's no downsampling to do other
-    // than turning them off entirely
     private fun downsample(style: TextStyle): TextStyle =
-        if (level == AnsiLevel.NONE) DEFAULT_STYLE else style
+        downsample(style, level, terminalInfo.ansiHyperLinks)
 
-    private val level get() = info.ansiLevel
+    private val level get() = terminalInfo.ansiLevel
 }

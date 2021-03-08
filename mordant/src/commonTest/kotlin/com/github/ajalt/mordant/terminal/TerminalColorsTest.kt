@@ -2,8 +2,8 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.internal.CSI
-import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.rendering.*
 import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
@@ -112,33 +112,40 @@ class TerminalColorsTest {
 
     @Test
     fun `all colors and styles downsampled`() {
-        val c = Terminal(ansiLevel = AnsiLevel.NONE).colors
+        val colorNone = Terminal(ansiLevel = AnsiLevel.NONE).colors
+        val colorRgb = Terminal(ansiLevel = AnsiLevel.TRUECOLOR).colors
         forAll(
-            row(c.black),
-            row(c.red),
-            row(c.green),
-            row(c.yellow),
-            row(c.blue),
-            row(c.magenta),
-            row(c.cyan),
-            row(c.white),
-            row(c.gray),
-            row(c.brightRed),
-            row(c.brightGreen),
-            row(c.brightYellow),
-            row(c.brightBlue),
-            row(c.brightMagenta),
-            row(c.brightCyan),
-            row(c.brightWhite),
-            row(c.bold),
-            row(c.dim),
-            row(c.italic),
-            row(c.underline),
-            row(c.inverse),
-            row(c.strikethrough),
-            row(c.plain),
-        ) { style ->
-            style shouldBe DEFAULT_STYLE
+            row ({ it.black }, TextColors.black),
+            row ({ it.red }, TextColors.red),
+            row ({ it.green }, TextColors.green),
+            row ({ it.yellow }, TextColors.yellow),
+            row ({ it.blue }, TextColors.blue),
+            row ({ it.magenta }, TextColors.magenta),
+            row ({ it.cyan }, TextColors.cyan),
+            row ({ it.white }, TextColors.white),
+            row ({ it.gray }, TextColors.gray),
+            row ({ it.brightRed }, TextColors.brightRed),
+            row ({ it.brightGreen }, TextColors.brightGreen),
+            row ({ it.brightYellow }, TextColors.brightYellow),
+            row ({ it.brightBlue }, TextColors.brightBlue),
+            row ({ it.brightMagenta }, TextColors.brightMagenta),
+            row ({ it.brightCyan }, TextColors.brightCyan),
+            row ({ it.brightWhite }, TextColors.brightWhite),
+            row ({ it.bold }, TextStyles.bold.style),
+            row ({ it.dim }, TextStyles.dim.style),
+            row ({ it.italic }, TextStyles.italic.style),
+            row ({ it.underline }, TextStyles.underline.style),
+            row ({ it.inverse }, TextStyles.inverse.style),
+            row ({ it.strikethrough }, TextStyles.strikethrough.style),
+            row ({ it.plain }, DEFAULT_STYLE),
+            row ({ it.success }, Theme.Default.success),
+            row ({ it.danger }, Theme.Default.danger),
+            row ({ it.warning }, Theme.Default.warning),
+            row ({ it.info }, Theme.Default.info),
+            row ({ it.muted }, Theme.Default.muted),
+        ) { block: (TerminalColors) -> TextStyle, style: TextStyle ->
+            block(colorNone) shouldBe DEFAULT_STYLE
+            block(colorRgb) shouldBe style
         }
     }
 

@@ -50,7 +50,7 @@ internal fun TextStyle.invokeStyle(text: String): String {
     return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
 }
 
-private fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
+internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
     return if (style === DEFAULT_STYLE) style else when (level) {
         AnsiLevel.NONE -> DEFAULT_STYLE
         AnsiLevel.ANSI16 -> style.copy(
