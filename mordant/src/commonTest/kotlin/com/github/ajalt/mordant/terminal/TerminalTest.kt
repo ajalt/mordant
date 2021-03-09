@@ -16,35 +16,30 @@ class TerminalTest {
     fun success() {
         t.success("success")
         vt.buffer() shouldBe t.theme.success("success") + "\n"
-        t.renderSuccess("success") shouldBe t.theme.success("success")
     }
 
     @Test
     fun danger() {
         t.danger("danger")
         vt.buffer() shouldBe t.theme.danger("danger") + "\n"
-        t.renderDanger("danger") shouldBe t.theme.danger("danger")
     }
 
     @Test
     fun warning() {
         t.warning("warning")
         vt.buffer() shouldBe t.theme.warning("warning") + "\n"
-        t.renderWarning("warning") shouldBe t.theme.warning("warning")
     }
 
     @Test
     fun info() {
         t.info("info")
         vt.buffer() shouldBe t.theme.info("info") + "\n"
-        t.renderInfo("info") shouldBe t.theme.info("info")
     }
 
     @Test
     fun muted() {
         t.muted("muted")
         vt.buffer() shouldBe t.theme.muted("muted") + "\n"
-        t.renderMuted("muted") shouldBe t.theme.muted("muted")
     }
 
     @Test
@@ -61,7 +56,7 @@ class TerminalTest {
 
     @Test
     fun `print customized`() {
-        t.print("print with a wrap", style = cyan, whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
+        t.print(cyan("print with a wrap"), whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
         vt.buffer() shouldBe """
         |${cyan("  print")}
         |${cyan(" with a")}
