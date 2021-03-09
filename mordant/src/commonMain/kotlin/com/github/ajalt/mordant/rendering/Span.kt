@@ -6,6 +6,12 @@ import com.github.ajalt.mordant.internal.stringCellWidth
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
+/**
+ * A word or string of whitespace and an associated [style].
+ *
+ * A Span cannot be empty, cannot contain newlines or ANSI codes, and must must either be entirely
+ * whitespace or contain no whitespace at all.
+ */
 class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
     internal companion object {
         fun word(text: String, style: TextStyle = DEFAULT_STYLE): Span {

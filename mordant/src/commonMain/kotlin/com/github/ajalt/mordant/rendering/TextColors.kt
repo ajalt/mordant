@@ -3,10 +3,27 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.colormath.*
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
+import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.math.roundToInt
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
 
+
+/**
+ * Default text style that can be applied to text.
+ *
+ * These styles are *not* automatically downsampled. You should print the styled strings with
+ * [Terminal.println] to do so.
+ *
+ * ## Example
+ *
+ * ```
+ * import com.github.ajalt.mordant.rendering.TextStyles.*
+ *
+ * val t = Terminal()
+ * t.println("This text is ${bold("bold")}!")
+ * ```
+ */
 // Unfortunately, this enum can't implement TextStyle because the enum values have the same name is
 // TextStyle properties
 @Suppress("EnumEntryName")
@@ -35,6 +52,21 @@ enum class TextStyles(val style: TextStyle) {
     override fun toString() = style.toString()
 }
 
+/**
+ * Default text colors that can be used to style text.
+ *
+ * These styles are *not* automatically downsampled. You should print the styled strings with
+ * [Terminal.println] to do so.
+ *
+ * ## Example
+ *
+ * ```
+ * import com.github.ajalt.mordant.rendering.TextColors.*
+ *
+ * val t = Terminal()
+ * t.println("This text is ${green("colorful")}!")
+ * ```
+ */
 @Suppress("EnumEntryName")
 enum class TextColors(
     private val textStyle: TextStyle,

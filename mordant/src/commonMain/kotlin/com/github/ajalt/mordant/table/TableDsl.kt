@@ -56,13 +56,22 @@ private class CellStyleBuilderMixin : CellStyleBuilder {
 }
 
 sealed class ColumnWidth {
+    /** The column will fit to the size of its content */
     object Auto : ColumnWidth()
+
+    /** The column will have a fixed [width] */
     class Fixed(val width: Int) : ColumnWidth() {
         init {
             require(width > 0) { "width must be greater than zero" }
         }
     }
 
+    /**
+     * The column will expand to fill the available terminal width.
+     *
+     * If there are multiple expanding columns, the available width will be divided among them
+     * proportional to their [weight]s.
+     */
     class Expand(val weight: Float = 1f) : ColumnWidth() {
         init {
             require(weight > 0) { "weight must be greater than zero" }
@@ -77,6 +86,7 @@ annotation class MordantDsl
 
 @MordantDsl
 class ColumnBuilder internal constructor() : CellStyleBuilder by CellStyleBuilderMixin() {
+    /** Set the width for this column */
     var width: ColumnWidth = ColumnWidth.Auto
 }
 
@@ -93,18 +103,22 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
     internal var captionTop: Widget? = null
     internal var captionBottom: Widget? = null
 
+    /** Add a [widget] as a caption oto the top of this table. */
     fun captionTop(widget: Widget) {
         captionTop = widget
     }
 
+    /** Add [text] as a caption to the top of this table. */
     fun captionTop(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
         captionTop(Text(text, style, align = align))
     }
 
+    /** Add a [widget] as a caption to the bottom of this table. */
     fun captionBottom(widget: Widget) {
         captionBottom = widget
     }
 
+    /** Add [text] as a caption to the bottom of this table. */
     fun captionBottom(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
         captionBottom(Text(text, style, align = align))
     }
@@ -112,14 +126,17 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
     /** Configure a single column, which the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
+    /** Configure the header section. */
     fun header(init: SectionBuilder.() -> Unit) {
         headerSection.init()
     }
 
+    /** Configure the body section. */
     fun body(init: SectionBuilder.() -> Unit) {
         bodySection.init()
     }
 
+    /** Configure the footer section. */
     fun footer(init: SectionBuilder.() -> Unit) {
         footerSection.init()
     }
@@ -135,19 +152,29 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
     /** Configure a single column, which the first column at index 0. */
     fun column(i: Int, init: CellStyleBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
+    /** Add styles to alternating rows. If there are more rows than styles, the styles will loop. */
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         rowStyles = listOf(style1, style2) + styles.asList()
     }
 
+    /**
+     * Add all [cells] from an iterable.
+     */
     fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
         val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getWidget(it)) }
         rows += RowBuilder(cellBuilders).apply(init)
     }
 
+    /**
+     * Add a row with one or more cells.
+     */
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
         rowFrom(cells.asList(), init)
     }
 
+    /**
+     * Add a row.
+     */
     fun row(init: RowBuilder.() -> Unit) {
         rows += RowBuilder(mutableListOf()).apply(init)
     }
@@ -157,21 +184,31 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
 class GridBuilder internal constructor(private val section: SectionBuilder) : CellStyleBuilder by section {
     internal val columns = mutableMapOf<Int, ColumnBuilder>()
 
-    /** Configure a single column, which the first column at index 0. */
+    /** Configure a single column, with the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilder(), init)
 
+    /** Add styles to alternating rows. If there are more rows than styles, the styles will loop. */
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         section.rowStyles(style1, style2, *styles)
     }
 
+    /**
+     * Add all [cells] from an iterable.
+     */
     fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
         section.rowFrom(cells, init)
     }
 
+    /**
+     * Add a row with one or more cells.
+     */
     fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {}) {
         section.row(*cells, init = init)
     }
 
+    /**
+     * Add a row.
+     */
     fun row(init: RowBuilder.() -> Unit) {
         section.row(init)
     }
@@ -181,16 +218,23 @@ class GridBuilder internal constructor(private val section: SectionBuilder) : Ce
 class RowBuilder internal constructor(
     internal val cells: MutableList<CellBuilder>,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
+    /** Add multiple cells to this row */
     fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit = {}) {
         cell(cell1, init)
         cell(cell2, init)
-        cells(cells.asList(), init)
+        cellsFrom(cells.asList(), init)
     }
 
-    fun cells(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
+    /** Add all [cells] from an iterable to this row */
+    fun cellsFrom(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
         cells.mapTo(this.cells) { CellBuilder(getWidget(it)).apply(init) }
     }
 
+    /** Add a cell to this row.
+     *
+     * The [content] can be a [Widget] to render, or any other type of object which will be
+     * converted to a string.
+     */
     fun cell(content: Any?, init: CellBuilder.() -> Unit = {}) {
         cells += CellBuilder(getWidget(content)).apply(init)
     }
@@ -199,17 +243,21 @@ class RowBuilder internal constructor(
 @MordantDsl
 class CellBuilder internal constructor(
     internal val content: Widget = Text(""),
-    rowSpan: Int = 1,
-    columnSpan: Int = 1,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
 
-    var columnSpan = columnSpan
+    /**
+     * Set the number of columns that this cell should span. The value will be truncated to the width of the table.
+     */
+    var columnSpan = 1
         set(value) {
             require(value > 0) { "Column span must be greater than 0" }
             field = value
         }
 
-    var rowSpan = rowSpan
+    /**
+     * Set the number of rows that this cell should span.
+     */
+    var rowSpan = 1
         set(value) {
             require(value > 0) { "Row span must be greater than 0" }
             field = value

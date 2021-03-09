@@ -8,6 +8,11 @@ import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
 typealias Line = List<Span>
 
+/**
+ * A lines, where each line is a list of [Span]s.
+ *
+ * Linebreaks are implicit between lines. There is no trailing line break. Lines can be empty.
+ */
 class Lines(
     val lines: List<Line>,
 ) {
