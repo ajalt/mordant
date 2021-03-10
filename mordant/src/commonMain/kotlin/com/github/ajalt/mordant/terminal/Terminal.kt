@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.makePrintingTerminalCursor
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.internal.sendInterceptedPrintRequest
@@ -234,7 +233,7 @@ class Terminal(
         return when (message) {
             is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)
             is Widget -> render(message)
-            else -> render(Text(message.toString(), DEFAULT_STYLE, whitespace, align, overflowWrap, width))
+            else -> render(Text(message.toString(), whitespace, align, overflowWrap, width))
         }
     }
 

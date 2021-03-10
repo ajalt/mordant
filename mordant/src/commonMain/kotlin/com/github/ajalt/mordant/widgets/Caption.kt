@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
@@ -16,12 +15,10 @@ class Caption(
         bottom: String? = null,
         topAlign: TextAlign = TextAlign.CENTER,
         bottomAlign: TextAlign = TextAlign.CENTER,
-        topStyle: TextStyle = DEFAULT_STYLE,
-        bottomStyle: TextStyle = DEFAULT_STYLE,
     ) : this(
         content,
-        top?.let { Text(it, topStyle, align = topAlign) },
-        bottom?.let { Text(it, bottomStyle, align = bottomAlign) },
+        top?.let { Text(it, align = topAlign) },
+        bottom?.let { Text(it, align = bottomAlign) },
     )
 
     override fun measure(t: Terminal, width: Int): WidthRange {

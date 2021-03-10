@@ -73,7 +73,6 @@ inline fun <T> Terminal.animation(crossinline draw: (T) -> Widget): Animation<T>
 }
 
 inline fun <T> Terminal.textAnimation(
-    style: TextStyle = TextStyle(),
     whitespace: Whitespace = Whitespace.PRE,
     align: TextAlign = TextAlign.NONE,
     overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
@@ -83,6 +82,6 @@ inline fun <T> Terminal.textAnimation(
 ): Animation<T> {
     return object : Animation<T>(this) {
         override fun renderData(data: T): Widget =
-            Text(draw(data), style, whitespace, align, overflowWrap, width, tabWidth)
+            Text(draw(data), whitespace, align, overflowWrap, width, tabWidth)
     }
 }

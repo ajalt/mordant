@@ -44,7 +44,7 @@ internal class TextProgressCell(private val text: Text) : ProgressCell {
     override fun ProgressState.makeWidget(): Widget = text
 }
 
-internal class PercentageProgressCell(private val style: TextStyle) : ProgressCell {
+internal class PercentageProgressCell : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
     override fun ProgressState.makeWidget(): Widget {
@@ -52,7 +52,7 @@ internal class PercentageProgressCell(private val style: TextStyle) : ProgressCe
             total == null || total <= 0 -> 0
             else -> (100.0 * completed / total).toInt()
         }
-        return Text("$percent%", style)
+        return Text("$percent%")
     }
 }
 
@@ -74,7 +74,7 @@ internal class CompletedProgressCell(
             includeTotal && total == null -> "/---.-"
             else -> ""
         } + suffix
-        return Text(t, style, whitespace = Whitespace.PRE)
+        return Text(t, whitespace = Whitespace.PRE)
     }
 }
 
@@ -90,7 +90,7 @@ internal class SpeedProgressCell(
             indeterminate || completedPerSecond <= 0 -> "---.-"
             else -> completedPerSecond.formatWithSiSuffix(1)
         }
-        return Text(t + suffix, style, whitespace = Whitespace.PRE)
+        return Text(t + suffix, whitespace = Whitespace.PRE)
     }
 }
 
@@ -115,7 +115,7 @@ internal class EtaProgressCell(
         return text("$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
     }
 
-    private fun text(s: String) = Text(s, style, whitespace = Whitespace.PRE)
+    private fun text(s: String) = Text(s, whitespace = Whitespace.PRE)
 }
 
 internal class BarProgressCell(

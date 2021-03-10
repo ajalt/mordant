@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.components
 
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.TextColors.red
+import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Text
@@ -48,8 +48,8 @@ class HorizontalRuleTest : RenderingTest() {
     @Test
     fun `styled title and rule`() {
         checkRender(
-            HorizontalRule(title = "title", ruleStyle = TextStyle(red), titleStyle = TextStyle(red)),
-            red("─── title ───"), width = 13
+            HorizontalRule(title = "title", ruleStyle = blue, titleStyle = blue),
+            blue("─── title ───"), width = 13
         )
     }
 

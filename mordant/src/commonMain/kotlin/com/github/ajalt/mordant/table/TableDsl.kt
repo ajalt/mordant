@@ -109,8 +109,8 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
     }
 
     /** Add [text] as a caption to the top of this table. */
-    fun captionTop(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
-        captionTop(Text(text, style, align = align))
+    fun captionTop(text: String, align: TextAlign = TextAlign.CENTER) {
+        captionTop(Text(text, align = align))
     }
 
     /** Add a [widget] as a caption to the bottom of this table. */
@@ -119,8 +119,8 @@ class TableBuilder internal constructor() : CellStyleBuilder by CellStyleBuilder
     }
 
     /** Add [text] as a caption to the bottom of this table. */
-    fun captionBottom(text: String, style: TextStyle = DEFAULT_STYLE, align: TextAlign = TextAlign.CENTER) {
-        captionBottom(Text(text, style, align = align))
+    fun captionBottom(text: String, align: TextAlign = TextAlign.CENTER) {
+        captionBottom(Text(text, align = align))
     }
 
     /** Configure a single column, which the first column at index 0. */

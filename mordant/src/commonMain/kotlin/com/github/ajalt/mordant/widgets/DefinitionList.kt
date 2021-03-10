@@ -135,13 +135,12 @@ class DefinitionListEntryBuilder {
 
     fun term(
         term: String,
-        style: TextStyle = DEFAULT_STYLE,
         whitespace: Whitespace = Whitespace.NORMAL,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
     ) {
-        term(Text(term, style, whitespace, align, overflowWrap, width))
+        term(Text(term, whitespace, align, overflowWrap, width))
     }
 
     fun description(description: Widget) {
@@ -150,13 +149,12 @@ class DefinitionListEntryBuilder {
 
     fun description(
         description: String,
-        style: TextStyle = DEFAULT_STYLE,
         whitespace: Whitespace = Whitespace.NORMAL,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
     ) {
-        description(Text(description, style, whitespace, align, overflowWrap, width))
+        description(Text(description, whitespace, align, overflowWrap, width))
     }
 
     internal fun build(): Pair<Widget, Widget> = Pair(

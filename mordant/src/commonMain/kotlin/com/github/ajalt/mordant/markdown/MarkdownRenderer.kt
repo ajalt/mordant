@@ -97,14 +97,16 @@ internal class MarkdownRenderer(
                 val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val lines =
                     innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
-                val content = Text(lines, whitespace = Whitespace.PRE_WRAP, style = theme.style("markdown.code.block"))
+                val content = Text(
+                    lines.withStyle(theme.style("markdown.code.block")),
+                    whitespace = Whitespace.PRE_WRAP
+                )
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
             MarkdownElementTypes.CODE_BLOCK -> {
                 val content = Text(
-                    innerInlines(node),
-                    whitespace = Whitespace.PRE_WRAP,
-                    style = theme.style("markdown.code.block")
+                    innerInlines(node).withStyle(theme.style("markdown.code.block")),
+                    whitespace = Whitespace.PRE_WRAP
                 )
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
@@ -265,7 +267,7 @@ internal class MarkdownRenderer(
     private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Widget {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> headerHr(Text(atxContent(node), style), bar, style)
+            else -> headerHr(Text(atxContent(node).withStyle(style)), bar, style)
         }
     }
 
@@ -277,7 +279,7 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode): Widget {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return headerHr(Text(content, style), bar, style)
+        return headerHr(Text(content.withStyle(style)), bar, style)
     }
 
     private fun headerHr(content: Widget, bar: String, style: TextStyle): Widget {

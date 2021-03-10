@@ -27,14 +27,13 @@ class WidgetBuilder {
 
     fun appendln(
         message: Any?,
-        style: TextStyle = DEFAULT_STYLE,
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
     ): WidgetBuilder = apply {
         if (message is Widget) widgets += message
-        else widgets += Text(message.toString(), style, whitespace, align, overflowWrap, width)
+        else widgets += Text(message.toString(), whitespace, align, overflowWrap, width)
     }
 
     fun appendln(widget: Widget): WidgetBuilder = apply {

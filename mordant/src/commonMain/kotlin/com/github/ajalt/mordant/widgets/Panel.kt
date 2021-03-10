@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.DEFAULT_PADDING
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -14,7 +13,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 
 private fun titleWidget(title: String?, titleTextStyle: TextStyle?): Text? {
     return title?.let {
-        Text(it, titleTextStyle ?: DEFAULT_STYLE, overflowWrap = ELLIPSES, whitespace = NOWRAP)
+        Text(it, overflowWrap = ELLIPSES, whitespace = NOWRAP)
     }
 }
 

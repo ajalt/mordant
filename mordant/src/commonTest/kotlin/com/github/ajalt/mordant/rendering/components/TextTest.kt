@@ -118,7 +118,7 @@ class TextTest : RenderingTest() {
         overflowWrap: OverflowWrap = NORMAL,
         width: Int = 79,
     ) = checkRender(
-        Text(text, TextStyles.hyperlink("http://example.com"), overflowWrap = overflowWrap),
+        Text(TextStyles.hyperlink("http://example.com")(text), overflowWrap = overflowWrap),
         expected,
         width = width
     ) { it.normalizeHyperlinks() }

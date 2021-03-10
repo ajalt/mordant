@@ -5,6 +5,8 @@ import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.rendering.TextStyles.dim
 import com.github.ajalt.mordant.table.Borders.ALL
 import com.github.ajalt.mordant.table.Borders.TOM_BOTTOM
 import com.github.ajalt.mordant.table.table
@@ -55,7 +57,7 @@ fun main() {
                 }
             }
         }
-        captionBottom("Budget courtesy @dril", TextStyle(dim = true))
+        captionBottom(dim("Budget courtesy @dril"))
     }
 
     terminal.println(table)

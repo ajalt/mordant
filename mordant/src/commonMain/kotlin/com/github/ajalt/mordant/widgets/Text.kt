@@ -12,8 +12,7 @@ internal const val LS = "\u2028"
 
 
 class Text internal constructor(
-    lines: Lines,
-    private val style: TextStyle = DEFAULT_STYLE,
+    private val lines: Lines,
     private val whitespace: Whitespace = Whitespace.NORMAL,
     private val align: TextAlign = NONE,
     private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
@@ -22,28 +21,22 @@ class Text internal constructor(
 ) : Widget {
     constructor(
         text: String,
-        style: TextStyle = DEFAULT_STYLE,
         whitespace: Whitespace = Whitespace.NORMAL,
         align: TextAlign = NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
         tabWidth: Int? = null,
-    ) : this(parseText(text, style), style, whitespace, align, overflowWrap, width, tabWidth)
+    ) : this(parseText(text, DEFAULT_STYLE), whitespace, align, overflowWrap, width, tabWidth)
 
     init {
         require(width == null || width >= 0) { "width cannot be negative" }
         require(tabWidth == null || tabWidth >= 0) { "tab width cannot be negative" }
     }
 
-    private val lines = when {
-        style === DEFAULT_STYLE -> lines
-        else -> Lines(lines.lines.map { l -> l.map { it.withStyle(style) } })
-    }
-
     internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {
         return when {
             align == this.align && (overflowWrap == null || overflowWrap == this.overflowWrap) -> this
-            else -> Text(lines, style, whitespace, align, overflowWrap ?: this.overflowWrap)
+            else -> Text(lines, whitespace, align, overflowWrap ?: this.overflowWrap, width, tabWidth)
         }
     }
 
@@ -104,7 +97,7 @@ class Text internal constructor(
                 if (i == 0 && !lastPieceWasWhitespace) {
                     val style = when (line.last().style) {
                         oldLine.firstOrNull()?.style -> line.last().style
-                        else -> style
+                        else -> DEFAULT_STYLE
                     }
                     line.add(Span.word(text = " ", style = style))
                     lastPieceWasWhitespace = true
@@ -192,11 +185,11 @@ class Text internal constructor(
     }
 
     private fun alignLineLeft(line: MutableList<Span>, extraWidth: Int) {
-        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: style))
+        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: DEFAULT_STYLE))
     }
 
     private fun alignLineRight(line: MutableList<Span>, extraWidth: Int) {
-        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: style))
+        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: DEFAULT_STYLE))
     }
 
     private fun alignLineCenter(line: MutableList<Span>, extraWidth: Int) {

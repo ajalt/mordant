@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.terminal.Terminal
+import io.kotest.matchers.shouldBe
 import kotlin.test.assertEquals
 
 abstract class RenderingTest(
@@ -24,7 +25,7 @@ abstract class RenderingTest(
         val actual = transformActual(t.render(widget))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
-            assertEquals(actual, trimmed.replace("⏎", ""))
+            actual shouldBe trimmed.replace("⏎", "")
         } catch (e: Throwable) {
             println(actual)
             throw e

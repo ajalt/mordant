@@ -11,12 +11,12 @@ import com.github.ajalt.mordant.table.grid
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
 
-    fun text(text: String, style: TextStyle = DEFAULT_STYLE) {
-        cells += TextProgressCell(Text(text, style))
+    fun text(text: String) {
+        cells += TextProgressCell(Text(text))
     }
 
-    fun percentage(style: TextStyle = DEFAULT_STYLE) {
-        cells += PercentageProgressCell(style)
+    fun percentage() {
+        cells += PercentageProgressCell()
     }
 
     fun progressBar(

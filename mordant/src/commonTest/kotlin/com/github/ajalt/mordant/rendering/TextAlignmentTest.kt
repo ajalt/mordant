@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.rendering
 
+import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.TextColors.blue
 import com.github.ajalt.mordant.rendering.TextColors.white
-import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.test.Test
@@ -80,10 +80,9 @@ class TextAlignmentTest : RenderingTest() {
         |5 5 5 5 5
         """.trimMargin()
         checkRender(Text(
-                text,
-                whitespace = Whitespace.PRE_WRAP,
-                align = align,
-                style = TextStyle(blue, white)
+            (blue on white)(text),
+            whitespace = Whitespace.PRE_WRAP,
+            align = align,
         ), ex, trimIndent = false, width = width)
     }
 }

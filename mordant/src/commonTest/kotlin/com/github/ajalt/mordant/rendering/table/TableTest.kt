@@ -389,7 +389,7 @@ class TableTest : RenderingTest() {
     |${blue("       bottom")}
     """) {
         captionTop("top")
-        captionBottom("bottom", align = TextAlign.RIGHT, style = TextStyle(blue))
+        captionBottom(blue("bottom"), align = TextAlign.RIGHT)
         body { row(1, 2, 3) }
     }
 

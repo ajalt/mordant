@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.internal.ThemeDimension
 import com.github.ajalt.mordant.internal.ThemeString
@@ -40,7 +39,7 @@ class HorizontalRule internal constructor(
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
     ) : this(
-        title = if (title.isEmpty()) EmptyWidget else Text(title, titleStyle ?: DEFAULT_STYLE),
+        title = if (title.isEmpty()) EmptyWidget else Text(titleStyle?.invoke(title) ?: title),
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         // titleStyle is applied by rendering the title widget and replacing the spans' styles. If
