@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.rendering.*
@@ -38,7 +37,7 @@ private class DefinitionList(
             it.max <= maxInlineTermWidth || inline && it.max + descriptionSpacing + maxDescWidth <= width
         }.maxWidthRange { it }.max
         val descOffset = (termWidth + descriptionSpacing).coerceAtLeast(4)
-        val lines = mutableListOf<Line>()
+        val lines = mutableListOf<List<Span>>()
 
         for ((i, entry) in entries.withIndex()) {
             if (i > 0) repeat(entrySpacing) { lines += emptyList<Span>() }
@@ -65,12 +64,12 @@ private class DefinitionList(
             } else if (descLines.size > termLines.size) {
                 val paddingLeft = if (descOffset > 0) listOf(Span.space(descOffset)) else EMPTY_LINE
                 descLines.drop(termLines.size).mapTo(lines) {
-                    if (it.isEmpty()) it else paddingLeft + it
+                    if (it.isEmpty()) it else Line(paddingLeft + it)
                 }
             }
         }
 
-        return Lines(lines)
+        return Lines(lines.map { Line(it) })
     }
 }
 

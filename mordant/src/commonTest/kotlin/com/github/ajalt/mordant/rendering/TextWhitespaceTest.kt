@@ -53,15 +53,15 @@ class TextWhitespaceTest : RenderingTest() {
 
     @Test
     fun `consecutive whitespace spans`() {
-        val line1 = listOf("a", "   ", " ").map { Span.word(it) }
-        val line2 = listOf(" ", "b").map { Span.word(it) }
+        val line1 = Line(listOf("a", "   ", " ").map { Span.word(it) })
+        val line2 = Line(listOf(" ", "b").map { Span.word(it) })
         checkRender(
-                Text(Lines(listOf(line1, line2)), whitespace = PRE_WRAP),
-                """
+            Text(Lines(listOf(line1, line2)), whitespace = PRE_WRAP),
+            """
                 |a
                 | b
                 """.trimMargin(),
-                width = 2
+            width = 2
         )
     }
 
@@ -74,10 +74,10 @@ class TextWhitespaceTest : RenderingTest() {
         |elit,   sed⏎
         """.trimMargin().replace("⏎", "").replace("␉", "\t")
         checkRender(Text(
-                text,
-                whitespace = ws,
-                align = NONE,
-                tabWidth = 4
+            text,
+            whitespace = ws,
+            align = NONE,
+            tabWidth = 4
         ), expected.trimMargin(), trimIndent = false, width = width)
     }
 }

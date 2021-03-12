@@ -428,7 +428,7 @@ class TableAlignmentTest : RenderingTest() {
                         }
 
                         override fun render(t: Terminal, width: Int): Lines {
-                            return Lines(listOf(listOf(Span.word("×"))))
+                            return Lines(listOf(Line(listOf(Span.word("×")))))
                         }
                     })
                     cell(Text("·\n·\n·", whitespace = PRE))

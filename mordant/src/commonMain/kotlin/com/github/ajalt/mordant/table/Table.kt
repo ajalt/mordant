@@ -260,7 +260,7 @@ private class TableRenderer(
         drawLeftBorderForColumn(columnCount)
 
         drawBottomBorder()
-        return Lines(tableLines)
+        return Lines(tableLines.map { Line(it) })
     }
 
     private fun drawBottomBorder() {
@@ -327,7 +327,7 @@ private class TableRenderer(
         }
     }
 
-    private fun renderCell(cell: Cell, x: Int, y: Int): List<Line> {
+    private fun renderCell(cell: Cell, x: Int, y: Int): List<List<Span>> {
         return when (cell) {
             is Cell.SpanRef -> {
                 emptyList()

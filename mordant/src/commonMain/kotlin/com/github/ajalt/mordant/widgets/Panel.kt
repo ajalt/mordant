@@ -135,7 +135,7 @@ class Panel private constructor(
             flatLine(vertical, line, vertical)
         }
 
-        lines.add(listOf(Span.word(b.ne, borderTextStyle), horizontalBorder, Span.word(b.nw, borderTextStyle)))
+        lines += Line(listOf(Span.word(b.ne, borderTextStyle), horizontalBorder, Span.word(b.nw, borderTextStyle)))
         return Lines(lines)
     }
 }

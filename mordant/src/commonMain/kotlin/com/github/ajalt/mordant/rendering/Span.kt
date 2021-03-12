@@ -24,7 +24,9 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
             return Span(text, style)
         }
 
-        fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE) = Span(" ".repeat(width), style)
+        fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE): Span {
+            return Span(" ".repeat(width), style)
+        }
         fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 

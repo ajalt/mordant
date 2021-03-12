@@ -1,9 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Span
-import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.rendering.WidthRange
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
 internal class RawWidget(private val content: String) : Widget {
@@ -12,6 +9,6 @@ internal class RawWidget(private val content: String) : Widget {
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        return Lines(listOf(listOf(Span.raw(content))))
+        return Lines(listOf(Line(listOf(Span.raw(content)))))
     }
 }

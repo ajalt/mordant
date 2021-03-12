@@ -40,7 +40,20 @@ internal class MarkdownDocument(private val parts: List<Widget>) : Widget {
 }
 
 private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
-    return fold(EMPTY_LINES) { l, r -> l + transform(r) }
+    return fold(EMPTY_LINES) { l, r ->
+        val other = transform(r)
+        when {
+            l.lines.isEmpty() -> other
+            other.lines.isEmpty() -> l
+            else -> Lines(
+                listOf(
+                    l.lines.dropLast(1),
+                    listOf(Line(l.lines.last() + other.lines.first())),
+                    other.lines.drop(1)
+                ).flatten()
+            )
+        }
+    }
 }
 
 internal class MarkdownRenderer(
@@ -95,8 +108,8 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.CODE_FENCE -> {
                 val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
-                val lines =
-                    innerInlines(node, drop = start, dropLast = if (end < 0) 0 else node.children.lastIndex - end)
+                val dropLast = if (end < 0) 0 else node.children.lastIndex - end
+                val lines = innerInlines(node, drop = start, dropLast = dropLast)
                 val content = Text(
                     lines.withStyle(theme.style("markdown.code.block")),
                     whitespace = Whitespace.PRE_WRAP

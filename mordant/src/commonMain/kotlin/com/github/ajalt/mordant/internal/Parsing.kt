@@ -24,6 +24,7 @@ internal fun parseText(text: String, style: TextStyle): Lines {
     return Lines(splitLines)
 }
 
+/** Split [text] into Chunks, splitting chunks only when the style changes */
 private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
     val commands = ANSI_RE.findAll(text).toList()
     if (commands.isEmpty()) return listOf(Chunk(text, defaultStyle))
@@ -46,6 +47,7 @@ private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
 
 // This could be implemented as a one line regex, but regex engines don't behave the same across
 // platforms, especially when dealing with unicode, which we need.
+/** Split a chunk into sequential whitespace/non-whitespace/linebreaks */
 private fun splitWords(chunk: Chunk): List<Chunk> {
     val chunks = mutableListOf<Chunk>()
     var i = 0
@@ -75,20 +77,21 @@ private fun splitWords(chunk: Chunk): List<Chunk> {
     return chunks
 }
 
+/** Split a flat list of chunks into a list of lines, removing linebreak chunks */
 private fun splitLines(words: Iterable<Chunk>): List<Line> {
     val lines = mutableListOf<Line>()
     var line = mutableListOf<Span>()
 
     for (word in words) {
         if (word.text.endsWith("\n")) {
-            lines += line
+            lines += Line(line, word.style)
             line = mutableListOf()
         } else {
             line.add(Span.word(word.text, word.style))
         }
     }
 
-    if (line.isNotEmpty()) lines += line
+    if (line.isNotEmpty()) lines += Line(line)
 
     return lines
 }

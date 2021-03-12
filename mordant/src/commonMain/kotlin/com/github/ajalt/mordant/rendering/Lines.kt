@@ -6,7 +6,9 @@ import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.rendering.TextAlign.*
 import com.github.ajalt.mordant.rendering.VerticalAlign.*
 
-typealias Line = List<Span>
+data class Line(val spans: List<Span>, val endStyle: TextStyle) : List<Span> by spans {
+    constructor(spans: List<Span>) : this(spans, spans.lastOrNull()?.style ?: DEFAULT_STYLE)
+}
 
 /**
  * A lines, where each line is a list of [Span]s.
@@ -24,35 +26,22 @@ class Lines(
     internal fun withStyle(style: TextStyle?): Lines {
         return when (style) {
             null, DEFAULT_STYLE -> this
-            else -> Lines(lines.map { l -> l.map { it.withStyle(style) } })
+            else -> Lines(
+                lines.map { l -> Line(l.map { it.withStyle(style) }, l.endStyle + style) }
+            )
         }
     }
 
     internal fun replaceStyle(style: TextStyle?): Lines {
         return when (style) {
             null, DEFAULT_STYLE -> this
-            else -> Lines(lines.map { l -> l.map { it.replaceStyle(style) } })
-        }
-    }
-
-    internal operator fun plus(other: Lines): Lines {
-        return when {
-            lines.isEmpty() -> other
-            other.lines.isEmpty() -> this
-            else -> {
-                Lines(
-                    listOf(
-                        lines.dropLast(1),
-                        listOf(lines.last() + other.lines.first()),
-                        other.lines.drop(1)
-                    ).flatten()
-                )
-            }
+            else -> Lines(lines.map { l -> Line(l.map { it.replaceStyle(style) }, style) })
         }
     }
 }
 
-internal val Line.lineWidth get() = sumOf { it.cellWidth }
+internal val Line.lineWidth: Int
+    get() = spans.sumOf { it.cellWidth }
 
 /** Equivalent to `listOf(...).flatten(), but ignores nulls and doesn't require wrapping single items in a list */
 internal fun flatLine(vararg parts: Any?): Line {
@@ -67,7 +56,7 @@ internal fun flatLine(vararg parts: Any?): Line {
             else -> error("not a span: $part")
         }
     }
-    return line
+    return Line(line)
 }
 
 /**
@@ -85,7 +74,7 @@ internal fun Lines.setSize(
 
     val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
 
-    val emptyLine = listOf(Span.space(newWidth))
+    val emptyLine = Line(listOf(Span.space(newWidth)))
     val lines = ArrayList<Line>(newHeight)
 
     val topEmptyLines = when (verticalAlign) {
@@ -109,11 +98,11 @@ internal fun Lines.setSize(
 
                 }
                 width == newWidth -> {
-                    lines.add(line.subList(0, j))
+                    lines.add(Line(line.subList(0, j)))
                     continue@line
                 }
                 else -> {
-                    lines.add(line.subList(0, j) + span.take(newWidth - width))
+                    lines.add(Line(line.subList(0, j) + span.take(newWidth - width)))
                     continue@line
                 }
             }
@@ -121,30 +110,23 @@ internal fun Lines.setSize(
 
         val remainingWidth = newWidth - width
         if (remainingWidth > 0) {
-            fun beginStyle() =
-                (i downTo 0).firstOrNull { this.lines.getOrNull(it)?.isEmpty() == false }
-                    ?.let { this.lines[it].first().style } ?: DEFAULT_STYLE
-
-            fun endStyle() =
-                (line.lastOrNull()?.style
-                    ?: (i..this.lines.lastIndex).firstOrNull { this.lines[it].isNotEmpty() }
-                        ?.let { this.lines[it].first().style })
-                    ?: DEFAULT_STYLE
+            val beginStyle = line.firstOrNull()?.style ?: line.endStyle
+            val endStyle = line.endStyle
 
             when (textAlign) {
                 CENTER, JUSTIFY -> {
-                    val l = Span.space(remainingWidth / 2, beginStyle())
-                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle())
-                    lines.add(listOf(listOf(l), line, listOf(r)).flatten())
+                    val l = Span.space(remainingWidth / 2, beginStyle)
+                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
+                    lines.add(Line(listOf(listOf(l), line, listOf(r)).flatten()))
                 }
                 LEFT -> {
-                    lines.add(line + Span.space(remainingWidth, endStyle()))
+                    lines.add(Line(line + Span.space(remainingWidth, endStyle)))
                 }
                 NONE -> {
-                    lines.add(line + Span.space(remainingWidth)) // No style spaces in this alignment
+                    lines.add(Line(line + Span.space(remainingWidth))) // Spaces aren't styled in this alignment
                 }
                 RIGHT -> {
-                    lines.add(listOf(Span.space(remainingWidth, beginStyle())) + line)
+                    lines.add(Line(listOf(Span.space(remainingWidth, beginStyle)) + line))
                 }
             }
         } else {
@@ -156,7 +138,7 @@ internal fun Lines.setSize(
         if (newHeight < lines.size) {
             return Lines(lines.take(newHeight))
         } else {
-            val line = if (newWidth == 0) EMPTY_LINE else listOf(Span.space(newWidth))
+            val line = if (newWidth == 0) EMPTY_LINE else Line(listOf(Span.space(newWidth)))
             repeat(newHeight - lines.size) {
                 lines.add(line)
             }

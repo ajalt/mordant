@@ -403,7 +403,7 @@ class TableTest : RenderingTest() {
     """) {
         val r = object : Widget {
             override fun measure(t: Terminal, width: Int) = WidthRange(1, 1)
-            override fun render(t: Terminal, width: Int) = Lines(listOf(listOf(Span.word("!"))))
+            override fun render(t: Terminal, width: Int) = Lines(listOf(Line(listOf(Span.word("!")))))
         }
         captionTop(r)
         captionBottom(r)

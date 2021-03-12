@@ -37,7 +37,7 @@ class OrderedList private constructor(
         ).lines.firstOrNull() ?: EMPTY_LINE
     }
 
-    private fun continuationPadding(i: Int, sepWidth: Int): Line {
+    private fun continuationPadding(i: Int, sepWidth: Int): List<Span> {
         val n = bulletWidth(i, sepWidth)
         return listOf(Span.space(n))
     }
@@ -71,7 +71,7 @@ class OrderedList private constructor(
             )
             for ((j, line) in entry.render(t, contentWidth).lines.withIndex()) {
                 val start = if (j == 0) bullet else continuationPadding(i, sepWidth)
-                lines += start + line
+                lines += Line(start + line)
             }
         }
         return Lines(lines)

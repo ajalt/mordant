@@ -103,6 +103,6 @@ class HorizontalRule internal constructor(
         if (remaining == 0) return rule
 
         val extraRule = Span.word(c.take(remaining), style)
-        return rule + extraRule
+        return Line(rule + extraRule)
     }
 }

@@ -57,6 +57,7 @@ class Text internal constructor(
 
         val lines = mutableListOf<Line>()
         var line = mutableListOf<Span>()
+        var endStyle = DEFAULT_STYLE
         var width = 0
         var lastPieceWasWhitespace = true
 
@@ -69,10 +70,10 @@ class Text internal constructor(
             }
 
             if (width < wrapWidth) {
-                line = alignLine(line, wrapWidth, width, align)
+                line = alignLine(line, wrapWidth, width, align, endStyle)
             }
 
-            lines += line
+            lines += Line(line, line.lastOrNull()?.style ?: endStyle)
             line = mutableListOf()
             width = 0
             lastPieceWasWhitespace = true
@@ -80,6 +81,7 @@ class Text internal constructor(
 
         for (oldLine in this.lines.lines) {
             val lastNonWhitespace = lastNonWhitespace(oldLine, align)
+            endStyle = oldLine.endStyle
 
             loop@ for ((i, piece) in oldLine.withIndex()) {
                 // Treat NEL and LS as hard line breaks
@@ -139,7 +141,7 @@ class Text internal constructor(
                         OverflowWrap.BREAK_WORD -> {
                             span.text.chunked(wrapWidth).forEach {
                                 if (it.length == wrapWidth) {
-                                    lines += listOf(Span.word(it, span.style))
+                                    lines += Line(listOf(Span.word(it, span.style)))
                                 } else {
                                     span = Span.word(it, span.style)
                                 }
@@ -164,45 +166,45 @@ class Text internal constructor(
         return Lines(lines)
     }
 
-    private fun lastNonWhitespace(line: Line, align: TextAlign): Int {
+    private fun lastNonWhitespace(line: List<Span>, align: TextAlign): Int {
         return when {
             whitespace.trimEol || align == JUSTIFY -> line.indexOfLast { !it.isWhitespace() }
             else -> -1
         }
     }
 
-    private fun alignLine(line: MutableList<Span>, wrapWidth: Int, width: Int, align: TextAlign): MutableList<Span> {
+    private fun alignLine(line: MutableList<Span>, wrapWidth: Int, width: Int, align: TextAlign, endStyle: TextStyle): MutableList<Span> {
         val extraWidth = wrapWidth - width
         when (align) {
-            LEFT -> alignLineLeft(line, extraWidth)
-            RIGHT -> alignLineRight(line, extraWidth)
-            CENTER -> alignLineCenter(line, extraWidth)
-            JUSTIFY -> return justifyLine(line, extraWidth)
+            LEFT -> alignLineLeft(line, extraWidth, endStyle)
+            RIGHT -> alignLineRight(line, extraWidth, endStyle)
+            CENTER -> alignLineCenter(line, extraWidth, endStyle)
+            JUSTIFY -> return justifyLine(line, extraWidth, endStyle)
             NONE -> {
             }
         }
         return line
     }
 
-    private fun alignLineLeft(line: MutableList<Span>, extraWidth: Int) {
-        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: DEFAULT_STYLE))
+    private fun alignLineLeft(line: MutableList<Span>, extraWidth: Int, endStyle: TextStyle) {
+        line.add(Span.space(extraWidth, line.lastOrNull()?.style ?: endStyle))
     }
 
-    private fun alignLineRight(line: MutableList<Span>, extraWidth: Int) {
-        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: DEFAULT_STYLE))
+    private fun alignLineRight(line: MutableList<Span>, extraWidth: Int, endStyle: TextStyle) {
+        line.add(0, Span.space(extraWidth, line.firstOrNull()?.style ?: endStyle))
     }
 
-    private fun alignLineCenter(line: MutableList<Span>, extraWidth: Int) {
+    private fun alignLineCenter(line: MutableList<Span>, extraWidth: Int, endStyle: TextStyle) {
         val halfExtra = extraWidth / 2
-        alignLineLeft(line, halfExtra + extraWidth % 2)
-        if (halfExtra > 0) alignLineRight(line, halfExtra)
+        alignLineLeft(line, halfExtra + extraWidth % 2, endStyle)
+        if (halfExtra > 0) alignLineRight(line, halfExtra, endStyle)
     }
 
-    private fun justifyLine(line: MutableList<Span>, extraWidth: Int): MutableList<Span> {
+    private fun justifyLine(line: MutableList<Span>, extraWidth: Int, endStyle: TextStyle): MutableList<Span> {
         val spaceCount = line.count { it.isWhitespace() }
 
         if (spaceCount == 0) {
-            alignLineCenter(line, extraWidth)
+            alignLineCenter(line, extraWidth, endStyle)
             return line
         }
 

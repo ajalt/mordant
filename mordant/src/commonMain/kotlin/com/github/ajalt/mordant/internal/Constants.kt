@@ -16,7 +16,7 @@ internal val DEFAULT_STYLE = TextStyle()
 internal val EMPTY_LINES = Lines(emptyList())
 
 @SharedImmutable
-internal val EMPTY_LINE: Line = emptyList()
+internal val EMPTY_LINE: Line = Line(emptyList(), DEFAULT_STYLE)
 
 @SharedImmutable
 internal val SINGLE_SPACE = Span.space(1)

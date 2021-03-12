@@ -57,7 +57,7 @@ class UnorderedList private constructor(
         for (entry in listEntries) {
             for ((i, line) in entry.render(t, contentWidth).lines.withIndex()) {
                 val start = if (i == 0) bullet else continuationPadding
-                lines += start + line
+                lines += Line(start + line)
             }
         }
         return Lines(lines)

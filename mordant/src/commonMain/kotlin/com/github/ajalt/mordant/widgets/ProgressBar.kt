@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.colormath.HSL
+import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.internal.ThemeFlag
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -89,28 +90,28 @@ class ProgressBar private constructor(
     }
 
     private fun makeComplete(t: Terminal, width: Int, barLength: Int, char: String, style: TextStyle): Line {
-        if (barLength == 0) return emptyList()
+        if (barLength == 0) return EMPTY_LINE
 
         val color = style.color?.toHSL()
 
         if (color == null || !showPulse[t]) {
-            return listOfNotNull(segmentText(char, barLength, style))
+            return Line(listOfNotNull(segmentText(char, barLength, style)))
         }
 
         // x is offset left by half a period so that the pulse starts offscreen
         val offset = 2 * (pulsePosition % 1.0).absoluteValue * width - width / 2f
-        return List(barLength) {
+        return Line(List(barLength) {
             // gaussian with σ²=0.1 and x scaled to ~50% of width
             val x = 2 * (it - offset) / width
             val gauss = exp(-x.pow(2.0) * 5)
             // linear interpolate the luminosity between the original and white
             val l = color.l + ((100 - color.l) * gauss).roundToInt()
             Span.word(char, TextStyle(HSL(color.h, color.s, l)))
-        }
+        })
     }
 
-    private fun makeLine(line: Line): Lines {
-        return Lines(listOf(line))
+    private fun makeLine(line: List<Span>): Lines {
+        return Lines(listOf(Line(line)))
     }
 
     private fun segmentText(char: String, count: Int, style: TextStyle): Span? {
