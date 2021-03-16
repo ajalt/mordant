@@ -14,9 +14,10 @@ kotlin {
         browser()
     }
 
-//    macosX64()
+    // TODO: enable other native targets once jb:markdown publishes them
+    // macosX64()
     linuxX64()
-//    mingwX64()
+    // mingwX64()
 
     sourceSets {
         all {
@@ -31,19 +32,14 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
-                implementation("org.jetbrains:markdown:0.2.0") // TODO: switch to official publication when it's ready
+                implementation("org.jetbrains:markdown:0.2.0")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("io.kotest:kotest-assertions-core:4.3.0")
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation("org.jetbrains:markdown:0.1.45")
+                implementation("io.kotest:kotest-assertions-core:4.4.3")
             }
         }
         val jvmTest by getting {

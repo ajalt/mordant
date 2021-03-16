@@ -25,7 +25,10 @@ abstract class RenderingTest(
         val actual = transformActual(t.render(widget))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
-            actual shouldBe trimmed.replace("⏎", "")
+
+            // TODO: switch back to kotest assertion once kotest 4.5 is released
+            // actual shouldBe trimmed.replace("⏎", "")
+            assertEquals(trimmed.replace("⏎", ""), actual)
         } catch (e: Throwable) {
             println(actual)
             throw e
