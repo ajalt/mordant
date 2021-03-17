@@ -9,7 +9,7 @@ plugins {
 
 kotlin {
     jvm()
-    js {
+    js(LEGACY) { // TODO: enable js(BOTH) once jb:markdown does
         nodejs()
         browser()
     }

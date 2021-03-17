@@ -32,8 +32,8 @@ private object BrowserMppImpls : JsMppImpls {
 private object NodeMppImpls : JsMppImpls {
     override fun readEnvvar(key: String): String? = process.env[key] as? String
     override fun isWindowsMpp(): Boolean = process.platform == "win32"
-    override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)")  as Boolean
-    override fun stdinInteractive(): Boolean =  js("Boolean(process.stdin.isTTY)") as Boolean
+    override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
+    override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
     override fun getTerminalSize(): Pair<Int, Int>? {
         // For some undocumented reason, getWindowSize is undefined sometimes, presumably when isTTY
         // is false
@@ -69,7 +69,20 @@ internal actual fun codepointSequence(string: String): Sequence<Int> {
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = JsTerminalCursor(terminal)
 
 private class JsTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    // TODO: implement js showOnExit for cursor show/hide
+    private var shutdownHook: (() -> Unit)? = null
+
+    override fun show() {
+        shutdownHook?.let { process.removeListener("exit", it) }
+        super.show()
+    }
+
+    override fun hide(showOnExit: Boolean) {
+        if (showOnExit && shutdownHook == null) {
+            shutdownHook = { show() }
+            process.on("exit", shutdownHook)
+        }
+        super.hide(showOnExit)
+    }
 }
 
 
