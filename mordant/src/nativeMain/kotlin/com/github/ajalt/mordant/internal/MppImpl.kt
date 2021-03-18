@@ -6,6 +6,9 @@ import platform.posix.STDIN_FILENO
 import platform.posix.STDOUT_FILENO
 import platform.posix.getenv
 import platform.posix.isatty
+import kotlin.native.concurrent.AtomicInt
+import platform.posix.atexit
+import kotlinx.cinterop.staticCFunction
 
 internal actual class AtomicInt actual constructor(initial: Int) {
     private val backing = kotlin.native.concurrent.AtomicInt(initial)
@@ -42,9 +45,35 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
 
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
 
-private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    // TODO: implement native showOnExit for cursor show/hide
+// These are for the NativeTerminalCursor, but are top-level since atexit requires a static function
+// This does mean that the callbacks state is shared between all cursor instances. Given that we
+// only want to print the show code once anyway, this should be acceptable.
+private val registeredAtExit = kotlin.native.concurrent.AtomicInt(0)
+private val shouldShow = kotlin.native.concurrent.AtomicInt(0)
+private fun cursorAtExitCallback() {
+    if (shouldShow.compareAndSet(1, 0)) {
+        // An alternative would be to keep a global reference to the terminal that registered the
+        // callback, but that would force us to freeze the terminal, which would cause other
+        // problems (e.g. registering an interceptor).
+        println("$CSI?25h")
+    }
 }
+
+private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
+    override fun show() {
+        shouldShow.value = 0
+        super.show()
+    }
+
+    override fun hide(showOnExit: Boolean) {
+        if (showOnExit && registeredAtExit.compareAndSet(0, 1)) {
+            atexit(staticCFunction(::cursorAtExitCallback))
+        }
+
+        super.hide(showOnExit)
+    }
+}
+
 
 
 @OptIn(ExperimentalTerminalApi::class)
