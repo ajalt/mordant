@@ -4,9 +4,10 @@
 
 ### Added
 - `Table.contentToCsv` to render a table's cells to csv format
+- Added support for JavaScript and linux native targets 
 
 ### Changed
-- Update Kotlin to 1.4.30
+- Update Kotlin to 1.4.31
 
 ## 2.0.0-alpha2
 _2021-02-02_
