@@ -28,9 +28,7 @@ sealed class Theme(
                 "list.number" to DEFAULT_STYLE,
                 "list.bullet" to DEFAULT_STYLE,
                 "hr.rule" to DEFAULT_STYLE,
-                "hr.title" to DEFAULT_STYLE,
                 "panel.border" to DEFAULT_STYLE,
-                "panel.title" to DEFAULT_STYLE,
 
                 "progressbar.pending" to TextStyle(DEFAULT_GRAY),
                 "progressbar.complete" to TextStyle(DEFAULT_HIGHLIGHT),

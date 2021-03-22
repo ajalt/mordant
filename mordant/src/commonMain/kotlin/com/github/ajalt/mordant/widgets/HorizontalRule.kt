@@ -12,7 +12,6 @@ class HorizontalRule internal constructor(
     private val title: Widget,
     private val ruleCharacter: ThemeString,
     private val ruleStyle: ThemeStyle,
-    private val titleStyle: ThemeStyle?,
     private val titleAlign: TextAlign,
     private val titlePadding: ThemeDimension,
 ) : Widget {
@@ -26,7 +25,6 @@ class HorizontalRule internal constructor(
         title = title,
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
-        titleStyle = null,
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
     )
@@ -35,17 +33,12 @@ class HorizontalRule internal constructor(
         title: String,
         ruleCharacter: String? = null,
         ruleStyle: TextStyle? = null,
-        titleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
     ) : this(
-        title = if (title.isEmpty()) EmptyWidget else Text(titleStyle?.invoke(title) ?: title),
+        title = if (title.isEmpty()) EmptyWidget else Text(title),
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
-        // titleStyle is applied by rendering the title widget and replacing the spans' styles. If
-        // titleStyle isn't null here, we avoid the extra copies by passing it to the Text widget
-        // we create above
-        titleStyle = ThemeStyle.of("hr.title", null).takeIf { titleStyle == null },
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
     )
@@ -58,11 +51,10 @@ class HorizontalRule internal constructor(
         val padding = titlePadding[t]
         val totalPadding = 2 * padding
         val minBarWidth = 4 + totalPadding // 2 for each of left bar and right bar
-        val content = title.withAlign(TextAlign.NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
-        val lines = if (content.isEmpty()) {
+        val renderedTitle = title.withAlign(TextAlign.NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
+        val lines = if (renderedTitle.isEmpty()) {
             listOf(rule(t, width))
         } else {
-            val renderedTitle = content.withStyle(titleStyle?.let { it[t] })
             val lastLine = renderedTitle.lines.last()
             val ruleWidth = width - lastLine.sumOf { it.cellWidth } - totalPadding
             val leftRuleWidth = when (titleAlign) {

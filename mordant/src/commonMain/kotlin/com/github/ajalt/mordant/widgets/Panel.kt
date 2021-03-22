@@ -11,12 +11,6 @@ import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.Whitespace.NOWRAP
 import com.github.ajalt.mordant.terminal.Terminal
 
-private fun titleWidget(title: String?, titleTextStyle: TextStyle?): Text? {
-    return title?.let {
-        Text(it, overflowWrap = ELLIPSES, whitespace = NOWRAP)
-    }
-}
-
 
 class Panel private constructor(
     content: Widget,
@@ -26,7 +20,6 @@ class Panel private constructor(
     private val borderStyle: BorderStyle?,
     private val titleAlign: TextAlign,
     private val borderTextStyle: ThemeStyle,
-    private val titleTextStyle: ThemeStyle?,
     private val titlePadding: ThemeDimension,
 ) : Widget {
     constructor(
@@ -46,7 +39,6 @@ class Panel private constructor(
         borderStyle = borderStyle,
         titleAlign = titleAlign,
         borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
-        titleTextStyle = null,
         titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
@@ -58,19 +50,15 @@ class Panel private constructor(
         borderStyle: BorderStyle? = BorderStyle.ROUNDED,
         titleAlign: TextAlign = CENTER,
         borderTextStyle: TextStyle? = null,
-        titleTextStyle: TextStyle? = borderTextStyle,
         titlePadding: Int? = null,
     ) : this(
         content = Text(content),
-        title = titleWidget(title, titleTextStyle),
+        title = title?.let { Text(it, overflowWrap = ELLIPSES, whitespace = NOWRAP) },
         expand = expand,
         padding = padding,
         borderStyle = borderStyle,
         titleAlign = titleAlign,
         borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
-        // The explicit style is baked in to the Text object, so only override the rendered style if
-        // we need it from the theme.
-        titleTextStyle = ThemeStyle.of("panel.title", null).takeIf { titleTextStyle == null },
         titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
@@ -108,7 +96,6 @@ class Panel private constructor(
             title ?: EmptyWidget,
             ThemeString.Explicit(borderStyle?.body?.ew ?: " "),
             this.borderTextStyle,
-            this.titleTextStyle,
             titleAlign,
             titlePadding
         ).render(t, contentWidth)

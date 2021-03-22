@@ -47,7 +47,7 @@ class ProgressBarTest : RenderingTest() {
     @JsName("default_theme")
     fun `default theme`() = doPercentTest(
         40,
-        "${CSI}38;2;16;152;157m━━${CSI}39m ${CSI}38;2;64;81;78m━━${CSI}39m",
+        "${CSI}38;2;97;175;239m━━${CSI}39m ${CSI}38;2;92;99;112m━━${CSI}39m",
         theme = Theme.Default
     )
 
@@ -55,35 +55,35 @@ class ProgressBarTest : RenderingTest() {
     @JsName("pulse_initial")
     fun `pulse initial`() = doPulseTest(
         pulsePosition = 0f,
-        "${CSI}38;2;16;152;157m━━━━━━━━━━${CSI}39m"
+        "${CSI}38;2;97;175;239m━━━━━━━━━━${CSI}39m"
     )
 
     @Test
     @JsName("pulse_25")
     fun `pulse 25`() = doPulseTest(
         pulsePosition = .25f,
-        "${CSI}38;2;255;255;255m━${CSI}38;2;200;248;249m━${CSI}38;2;89;233;238m━${CSI}38;2;22;202;208m━${CSI}38;2;18;166;171m━${CSI}38;2;16;152;157m━━━━━${CSI}39m"
+        "${CSI}38;2;255;255;255m━${CSI}38;2;227;241;252m━${CSI}38;2;167;211;246m━${CSI}38;2;125;189;242m━${CSI}38;2;102;178;240m━${CSI}38;2;97;175;239m━━━━━${CSI}39m"
     )
 
     @Test
     @JsName("pulse_50")
     fun `pulse 50`() = doPulseTest(
         pulsePosition = .50f,
-        "${CSI}38;2;16;152;157m━${CSI}38;2;18;166;171m━${CSI}38;2;22;202;208m━${CSI}38;2;89;233;238m━${CSI}38;2;200;248;249m━${CSI}38;2;255;255;255m━${CSI}38;2;200;248;249m━${CSI}38;2;89;233;238m━${CSI}38;2;22;202;208m━${CSI}38;2;18;166;171m━${CSI}39m"
+        "${CSI}38;2;97;175;239m━${CSI}38;2;102;178;240m━${CSI}38;2;125;189;242m━${CSI}38;2;167;211;246m━${CSI}38;2;227;241;252m━${CSI}38;2;255;255;255m━${CSI}38;2;227;241;252m━${CSI}38;2;167;211;246m━${CSI}38;2;125;189;242m━${CSI}38;2;102;178;240m━${CSI}39m"
     )
 
     @Test
     @JsName("pulse_75")
     fun `pulse 75`() = doPulseTest(
         pulsePosition = .75f,
-        "${CSI}38;2;16;152;157m━━━━━━${CSI}38;2;18;166;171m━${CSI}38;2;22;202;208m━${CSI}38;2;89;233;238m━${CSI}38;2;200;248;249m━${CSI}39m"
+        "${CSI}38;2;97;175;239m━━━━━━${CSI}38;2;102;178;240m━${CSI}38;2;125;189;242m━${CSI}38;2;167;211;246m━${CSI}38;2;227;241;252m━${CSI}39m",
     )
 
     @Test
     @JsName("pulse_100")
     fun `pulse 100`() = doPulseTest(
         pulsePosition = 1f,
-        "${CSI}38;2;16;152;157m━━━━━━━━━━${CSI}39m"
+        "${CSI}38;2;97;175;239m━━━━━━━━━━${CSI}39m"
     )
 
     private fun doPulseTest(pulsePosition: Float, expected: String) {

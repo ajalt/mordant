@@ -2,8 +2,8 @@ package com.github.ajalt.mordant.rendering.components
 
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.TextColors.blue
-import com.github.ajalt.mordant.rendering.TextColors.red
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.widgets.Panel
@@ -91,15 +91,14 @@ class PanelTest : RenderingTest(width = 20) {
     @Test
     @JsName("themed_panel")
     fun `themed panel`() = checkRender(
-        Panel("text content", title = "title"),
+        Panel(green("text content"), title = blue("title")),
         """
         ${red("╭───${blue("title")}────╮")}
-        ${red("│")}text content${red("│")}
+        ${red("│${green("text content")}│")}
         ${red("╰────────────╯")}
         """,
         theme = Theme {
             styles["panel.border"] = red
-            styles["panel.title"] = blue
             dimensions["panel.title.padding"] = 0
         }
     )

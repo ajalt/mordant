@@ -56,7 +56,7 @@ class HorizontalRuleTest : RenderingTest() {
     @JsName("styled_title_and_rule")
     fun `styled title and rule`() {
         checkRender(
-            HorizontalRule(title = "title", ruleStyle = blue, titleStyle = blue),
+            HorizontalRule(title = blue("title"), ruleStyle = blue),
             blue("─── title ───"), width = 13
         )
     }
@@ -65,12 +65,11 @@ class HorizontalRuleTest : RenderingTest() {
     @JsName("themed_title_and_rule")
     fun `themed title and rule`() {
         checkRender(
-            HorizontalRule(title = "title"),
-            red("──  title  ──"),
+            HorizontalRule(title = blue("title")),
+            red("──  ${blue("title")}  ──"),
             width = 13,
             theme = Theme {
                 styles["hr.rule"] = red
-                styles["hr.title"] = red
                 dimensions["hr.title.padding"] = 2
             }
         )

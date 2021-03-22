@@ -146,7 +146,6 @@ internal class MarkdownRenderer(
             MarkdownElementTypes.ATX_6 -> atxHr(theme.string("markdown.h6.rule"), theme.style("markdown.h6"), node)
 
             GFMTokenTypes.CHECK_BOX -> {
-                println(node.nodeText())
                 val content = CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
                 val checkbox = when {
                     content.isBlank() -> theme.string("markdown.task.unchecked")
