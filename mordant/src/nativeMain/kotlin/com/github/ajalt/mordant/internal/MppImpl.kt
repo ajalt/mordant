@@ -1,14 +1,18 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
+import kotlinx.cinterop.cstr
+import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.toKStringFromUtf8
+import platform.posix.*
 import platform.posix.STDIN_FILENO
 import platform.posix.STDOUT_FILENO
+import platform.posix.atexit
 import platform.posix.getenv
 import platform.posix.isatty
 import kotlin.native.concurrent.AtomicInt
-import platform.posix.atexit
-import kotlinx.cinterop.staticCFunction
+import kotlin.native.concurrent.AtomicReference
+
 
 internal actual class AtomicInt actual constructor(initial: Int) {
     private val backing = kotlin.native.concurrent.AtomicInt(initial)
@@ -45,35 +49,51 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
 
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
 
-// These are for the NativeTerminalCursor, but are top-level since atexit requires a static function
-// This does mean that the callbacks state is shared between all cursor instances. Given that we
-// only want to print the show code once anyway, this should be acceptable.
+
+// These are for the NativeTerminalCursor, but are top-level since atexit and signal require static
+// functions.
 private val registeredAtExit = kotlin.native.concurrent.AtomicInt(0)
-private val shouldShow = kotlin.native.concurrent.AtomicInt(0)
+private const val CURSOR_SHOW_STR = "\u001B[?25h"
+private val CURSOR_SHOW_BUF = CURSOR_SHOW_STR.cstr // .ctr allocates, so we need to do it statically
+
+@OptIn(ExperimentalUnsignedTypes::class)
+private val CURSOR_SHOW_LEN = 6UL
+
 private fun cursorAtExitCallback() {
-    if (shouldShow.compareAndSet(1, 0)) {
-        // An alternative would be to keep a global reference to the terminal that registered the
-        // callback, but that would force us to freeze the terminal, which would cause other
-        // problems (e.g. registering an interceptor).
-        println("$CSI?25h")
-    }
+    // We can't unregister atexit callbacks, so this will print the code even if the cursor has been
+    // shown manually. We'd like to have another variable to keep track of that case, but due to
+    // KT-45565, we can't access any state in an atexit handler.
+    println(CURSOR_SHOW_STR)
 }
 
-private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    override fun show() {
-        shouldShow.value = 0
-        super.show()
-    }
+// In case the user already has a sigint handler installed, we need to keep track of it
+private val existingSigintHandler = AtomicReference<__sighandler_t?>(null)
 
+private fun cursorSigintHandler(signum: Int) {
+    signal(SIGINT, SIG_IGN) // disable sigint handling to avoid recursive calls
+    // signal handlers can't safely access most state or functions due to their async nature, so we
+    // have to write to stdout directly without doing any allocation
+    write(STDOUT_FILENO, CURSOR_SHOW_BUF, CURSOR_SHOW_LEN)
+    signal(SIGINT, existingSigintHandler.value ?: SIG_DFL) // reset signal handling to previous value
+    existingSigintHandler.value = null
+    raise(signum) // re-raise the signal
+}
+
+private val cursorSigintHandlerPtr = staticCFunction(::cursorSigintHandler)
+
+private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
     override fun hide(showOnExit: Boolean) {
         if (showOnExit && registeredAtExit.compareAndSet(0, 1)) {
             atexit(staticCFunction(::cursorAtExitCallback))
+            val handler = signal(SIGINT, cursorSigintHandlerPtr)
+            if (handler != cursorSigintHandlerPtr) {
+                existingSigintHandler.value = handler
+            }
         }
 
         super.hide(showOnExit)
     }
 }
-
 
 
 @OptIn(ExperimentalTerminalApi::class)
