@@ -21,12 +21,16 @@ enum class Whitespace(
 ) {
     /** Wrap text and collapse all whitespaces and line breaks */
     NORMAL(collapseNewlines = true, collapseSpaces = true, wrap = true, trimEol = true),
+
     /** Collapse spaces and line breaks, but don't wrap lines. This will effectively put all text on a single line. */
     NOWRAP(collapseNewlines = true, collapseSpaces = true, wrap = false, trimEol = true),
+
     /** Make no changes to the input text */
     PRE(collapseNewlines = false, collapseSpaces = false, wrap = false, trimEol = false),
+
     /** Like [PRE], but will break long lines */
     PRE_WRAP(collapseNewlines = false, collapseSpaces = false, wrap = true, trimEol = true),
+
     /** Like [NORMAL], but preserves any line breaks from the input */
     PRE_LINE(collapseNewlines = false, collapseSpaces = true, wrap = true, trimEol = true)
 }

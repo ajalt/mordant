@@ -65,6 +65,7 @@ internal class MarkdownRenderer(
     private val EOL_LINES = Lines(listOf(EMPTY_LINE, EMPTY_LINE))
     private val EOL_TEXT = Text(EOL_LINES, whitespace = Whitespace.PRE)
     private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
+
     @Suppress("RegExpRedundantEscape") // extra escape required on js
     private val CHECK_BOX_REGEX = Regex("""\[[^\]]]""")
 

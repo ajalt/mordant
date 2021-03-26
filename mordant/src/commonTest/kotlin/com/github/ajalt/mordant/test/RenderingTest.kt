@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.terminal.Terminal
-import io.kotest.matchers.shouldBe
 import kotlin.test.assertEquals
 
 abstract class RenderingTest(

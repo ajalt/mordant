@@ -3,7 +3,6 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.stringCellWidth
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 /**
@@ -27,6 +26,7 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE): Span {
             return Span(" ".repeat(width), style)
         }
+
         fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 

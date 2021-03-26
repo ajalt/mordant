@@ -42,9 +42,9 @@ class TextOverflowWrapTest : RenderingTest() {
         |Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
         """.trimMargin()
         checkRender(Text(
-                text,
-                align = TextAlign.NONE,
-                overflowWrap = wrap
+            text,
+            align = TextAlign.NONE,
+            overflowWrap = wrap
         ), expected.trimMargin(), trimIndent = false, width = 23)
     }
 }

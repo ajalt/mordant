@@ -28,4 +28,9 @@ internal expect fun codepointSequence(string: String): Sequence<Int>
 internal expect fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor
 
 @OptIn(ExperimentalTerminalApi::class)
-internal expect fun sendInterceptedPrintRequest(request: PrintRequest, terminalInterface: TerminalInterface, interceptors: List<TerminalInterceptor>, lock: Any)
+internal expect fun sendInterceptedPrintRequest(
+    request: PrintRequest,
+    terminalInterface: TerminalInterface,
+    interceptors: List<TerminalInterceptor>,
+    lock: Any,
+)

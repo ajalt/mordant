@@ -2,12 +2,12 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.OverflowWrap
-import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.Borders.ALL
 import com.github.ajalt.mordant.table.Borders.LEFT_RIGHT
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import kotlin.js.JsName
 import kotlin.test.Test

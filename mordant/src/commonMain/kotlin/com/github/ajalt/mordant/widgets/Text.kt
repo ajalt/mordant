@@ -173,7 +173,13 @@ class Text internal constructor(
         }
     }
 
-    private fun alignLine(line: MutableList<Span>, wrapWidth: Int, width: Int, align: TextAlign, endStyle: TextStyle): MutableList<Span> {
+    private fun alignLine(
+        line: MutableList<Span>,
+        wrapWidth: Int,
+        width: Int,
+        align: TextAlign,
+        endStyle: TextStyle,
+    ): MutableList<Span> {
         val extraWidth = wrapWidth - width
         when (align) {
             LEFT -> alignLineLeft(line, extraWidth, endStyle)

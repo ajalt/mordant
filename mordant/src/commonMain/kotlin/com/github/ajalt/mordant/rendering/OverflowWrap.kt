@@ -9,10 +9,13 @@ package com.github.ajalt.mordant.rendering
 enum class OverflowWrap {
     /** Don't break or alter long words */
     NORMAL,
+
     /** Break words that exceed the maximum line length */
     BREAK_WORD,
+
     /** Truncate words that exceed the maximum line length */
     TRUNCATE,
+
     /** Truncate words that exceed the maximum line length, and replace the last visible character with `…` */
     ELLIPSES
 }

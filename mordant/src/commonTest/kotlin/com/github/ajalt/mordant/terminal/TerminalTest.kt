@@ -1,8 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextStyles.dim
+import com.github.ajalt.mordant.rendering.TextColors.cyan
 import com.github.ajalt.mordant.rendering.Whitespace
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
