@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 2.0.0-beta1
+_2021-03-26_
+
 ### Added
 - `Table.contentToCsv` to render a table's cells to csv format
 - Added support for JavaScript and linux native targets 

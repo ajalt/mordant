@@ -10,7 +10,7 @@ Mordant has:
 * Components for laying out our terminal output, including lists, tables, panels, and more
 * Support for animating any widget, like progress bars and dashboards
 
-##### This README documents Mordant 2.0, which is in alpha. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
+##### This README documents Mordant 2.0, which is in beta. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
 
 ## Usage
 
@@ -229,7 +229,7 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-   implementation("com.github.ajalt.mordant:mordant:2.0.0-alpha2")
+   implementation("com.github.ajalt.mordant:mordant:2.0.0-beta1")
 }
 ```
 
@@ -237,7 +237,7 @@ dependencies {
 
 ## License
 
-    Copyright 2018-2020 AJ Alt
+    Copyright 2018-2021 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
