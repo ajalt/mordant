@@ -17,7 +17,7 @@ kotlin {
     // TODO: enable other native targets once jb:markdown publishes them
     // macosX64()
     linuxX64()
-    // mingwX64()
+    mingwX64()
 
     sourceSets {
         all {
@@ -32,7 +32,7 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.0.0")
-                implementation("org.jetbrains:markdown:0.2.0")
+                implementation("org.jetbrains:markdown:0.2.1")
             }
         }
         val commonTest by getting {
@@ -62,9 +62,9 @@ kotlin {
         val linuxX64Main by getting {
             dependsOn(nativeMain)
         }
-//        val mingwX64Main by getting {
-//            dependsOn(nativeMain)
-//        }
+        val mingwX64Main by getting {
+            dependsOn(nativeMain)
+        }
 
         val nativeTest by creating {
             dependsOn(commonTest)
@@ -75,9 +75,9 @@ kotlin {
         val linuxX64Test by getting {
             dependsOn(nativeTest)
         }
-//        val mingwX64Test by getting {
-//            dependsOn(nativeTest)
-//        }
+        val mingwX64Test by getting {
+            dependsOn(nativeTest)
+        }
     }
 }
 
