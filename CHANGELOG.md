@@ -5,9 +5,11 @@
 ### Added
 - `Table.contentToCsv` to render a table's cells to csv format
 - Added support for JavaScript and linux native targets 
+- Getter properties for standard theme styles
 
 ### Changed
 - Update Kotlin to 1.4.31
+- Improve terminal capabilities detection
 
 ## 2.0.0-alpha2
 _2021-02-02_
