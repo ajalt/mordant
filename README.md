@@ -225,7 +225,7 @@ task completes.
 
 ## Installation
 
-Mordant is distributed through Maven Central. For Gradle use:
+Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
@@ -233,17 +233,9 @@ dependencies {
 }
 ```
 
-For Maven, use `mordant-jvm` as the `mordant` artifact ID won't work:
+<sup>In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.</sup>
 
-```xml
-<dependency>
-    <groupId>com.github.ajalt.mordant</groupId>
-    <artifactId>mordant-jvm</artifactId>
-    <version>2.0.0-beta1</version>
-</dependency>
-```
-
-###### In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
+<sup>If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`</sup>
 
 ## License
 
