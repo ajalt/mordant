@@ -43,6 +43,7 @@ class TextOverflowWrapTest : RenderingTest() {
         """.trimMargin()
         checkRender(Text(
             text,
+            whitespace = Whitespace.NORMAL,
             align = TextAlign.NONE,
             overflowWrap = wrap
         ), expected.trimMargin(), trimIndent = false, width = 23)

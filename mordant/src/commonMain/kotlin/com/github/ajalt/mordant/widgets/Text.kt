@@ -13,7 +13,7 @@ internal const val LS = "\u2028"
 
 class Text internal constructor(
     private val lines: Lines,
-    private val whitespace: Whitespace = Whitespace.NORMAL,
+    private val whitespace: Whitespace = Whitespace.PRE,
     private val align: TextAlign = NONE,
     private val overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
     private val width: Int? = null,
@@ -21,7 +21,7 @@ class Text internal constructor(
 ) : Widget {
     constructor(
         text: String,
-        whitespace: Whitespace = Whitespace.NORMAL,
+        whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
