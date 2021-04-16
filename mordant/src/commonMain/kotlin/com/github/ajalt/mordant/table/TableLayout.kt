@@ -1,11 +1,8 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.rendering.OverflowWrap
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.VerticalAlign
-import com.github.ajalt.mordant.rendering.foldStyles
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Padding
-import com.github.ajalt.mordant.widgets.withAlign
+import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.widgets.withPadding
 
 internal typealias ImmutableRow = List<Cell>
@@ -71,6 +68,7 @@ internal class TableLayout(private val table: TableBuilder) {
 
         val borders = getStyle(Borders.ALL) { it.borders }
         val padding = getStyle(Padding.horizontal(1)) { it.padding }
+        val whitespace = getStyle(Whitespace.PRE) { it.whitespace }
         val textAlign = getStyle(TextAlign.LEFT) { it.align }
         val verticalAlign = getStyle(VerticalAlign.TOP) { it.verticalAlign }
         val overflowWrap = getStyle(OverflowWrap.ELLIPSES) { it.overflowWrap }
@@ -85,7 +83,15 @@ internal class TableLayout(private val table: TableBuilder) {
             section.style,
             table.style
         )
-        val content = cell.content.withAlign(textAlign, overflowWrap).withPadding(padding)
+        val content = when (cell.content) {
+            is CellContent.WidgetContent -> cell.content.widget
+            is CellContent.TextContent -> Text(
+                cell.content.text,
+                whitespace,
+                textAlign,
+                overflowWrap
+            )
+        }.withPadding(padding)
 
         val builtCell = Cell.Content(
             content = content,

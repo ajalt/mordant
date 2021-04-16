@@ -11,6 +11,7 @@ interface CellStyleBuilder {
     var padding: Padding?
     var style: TextStyle?
     var borders: Borders?
+    var whitespace: Whitespace?
     var align: TextAlign?
     var verticalAlign: VerticalAlign?
     var overflowWrap: OverflowWrap?
@@ -50,6 +51,7 @@ private class CellStyleBuilderMixin : CellStyleBuilder {
     override var padding: Padding? = null
     override var style: TextStyle? = null
     override var borders: Borders? = null
+    override var whitespace: Whitespace? = null
     override var align: TextAlign? = null
     override var verticalAlign: VerticalAlign? = null
     override var overflowWrap: OverflowWrap? = null
@@ -161,7 +163,7 @@ class SectionBuilder internal constructor() : CellStyleBuilder by CellStyleBuild
      * Add all [cells] from an iterable.
      */
     fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {}) {
-        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getWidget(it)) }
+        val cellBuilders = cells.mapTo(mutableListOf()) { CellBuilder(getCellContent(it)) }
         rows += RowBuilder(cellBuilders).apply(init)
     }
 
@@ -227,7 +229,7 @@ class RowBuilder internal constructor(
 
     /** Add all [cells] from an iterable to this row */
     fun cellsFrom(cells: Iterable<Any?>, init: CellBuilder.() -> Unit = {}) {
-        cells.mapTo(this.cells) { CellBuilder(getWidget(it)).apply(init) }
+        cells.mapTo(this.cells) { CellBuilder(getCellContent(it)).apply(init) }
     }
 
     /** Add a cell to this row.
@@ -236,13 +238,18 @@ class RowBuilder internal constructor(
      * converted to a string.
      */
     fun cell(content: Any?, init: CellBuilder.() -> Unit = {}) {
-        cells += CellBuilder(getWidget(content)).apply(init)
+        cells += CellBuilder(getCellContent(content)).apply(init)
     }
+}
+
+internal sealed class CellContent {
+    data class WidgetContent(val widget: Widget) : CellContent()
+    data class TextContent(val text: String) : CellContent()
 }
 
 @MordantDsl
 class CellBuilder internal constructor(
-    internal val content: Widget = Text(""),
+    internal val content: CellContent,
 ) : CellStyleBuilder by CellStyleBuilderMixin() {
 
     /**
@@ -319,12 +326,9 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
     }
 }
 
-private fun getWidget(content: Any?): Widget {
-    if (content is Widget) return content
-    return when (val string = content.toString()) {
-        "" -> EmptyWidget
-        else -> Text(string)
-    }
+private fun getCellContent(content: Any?): CellContent {
+    if (content is Widget) return CellContent.WidgetContent(content)
+    return CellContent.TextContent(content.toString())
 }
 
 private fun <T : CellStyleBuilder> initColumn(columns: MutableMap<Int, T>, i: Int, def: T, init: T.() -> Unit) {

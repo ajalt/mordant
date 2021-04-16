@@ -121,13 +121,14 @@ class TableColumnWidthTest : RenderingTest() {
             borderStyle = BorderStyle.ASCII
             padding = Padding.none()
             overflowWrap = OverflowWrap.TRUNCATE
+            whitespace = Whitespace.NORMAL
             column(0) { width = ColumnWidth.Fixed(3) }
             column(2) { width = ColumnWidth.Expand() }
             column(3) { width = ColumnWidth.Expand(2) }
             body {
                 this.borders = borders
                 row {
-                    cells(11, Text("22 foo", whitespace = Whitespace.NORMAL), 33, 44)
+                    cells(11, "22 foo", 33, 44)
                 }
             }
         }, expected.trimIndent(), width = tableWidth)
