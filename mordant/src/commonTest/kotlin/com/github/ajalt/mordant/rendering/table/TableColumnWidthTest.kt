@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.rendering.table
 
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.OverflowWrap
+import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.Borders.ALL
 import com.github.ajalt.mordant.table.Borders.LEFT_RIGHT
@@ -9,6 +10,7 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.Text
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -125,7 +127,7 @@ class TableColumnWidthTest : RenderingTest() {
             body {
                 this.borders = borders
                 row {
-                    cells(11, "22 foo", 33, 44)
+                    cells(11, Text("22 foo", whitespace = Whitespace.NORMAL), 33, 44)
                 }
             }
         }, expected.trimIndent(), width = tableWidth)

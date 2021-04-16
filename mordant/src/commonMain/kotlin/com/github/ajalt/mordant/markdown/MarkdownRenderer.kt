@@ -130,11 +130,11 @@ internal class MarkdownRenderer(
                 else -> Text(EMPTY_LINES)
             }
             MarkdownElementTypes.PARAGRAPH -> {
-                Text(innerInlines(node))
+                Text(innerInlines(node), whitespace = Whitespace.NORMAL)
             }
             MarkdownElementTypes.LINK_DEFINITION -> {
                 if (hyperlinks) EmptyWidget
-                else Text(parseText(node.nodeText(), theme.style("markdown.link.destination")))
+                else Text(parseText(node.nodeText(), theme.style("markdown.link.destination")), whitespace = Whitespace.NORMAL)
             }
 
             MarkdownElementTypes.SETEXT_1 -> setext(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
@@ -282,7 +282,7 @@ internal class MarkdownRenderer(
     private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Widget {
         return when {
             node.children.size <= 1 -> EOL_TEXT
-            else -> headerHr(Text(atxContent(node).withStyle(style)), bar, style)
+            else -> headerHr(Text(atxContent(node).withStyle(style), whitespace = Whitespace.NORMAL), bar, style)
         }
     }
 
@@ -294,7 +294,7 @@ internal class MarkdownRenderer(
     private fun setext(bar: String, style: TextStyle, node: ASTNode): Widget {
         val (drop, dropLast) = dropWs(node.children[0].children)
         val content = innerInlines(node.children[0], drop = drop, dropLast = dropLast)
-        return headerHr(Text(content.withStyle(style)), bar, style)
+        return headerHr(Text(content.withStyle(style), whitespace = Whitespace.NORMAL), bar, style)
     }
 
     private fun headerHr(content: Widget, bar: String, style: TextStyle): Widget {
@@ -312,7 +312,7 @@ internal class MarkdownRenderer(
         for (child in node.children) {
             if (child.type != GFMTokenTypes.CELL) continue
             val (drop, dropLast) = dropWs(child.children)
-            cell(Text(innerInlines(child, drop = drop, dropLast = dropLast)))
+            cell(Text(innerInlines(child, drop = drop, dropLast = dropLast), whitespace = Whitespace.NORMAL))
         }
     }
 

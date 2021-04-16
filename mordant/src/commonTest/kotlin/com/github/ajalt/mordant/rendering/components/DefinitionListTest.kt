@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.rendering.components
 
+import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.DefinitionListBuilder
@@ -31,7 +32,7 @@ term 1:    Lorem ipsum
            amet
 term 2 2:  desc 2 2
    """, width = 23) {
-        entry("term 1:", "Lorem ipsum dolor sit amet")
+        entry("term 1:", Text("Lorem ipsum dolor sit amet", whitespace = NORMAL))
         entry("term 2 2:", "desc 2 2")
         inline = true
     }
@@ -86,7 +87,7 @@ term 3:  desc 3
         inline = true
 
         entry("term 1:", "desc 1")
-        entry("term 2 lorem ipsum dolor sit amet:", "desc 2")
+        entry(Text("term 2 lorem ipsum dolor sit amet:", whitespace = NORMAL), "desc 2")
         entry("term 3:", "desc 3")
     }
 
@@ -112,7 +113,7 @@ term 2:   desc 2
 
 
     @Test
-    @JsName("non_nline")
+    @JsName("non_inline")
     fun `non-inline`() = doTest("""
 term 1:
 desc 1
@@ -127,12 +128,12 @@ adipiscing elit
 """, width = 21) {
         entry("term 1:", "desc 1")
         entry {
-            term(Text("term 2 lorem ipsum dolor sit amet:"))
+            term(Text("term 2 lorem ipsum dolor sit amet:", whitespace = NORMAL))
             description(Text("desc 2"))
         }
         entry {
             term("term 3:")
-            description("desc 3 consectetur adipiscing elit")
+            description("desc 3 consectetur adipiscing elit", whitespace = NORMAL)
         }
     }
 

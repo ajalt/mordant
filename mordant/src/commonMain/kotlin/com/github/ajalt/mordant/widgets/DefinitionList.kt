@@ -134,7 +134,7 @@ class DefinitionListEntryBuilder {
 
     fun term(
         term: String,
-        whitespace: Whitespace = Whitespace.NORMAL,
+        whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
@@ -148,7 +148,7 @@ class DefinitionListEntryBuilder {
 
     fun description(
         description: String,
-        whitespace: Whitespace = Whitespace.NORMAL,
+        whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
