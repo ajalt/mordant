@@ -8,7 +8,7 @@ import com.github.ajalt.mordant.widgets.withPadding
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
 
-internal class TableLayout(private val table: TableBuilder) {
+internal class TableLayout(private val table: TableBuilderInstance) {
     fun buildTable(): TableImpl {
         val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
             it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
@@ -28,7 +28,7 @@ internal class TableLayout(private val table: TableBuilder) {
         )
     }
 
-    private fun buildSection(section: SectionBuilder, builderWidth: Int): MutableList<MutableRow> {
+    private fun buildSection(section: SectionBuilderInstance, builderWidth: Int): MutableList<MutableRow> {
         val rows: MutableList<MutableRow> = MutableList(section.rows.size) { ArrayList(section.rows.size) }
 
         for ((y, row) in section.rows.withIndex()) {
@@ -44,8 +44,8 @@ internal class TableLayout(private val table: TableBuilder) {
     }
 
     private fun insertCell(
-        cell: CellBuilder,
-        section: SectionBuilder,
+        cell: CellBuilderInstance,
+        section: SectionBuilderInstance,
         rows: MutableList<MutableRow>,
         startingX: Int,
         startingY: Int,
