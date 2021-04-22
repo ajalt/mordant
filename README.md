@@ -173,9 +173,11 @@ redirected to a file) these commands are no-ops.
 
 ```kotlin
 val t = Terminal()
-t.cursor.up(3)
-t.cursor.startOfLine()
-t.cursor.clearScreenAfterCursor()
+t.cursor.move {
+    up(3)
+    startOfLine()
+    clearScreenAfterCursor()
+}
 t.cursor.hide(showOnExit = true)
 ```
 
