@@ -56,6 +56,7 @@ private inline fun <T> List<T>.foldLines(transform: (T) -> Lines): Lines {
     }
 }
 
+@Suppress("PrivatePropertyName")
 internal class MarkdownRenderer(
     input: String,
     private val theme: Theme,

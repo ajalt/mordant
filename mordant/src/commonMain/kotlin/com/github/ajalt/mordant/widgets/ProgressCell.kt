@@ -74,7 +74,7 @@ internal class CompletedProgressCell(
             includeTotal && total == null -> "/---.-"
             else -> ""
         } + suffix
-        return Text(t, whitespace = Whitespace.PRE)
+        return Text(style(t), whitespace = Whitespace.PRE)
     }
 }
 
@@ -90,7 +90,7 @@ internal class SpeedProgressCell(
             indeterminate || completedPerSecond <= 0 -> "---.-"
             else -> completedPerSecond.formatWithSiSuffix(1)
         }
-        return Text(t + suffix, whitespace = Whitespace.PRE)
+        return Text(style(t + suffix), whitespace = Whitespace.PRE)
     }
 }
 
@@ -115,7 +115,7 @@ internal class EtaProgressCell(
         return text("$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
     }
 
-    private fun text(s: String) = Text(s, whitespace = Whitespace.PRE)
+    private fun text(s: String) = Text(style(s), whitespace = Whitespace.PRE)
 }
 
 internal class BarProgressCell(

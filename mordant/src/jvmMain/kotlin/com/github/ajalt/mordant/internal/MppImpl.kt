@@ -56,7 +56,7 @@ private fun parseSttySize(output: String): Pair<Int, Int>? {
     return dimens[1] to dimens[0]
 }
 
-internal actual fun isWindows(): Boolean = "win" in System.getProperty("os.name").toLowerCase()
+internal actual fun isWindows(): Boolean = "win" in System.getProperty("os.name").lowercase()
 
 internal actual fun getEnv(key: String): String? = System.getenv(key)
 
