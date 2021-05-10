@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+- Published artifacts for macOS
+
+### Changed
+- Update Kotlin to 1.5.0
+- All text instances and print functions now default to preformatted whitespace, meaning that spaces and newlines will be preserved. You can explicitly pass `Whitespace.NORMAL` to restore the previous behavior.
+
 ## 2.0.0-beta1
 _2021-03-26_
 

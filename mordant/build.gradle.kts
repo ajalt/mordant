@@ -9,21 +9,20 @@ plugins {
 
 kotlin {
     jvm()
-    js(LEGACY) { // TODO: enable js(BOTH) once jb:markdown does
+    js(BOTH) {
         nodejs()
         browser()
     }
 
-    // TODO: enable other native targets once jb:markdown publishes them
-    // macosX64()
+    macosX64()
     linuxX64()
     mingwX64()
 
     sourceSets {
         all {
             with(languageSettings) {
-                languageVersion = "1.4"
-                apiVersion = "1.4"
+                languageVersion = "1.5"
+                apiVersion = "1.5"
                 useExperimentalAnnotation("kotlin.RequiresOptIn")
             }
         }
@@ -31,34 +30,23 @@ kotlin {
         val commonMain by getting {
             dependsOn(gen)
             dependencies {
-                api("com.github.ajalt.colormath:colormath:2.0.0")
-                implementation("org.jetbrains:markdown:0.2.1")
+                api("com.github.ajalt.colormath:colormath:2.1.0")
+                implementation("org.jetbrains:markdown:0.2.3")
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation("io.kotest:kotest-assertions-core:4.4.3")
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test-junit"))
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                api(kotlin("test-js"))
+                implementation(kotlin("test"))
+                implementation("io.kotest:kotest-assertions-core:4.5.0")
             }
         }
 
         val nativeMain by creating {
             dependsOn(commonMain)
         }
-//        val macosX64Main by getting {
-//            dependsOn(nativeMain)
-//        }
+        val macosX64Main by getting {
+            dependsOn(nativeMain)
+        }
         val linuxX64Main by getting {
             dependsOn(nativeMain)
         }
@@ -69,9 +57,9 @@ kotlin {
         val nativeTest by creating {
             dependsOn(commonTest)
         }
-//        val macosX64Test by getting {
-//            dependsOn(nativeTest)
-//        }
+        val macosX64Test by getting {
+            dependsOn(nativeTest)
+        }
         val linuxX64Test by getting {
             dependsOn(nativeTest)
         }
@@ -114,7 +102,7 @@ publishing {
             licenses {
                 license {
                     name.set("The Apache Software License, Version 2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     distribution.set("repo")
                 }
             }
