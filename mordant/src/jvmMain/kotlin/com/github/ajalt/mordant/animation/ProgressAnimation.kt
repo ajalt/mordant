@@ -85,6 +85,9 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         }
 }
 
+/**
+ * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
+ */
 class ProgressAnimation internal constructor(
     t: Terminal,
     private val layout: ProgressLayout,
@@ -100,72 +103,82 @@ class ProgressAnimation internal constructor(
         layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
     }
 
+    // Locking: all state is protected by this object's monitor. Tick is run on the timer thread.
+
+    @Synchronized
     fun update(completed: Long) {
-        synchronized(history) {
-            history.update(completed)
-            if (!tickerStarted) {
-                animation.update(Unit)
-            }
+        history.update(completed)
+        if (!tickerStarted) {
+            animation.update(Unit)
         }
     }
 
+    @Synchronized
     fun update() {
         update(history.completed)
     }
 
+    @Synchronized
     fun update(completed: Long, total: Long?) {
         updateTotalWithoutAnimation(total)
         update(completed)
     }
 
+    @Synchronized
     fun updateTotal(total: Long?) {
         updateTotalWithoutAnimation(total)
         update()
     }
 
+    @Synchronized
     private fun updateTotalWithoutAnimation(total: Long?) {
         this.total = total?.takeIf { it > 0 }
     }
 
+    @Synchronized
     fun advance(amount: Long = 1) {
         update(history.completed + amount)
     }
 
+    @Synchronized
     fun start() {
-        synchronized(history) {
-            if (tickerStarted) return
-            tickerStarted = true
-            history.start()
-            ticker.start {
-                update()
-                animation.update(Unit)
-            }
+        if (tickerStarted) return
+        tickerStarted = true
+        history.start()
+        ticker.start {
+            tick()
         }
     }
 
+    @Synchronized
+    private fun tick() {
+        // Running on the timer thread.
+        if (!tickerStarted)
+            return   // This can happen if we're racing with stop().
+        update()
+        animation.update(Unit)
+    }
+
+    @Synchronized
     fun stop() {
-        synchronized(history) {
-            if (!tickerStarted) return
-            tickerStarted = false
-            ticker.stop()
-        }
+        if (!tickerStarted) return
+        tickerStarted = false
+        ticker.stop()
     }
 
+    @Synchronized
     fun restart() {
-        synchronized(history) {
-            stop()
-            layout.cells.forEach { (it as? CachedProgressCell)?.clear() }
-            update(0)
-            start()
-        }
+        stop()
+        layout.cells.forEach { (it as? CachedProgressCell)?.clear() }
+        update(0)
+        start()
     }
 
+    @Synchronized
     fun clear() {
-        synchronized(history) {
-            stop()
-            history.clear()
-            animation.clear()
-        }
+        stop()
+        history.clear()
+        animation.clear()
     }
 }
 
