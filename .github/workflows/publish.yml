@@ -16,6 +16,15 @@ jobs:
         with:
           dependencies-cache-enabled: true
           arguments: check --stacktrace
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: error-report
+          path: build-reports.zip
   windows-tests:
     runs-on: windows-latest
     steps:
@@ -24,6 +33,15 @@ jobs:
         with:
           dependencies-cache-enabled: true
           arguments: mingwX64Test --stacktrace
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: error-report
+          path: build-reports.zip
   deploy-linux:
     needs: [ linux-tests, windows-tests ]
     runs-on: ubuntu-latest
