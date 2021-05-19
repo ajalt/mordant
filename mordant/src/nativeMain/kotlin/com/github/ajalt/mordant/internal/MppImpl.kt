@@ -33,13 +33,12 @@ internal actual fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
 
 internal actual fun codepointSequence(string: String): Sequence<Int> = sequence {
     var i = 0
-    val chars = string.toCharArray()
-    while (i < chars.size) {
-        if (i < chars.lastIndex && Char.isSurrogatePair(chars[i], chars[i + 1])) {
-            yield(Char.toCodePoint(chars[i], chars[i + 1]))
+    while (i < string.length) {
+        if (i < string.lastIndex && Char.isSurrogatePair(string[i], string[i + 1])) {
+            yield(Char.toCodePoint(string[i], string[i + 1]))
             i += 1
         } else {
-            yield(chars[i].toInt())
+            yield(string[i].toInt())
         }
         i += 1
     }
