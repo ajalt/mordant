@@ -11,7 +11,7 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
         val csbi = alloc<CONSOLE_SCREEN_BUFFER_INFO>()
         val success = GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), csbi.ptr)
         if (success == TRUE) {
-            csbi.dwSize.run { Y.toInt() to X.toInt() }
+            csbi.dwSize.run { X.toInt() to Y.toInt() }
         } else {
             null
         }
