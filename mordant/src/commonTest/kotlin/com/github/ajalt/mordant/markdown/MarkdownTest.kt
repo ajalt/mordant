@@ -305,7 +305,7 @@ ${quote("▎ bar baz")}
 
 [inline link 1]( example.com "with a title" )
 
-[inline link 2](http://www.example.com)
+[inline link 2](https://www.example.com)
 
 [inline link 3]()
 
@@ -327,7 +327,7 @@ ${linkDest("[a link]")}
 
 ${linkText("inline link 1${linkDest("(example.com)")}")}
 
-${linkText("inline link 2${linkDest("(http://www.example.com)")}")}
+${linkText("inline link 2${linkDest("(https://www.example.com)")}")}
 
 ${linkText("inline link 3${linkDest("()")}")}
 
@@ -356,7 +356,7 @@ ${linkDest("[a link]: example.com")}
 
 [inline link 1]( example.com/1 "with a title" )
 
-[inline link 2](http://www.example.com/2)
+[inline link 2](https://www.example.com/2)
 
 [inline link 3]()
 
@@ -380,7 +380,7 @@ ${(linkText + hyperlink("example.com/4"))("a link")}
 
 ${(linkText + hyperlink("example.com/1"))("inline link 1")}
 
-${(linkText + hyperlink("http://www.example.com/2"))("inline link 2")}
+${(linkText + hyperlink("https://www.example.com/2"))("inline link 2")}
 
 ${linkText("inline link 3${linkDest("()")}")}
 
@@ -395,7 +395,7 @@ ${linkText("www.example.com/url")}
 <${linkText("autolink@example.com")}>
 
 
-""", hyperlinks = true)
+""".normalizeHyperlinks(), hyperlinks = true)
 
     @Test
     @JsName("image_tags")
