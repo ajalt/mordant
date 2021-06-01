@@ -31,13 +31,13 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:2.1.0")
-                implementation("org.jetbrains:markdown:0.2.3")
+                implementation("org.jetbrains:markdown:0.2.4")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("io.kotest:kotest-assertions-core:4.5.0")
+                implementation("io.kotest:kotest-assertions-core:4.6.0")
             }
         }
 
