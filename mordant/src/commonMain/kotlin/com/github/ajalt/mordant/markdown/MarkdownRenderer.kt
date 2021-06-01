@@ -68,7 +68,7 @@ internal class MarkdownRenderer(
     private val TABLE_DELIMITER_REGEX = Regex(""":?-+:?""")
 
     @Suppress("RegExpRedundantEscape") // extra escape required on js
-    private val CHECK_BOX_REGEX = Regex("""\[[^\]]]""")
+    private val CHECK_BOX_REGEX = Regex("""\[[^\]]\]""")
 
     // Hack to work around the fact that the markdown parser doesn't parse CRLF correctly
     private val input = input.replace("\r", "")

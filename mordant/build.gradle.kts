@@ -9,7 +9,7 @@ plugins {
 
 kotlin {
     jvm()
-    js(LEGACY) { // We can't publish IR until https://github.com/JetBrains/markdown/issues/78 is fixed
+    js(LEGACY) {
         nodejs()
         browser()
     }
