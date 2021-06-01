@@ -24,5 +24,6 @@ internal val SINGLE_SPACE = Span.space(1)
 @SharedImmutable
 internal val DEFAULT_PADDING = Padding.none()
 
+@Suppress("RegExpRedundantEscape") // JS requires escaping the lone `]` at the beginning of the pattern, so we can't use $OSC
 @SharedImmutable
-internal val ANSI_RE = Regex("""$OSC[^$ESC]*$ESC\\|$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
+internal val ANSI_RE = Regex("""$ESC\][^$ESC]*$ESC\\|$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")

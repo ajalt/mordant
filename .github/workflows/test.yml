@@ -6,8 +6,14 @@ on:
       - '*.md'
 
 jobs:
-  linux-tests:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      matrix:
+        os:
+          - macOS-latest
+          - windows-latest
+          - ubuntu-latest
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v2
       - uses: eskatos/gradle-command-action@v1
@@ -23,41 +29,6 @@ jobs:
         with:
           name: error-report
           path: build-reports.zip
-# TODO: enable once macOS target is supported
-#  macos-tests:
-#    runs-on: macos-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: eskatos/gradle-command-action@v1
-#        with:
-#          dependencies-cache-enabled: true
-#          arguments: macosX64Test --stacktrace
-#      - name: Bundle the build report
-#        if: failure()
-#        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
-#      - name: Upload the build report
-#        if: failure()
-#        uses: actions/upload-artifact@master
-#        with:
-#          name: error-report
-#          path: build-reports.zip
-  windows-tests:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          dependencies-cache-enabled: true
-          arguments: mingwX64Test --stacktrace
-      - name: Bundle the build report
-        if: failure()
-        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
-      - name: Upload the build report
-        if: failure()
-        uses: actions/upload-artifact@master
-        with:
-          name: error-report
-          path: build-reports.zip
 
 env:
-  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+  GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxPermSize=2g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
