@@ -38,7 +38,7 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
             yield(Char.toCodePoint(string[i], string[i + 1]))
             i += 1
         } else {
-            yield(string[i].toInt())
+            yield(string[i].code)
         }
         i += 1
     }
