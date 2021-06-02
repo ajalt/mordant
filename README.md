@@ -98,7 +98,7 @@ Terminal(AnsiLevel.TRUECOLOR)
 ## Tables
 
 Use the `table` DSL to quickly create tables. Mordant handles ANSI styles and wide characters like
-CJK and emojii.
+CJK and emoji.
 
 ```kotlin
 val t = Terminal()
@@ -231,7 +231,7 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-   implementation("com.github.ajalt.mordant:mordant:2.0.0-beta1")
+   implementation("com.github.ajalt.mordant:mordant:2.0.0-beta2")
 }
 ```
 
