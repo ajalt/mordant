@@ -168,10 +168,11 @@ class ProgressAnimation internal constructor(
 
     @Synchronized
     fun restart() {
+        val tickerStarted = tickerStarted
         stop()
         layout.cells.forEach { (it as? CachedProgressCell)?.clear() }
         update(0)
-        start()
+        if (tickerStarted) start()
     }
 
     @Synchronized
