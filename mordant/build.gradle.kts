@@ -22,7 +22,7 @@ buildscript {
 
 kotlin {
     jvm()
-    js(LEGACY) {
+    js(BOTH) {
         nodejs()
         browser()
     }
