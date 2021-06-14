@@ -26,7 +26,7 @@ val t = Terminal()
 t.println(red("This text will be red on terminals that support color"))
 ```
 
-![](img/example_basic.png)
+![](docs/img/example_basic.png)
 
 #### Multiple styles
 
@@ -36,7 +36,7 @@ val t = Terminal()
 t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 ```
 
-![](img/example_multi.png)
+![](docs/img/example_multi.png)
 
 #### Foreground and background colors
 
@@ -44,7 +44,7 @@ t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 t.println((yellow on brightGreen)("this is easy to read, right?"))
 ```
 
-![](img/example_fg_bg.png)
+![](docs/img/example_fg_bg.png)
 
 #### Background color alone
 
@@ -52,7 +52,7 @@ t.println((yellow on brightGreen)("this is easy to read, right?"))
 t.println("The foreground ${brightBlue.bg("color will stay the")} same")
 ```
 
-![](img/example_bg.png)
+![](docs/img/example_bg.png)
 
 #### Combine styles and colors
 
@@ -62,7 +62,7 @@ t.println(style("You can save styles"))
 t.println(style("to reuse"))
 ```
 
-![](img/example_styles.png)
+![](docs/img/example_styles.png)
 
 #### Nest styles and colors
 
@@ -70,7 +70,7 @@ t.println(style("to reuse"))
 t.println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} styles")} arbitrarily"))
 ```
 
-![](img/example_nesting.png)
+![](docs/img/example_nesting.png)
 
 #### True color and other color spaces
 
@@ -80,7 +80,7 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
 ```
 
-![](img/example_rgb.png)
+![](docs/img/example_rgb.png)
 <p></p>
 
 ### Terminal color support detection
@@ -108,7 +108,7 @@ t.println(table {
 })
 ```
 
-![](img/simple_table.png)
+![](docs/img/simple_table.png)
 
 Mordant gives you lots of customization for your tables, including striped row styles, row and
 column spans, and different border styles.
@@ -151,7 +151,7 @@ table {
 }
 ```
 
-![](img/complex_table.png)
+![](docs/img/complex_table.png)
 
 ## Markdown
 
@@ -163,7 +163,7 @@ val t = Terminal()
 t.printMarkdown(File("README.md").readText())
 ```
 
-![](img/markdown.png)
+![](docs/img/markdown.png)
 
 ## Controlling the cursor
 
@@ -202,7 +202,7 @@ repeat(120) {
 }
 ``` 
 
-![](img/animation.svg)
+![](docs/img/animation.svg)
 
 ## Progress bars
 
@@ -224,7 +224,7 @@ The `progressAnimation` builder is currently JVM-only. On other platforms, you c
 `t.animation { progressLayout { ... } }` which will render the same widget, you'll just need to call `progress.update`
 manually.
 
-![](img/example_progress.png)
+![](docs/img/example_progress.png)
 
 Call `progress.start` to animate the progress, and `progress.update` or `progress.advance` as your
 task completes.

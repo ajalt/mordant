@@ -30,6 +30,7 @@ EOM
 cat README.md \
   | sed '/## License/Q' \
   | sed 's!https://ajalt.github.io/mordant/!/!g' \
+  | sed 's!docs/img!img!g' \
   >> docs/index.md
 
 # Build and deploy the new site to github pages
