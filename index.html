@@ -1,0 +1,831 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mordant: Multiplatform text styling for Kotlin command-line applications">
+      
+      
+      
+        <meta name="author" content="AJ Alt">
+      
+      
+      <link rel="icon" href="img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.1">
+    
+    
+      
+        <title>Mordant</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.9299cb39.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ef6f36e2.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4051b5">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <script>function __prefix(e){return new URL(".",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#this-readme-documents-mordant-20-which-is-in-beta-you-can-read-the-docs-for-mordant-10-here" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Mordant" class="md-header__button md-logo" aria-label="Mordant" data-md-component="logo">
+      
+  <img src="img/gradient_white_24dp.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mordant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/ajalt/mordant/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mordant
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Mordant" class="md-nav__button md-logo" aria-label="Mordant" data-md-component="logo">
+      
+  <img src="img/gradient_white_24dp.svg" alt="logo">
+
+    </a>
+    Mordant
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/ajalt/mordant/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mordant
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        Getting Started
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#this-readme-documents-mordant-20-which-is-in-beta-you-can-read-the-docs-for-mordant-10-here" class="md-nav__link">
+    This README documents Mordant 2.0, which is in beta. You can read the docs for Mordant 1.0 here.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiple-styles" class="md-nav__link">
+    Multiple styles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foreground-and-background-colors" class="md-nav__link">
+    Foreground and background colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-color-alone" class="md-nav__link">
+    Background color alone
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-styles-and-colors" class="md-nav__link">
+    Combine styles and colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nest-styles-and-colors" class="md-nav__link">
+    Nest styles and colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-color-and-other-color-spaces" class="md-nav__link">
+    True color and other color spaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal-color-support-detection" class="md-nav__link">
+    Terminal color support detection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    Tables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown" class="md-nav__link">
+    Markdown
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-the-cursor" class="md-nav__link">
+    Controlling the cursor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animations" class="md-nav__link">
+    Animations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progress-bars" class="md-nav__link">
+    Progress bars
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-version-20-the-maven-coordinates-changed-make-sure-youre-using-the-new-coordinates-if-youre-updating-from-an-older-version" class="md-nav__link">
+    In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid" class="md-nav__link">
+    If you're using Maven instead of Gradle, use &lt;artifactId&gt;mordant-jvm&lt;/artifactId&gt;
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog/" class="md-nav__link">
+        Releases
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#this-readme-documents-mordant-20-which-is-in-beta-you-can-read-the-docs-for-mordant-10-here" class="md-nav__link">
+    This README documents Mordant 2.0, which is in beta. You can read the docs for Mordant 1.0 here.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multiple-styles" class="md-nav__link">
+    Multiple styles
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foreground-and-background-colors" class="md-nav__link">
+    Foreground and background colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#background-color-alone" class="md-nav__link">
+    Background color alone
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-styles-and-colors" class="md-nav__link">
+    Combine styles and colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nest-styles-and-colors" class="md-nav__link">
+    Nest styles and colors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#true-color-and-other-color-spaces" class="md-nav__link">
+    True color and other color spaces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminal-color-support-detection" class="md-nav__link">
+    Terminal color support detection
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tables" class="md-nav__link">
+    Tables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markdown" class="md-nav__link">
+    Markdown
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-the-cursor" class="md-nav__link">
+    Controlling the cursor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animations" class="md-nav__link">
+    Animations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#progress-bars" class="md-nav__link">
+    Progress bars
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-version-20-the-maven-coordinates-changed-make-sure-youre-using-the-new-coordinates-if-youre-updating-from-an-older-version" class="md-nav__link">
+    In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid" class="md-nav__link">
+    If you're using Maven instead of Gradle, use &lt;artifactId&gt;mordant-jvm&lt;/artifactId&gt;
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/ajalt/mordant/edit/master/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 align="center">Mordant</h1>
+
+<h4 align="center">Colorful styling for command-line applications</h4>
+
+<blockquote>
+<p>/mɔː(ɹ)dənt/ A substance used to set (i.e. bind) colored dyes on fabrics <sup><a href="https://wikipedia.org/wiki/Mordant">1</a></sup></p>
+</blockquote>
+<p>Mordant has:</p>
+<ul>
+<li>Easy colorful ANSI output with automatic detection of terminal capabilities</li>
+<li>Markdown rendering directly to the terminal</li>
+<li>Widget for laying out terminal output, including lists, tables, panels, and more</li>
+<li>Support for animating any widget, like progress bars and dashboards</li>
+</ul>
+<h5 id="this-readme-documents-mordant-20-which-is-in-beta-you-can-read-the-docs-for-mordant-10-here">This README documents Mordant 2.0, which is in beta. <a href="https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md">You can read the docs for Mordant 1.0 here.</a><a class="headerlink" href="#this-readme-documents-mordant-20-which-is-in-beta-you-can-read-the-docs-for-mordant-10-here" title="Permanent link">&para;</a></h5>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>Create a <code>Terminal</code> instance, and import any enum entries you want from <code>TextColors</code> and
+<code>TextStyles</code>. The <code>println</code> function on your <code>Terminal</code> will detect your current terminal
+capabilities and automatically downsample ANSI codes if necessary.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">com.github.ajalt.mordant.rendering.TextColors.*</span>
+<span class="k">import</span> <span class="nn">com.github.ajalt.mordant.rendering.TextStyles.*</span>
+
+<span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="s">&quot;This text will be red on terminals that support color&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_basic.png" /></p>
+<h4 id="multiple-styles">Multiple styles<a class="headerlink" href="#multiple-styles" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">com.github.ajalt.mordant.rendering.TextColors.*</span>
+<span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;${red(&quot;</span><span class="n">red</span><span class="s">&quot;)} ${white(&quot;</span><span class="n">white</span><span class="s">&quot;)} and ${blue(&quot;</span><span class="n">blue</span><span class="s">&quot;)}&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_multi.png" /></p>
+<h4 id="foreground-and-background-colors">Foreground and background colors<a class="headerlink" href="#foreground-and-background-colors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">((</span><span class="n">yellow</span> <span class="n">on</span> <span class="n">brightGreen</span><span class="p">)(</span><span class="s">&quot;this is easy to read, right?&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_fg_bg.png" /></p>
+<h4 id="background-color-alone">Background color alone<a class="headerlink" href="#background-color-alone" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;The foreground ${brightBlue.bg(&quot;</span><span class="n">color</span> <span class="n">will</span> <span class="n">stay</span> <span class="n">the</span><span class="s">&quot;)} same&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_bg.png" /></p>
+<h4 id="combine-styles-and-colors">Combine styles and colors<a class="headerlink" href="#combine-styles-and-colors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="py">style</span> <span class="p">=</span> <span class="p">(</span><span class="n">bold</span> <span class="p">+</span> <span class="n">white</span> <span class="p">+</span> <span class="n">underline</span><span class="p">)</span>
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">style</span><span class="p">(</span><span class="s">&quot;You can save styles&quot;</span><span class="p">))</span>
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">style</span><span class="p">(</span><span class="s">&quot;to reuse&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_styles.png" /></p>
+<h4 id="nest-styles-and-colors">Nest styles and colors<a class="headerlink" href="#nest-styles-and-colors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">white</span><span class="p">(</span><span class="s">&quot;You ${(blue on yellow)(&quot;</span><span class="n">can</span> <span class="err">$</span><span class="p">{(</span><span class="n">black</span> <span class="p">+</span> <span class="n">strikethrough</span><span class="p">)(</span><span class="s">&quot;nest&quot;</span><span class="p">)}</span> <span class="n">styles</span><span class="s">&quot;)} arbitrarily&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_nesting.png" /></p>
+<h4 id="true-color-and-other-color-spaces">True color and other color spaces<a class="headerlink" href="#true-color-and-other-color-spaces" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">com.github.ajalt.mordant.rendering.TextColors.Companion.rgb</span>
+
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">rgb</span><span class="p">(</span><span class="s">&quot;#b4eeb4&quot;</span><span class="p">)(</span><span class="s">&quot;This will get downsampled on terminals that don&#39;t support truecolor&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="" src="img/example_rgb.png" />
+<p></p></p>
+<h3 id="terminal-color-support-detection">Terminal color support detection<a class="headerlink" href="#terminal-color-support-detection" title="Permanent link">&para;</a></h3>
+<p>By default, <code>Terminal()</code> will try to detect ANSI support in the current stdout stream. If you&rsquo;d
+like to override the detection, you can pass a specific value to the <code>Terminal</code> constructor.</p>
+<p>For example, to always output ANSI RGB color codes, even if stdout is currently directed to a file,
+you can do this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Terminal</span><span class="p">(</span><span class="n">AnsiLevel</span><span class="p">.</span><span class="n">TRUECOLOR</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h2>
+<p>Use the <code>table</code> DSL to quickly create tables. Mordant handles ANSI styles and wide characters like
+CJK and emoji.</p>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">table</span> <span class="p">{</span>
+    <span class="n">header</span> <span class="p">{</span> <span class="n">row</span><span class="p">(</span><span class="s">&quot;CJK&quot;</span><span class="p">,</span> <span class="s">&quot;Emojis&quot;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">body</span> <span class="p">{</span> <span class="n">row</span><span class="p">(</span><span class="s">&quot;모ㄹ단ㅌ&quot;</span><span class="p">,</span> <span class="s">&quot;🙊🙉🙈&quot;</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">})</span>
+</code></pre></div>
+
+<p><img alt="" src="img/simple_table.png" /></p>
+<p>Mordant gives you lots of customization for your tables, including striped row styles, row and
+column spans, and different border styles.</p>
+<div class="highlight"><pre><span></span><code><span class="n">table</span> <span class="p">{</span>
+    <span class="n">borderStyle</span> <span class="p">=</span> <span class="n">SQUARE_DOUBLE_SECTION_SEPARATOR</span>
+    <span class="n">align</span> <span class="p">=</span> <span class="n">RIGHT</span>
+    <span class="n">outerBorder</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="n">column</span><span class="p">(</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">align</span> <span class="p">=</span> <span class="n">LEFT</span>
+        <span class="n">borders</span> <span class="p">=</span> <span class="n">ALL</span>
+        <span class="n">style</span> <span class="p">=</span> <span class="n">magenta</span>
+    <span class="p">}</span>
+    <span class="n">column</span><span class="p">(</span><span class="m">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">borders</span> <span class="p">=</span> <span class="n">ALL</span>
+        <span class="n">style</span> <span class="p">=</span> <span class="n">magenta</span>
+    <span class="p">}</span>
+    <span class="n">header</span> <span class="p">{</span>
+        <span class="n">style</span><span class="p">(</span><span class="n">magenta</span><span class="p">,</span> <span class="n">bold</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;Projected Cost&quot;</span><span class="p">,</span> <span class="s">&quot;Actual Cost&quot;</span><span class="p">,</span> <span class="s">&quot;Difference&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">body</span> <span class="p">{</span>
+        <span class="n">rowStyles</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">brightBlue</span><span class="p">)</span>
+        <span class="n">borders</span> <span class="p">=</span> <span class="n">TOM_BOTTOM</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;Food&quot;</span><span class="p">,</span> <span class="s">&quot;$400&quot;</span><span class="p">,</span> <span class="s">&quot;$200&quot;</span><span class="p">,</span> <span class="s">&quot;$200&quot;</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;Data&quot;</span><span class="p">,</span> <span class="s">&quot;$100&quot;</span><span class="p">,</span> <span class="s">&quot;$150&quot;</span><span class="p">,</span> <span class="s">&quot;-$50&quot;</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;Rent&quot;</span><span class="p">,</span> <span class="s">&quot;$800&quot;</span><span class="p">,</span> <span class="s">&quot;$800&quot;</span><span class="p">,</span> <span class="s">&quot;$0&quot;</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;Candles&quot;</span><span class="p">,</span> <span class="s">&quot;$0&quot;</span><span class="p">,</span> <span class="s">&quot;$3,600&quot;</span><span class="p">,</span> <span class="s">&quot;-$3,600&quot;</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">(</span><span class="s">&quot;Utility&quot;</span><span class="p">,</span> <span class="s">&quot;$145&quot;</span><span class="p">,</span> <span class="s">&quot;$150&quot;</span><span class="p">,</span> <span class="s">&quot;-$5&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">footer</span> <span class="p">{</span>
+        <span class="n">style</span><span class="p">(</span><span class="n">bold</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span>
+        <span class="n">row</span> <span class="p">{</span>
+            <span class="n">cell</span><span class="p">(</span><span class="s">&quot;Subtotal&quot;</span><span class="p">)</span>
+            <span class="n">cell</span><span class="p">(</span><span class="s">&quot;$-3,455&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="n">columnSpan</span> <span class="p">=</span> <span class="m">3</span> <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">captionBottom</span><span class="p">(</span><span class="s">&quot;Budget courtesy @dril&quot;</span><span class="p">,</span> <span class="n">TextStyle</span><span class="p">(</span><span class="n">dim</span> <span class="p">=</span> <span class="k">true</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><img alt="" src="img/complex_table.png" /></p>
+<h2 id="markdown">Markdown<a class="headerlink" href="#markdown" title="Permanent link">&para;</a></h2>
+<p>Mordant can render GitHub Flavored Markdown. Hyperlinks will even be clickable if you&rsquo;re on a
+terminal that supports it, like recent versions of iTerm or Windows Terminal.</p>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">printMarkdown</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="s">&quot;README.md&quot;</span><span class="p">).</span><span class="n">readText</span><span class="p">())</span>
+</code></pre></div>
+
+<p><img alt="" src="img/markdown.png" /></p>
+<h2 id="controlling-the-cursor">Controlling the cursor<a class="headerlink" href="#controlling-the-cursor" title="Permanent link">&para;</a></h2>
+<p>You can show and hide the cursor, move it around, and clear parts of the screen with the <code>cursor</code>
+property on <code>Terminal</code>. If your terminal doesn&rsquo;t support cursor movements (like when output is
+redirected to a file) these commands are no-ops.</p>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="n">t</span><span class="p">.</span><span class="n">cursor</span><span class="p">.</span><span class="n">move</span> <span class="p">{</span>
+    <span class="n">up</span><span class="p">(</span><span class="m">3</span><span class="p">)</span>
+    <span class="n">startOfLine</span><span class="p">()</span>
+    <span class="n">clearScreenAfterCursor</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="n">t</span><span class="p">.</span><span class="n">cursor</span><span class="p">.</span><span class="n">hide</span><span class="p">(</span><span class="n">showOnExit</span> <span class="p">=</span> <span class="k">true</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="animations">Animations<a class="headerlink" href="#animations" title="Permanent link">&para;</a></h2>
+<p>You can animate any widget like a table with <code>Terminal.animation</code>, or any regular
+string with <code>Terminal.textAnimation</code>.</p>
+<div class="highlight"><pre><span></span><code>val t = Terminal()
+val a = t.textAnimation&lt;Int&gt; { frame -&gt;
+    (1..50).joinToString(&quot;&quot;) {
+        val hue = (frame + it) * 3 % 360
+        t.colors.hsv(hue, 100, 100)(&quot;━&quot;)
+    }
+}
+
+t.cursor.hide(showOnExit = true)
+repeat(120) {
+    a.update(it)
+    Thread.sleep(25)
+}
+</code></pre></div>
+
+<p><img alt="" src="img/animation.svg" /></p>
+<h2 id="progress-bars">Progress bars<a class="headerlink" href="#progress-bars" title="Permanent link">&para;</a></h2>
+<p>You can create customizable progress bars that automatically compute speed and time remaining.</p>
+<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="py">t</span> <span class="p">=</span> <span class="n">Terminal</span><span class="p">()</span>
+<span class="k">val</span> <span class="py">progress</span> <span class="p">=</span> <span class="n">t</span><span class="p">.</span><span class="n">progressAnimation</span> <span class="p">{</span>
+    <span class="n">text</span><span class="p">(</span><span class="s">&quot;my-file.iso&quot;</span><span class="p">)</span>
+    <span class="n">percentage</span><span class="p">()</span>
+    <span class="n">progressBar</span><span class="p">()</span>
+    <span class="n">completed</span><span class="p">()</span>
+    <span class="n">speed</span><span class="p">(</span><span class="s">&quot;B/s&quot;</span><span class="p">)</span>
+    <span class="n">timeRemaining</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The <code>progressAnimation</code> builder is currently JVM-only. On other platforms, you can still use 
+<code>t.animation { progressLayout { ... } }</code> which will render the same widget, you&rsquo;ll just need to call <code>progress.update</code>
+manually.</p>
+<p><img alt="" src="img/example_progress.png" /></p>
+<p>Call <code>progress.start</code> to animate the progress, and <code>progress.update</code> or <code>progress.advance</code> as your
+task completes.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Mordant is distributed through Maven Central.</p>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span> <span class="o">{</span>
+   <span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant:2.0.0-beta2&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<h6 id="in-version-20-the-maven-coordinates-changed-make-sure-youre-using-the-new-coordinates-if-youre-updating-from-an-older-version">In version 2.0, the maven coordinates changed. Make sure you&rsquo;re using the new coordinates if you&rsquo;re updating from an older version.<a class="headerlink" href="#in-version-20-the-maven-coordinates-changed-make-sure-youre-using-the-new-coordinates-if-youre-updating-from-an-older-version" title="Permanent link">&para;</a></h6>
+<h6 id="if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid">If you&rsquo;re using Maven instead of Gradle, use <code>&lt;artifactId&gt;mordant-jvm&lt;/artifactId&gt;</code><a class="headerlink" href="#if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid" title="Permanent link">&para;</a></h6>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+      
+        <a href="api/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              API Reference
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2021 AJ Alt
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": ".", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "assets/javascripts/workers/search.fe42c31b.min.js", "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.7353b375.min.js"></script>
+      
+    
+  </body>
+</html>
