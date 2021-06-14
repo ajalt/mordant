@@ -1,0 +1,41 @@
+site_name: Mordant
+repo_name: Mordant
+repo_url: https://github.com/ajalt/mordant
+site_description: "Mordant: Multiplatform text styling for Kotlin command-line applications"
+site_author: AJ Alt
+remote_branch: gh-pages
+
+copyright: 'Copyright &copy; 2021 AJ Alt'
+
+theme:
+  name: 'material'
+  logo: img/gradient_white_24dp.svg
+  favicon: img/favicon.ico
+  palette:
+    primary: indigo
+    accent: indigo
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - smarty
+  - codehilite:
+      guess_lang: false
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - tables
+
+nav:
+  - 'Getting Started': index.md
+  - 'API Reference': api/index.html
+  - 'Releases': changelog.md

@@ -7,7 +7,7 @@ Mordant has:
 
 * Easy colorful ANSI output with automatic detection of terminal capabilities
 * Markdown rendering directly to the terminal
-* Components for laying out our terminal output, including lists, tables, panels, and more
+* Widget for laying out terminal output, including lists, tables, panels, and more
 * Support for animating any widget, like progress bars and dashboards
 
 ##### This README documents Mordant 2.0, which is in beta. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
@@ -26,7 +26,7 @@ val t = Terminal()
 t.println(red("This text will be red on terminals that support color"))
 ```
 
-![](.github/example_basic.png)
+![](img/example_basic.png)
 
 #### Multiple styles
 
@@ -36,7 +36,7 @@ val t = Terminal()
 t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 ```
 
-![](.github/example_multi.png)
+![](img/example_multi.png)
 
 #### Foreground and background colors
 
@@ -44,7 +44,7 @@ t.println("${red("red")} ${white("white")} and ${blue("blue")}")
 t.println((yellow on brightGreen)("this is easy to read, right?"))
 ```
 
-![](.github/example_fg_bg.png)
+![](img/example_fg_bg.png)
 
 #### Background color alone
 
@@ -52,7 +52,7 @@ t.println((yellow on brightGreen)("this is easy to read, right?"))
 t.println("The foreground ${brightBlue.bg("color will stay the")} same")
 ```
 
-![](.github/example_bg.png)
+![](img/example_bg.png)
 
 #### Combine styles and colors
 
@@ -62,7 +62,7 @@ t.println(style("You can save styles"))
 t.println(style("to reuse"))
 ```
 
-![](.github/example_styles.png)
+![](img/example_styles.png)
 
 #### Nest styles and colors
 
@@ -70,7 +70,7 @@ t.println(style("to reuse"))
 t.println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} styles")} arbitrarily"))
 ```
 
-![](.github/example_nesting.png)
+![](img/example_nesting.png)
 
 #### True color and other color spaces
 
@@ -80,7 +80,7 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
 ```
 
-![](.github/example_rgb.png)
+![](img/example_rgb.png)
 <p></p>
 
 ### Terminal color support detection
@@ -108,7 +108,7 @@ t.println(table {
 })
 ```
 
-![](.github/simple_table.png)
+![](img/simple_table.png)
 
 Mordant gives you lots of customization for your tables, including striped row styles, row and
 column spans, and different border styles.
@@ -151,7 +151,7 @@ table {
 }
 ```
 
-![](.github/complex_table.png)
+![](img/complex_table.png)
 
 ## Markdown
 
@@ -163,7 +163,7 @@ val t = Terminal()
 t.printMarkdown(File("README.md").readText())
 ```
 
-![](.github/markdown.png)
+![](img/markdown.png)
 
 ## Controlling the cursor
 
@@ -202,7 +202,7 @@ repeat(120) {
 }
 ``` 
 
-![](.github/animation.svg)
+![](img/animation.svg)
 
 ## Progress bars
 
@@ -220,7 +220,11 @@ val progress = t.progressAnimation {
 }
 ```
 
-![](.github/example_progress.png)
+The `progressAnimation` builder is currently JVM-only. On other platforms, you can still use 
+`t.animation { progressLayout { ... } }` which will render the same widget, you'll just need to call `progress.update`
+manually.
+
+![](img/example_progress.png)
 
 Call `progress.start` to animate the progress, and `progress.update` or `progress.advance` as your
 task completes.
@@ -235,9 +239,9 @@ dependencies {
 }
 ```
 
-<sup>In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.</sup>
+###### In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
 
-<sup>If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`</sup>
+###### If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`
 
 ## License
 

@@ -3,6 +3,7 @@ name: Publish
 on:
   push:
     paths-ignore:
+      - 'docs/**'
       - '*.md'
     branches:
       - master
