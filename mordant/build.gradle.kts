@@ -1,10 +1,18 @@
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.dokka")
     id("maven-publish")
     id("signing")
+    id("org.jetbrains.dokka") version "1.4.32"
+}
+
+buildscript {
+    dependencies {
+        classpath("org.jetbrains.dokka:dokka-base:1.4.32")
+    }
 }
 
 kotlin {
@@ -75,11 +83,21 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+tasks.dokkaHtml.configure {
+    outputDirectory.set(rootDir.resolve("docs/api"))
+    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+        footerMessage = "Copyright &copy; 2021 AJ Alt"
+    }
+    dokkaSourceSets {
+        configureEach {
+            reportUndocumented.set(false)
+            skipDeprecated.set(true)
+        }
+    }
+}
+
 val emptyJavadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
-}
-artifacts {
-    archives(emptyJavadocJar)
 }
 
 
