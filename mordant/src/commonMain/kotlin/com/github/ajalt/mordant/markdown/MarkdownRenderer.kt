@@ -305,7 +305,7 @@ internal class MarkdownRenderer(
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
         val drop = if (nodes.firstOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
-        val dropLast = if (nodes.lastOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
+        val dropLast = if (nodes.size > 1 && nodes.last().type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
         return drop to dropLast
     }
 

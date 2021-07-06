@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed
+- Update Kotlin to 1.5.20
+
+### Fixed
+- Fixed exception thrown when parsing markdown tables with empty cells
+
 ## 2.0.0-beta2
 _2021-06-01_
 
