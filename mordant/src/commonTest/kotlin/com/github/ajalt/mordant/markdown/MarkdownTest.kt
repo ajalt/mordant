@@ -726,6 +726,35 @@ LS
 └────────┴────────┴────────┘
 """)
 
+    @Test
+    @JsName("table_with_empty_cell")
+    fun `table with empty cell`() = doTest("""
+ | foo |
+ | --- |
+ |     |
+""", """
+┌─────┐
+│${bold(" foo ")}│
+╞═════╡
+│     │
+└─────┘
+""")
+
+    @Test
+    @JsName("table_with_empty_header_cell")
+    fun `table with empty header cell`() = doTest("""
+ |     |
+ | --- |
+ | baz |
+""", """
+┌─────┐
+│     │
+╞═════╡
+│ baz │
+└─────┘
+""")
+
+
     // https://github.github.com/gfm/#example-279
     @Test
     @JsName("task_list")
