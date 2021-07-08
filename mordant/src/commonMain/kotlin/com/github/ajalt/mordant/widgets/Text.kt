@@ -110,13 +110,16 @@ class Text internal constructor(
 
                 // Collapse spaces
                 if (pieceIsWhitespace && lastPieceWasWhitespace && whitespace.collapseSpaces) continue
-                var span = when {
-                    pieceIsWhitespace && whitespace.collapseSpaces -> Span.space(1, piece.style)
-                    piece.isTab() -> if (tabWidth > 0) Span.space(
-                        tabWidth - (width % tabWidth),
-                        piece.style
-                    ) else continue
-                    else -> piece
+                var span = if (pieceIsWhitespace && whitespace.collapseSpaces) {
+                    Span.space(1, piece.style)
+                } else if (piece.isTab()) {
+                    if (tabWidth > 0) {
+                        Span.space(tabWidth - (width % tabWidth), piece.style)
+                    } else {
+                        continue
+                    }
+                } else {
+                    piece
                 }
 
                 // Wrap line if necessary
