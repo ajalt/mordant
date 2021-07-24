@@ -356,13 +356,21 @@ internal class MarkdownRenderer(
     }
 
     private fun renderImageLink(node: ASTNode): Lines {
-        val text = findLinkText(node.firstChildOfType(MarkdownElementTypes.INLINE_LINK))
-            ?.takeUnless { it.isEmpty() }
-            ?: return EMPTY_LINES
-        return listOf(
-            parseText("🖼️ ", DEFAULT_STYLE),
-            text.replaceStyle(theme.style("markdown.img.alt-text"))
-        ).foldLines { it }
+        // Could be inline, full or short reference
+        val link = node.findChildOfType(MarkdownElementTypes.INLINE_LINK)
+            ?: node.findChildOfType(MarkdownElementTypes.FULL_REFERENCE_LINK)
+            ?: node.findChildOfType(MarkdownElementTypes.SHORT_REFERENCE_LINK)
+        if (link != null) {
+            val text = findLinkText(link)
+                ?.takeUnless { it.isEmpty() }
+                ?: return EMPTY_LINES
+            return listOf(
+                parseText("🖼️ ", DEFAULT_STYLE),
+                text.replaceStyle(theme.style("markdown.img.alt-text"))
+            ).foldLines { it }
+        } else {
+            return EMPTY_LINES
+        }
     }
 
     private fun findLinkLabel(node: ASTNode): String? {
