@@ -407,6 +407,10 @@ ${linkText("www.example.com/url")}
 ![an image](example.png)
 
 ![](example.png)
+
+![an image][1]
+
+[1]: example.png
 """, """
 🖼️ ${imgAlt("an image")}
 
@@ -415,6 +419,10 @@ ${linkText("www.example.com/url")}
 🖼️ ${imgAlt("an image")}
 
 
+
+🖼️ ${imgAlt("an image")}
+
+${linkDest("[1]: example.png")}
 """)
 
     @Test
