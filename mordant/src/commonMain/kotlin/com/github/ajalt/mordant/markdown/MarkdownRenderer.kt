@@ -135,7 +135,8 @@ internal class MarkdownRenderer(
             }
             MarkdownElementTypes.LINK_DEFINITION -> {
                 if (hyperlinks) EmptyWidget
-                else Text(parseText(node.nodeText(), theme.style("markdown.link.destination")), whitespace = Whitespace.NORMAL)
+                else Text(parseText(node.nodeText(), theme.style("markdown.link.destination")),
+                    whitespace = Whitespace.NORMAL)
             }
 
             MarkdownElementTypes.SETEXT_1 -> setext(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
@@ -356,21 +357,17 @@ internal class MarkdownRenderer(
     }
 
     private fun renderImageLink(node: ASTNode): Lines {
-        // Could be inline, full or short reference
         val link = node.findChildOfType(MarkdownElementTypes.INLINE_LINK)
             ?: node.findChildOfType(MarkdownElementTypes.FULL_REFERENCE_LINK)
             ?: node.findChildOfType(MarkdownElementTypes.SHORT_REFERENCE_LINK)
-        if (link != null) {
-            val text = findLinkText(link)
-                ?.takeUnless { it.isEmpty() }
-                ?: return EMPTY_LINES
-            return listOf(
-                parseText("🖼️ ", DEFAULT_STYLE),
-                text.replaceStyle(theme.style("markdown.img.alt-text"))
-            ).foldLines { it }
-        } else {
-            return EMPTY_LINES
-        }
+            ?: return EMPTY_LINES
+        val text = findLinkText(link)
+            ?.takeUnless { it.isEmpty() }
+            ?: return EMPTY_LINES
+        return listOf(
+            parseText("🖼️ ", DEFAULT_STYLE),
+            text.replaceStyle(theme.style("markdown.img.alt-text"))
+        ).foldLines { it }
     }
 
     private fun findLinkLabel(node: ASTNode): String? {
