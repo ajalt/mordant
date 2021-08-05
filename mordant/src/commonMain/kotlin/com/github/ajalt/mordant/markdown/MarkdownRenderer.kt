@@ -262,6 +262,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.TEXT,
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE,
+            GFMTokenTypes.TILDE,
             -> {
                 parseText(node.nodeText(), DEFAULT_STYLE)
             }
