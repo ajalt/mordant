@@ -58,6 +58,9 @@ class MarkdownTest {
     ) { it shouldNotBe DEFAULT_STYLE }
 
     @Test
+    fun tilde() = doTest("~", "~")
+
+    @Test
     @JsName("test_paragraphs")
     fun `test paragraphs`() = doTest("""
 Paragraph one
