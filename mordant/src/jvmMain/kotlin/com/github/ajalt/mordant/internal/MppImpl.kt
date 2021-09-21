@@ -46,7 +46,7 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
 }
 
 private fun parseWindowsPowershellSize(output: String): Pair<Int, Int>? {
-    val groups = Regex("""[Ww]window[Ss]ize\s+:?\s+(\d+),(\d+)""").find(output)?.groupValues ?: return null
+    val groups = Regex("""[Ww]indow[Ss]ize\s+:?\s+(\d+),(\d+)""").find(output)?.groupValues ?: return null
     return groups[1].toInt() to groups[2].toInt()
 }
 
