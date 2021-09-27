@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.colormath.Ansi16
-import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.colormath.model.Ansi16
+import com.github.ajalt.colormath.model.Ansi256
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorSelector
@@ -113,6 +113,6 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
         // The ITU T.416 spec uses colons for the rgb separator as well as extra parameters for CMYK
         // and such. Most terminals only support the semicolon form, so that's what we use.
         // https://gist.github.com/XVilka/8346728#gistcomment-2774523
-        else -> it.toRGB().run { listOf(select, selectorRgb, r, g, b) }
+        else -> it.toSRGB().run { listOf(select, selectorRgb, redInt, greenInt, blueInt) }
     }
 }

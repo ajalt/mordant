@@ -1,10 +1,11 @@
 package com.github.ajalt.mordant.test
 
+import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.test.assertEquals
+import io.kotest.matchers.shouldBe
 
 abstract class RenderingTest(
     private val width: Int = 79,
@@ -24,10 +25,7 @@ abstract class RenderingTest(
         val actual = transformActual(t.render(widget))
         try {
             val trimmed = if (trimIndent) expected.trimIndent() else expected
-
-            // TODO: switch back to kotest assertion once kotest 4.5 is released
-            // actual shouldBe trimmed.replace("⏎", "")
-            assertEquals(trimmed.replace("⏎", ""), actual)
+            actual shouldBe trimmed.replace("⏎", "")
         } catch (e: Throwable) {
             println(actual)
             throw e

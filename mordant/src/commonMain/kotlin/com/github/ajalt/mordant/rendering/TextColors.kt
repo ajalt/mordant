@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
-import com.github.ajalt.colormath.*
+import com.github.ajalt.colormath.Color
+import com.github.ajalt.colormath.model.*
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 import com.github.ajalt.mordant.terminal.Terminal
@@ -102,7 +103,7 @@ enum class TextColors(
          * @param g The green amount, in the range \[0, 255]
          * @param b The blue amount, in the range \[0, 255]
          */
-        fun rgb(r: Int, g: Int, b: Int, level: AnsiLevel = TRUECOLOR): TextStyle = color(RGB(r, g, b), level)
+        fun rgb(r: Int, g: Int, b: Int, level: AnsiLevel = TRUECOLOR): TextStyle = color(RGB.from255(r, g, b), level)
 
         /**
          * Create a color code from an HSL color.

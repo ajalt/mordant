@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Changed
-- Update Kotlin to 1.5.20
+- Update Kotlin to 1.5.31
+- Update Colormath to 3.0
 
 ### Fixed
 - Fixed exception thrown when parsing markdown tables with empty cells

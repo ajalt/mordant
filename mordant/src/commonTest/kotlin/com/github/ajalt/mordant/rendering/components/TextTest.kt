@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.rendering.components
 
-import com.github.ajalt.colormath.Ansi256
-import com.github.ajalt.colormath.RGB
+import com.github.ajalt.colormath.model.Ansi256
+import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.OSC
 import com.github.ajalt.mordant.internal.ST
@@ -85,7 +85,7 @@ class TextTest : RenderingTest() {
     @Test
     @JsName("ansi_parsing_with_styles")
     fun `ansi parsing with styles`() = checkRender(Text("""
-    ${TextStyle(RGB(255, 0, 0), white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor = gray)("gray.bg")}")} red")}
+    ${TextStyle(RGB(1, 0, 0), white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor = gray)("gray.bg")}")} red")}
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
     ${CSI}38;2;255;0;0;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}38;2;255;0;0;47m red${CSI}39;49m

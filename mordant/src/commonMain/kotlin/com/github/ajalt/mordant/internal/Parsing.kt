@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.colormath.Ansi16
-import com.github.ajalt.colormath.Ansi256
+import com.github.ajalt.colormath.model.Ansi16
+import com.github.ajalt.colormath.model.Ansi256
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.colormath.RGB
+import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.mordant.rendering.*
 
 private const val NEL = '\u0085'
@@ -238,7 +238,7 @@ private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
             ) {
                 null to 0
             } else {
-                RGB(codes[i + 1], codes[i + 2], codes[i + 3]) to 4
+                RGB.from255(codes[i + 1], codes[i + 2], codes[i + 3]) to 4
             }
         }
         else -> null to 0

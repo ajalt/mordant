@@ -1,16 +1,16 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.colormath.HSL
+import com.github.ajalt.colormath.model.Oklab
+import com.github.ajalt.colormath.model.RGB
+import com.github.ajalt.colormath.transform.EasingFunctions
+import com.github.ajalt.colormath.transform.interpolator
+import com.github.ajalt.colormath.transform.sequence
 import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.internal.ThemeFlag
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.math.absoluteValue
-import kotlin.math.exp
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
 class ProgressBar private constructor(
     private var total: Long,
@@ -92,22 +92,23 @@ class ProgressBar private constructor(
     private fun makeComplete(t: Terminal, width: Int, barLength: Int, char: String, style: TextStyle): Line {
         if (barLength == 0) return EMPTY_LINE
 
-        val color = style.color?.toHSL()
+        val color = style.color
 
         if (color == null || !showPulse[t]) {
             return Line(listOfNotNull(segmentText(char, barLength, style)))
         }
 
-        // x is offset left by half a period so that the pulse starts offscreen
-        val offset = 2 * (pulsePosition % 1.0).absoluteValue * width - width / 2f
-        return Line(List(barLength) {
-            // gaussian with σ²=0.1 and x scaled to ~50% of width
-            val x = 2 * (it - offset) / width
-            val gauss = exp(-x.pow(2.0) * 5)
-            // linear interpolate the luminosity between the original and white
-            val l = color.l + ((100 - color.l) * gauss).roundToInt()
-            Span.word(char, TextStyle(HSL(color.h, color.s, l)))
-        })
+        val p = (pulsePosition % 1.0) * 1.5
+        val lerp = Oklab.interpolator {
+            easing = EasingFunctions.easeInOut()
+            stop(color, p - .5)
+            stop(RGB(1, 1, 1), p - .25)
+            stop(color, p)
+        }.sequence(width).take(barLength)
+            // as an optimization, convert to RGBInt so that adjacent identical styles can be joined
+            // even if the float values are slightly different
+            .map { Span.word(char, TextStyle(it.toSRGB().toRGBInt())) }
+        return Line(lerp.toList())
     }
 
     private fun makeLine(line: List<Span>): Lines {
