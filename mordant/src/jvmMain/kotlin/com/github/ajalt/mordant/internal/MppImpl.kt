@@ -99,7 +99,7 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
         if (showOnExit) {
             synchronized(lock) {
                 if (shutdownHook == null) {
-                    shutdownHook = Thread { show() }
+                    shutdownHook = Thread { super.show() }
                     Runtime.getRuntime().addShutdownHook(shutdownHook)
                 }
             }
