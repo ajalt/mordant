@@ -1,5 +1,10 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -38,7 +43,7 @@ kotlin {
         val commonMain by getting {
             dependsOn(gen)
             dependencies {
-                api("com.github.ajalt.colormath:colormath:3.1.0")
+                api("com.github.ajalt.colormath:colormath:3.1.1")
                 implementation("org.jetbrains:markdown:0.2.4")
             }
         }
@@ -49,30 +54,23 @@ kotlin {
             }
         }
 
-        val nativeMain by creating {
-            dependsOn(commonMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(nativeMain)
-        }
-        val linuxX64Main by getting {
-            dependsOn(nativeMain)
-        }
-        val mingwX64Main by getting {
-            dependsOn(nativeMain)
+        val nativeMain by creating { dependsOn(commonMain) }
+        listOf("macosX64", "linuxX64", "mingwX64").forEach { target ->
+            getByName(target + "Main").dependsOn(nativeMain)
         }
 
-        val nativeTest by creating {
-            dependsOn(commonTest)
-        }
-        val macosX64Test by getting {
-            dependsOn(nativeTest)
-        }
-        val linuxX64Test by getting {
-            dependsOn(nativeTest)
-        }
-        val mingwX64Test by getting {
-            dependsOn(nativeTest)
+        targets.withType<KotlinNativeTargetWithTests<*>> {
+            binaries {
+                // Configure a separate test where code runs in background
+                test("background", setOf(NativeBuildType.DEBUG)) {
+                    freeCompilerArgs = freeCompilerArgs + "-trw"
+                }
+            }
+            testRuns {
+                val background by creating {
+                    setExecutionSourceFrom(binaries.getByName("backgroundDebugTest") as TestExecutable)
+                }
+            }
         }
     }
 }

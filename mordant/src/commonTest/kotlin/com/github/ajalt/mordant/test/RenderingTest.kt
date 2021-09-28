@@ -20,7 +20,7 @@ abstract class RenderingTest(
         hyperlinks: Boolean = true,
         theme: Theme = Theme.Default,
         transformActual: (String) -> String = { it },
-    ) = threadedTest {
+    ) {
         val t = Terminal(AnsiLevel.TRUECOLOR, theme, width, height, hyperlinks, tabWidth)
         val actual = transformActual(t.render(widget))
         try {
