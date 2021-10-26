@@ -1,13 +1,15 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta3
+_2021-06-01_
 
 ### Changed
 - Update Kotlin to 1.5.31
-- Update Colormath to 3.0
+- Update Colormath to 3.0. If you use and colormath colors directly, you may need to update your imports.
 
 ### Fixed
 - Fixed exception thrown when parsing markdown tables with empty cells
+- Fixed rendering of markdown image reference links and link content
 
 ## 2.0.0-beta2
 _2021-06-01_
