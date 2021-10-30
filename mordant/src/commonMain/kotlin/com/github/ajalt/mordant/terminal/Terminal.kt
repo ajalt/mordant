@@ -65,7 +65,7 @@ class Terminal(
     val colors: TerminalColors = TerminalColors(info, theme)
 
     /**
-     * Functions for control the terminal's cursor.
+     * Functions for controlling the terminal's cursor.
      *
      * If the terminal is not interactive, all of the cursor functions are no-ops.
      */
