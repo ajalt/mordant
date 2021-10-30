@@ -10,6 +10,7 @@ class TerminalInfo(
     var ansiHyperLinks: Boolean,
     val stdoutInteractive: Boolean,
     val stdinInteractive: Boolean,
+    val stderrInteractive: Boolean,
 ) {
     var width: Int = width
         private set
@@ -23,7 +24,8 @@ class TerminalInfo(
     /**
      * Query the terminal for its current size, updating [width] and [height] if successful.
      *
-     * This call will create subprocess and block for up to [timeoutMs] waiting for it to complete.
+     * On JVM, this call will create a subprocess and block for up to [timeoutMs] waiting for it to complete.
+     * On other platforms, this call doesn't require a subprocess, and [timeoutMs] is ignored.
      *
      * @return `true` if the size was updated, of `false` if it was not
      */

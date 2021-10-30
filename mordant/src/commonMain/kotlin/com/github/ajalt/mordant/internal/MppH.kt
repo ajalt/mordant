@@ -25,6 +25,8 @@ internal expect fun stdoutInteractive(): Boolean
 
 internal expect fun stdinInteractive(): Boolean
 
+internal expect fun stderrInteractive(): Boolean
+
 internal expect fun codepointSequence(string: String): Sequence<Int>
 
 internal expect fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor

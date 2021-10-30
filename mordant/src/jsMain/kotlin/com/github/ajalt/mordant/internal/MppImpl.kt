@@ -26,6 +26,7 @@ private interface JsMppImpls {
     fun isWindowsMpp(): Boolean
     fun stdoutInteractive(): Boolean
     fun stdinInteractive(): Boolean
+    fun stderrInteractive(): Boolean
     fun getTerminalSize(): Pair<Int, Int>?
 }
 
@@ -34,6 +35,7 @@ private object BrowserMppImpls : JsMppImpls {
     override fun isWindowsMpp(): Boolean = false
     override fun stdoutInteractive(): Boolean = false
     override fun stdinInteractive(): Boolean = false
+    override fun stderrInteractive(): Boolean = false
     override fun getTerminalSize(): Pair<Int, Int>? = null
 }
 
@@ -42,6 +44,7 @@ private object NodeMppImpls : JsMppImpls {
     override fun isWindowsMpp(): Boolean = process.platform == "win32"
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
+    override fun stderrInteractive(): Boolean = js("Boolean(process.stderr.isTTY)") as Boolean
     override fun getTerminalSize(): Pair<Int, Int>? {
         // For some undocumented reason, getWindowSize is undefined sometimes, presumably when isTTY
         // is false
@@ -66,6 +69,7 @@ internal actual fun isWindows(): Boolean = impls.isWindowsMpp()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
+internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     val it = string.asDynamic()[Symbol.iterator]()
