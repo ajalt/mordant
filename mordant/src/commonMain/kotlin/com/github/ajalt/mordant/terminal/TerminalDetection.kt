@@ -35,7 +35,7 @@ internal object TerminalDetection {
             terminalSizeDetectionIsFast() -> getTerminalSize(100)
             else -> null
         }
-        return detected ?: (getEnv("COLUMNS")?.toInt() ?: 79) to (getEnv("LINES")?.toInt() ?: 24)
+        return detected ?: ((getEnv("COLUMNS")?.toInt() ?: 79) to (getEnv("LINES")?.toInt() ?: 24))
     }
 
     // https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
@@ -80,7 +80,7 @@ internal object TerminalDetection {
 
         val (term, level) = getTerm()?.split("-")
             ?.let { it.firstOrNull() to it.lastOrNull() }
-            ?: null to null
+            ?: (null to null)
 
         when (level) {
             "256", "256color", "256colors" -> return ANSI256
