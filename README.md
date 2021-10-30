@@ -7,7 +7,7 @@ Mordant has:
 
 * Easy colorful ANSI output with automatic detection of terminal capabilities
 * Markdown rendering directly to the terminal
-* Widget for laying out terminal output, including lists, tables, panels, and more
+* Widgets for laying out terminal output, including lists, tables, panels, and more
 * Support for animating any widget, like progress bars and dashboards
 
 ##### This README documents Mordant 2.0, which is in beta. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
