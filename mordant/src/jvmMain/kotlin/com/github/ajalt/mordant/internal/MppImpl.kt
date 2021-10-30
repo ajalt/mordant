@@ -79,10 +79,12 @@ internal actual fun runningInIdeaJavaAgent() = try {
     false
 }
 
-// Unfortunately, the JVM doesn't let us check stdin and stdout separately.
+// Unfortunately, the JVM doesn't let us check stdin, stdout or stderr separately.
 internal actual fun stdoutInteractive(): Boolean = System.console() != null
 
 internal actual fun stdinInteractive(): Boolean = System.console() != null
+
+internal actual fun stderrInteractive(): Boolean = System.console() != null
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     return string.codePoints().iterator().asSequence()

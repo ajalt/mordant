@@ -3,12 +3,6 @@ package com.github.ajalt.mordant.internal
 import com.github.ajalt.mordant.terminal.*
 import kotlinx.cinterop.*
 import platform.posix.*
-import platform.posix.STDIN_FILENO
-import platform.posix.STDOUT_FILENO
-import platform.posix.atexit
-import platform.posix.getenv
-import platform.posix.isatty
-import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
 
 
@@ -38,6 +32,8 @@ internal actual fun getEnv(key: String): String? = getenv(key)?.toKStringFromUtf
 internal actual fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO) != 0
 
 internal actual fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
+
+internal actual fun stderrInteractive(): Boolean = isatty(STDERR_FILENO) != 0
 
 internal actual fun codepointSequence(string: String): Sequence<Int> = sequence {
     var i = 0
