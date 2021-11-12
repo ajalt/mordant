@@ -97,42 +97,42 @@ class TerminalColors internal constructor(
     val plain: TextStyle get() = DEFAULT_STYLE
 
     /** @param hex An rgb hex string in the form "#ffffff" or "ffffff" */
-    fun rgb(hex: String): TextStyle = color(RGB(hex))
+    fun rgb(hex: String): TextStyle = TextColors.rgb(hex, level)
 
     /**
      * Create a color code from an RGB color.
      *
-     * @param r The red amount, in the range \[0, 255]
-     * @param g The green amount, in the range \[0, 255]
-     * @param b The blue amount, in the range \[0, 255]
+     * @param r The red amount, in the range `[0, 1]`
+     * @param g The green amount, in the range `[0, 1]`
+     * @param b The blue amount, in the range `[0, 1]`
      */
-    fun rgb(r: Int, g: Int, b: Int): TextStyle = TextColors.rgb(r, g, b, level)
+    fun rgb(r: Number, g: Number, b: Number): TextStyle = TextColors.rgb(r, g, b, level)
 
     /**
      * Create a color code from an HSL color.
      *
-     * @param h The hue, in the range \[0, 360]
-     * @param s The saturation, in the range \[0, 100]
-     * @param l The lightness, in the range \[0, 100]
+     * @param h The hue, in the range `[0, 360]`
+     * @param s The saturation, in the range `[0, 1]`
+     * @param l The lightness, in the range `[0, 1]`
      */
-    fun hsl(h: Int, s: Int, l: Int): TextStyle = TextColors.hsl(h, s, l, level)
+    fun hsl(h: Number, s: Number, l: Number): TextStyle = TextColors.hsl(h, s, l, level)
 
     /**
      * Create a color code from an HSV color.
      *
-     * @param h The hue, in the range \[0, 360]
-     * @param s The saturation, in the range \[0,100]
-     * @param v The value, in the range \[0,100]
+     * @param h The hue, in the range `[0, 360]`
+     * @param s The saturation, in the range `[0, 1]`
+     * @param v The value, in the range `[0, 1]`
      */
-    fun hsv(h: Int, s: Int, v: Int): TextStyle = TextColors.hsv(h, s, v, level)
+    fun hsv(h: Number, s: Number, v: Number): TextStyle = TextColors.hsv(h, s, v, level)
 
     /**
      * Create a color code from a CMYK color.
      *
-     * @param c The cyan amount, in the range \[0, 100]
-     * @param m The magenta amount, in the range \[0,100]
-     * @param y The yellow amount, in the range \[0,100]
-     * @param k The black amount, in the range \[0,100]
+     * @param c The cyan amount, in the range `[0, 100]`
+     * @param m The magenta amount, in the range `[0, 100]`
+     * @param y The yellow amount, in the range `[0, 100]`
+     * @param k The black amount, in the range `[0, 100]`
      */
     fun cmyk(c: Int, m: Int, y: Int, k: Int): TextStyle = TextColors.cmyk(c, m, y, k, level)
 
@@ -141,16 +141,16 @@ class TerminalColors internal constructor(
      *
      * @param fraction The fraction of white in the color. 0 is pure black, 1 is pure white.
      */
-    fun gray(fraction: Double): TextStyle = TextColors.gray(fraction, level)
+    fun gray(fraction: Number): TextStyle = TextColors.gray(fraction, level)
 
     /**
      * Create a color code from a CIE XYZ color.
      *
      * Conversions use D65 reference white, and sRGB profile.
      *
-     * [x], [y], and [z] are generally in the interval [0, 100], but may be larger
+     * [x], [y], and [z] are generally in the interval `[0, 1]`
      */
-    fun xyz(x: Double, y: Double, z: Double): TextStyle = TextColors.xyz(x, y, z, level)
+    fun xyz(x: Number, y: Number, z: Number): TextStyle = TextColors.xyz(x, y, z, level)
 
 
     /**
@@ -158,10 +158,10 @@ class TerminalColors internal constructor(
      *
      * Conversions use D65 reference white, and sRGB profile.
      *
-     * [l] is in the interval [0, 100]. [a] and [b] have unlimited range,
-     * but are generally in [-100, 100]
+     * [l] is in the interval `[0, 100]`. [a] and [b] have unlimited range,
+     * but are generally in `[-100, 100]`
      */
-    fun lab(l: Double, a: Double, b: Double): TextStyle = TextColors.lab(l, a, b, level)
+    fun lab(l: Number, a: Number, b: Number): TextStyle = TextColors.lab(l, a, b, level)
 
     /**
      * Create a [TextStyle] with a foreground of [color], downsampled to a given [level].

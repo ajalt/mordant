@@ -54,14 +54,14 @@ internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean)
     return if (style === DEFAULT_STYLE) style else when (level) {
         AnsiLevel.NONE -> DEFAULT_STYLE
         AnsiLevel.ANSI16 -> style.copy(
-            fg = style.color?.toAnsi16(),
-            bg = style.bgColor?.toAnsi16(),
+            fg = style.color?.let { if (it is Ansi16) it else it.toSRGB().clamp().toAnsi16() },
+            bg = style.bgColor?.let { if (it is Ansi16) it else it.toSRGB().clamp().toAnsi16() },
             hyperlink = style.hyperlink.takeIf { hyperlinks },
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
         AnsiLevel.ANSI256 -> style.copy(
-            fg = style.color?.let { if (it is Ansi16) it else it.toAnsi256() },
-            bg = style.bgColor?.let { if (it is Ansi16) it else it.toAnsi256() },
+            fg = style.color?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
+            bg = style.bgColor?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
             hyperlink = style.hyperlink.takeIf { hyperlinks },
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
@@ -113,6 +113,6 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
         // The ITU T.416 spec uses colons for the rgb separator as well as extra parameters for CMYK
         // and such. Most terminals only support the semicolon form, so that's what we use.
         // https://gist.github.com/XVilka/8346728#gistcomment-2774523
-        else -> it.toSRGB().run { listOf(select, selectorRgb, redInt, greenInt, blueInt) }
+        else -> it.toSRGB().clamp().run { listOf(select, selectorRgb, redInt, greenInt, blueInt) }
     }
 }
