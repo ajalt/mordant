@@ -97,13 +97,13 @@ class TerminalColorsTest {
     @JsName("all_24bit_colors")
     fun `all 24bit colors`() = forAll(
         row(c.rgb("#ff00ff"), RGB("#ff00ff")),
-        row(c.rgb(11, 22, 33), RGB.from255(11, 22, 33)),
-        row(c.hsl(11, 22, 33), HSL(11, 22, 33)),
-        row(c.hsv(11, 22, 33), HSV(11, 22, 33)),
+        row(c.rgb(.11, .22, .33), RGB(.11, .22, .33)),
+        row(c.hsl(.11, .22, .33), HSL(.11, .22, .33)),
+        row(c.hsv(11, .22, .33), HSV(11, .22, .33)),
         row(c.cmyk(11, 22, 33, 44), CMYK(11, 22, 33, 44)),
-        row(c.gray(0.5), RGB.from255(128, 128, 128)),
-        row(c.xyz(11.0, 22.0, 33.0), XYZ(11.0, 22.0, 33.0)),
-        row(c.lab(11.0, 22.0, 33.0), LAB(11.0, 22.0, 33.0)),
+        row(c.gray(0.5), RGB(.5, .5, .5)),
+        row(c.xyz(.11, .22, .33), XYZ(.11, .22, .33)),
+        row(c.lab(11, 22, 33), LAB(11, 22, 33)),
     ) { color, expected ->
         color.color shouldBe expected
     }

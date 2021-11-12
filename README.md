@@ -191,7 +191,7 @@ val t = Terminal()
 val a = t.textAnimation<Int> { frame ->
     (1..50).joinToString("") {
         val hue = (frame + it) * 3 % 360
-        t.colors.hsv(hue, 100, 100)("━")
+        t.colors.hsv(hue, 1, 1)("━")
     }
 }
 
