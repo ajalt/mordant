@@ -99,6 +99,6 @@ class ProgressAnimationTest : RenderingTest() {
     }
 
     private fun VirtualTerminalInterface.normalizedBuffer(): String {
-        return buffer().substringAfter("${CSI}0J").trimEnd()
+        return buffer().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimEnd()
     }
 }

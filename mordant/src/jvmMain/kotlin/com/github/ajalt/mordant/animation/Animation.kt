@@ -12,17 +12,18 @@ import com.github.ajalt.mordant.widgets.Text
 abstract class Animation<T>(private val terminal: Terminal) {
     private var size: Pair<Int, Int>? = null
     private var text: String? = null
-
-    // Don't clear the screen the first time the animation is drawn
     private var needsClear = false
+
+    // Don't move the cursor the first time the animation is drawn
+    private var firstDraw = true
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
         text?.let { t ->
             PrintRequest(text = buildString {
-                if (needsClear) {
+                if (!firstDraw) {
                     getClear()?.let { append(it) }
                 }
-                needsClear = true
+                firstDraw = false
                 if (req.text.isNotEmpty()) {
                     appendLine(req.text)
                 }
@@ -52,14 +53,17 @@ abstract class Animation<T>(private val terminal: Terminal) {
         return terminal.cursor.getMoves {
             startOfLine()
             up(height)
-            clearScreenAfterCursor()
+            if (needsClear) clearScreenAfterCursor()
         }
     }
 
     fun update(data: T) {
         val rendered = renderData(data).render(terminal)
-        // Only clear the screen if we've previously drawn our animation
-        size = rendered.height to rendered.width
+        val height = rendered.height
+        val width = rendered.width
+        // To avoid flickering don't clear the screen if the render will completely cover the last frame
+        needsClear = size?.let { (h, w) -> height < h || width < w } ?: false
+        size = height to width
         text = terminal.render(rendered)
         // Print an empty renderable to trigger our interceptor, which will add the rendered text
         terminal.print(EmptyWidget)
