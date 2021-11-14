@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.test
 
-import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Widget
