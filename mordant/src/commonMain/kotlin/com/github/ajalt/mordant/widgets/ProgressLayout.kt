@@ -55,6 +55,16 @@ open class ProgressBuilder internal constructor() {
         cells += EtaProgressCell(prefix, style)
     }
 
+    /**
+     * Add a [Spinner] to this layout.
+     *
+     * @param spinner The spinner to display
+     * @param frameRate The number of times per second to advance the spinner's displayed frame
+     */
+    fun spinner(spinner: Spinner, frameRate: Int = 8) {
+        cells += SpinnerProgressCell(spinner.frames, frameRate)
+    }
+
     internal fun build(): ProgressLayout {
         return ProgressLayout(cells, padding)
     }

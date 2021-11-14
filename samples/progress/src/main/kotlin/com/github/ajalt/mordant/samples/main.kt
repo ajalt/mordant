@@ -1,7 +1,9 @@
 package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.mordant.animation.progressAnimation
+import com.github.ajalt.mordant.rendering.TextColors.brightBlue
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.Spinner
 
 fun main() {
     val terminal = Terminal()
@@ -10,6 +12,7 @@ fun main() {
     terminal.info.updateTerminalSize()
 
     val progress = terminal.progressAnimation {
+        spinner(Spinner.Dots(brightBlue))
         text("my-file.bin")
         percentage()
         progressBar()

@@ -17,6 +17,14 @@ internal actual class AtomicInt actual constructor(initial: Int) {
     actual fun getAndIncrement(): Int {
         return backing.addAndGet(1) - 1
     }
+
+    actual fun get(): Int {
+        return backing.value
+    }
+
+    actual fun set(value: Int) {
+        backing.value = value
+    }
 }
 
 internal actual fun terminalSizeDetectionIsFast(): Boolean = true

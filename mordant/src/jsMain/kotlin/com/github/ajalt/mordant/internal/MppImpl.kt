@@ -10,6 +10,14 @@ internal actual class AtomicInt actual constructor(initial: Int) {
     actual fun getAndIncrement(): Int {
         return backing++
     }
+
+    actual fun get(): Int {
+        return backing
+    }
+
+    actual fun set(value: Int) {
+        backing = value
+    }
 }
 
 

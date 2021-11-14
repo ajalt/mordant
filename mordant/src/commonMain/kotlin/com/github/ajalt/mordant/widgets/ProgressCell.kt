@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.BlankWidgetWrapper
 import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
 import com.github.ajalt.mordant.internal.formatWithSiSuffix
 import com.github.ajalt.mordant.rendering.TextStyle
@@ -42,6 +43,20 @@ internal class TextProgressCell(private val text: Text) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.STATIC
     override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
     override fun ProgressState.makeWidget(): Widget = text
+}
+
+internal class SpinnerProgressCell(
+    private val frames: List<Widget>,
+    private val frameRate: Int,
+) : ProgressCell {
+    override val animationRate: AnimationRate get() = AnimationRate.ANIMATION
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Auto
+    override fun ProgressState.makeWidget(): Widget {
+        val frame = elapsedSeconds * frameRate
+        val spinner = Spinner(frames, initial = frame.toInt())
+        if (total != null && completed >= total) return BlankWidgetWrapper(spinner)
+        return spinner
+    }
 }
 
 internal class PercentageProgressCell : ProgressCell {
