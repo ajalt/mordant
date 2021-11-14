@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.table
+package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.CENTER

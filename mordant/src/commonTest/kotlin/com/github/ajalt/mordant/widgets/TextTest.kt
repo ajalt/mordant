@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.colormath.model.Ansi256
 import com.github.ajalt.colormath.model.RGB
@@ -12,9 +12,6 @@ import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.test.normalizeHyperlinks
-import com.github.ajalt.mordant.widgets.LS
-import com.github.ajalt.mordant.widgets.NEL
-import com.github.ajalt.mordant.widgets.Text
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import kotlin.js.JsName

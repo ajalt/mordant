@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.blue
