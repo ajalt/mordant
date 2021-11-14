@@ -1,12 +1,10 @@
-package com.github.ajalt.mordant.rendering.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.test.RenderingTest
-import com.github.ajalt.mordant.widgets.Panel
-import com.github.ajalt.mordant.widgets.Text
 import kotlin.js.JsName
 import kotlin.test.Test
 

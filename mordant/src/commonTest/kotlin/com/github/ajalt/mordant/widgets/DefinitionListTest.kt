@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.rendering.components
+package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
