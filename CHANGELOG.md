@@ -1,8 +1,13 @@
 # Changelog
 
-## 2.0.0-beta3
-_2021-06-01_
+## Unreleased
+### Added
+- `Spinner` widget that displays a looping animation
 
+### Fixed
+- Reduced flickering on high frame rate animations
+
+## 2.0.0-beta3
 ### Changed
 - Update Kotlin to 1.5.31
 - Update Colormath to 3.0. If you use and colormath colors directly, you may need to update your imports.
@@ -12,8 +17,6 @@ _2021-06-01_
 - Fixed rendering of markdown image reference links and link content
 
 ## 2.0.0-beta2
-_2021-06-01_
-
 ### Added
 - Published artifacts for macOS
 
@@ -22,8 +25,6 @@ _2021-06-01_
 - All text instances and print functions now default to preformatted whitespace, meaning that spaces and newlines will be preserved. You can explicitly pass `Whitespace.NORMAL` to restore the previous behavior.
 
 ## 2.0.0-beta1
-_2021-03-26_
-
 ### Added
 - `Table.contentToCsv` to render a table's cells to csv format
 - Added support for JavaScript and linux native targets 
@@ -34,8 +35,6 @@ _2021-03-26_
 - Improve terminal capabilities detection
 
 ## 2.0.0-alpha2
-_2021-02-02_
-
 ### Added
 - `Terminal.progressAnimation` builder to create a customizable progress bar animation
 - Improved cursor APIs and added ability to produce cursor ANSI codes as a string
@@ -45,8 +44,6 @@ _2021-02-02_
 - Rework theming system to simplify customization
 
 ## 2.0.0-alpha1
-_2019-11-01_
-
 Mordant 2.0 is a rewrite that retains the simple APIs of Mordant 1.0, and adds support for rendering
 complex widgets.
 
@@ -63,26 +60,18 @@ complex widgets.
   capabilities.
 
 ## 1.2.1
-_2019-03-17_
-
 ### Changed
 - Improve support for color detection in IntelliJ and VS Code terminals
 
 ## 1.2.0
-_2018-08-19_
-
 ### Added
 - Add functions for generating ANSI cursor movement
 - Add ability to generate ANSI color codes from any colormath color object
 - Update colormath to 1.2.0
 
 ## 1.1.0
-_2018-07-15_
-
 ### Added
 - Add support for XYZ and LAB color spaces
 
 ## 1.0.0
-_2017-09-24_
-
 - Initial Release

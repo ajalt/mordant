@@ -4,6 +4,8 @@ import com.github.ajalt.mordant.terminal.*
 
 internal expect class AtomicInt(initial: Int) {
     fun getAndIncrement(): Int
+    fun get(): Int
+    fun set(value: Int)
 }
 
 internal expect fun getEnv(key: String): String?

@@ -11,6 +11,14 @@ internal actual class AtomicInt actual constructor(initial: Int) {
     actual fun getAndIncrement(): Int {
         return backing.getAndIncrement()
     }
+
+    actual fun get(): Int {
+        return backing.get()
+    }
+
+    actual fun set(value: Int) {
+        backing.set(value)
+    }
 }
 
 // We have to shell out to another program on JVM, which takes ~10ms for stty and ~100ms for powershell
