@@ -11,14 +11,14 @@ class PaddingTest : RenderingTest() {
     |⏎
     | x ⏎
     |⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun twoValues() = checkRender(w.withPadding(1, 2), """
     |⏎
     |  x  ⏎
     |⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun threeValues() = checkRender(w.withPadding(1, 2, 3), """
@@ -27,7 +27,7 @@ class PaddingTest : RenderingTest() {
     |⏎
     |⏎
     |⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun fourValues() = checkRender(w.withPadding(1, 2, 3, 4), """
@@ -36,19 +36,19 @@ class PaddingTest : RenderingTest() {
     |⏎
     |⏎
     |⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun vertical() = checkRender(w.withVerticalPadding(1), """
     |⏎
     |x⏎
     |⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun horizontal() = checkRender(w.withHorizontalPadding(1), """
     | x ⏎
-    """.trimMargin())
+    """)
 
     @Test
     fun padEmpty() = checkRender(Text("x\n\ny").withPadding(1, padEmptyLines = true), """
@@ -57,7 +57,7 @@ class PaddingTest : RenderingTest() {
     |  ⏎
     | y ⏎
     |⏎
-    """.trimMargin(), trimIndent = false)
+    """)
 
     @Test
     fun noPadEmpty() = checkRender(Text("x\n\ny").withPadding(1, padEmptyLines = false), """
@@ -66,5 +66,5 @@ class PaddingTest : RenderingTest() {
     |⏎
     | y ⏎
     |⏎
-    """.trimMargin(), trimIndent = false)
+    """)
 }

@@ -439,19 +439,19 @@ class TableTest : RenderingTest() {
             row(1, ".2.", 3)
             row(4, 5, 6)
         }, """
-    1   .2. 3
-    4   5   6
-    """
+        |1   .2. 3
+        |4   5   6
+        """
     )
 
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
-        checkRender(table(builder), expected.trimMargin(), trimIndent = false)
+        checkRender(table(builder), expected)
     }
 
     private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {
             borderStyle = BorderStyle.HEAVY_HEAD_FOOT
             body(builder)
-        }, expected.trimMargin(), trimIndent = false)
+        }, expected)
     }
 }

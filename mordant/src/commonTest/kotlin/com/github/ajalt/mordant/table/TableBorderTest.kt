@@ -12,7 +12,7 @@ class TableBorderTest : RenderingTest() {
     fun NONE() = doTest(NONE,
         """
         | × 
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -20,14 +20,14 @@ class TableBorderTest : RenderingTest() {
         """
         | × 
         |───
-        """.trimMargin()
+        """
     )
 
     @Test
     fun RIGHT() = doTest(RIGHT,
         """
         | × │
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -35,7 +35,7 @@ class TableBorderTest : RenderingTest() {
         """
         | × │
         |───┘
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -43,7 +43,7 @@ class TableBorderTest : RenderingTest() {
         """
         |───
         | × 
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -52,7 +52,7 @@ class TableBorderTest : RenderingTest() {
         |───
         | × 
         |───
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -60,7 +60,7 @@ class TableBorderTest : RenderingTest() {
         """
         |───┐
         | × │
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -69,14 +69,14 @@ class TableBorderTest : RenderingTest() {
         |───┐
         | × │
         |───┘
-        """.trimMargin()
+        """
     )
 
     @Test
     fun LEFT() = doTest(LEFT,
         """
         |│ × 
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -84,14 +84,14 @@ class TableBorderTest : RenderingTest() {
         """
         |│ × 
         |└───
-        """.trimMargin()
+        """
     )
 
     @Test
     fun LEFT_RIGHT() = doTest(LEFT_RIGHT,
         """
         |│ × │
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -99,7 +99,7 @@ class TableBorderTest : RenderingTest() {
         """
         |│ × │
         |└───┘
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -107,7 +107,7 @@ class TableBorderTest : RenderingTest() {
         """
         |┌───
         |│ × 
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -116,7 +116,7 @@ class TableBorderTest : RenderingTest() {
         |┌───
         |│ × 
         |└───
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -124,7 +124,7 @@ class TableBorderTest : RenderingTest() {
         """
         |┌───┐
         |│ × │
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -133,7 +133,7 @@ class TableBorderTest : RenderingTest() {
         |┌───┐
         |│ × │
         |└───┘
-        """.trimMargin()
+        """
     )
 
     private fun doTest(borders: Borders, expected: String) = checkRender(table {
@@ -141,5 +141,5 @@ class TableBorderTest : RenderingTest() {
         body {
             row("×")
         }
-    }, expected, trimIndent = false)
+    }, expected)
 }

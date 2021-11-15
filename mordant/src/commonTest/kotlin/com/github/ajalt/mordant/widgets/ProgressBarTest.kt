@@ -100,7 +100,7 @@ class ProgressBarTest : RenderingTest() {
             expected,
             theme = theme,
             width = 5,
-            trimIndent = false,
+            trimMargin = false,
         )
     }
 }

@@ -288,6 +288,6 @@ class TableBorderStyleTest : RenderingTest() {
                 transitionRow(false)
                 sectionRows()
             }
-        }, expected, trimIndent)
+        }, if (trimIndent) expected.trimIndent() else expected, trimMargin = false)
     }
 }
