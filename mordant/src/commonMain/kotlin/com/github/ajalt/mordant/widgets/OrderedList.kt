@@ -5,6 +5,14 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.math.log10
 
+/**
+ * A numbered list of widgets.
+ *
+ * @property listEntries The content of the list
+ * @property numberStyle The style of the list numbers. Defaults to the theme value `list.number`.
+ * @property numberSeparator The string to print between the list numbers and the widgets. Defaults to the theme value
+ *   `list.number.separator`
+ */
 class OrderedList private constructor(
     private val listEntries: List<Widget>,
     private val numberStyle: ThemeStyle,
