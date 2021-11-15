@@ -90,6 +90,6 @@ class TextAlignmentTest : RenderingTest() {
             (blue on white)(text),
             whitespace = Whitespace.PRE_WRAP,
             align = align,
-        ), ex, trimIndent = false, width = width)
+        ), ex, width = width)
     }
 }

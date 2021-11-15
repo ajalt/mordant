@@ -29,7 +29,7 @@ class SpinnerTest : RenderingTest() {
         vararg expected: String,
     ) {
         for (ex in expected) {
-            checkRender(spinner, ex)
+            checkRender(spinner, ex, trimMargin = false)
             val t = spinner.tick
             spinner.advanceTick() shouldBe (t + 1)
         }

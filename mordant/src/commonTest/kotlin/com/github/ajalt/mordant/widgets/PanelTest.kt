@@ -15,9 +15,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun `no expand`() = checkRender(
         Panel(Text("text"), expand = false),
         """
-        ╭────╮
-        │text│
-        ╰────╯
+        |╭────╮
+        |│text│
+        |╰────╯
         """
     )
 
@@ -25,9 +25,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun expand() = checkRender(
         Panel(Text("text", align = TextAlign.CENTER), expand = true),
         """
-        ╭──────────────────╮
-        │       text       │
-        ╰──────────────────╯
+        |╭──────────────────╮
+        |│       text       │
+        |╰──────────────────╯
         """
     )
 
@@ -38,7 +38,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
         |text  ⏎
         |line 2⏎
-        """.trimMargin()
+        """
     )
 
     @Test
@@ -46,9 +46,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun `default title`() = checkRender(
         Panel("text content", title = "title"),
         """
-        ╭── title ───╮
-        │text content│
-        ╰────────────╯
+        |╭── title ───╮
+        |│text content│
+        |╰────────────╯
         """
     )
 
@@ -57,9 +57,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun `long title`() = checkRender(
         Panel("content", title = "title title"),
         """
-        ╭ title title ╮
-        │content      │
-        ╰─────────────╯
+        |╭ title title ╮
+        |│content      │
+        |╰─────────────╯
         """
     )
 
@@ -68,9 +68,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun `title align left`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.LEFT),
         """
-        ╭─ title ────╮
-        │text content│
-        ╰────────────╯
+        |╭─ title ────╮
+        |│text content│
+        |╰────────────╯
         """
     )
 
@@ -79,9 +79,9 @@ class PanelTest : RenderingTest(width = 20) {
     fun `title align right`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.RIGHT),
         """
-        ╭──── title ─╮
-        │text content│
-        ╰────────────╯
+        |╭──── title ─╮
+        |│text content│
+        |╰────────────╯
         """
     )
 
@@ -90,13 +90,13 @@ class PanelTest : RenderingTest(width = 20) {
     fun `themed panel`() = checkRender(
         Panel(green("text content"), title = blue("title")),
         """
-        ${red("╭───${blue("title")}────╮")}
-        ${red("│${green("text content")}│")}
-        ${red("╰────────────╯")}
+        |${red("╭───${blue("title")}────╮")}
+        |${red("│${green("text content")}│")}
+        |${red("╰────────────╯")}
         """,
         theme = Theme {
             styles["panel.border"] = red
             dimensions["panel.title.padding"] = 0
-        }
+        },
     )
 }

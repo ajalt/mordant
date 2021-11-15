@@ -131,6 +131,6 @@ class TableColumnWidthTest : RenderingTest() {
                     cells(11, "22 foo", 33, 44)
                 }
             }
-        }, expected.trimIndent(), width = tableWidth)
+        }, expected.trimIndent(), width = tableWidth, trimMargin = false)
     }
 }

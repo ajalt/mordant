@@ -444,7 +444,7 @@ class TableAlignmentTest : RenderingTest() {
                 }
                 rowFrom(listOf("·······", "·"))
             }
-        }, expected)
+        }, expected.trimIndent())
     }
 
     private fun doWidgetTest(verticalAlign: VerticalAlign, align: TextAlign, expected: String) {
@@ -466,6 +466,6 @@ class TableAlignmentTest : RenderingTest() {
                 }
                 row("····", "·")
             }
-        }, expected)
+        }, expected.trimIndent())
     }
 }

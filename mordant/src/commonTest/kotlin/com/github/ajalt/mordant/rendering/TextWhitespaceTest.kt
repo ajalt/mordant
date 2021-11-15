@@ -62,7 +62,7 @@ class TextWhitespaceTest : RenderingTest() {
             """
                 |a
                 | b
-                """.trimMargin(),
+                """,
             width = 2
         )
     }
@@ -80,6 +80,6 @@ class TextWhitespaceTest : RenderingTest() {
             whitespace = ws,
             align = NONE,
             tabWidth = 4
-        ), expected.trimMargin(), trimIndent = false, width = width)
+        ), expected, width = width)
     }
 }
