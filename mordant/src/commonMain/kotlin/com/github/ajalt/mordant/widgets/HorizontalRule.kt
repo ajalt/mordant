@@ -4,6 +4,15 @@ import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
+/**
+ * A line drawn across the terminal, with an optional [title].
+ *
+ * @property title An optional widget to draw inside the rule
+ * @property ruleCharacter The string to draw the rule with, may be one or more characters. By default, uses the theme value `hr.rule`.
+ * @property ruleStyle The style of the rule. By default, uses the theme value `hr.rule`.
+ * @property titleAlign If [title] is defined, how to align it within the rule
+ * @property titlePadding The amount of space to draw between the [title] and the rule. By default, uses the theme value `hr.title.padding`.
+ */
 class HorizontalRule internal constructor(
     private val title: Widget,
     private val ruleCharacter: ThemeString,

@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-/** Add a top and/or bottom caption to [content] */
+/** Add a [top] and/or [bottom] caption to [content] */
 class Caption(
     val content: Widget,
     val top: Widget? = null,
