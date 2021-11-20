@@ -11,6 +11,7 @@ import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -444,6 +445,25 @@ class TableTest : RenderingTest() {
         """
     )
 
+    @Test
+    fun row() = checkRender(
+        row {
+            column(1) { width = ColumnWidth.Expand() }
+            val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
+            cells(1, bar, 2)
+        }, """
+        |1 ━━━━━━ 2⏎
+        """, width = 10)
+
+    @Test
+    fun rowPadding() = checkRender(
+        row(padding=2) {
+            column(1) { width = ColumnWidth.Expand() }
+            val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
+            cells(1, bar, 2)
+        }, """
+        |1  ━━━━  2⏎
+        """, width = 10)
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         checkRender(table(builder), expected)
     }

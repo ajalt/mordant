@@ -123,6 +123,28 @@ internal class GridBuilderInstance(
 }
 
 @MordantDsl
+internal class SingleRowBuilderInstance(
+    private val section: SectionBuilder,
+) : SingleRowBuilder, CellStyleBuilder by section {
+    val columns = mutableMapOf<Int, ColumnBuilder>()
+    val row = RowBuilderInstance(mutableListOf())
+
+    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit) {
+        row.cells(cell1, cell2, *cells, init=init)
+    }
+
+    override fun cellsFrom(cells: Iterable<Any?>, init: CellBuilder.() -> Unit) {
+        row.cellsFrom(cells, init)
+    }
+
+    override fun cell(content: Any?, init: CellBuilder.() -> Unit) {
+        row.cell(content, init)
+    }
+
+    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilderInstance(), init)
+}
+
+@MordantDsl
 internal class RowBuilderInstance(
     val cells: MutableList<CellBuilderInstance>,
 ) : RowBuilder, CellStyleBuilder by CellStyleBuilderMixin() {

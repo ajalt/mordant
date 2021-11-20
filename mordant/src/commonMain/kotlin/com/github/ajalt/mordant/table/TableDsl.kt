@@ -4,6 +4,7 @@ import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.Text
 
 interface CellStyleBuilder {
     var padding: Padding?
@@ -49,7 +50,12 @@ sealed class ColumnWidth {
     /** The column will fit to the size of its content */
     object Auto : ColumnWidth()
 
-    /** The column will have a fixed [width] */
+    /**
+     * The column will have a fixed [width].
+     *
+     * The width includes padding, so increasing horizontal padding of a fixed column will decrease content width rather
+     * than expand the column.
+     */
     class Fixed(val width: Int) : ColumnWidth() {
         init {
             require(width > 0) { "width must be greater than zero" }
@@ -67,7 +73,7 @@ sealed class ColumnWidth {
             require(weight > 0) { "weight must be greater than zero" }
         }
 
-        constructor(weight: Int) : this(weight.toFloat())
+        constructor(weight: Number) : this(weight.toFloat())
     }
 }
 
@@ -111,12 +117,8 @@ interface TableBuilder : CellStyleBuilder {
     fun footer(init: SectionBuilder.() -> Unit)
 }
 
-
 @MordantDsl
-interface SectionBuilder : CellStyleBuilder {
-    /** Configure a single column, which the first column at index 0. */
-    fun column(i: Int, init: CellStyleBuilder.() -> Unit)
-
+interface RowHolderBuilder {
     /** Add styles to alternating rows. If there are more rows than styles, the styles will loop. */
     fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle)
 
@@ -132,21 +134,15 @@ interface SectionBuilder : CellStyleBuilder {
 }
 
 @MordantDsl
-interface GridBuilder : CellStyleBuilder {
+interface SectionBuilder : CellStyleBuilder, RowHolderBuilder {
+    /** Configure a single column, which the first column at index 0. */
+    fun column(i: Int, init: CellStyleBuilder.() -> Unit)
+}
+
+@MordantDsl
+interface GridBuilder : CellStyleBuilder, RowHolderBuilder {
     /** Configure a single column, with the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit)
-
-    /** Add styles to alternating rows. If there are more rows than styles, the styles will loop. */
-    fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle)
-
-    /** Add all [cells] from an iterable. */
-    fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit = {})
-
-    /** Add a row with one or more cells. */
-    fun row(vararg cells: Any?, init: RowBuilder.() -> Unit = {})
-
-    /** Add a row. */
-    fun row(init: RowBuilder.() -> Unit)
 }
 
 @MordantDsl
@@ -163,6 +159,12 @@ interface RowBuilder : CellStyleBuilder {
      * converted to a string.
      */
     fun cell(content: Any?, init: CellBuilder.() -> Unit = {})
+}
+
+@MordantDsl
+interface SingleRowBuilder : RowBuilder {
+    /** Configure a single column, with the first column at index 0. */
+    fun column(i: Int, init: ColumnBuilder.() -> Unit)
 }
 
 @MordantDsl
@@ -230,6 +232,25 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
         val gb = GridBuilderInstance(bodySection)
         gb.init()
         columns.putAll(gb.columns)
+    }
+
+    return TableLayout(tableBuilder).buildTable()
+}
+
+/**
+ * Build a row widget that can be used to lay out text and other widgets.
+ *
+ * This builder functions like a single row in a [grid]. Cells have optional [padding] between them.
+ */
+fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
+    val tableBuilder = TableBuilderInstance().apply {
+        borders = Borders.NONE
+        this.padding = Padding.of(left = padding)
+        val b = SingleRowBuilderInstance(bodySection)
+        b.init()
+        bodySection.rows += b.row
+        columns.putAll(b.columns)
+        column(0) { this@column.padding = Padding.none() }
     }
 
     return TableLayout(tableBuilder).buildTable()
