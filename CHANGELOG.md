@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - `Spinner` widget that displays a looping animation
+- `EmptyEidget` widget that can be used as a placeholder in layouts
 
 ### Fixed
 - Reduced flickering on high frame rate animations
