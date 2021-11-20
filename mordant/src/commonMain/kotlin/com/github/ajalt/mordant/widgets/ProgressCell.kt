@@ -61,7 +61,7 @@ internal class SpinnerProgressCell(
 
 internal class PercentageProgressCell : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
-    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4)
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(4) // " 100%"
     override fun ProgressState.makeWidget(): Widget {
         val percent = when {
             total == null || total <= 0 -> 0
@@ -78,6 +78,8 @@ internal class CompletedProgressCell(
 ) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
     override val columnWidth: ColumnWidth
+        // " 100.0M"
+        // " 100.0/200.0M"
         get() = ColumnWidth.Fixed((if (includeTotal) 12 else 6) + suffix.length)
 
     override fun ProgressState.makeWidget(): Widget {
@@ -98,7 +100,7 @@ internal class SpeedProgressCell(
     private val style: TextStyle,
 ) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
-    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(6 + suffix.length)
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(6 + suffix.length) // " 100.0M"
 
     override fun ProgressState.makeWidget(): Widget {
         val t = when {
@@ -114,7 +116,7 @@ internal class EtaProgressCell(
     private val style: TextStyle,
 ) : ProgressCell {
     override val animationRate: AnimationRate get() = AnimationRate.TEXT
-    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(7 + prefix.length)
+    override val columnWidth: ColumnWidth get() = ColumnWidth.Fixed(7 + prefix.length) // " 0:00:02"
 
     override fun ProgressState.makeWidget(): Widget {
         val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond

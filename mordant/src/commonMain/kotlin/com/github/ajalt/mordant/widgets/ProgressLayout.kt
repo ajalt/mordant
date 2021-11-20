@@ -4,9 +4,8 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.table.grid
+import com.github.ajalt.mordant.table.row
 
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
@@ -92,22 +91,15 @@ class ProgressLayout internal constructor(
             completedPerSecond = cps,
             elapsedSeconds = elapsedSeconds,
         )
-        return grid {
-            rowFrom(cells.map { it.run { state.run { makeWidget() } } })
+        return row(paddingSize) {
             align = TextAlign.RIGHT
-            borders = Borders.NONE
+            cellsFrom(cells.map { it.run { state.run { makeWidget() } } })
             cells.forEachIndexed { i, it ->
                 column(i) {
-                    padding = when (i) {
-                        cells.lastIndex -> Padding.none()
-                        else -> Padding.of(right = paddingSize)
-                    }
-                    // Expand fixed columns to account for padding
-                    width = when (i) {
-                        cells.lastIndex -> it.columnWidth
-                        else -> (it.columnWidth as? ColumnWidth.Fixed)
-                            ?.let { ColumnWidth.Fixed(it.width + paddingSize) }
-                            ?: it.columnWidth
+                    width = when (val w = it.columnWidth) {
+                        // The fixed width cells don't include padding, so add it here
+                        is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + paddingSize)
+                        else -> w
                     }
                 }
             }

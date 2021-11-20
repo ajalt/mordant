@@ -66,7 +66,7 @@ class ProgressBar private constructor(
 
     override fun measure(t: Terminal, width: Int): WidthRange {
         val w = width(width)
-        return WidthRange(w.coerceAtMost(4), w)
+        return WidthRange(w.coerceAtMost(3), w)
     }
 
     override fun render(t: Terminal, width: Int): Lines {
