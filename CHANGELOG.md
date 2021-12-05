@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta4
 ### Added
 - `Spinner` widget that displays a looping animation
 - `EmptyEidget` widget that can be used as a placeholder in layouts
