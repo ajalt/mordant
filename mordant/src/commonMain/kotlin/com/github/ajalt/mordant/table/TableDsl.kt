@@ -4,7 +4,6 @@ import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
-import com.github.ajalt.mordant.widgets.Text
 
 interface CellStyleBuilder {
     var padding: Padding?
@@ -162,10 +161,29 @@ interface RowBuilder : CellStyleBuilder {
 }
 
 @MordantDsl
-interface SingleRowBuilder : RowBuilder {
+interface SingleLineBuilder : CellStyleBuilder {
+    /** Add multiple cells to this row */
+    fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit = {})
+
+    /** Add all [cells] from an iterable to this row */
+    fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit = {})
+
+    /** Add a cell to this row.
+     *
+     * The [content] can be a [Widget] to render, or any other type of object which will be
+     * converted to a string.
+     */
+    fun cell(content: Any?, init: CellStyleBuilder.() -> Unit = {})
+}
+
+@MordantDsl
+interface SingleRowBuilder : SingleLineBuilder {
     /** Configure a single column, with the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit)
 }
+
+@MordantDsl
+interface SingleColumnBuilder : ColumnBuilder, SingleLineBuilder
 
 @MordantDsl
 interface CellBuilder : CellStyleBuilder {
@@ -240,7 +258,8 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
 /**
  * Build a row widget that can be used to lay out text and other widgets.
  *
- * This builder functions like a single row in a [grid]. Cells have optional [padding] between them.
+ * This builder functions like a single row in a [grid]. Cells have optional [padding], which sets the default left
+ * padding of all cells after the first.
  */
 fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
@@ -250,7 +269,26 @@ fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
         b.init()
         bodySection.rows += b.row
         columns.putAll(b.columns)
-        column(0) { this@column.padding = Padding.none() }
+        column(0) { this.padding = this.padding ?: Padding.none() }
+    }
+
+    return TableLayout(tableBuilder).buildTable()
+}
+
+
+/**
+ * Build a column widget that can be used to lay out text and other widgets.
+ *
+ * This builder functions like a single column in a [grid]. Cells have optional [padding], which sets the default top
+ * padding of all cells after the first.
+ */
+fun column(padding: Int = 0, init: SingleColumnBuilder.() -> Unit): Widget {
+    val tableBuilder = TableBuilderInstance().apply {
+        borders = Borders.NONE
+        this.padding = Padding.none()
+        val b = SingleColumnBuilderInstance(bodySection, padding)
+        b.init()
+        column(0) { width = b.width }
     }
 
     return TableLayout(tableBuilder).buildTable()

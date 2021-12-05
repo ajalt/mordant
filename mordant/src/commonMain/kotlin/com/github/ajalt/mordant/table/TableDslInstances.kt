@@ -129,19 +129,53 @@ internal class SingleRowBuilderInstance(
     val columns = mutableMapOf<Int, ColumnBuilder>()
     val row = RowBuilderInstance(mutableListOf())
 
-    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellBuilder.() -> Unit) {
-        row.cells(cell1, cell2, *cells, init=init)
+    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit) {
+        row.cells(cell1, cell2, *cells, init = init)
     }
 
-    override fun cellsFrom(cells: Iterable<Any?>, init: CellBuilder.() -> Unit) {
+    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit) {
         row.cellsFrom(cells, init)
     }
 
-    override fun cell(content: Any?, init: CellBuilder.() -> Unit) {
+    override fun cell(content: Any?, init: CellStyleBuilder.() -> Unit) {
         row.cell(content, init)
     }
 
     override fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilderInstance(), init)
+}
+
+@MordantDsl
+internal class SingleColumnBuilderInstance(
+    private val section: SectionBuilder,
+    private val defaultPadding: Int,
+) : SingleColumnBuilder, CellStyleBuilder by section {
+    override var width: ColumnWidth = ColumnWidth.Auto
+    private var empty = true
+
+    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit) {
+        section.row(cell1, init = pad(init))
+        section.row(cell2, init = pad(init))
+        cells.forEach { section.row(it, init = pad(init)) }
+    }
+
+    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit) {
+        cells.forEach { section.row(it, init = pad(init)) }
+    }
+
+    override fun cell(content: Any?, init: CellStyleBuilder.() -> Unit) {
+        section.row(content, init = pad(init))
+    }
+
+    private fun pad(init: CellStyleBuilder.() -> Unit): CellStyleBuilder.() -> Unit = {
+        if (defaultPadding > 0) {
+            if (empty) {
+                empty = false
+            } else {
+                padding = Padding.of(top = defaultPadding)
+            }
+        }
+        init()
+    }
 }
 
 @MordantDsl
