@@ -151,6 +151,11 @@ table {
 }
 ```
 
+## Layout
+
+If you need to lay out multiple widgets or strings, you can use the `grid` builder, which has an API similar to `table`,
+but doesn't apply styling by default. There are also the `row` and `column` builders if you don't need a full grid.
+
 ![](docs/img/complex_table.png)
 
 ## Markdown
