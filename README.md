@@ -248,6 +248,26 @@ dependencies {
 
 ###### If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`
 
+#### Snapshots
+
+<details>
+<summary>Snapshot builds are also available</summary>
+
+<a href="https://oss.sonatype.org/content/repositories/snapshots/com/github/ajalt/mordant/mordant"><img src="https://img.shields.io/nexus/s/com.github.ajalt.mordant/mordant?color=blue&label=latest%20shapshot&server=https%3A%2F%2Foss.sonatype.org"/></a>
+
+<p>
+You'll need to add the Sonatype snapshots repository:
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
+}
+```
+</p>
+</details>
+
 ## License
 
     Copyright 2018-2021 AJ Alt
