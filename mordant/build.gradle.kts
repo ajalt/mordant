@@ -11,12 +11,12 @@ plugins {
     kotlin("multiplatform")
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka") version "1.5.31"
+    id("org.jetbrains.dokka") version "1.6.0"
 }
 
 buildscript {
     dependencies {
-        classpath("org.jetbrains.dokka:dokka-base:1.5.31")
+        classpath("org.jetbrains.dokka:dokka-base:1.6.0")
     }
 }
 
@@ -34,8 +34,8 @@ kotlin {
     sourceSets {
         all {
             with(languageSettings) {
-                languageVersion = "1.5"
-                apiVersion = "1.5"
+                languageVersion = "1.6"
+                apiVersion = "1.6"
                 optIn("kotlin.RequiresOptIn")
             }
         }
@@ -43,14 +43,14 @@ kotlin {
         val commonMain by getting {
             dependsOn(gen)
             dependencies {
-                api("com.github.ajalt.colormath:colormath:3.1.1")
+                api("com.github.ajalt.colormath:colormath:3.2.0")
                 implementation("org.jetbrains:markdown:0.2.4")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("io.kotest:kotest-assertions-core:4.6.3")
+                implementation("io.kotest:kotest-assertions-core:5.0.2")
             }
         }
 
