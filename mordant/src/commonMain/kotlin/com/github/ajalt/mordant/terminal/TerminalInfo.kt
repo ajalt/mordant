@@ -11,6 +11,9 @@ class TerminalInfo(
     val stdoutInteractive: Boolean,
     val stdinInteractive: Boolean,
     val stderrInteractive: Boolean,
+    /**  If true, `\r` will clear the entire line it's printed on in the current terminal, if false, `\r` will only move
+     * the cursor */
+    val crClearsLine: Boolean,
 ) {
     var width: Int = width
         private set

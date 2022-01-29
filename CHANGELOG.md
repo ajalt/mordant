@@ -1,5 +1,16 @@
 # Changelog
 
+# Unreleased
+### Added
+- New fields to `TerminalInfo`: `stderrInteractive` and `crClearsLine`.
+- Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
+
+### Changed
+- Update Kotlin to 1.6.10
+
+### Fixed
+- Fix regression in clearing animations [(#48)](https://github.com/ajalt/mordant/issues/48)
+
 ## 2.0.0-beta4
 ### Added
 - `Spinner` widget that displays a looping animation

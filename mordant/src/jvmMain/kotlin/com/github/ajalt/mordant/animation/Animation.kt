@@ -1,20 +1,22 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
-import com.github.ajalt.mordant.terminal.PrintRequest
-import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.TerminalInterceptor
+import com.github.ajalt.mordant.terminal.*
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.RawWidget
 import com.github.ajalt.mordant.widgets.Text
 
 /**
- * A base class for objects that can turn arbitrary objects into rendered widgets.
+ * An Animation renders a widget to the screen each time [update] is called, clearing the render from the previous call.
  *
- * [Animation] by itself doesn't handle actually triggering frames - if you use this that's up to you. Instead, it handles clearing the
- * areas of the screen needed as the widgets change, and ensuring that anything rendered via [Terminal.println] appears above the animated
- * widgets. Override [renderData] to provide a [Widget] for display.
+ * If you [print][Terminal.print] anything in between calls to [update], the rendered widget will be cleared, before the
+ * print, then rendered again below it.
+ *
+ * Note that [Animation] doesn't render the widget automatically: you need to call [update] yourself when your data
+ * changes. If your terminal is not [interactive][TerminalInfo.interactive], the animation will not render anything.
+ *
+ * You can create instances of Animations with [animation], [textAnimation], and [progressAnimation], or by creating a
+ * subclass.
  */
 @OptIn(ExperimentalTerminalApi::class)
 abstract class Animation<T>(private val terminal: Terminal) {
@@ -28,8 +30,9 @@ abstract class Animation<T>(private val terminal: Terminal) {
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
         text?.let { t ->
             PrintRequest(text = buildString {
-                if (req.text.isNotEmpty())
+                if (req.text.isNotEmpty()) {
                     needsClear = true
+                }
 
                 if (!firstDraw) {
                     getClear()?.let { append(it) }
@@ -39,7 +42,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
                     appendLine(req.text)
                 }
                 append(t)
-            }, trailingLinebreak = true)
+            }, trailingLinebreak = !terminal.info.crClearsLine)
         } ?: req
     }
 
@@ -83,7 +86,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
 }
 
 /**
- * Returns an anonymous subclass of [Animation] that uses the [draw] function to render objects of type [T].
+ * Create an [Animation] that uses the [draw] function to render objects of type [T].
  *
  * @see Animation
  */
@@ -94,7 +97,7 @@ inline fun <T> Terminal.animation(crossinline draw: (T) -> Widget): Animation<T>
 }
 
 /**
- * Returns an anonymous subclass of [Animation] that wraps the result of the [draw] function into a [Text] and renders that.
+ * Create an [Animation] that wraps the result of the [draw] function into a [Text] widget and renders it.
  */
 inline fun <T> Terminal.textAnimation(
     whitespace: Whitespace = Whitespace.PRE,
@@ -105,7 +108,8 @@ inline fun <T> Terminal.textAnimation(
     crossinline draw: (T) -> String,
 ): Animation<T> {
     return object : Animation<T>(this) {
-        override fun renderData(data: T): Widget =
-            Text(draw(data), whitespace, align, overflowWrap, width, tabWidth)
+        override fun renderData(data: T): Widget {
+            return Text(draw(data), whitespace, align, overflowWrap, width, tabWidth)
+        }
     }
 }
