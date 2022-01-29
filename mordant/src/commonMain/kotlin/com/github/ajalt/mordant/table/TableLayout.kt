@@ -19,8 +19,8 @@ internal class TableLayout(private val table: TableBuilderInstance) {
 
         return TableImpl(
             rows = listOf(header, body, footer).flatten(),
+            borderType = table.borderType,
             borderStyle = table.borderStyle,
-            borderTextStyle = table.borderTextStyle,
             headerRowCount = header.size,
             footerRowCount = footer.size,
             columnStyles = table.columns.mapValues { it.value.width },

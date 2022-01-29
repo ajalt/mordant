@@ -6,8 +6,8 @@ import com.github.ajalt.mordant.internal.EMPTY_LINES
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.rendering.BorderStyle.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
-import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.BorderType.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.table.SectionBuilder
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
@@ -158,7 +158,7 @@ internal class MarkdownRenderer(
             }
 
             GFMElementTypes.TABLE -> table {
-                borderStyle = when {
+                borderType = when {
                     theme.flag("markdown.table.ascii") -> ASCII_DOUBLE_SECTION_SEPARATOR
                     else -> SQUARE_DOUBLE_SECTION_SEPARATOR
                 }

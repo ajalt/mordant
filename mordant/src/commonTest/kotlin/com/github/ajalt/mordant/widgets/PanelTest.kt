@@ -34,7 +34,7 @@ class PanelTest : RenderingTest(width = 20) {
     @Test
     @JsName("no_border")
     fun `no border`() = checkRender(
-        Panel(Text("text\nline 2", whitespace = PRE), borderStyle = null),
+        Panel(Text("text\nline 2", whitespace = PRE), borderType = null),
         """
         |text  ⏎
         |line 2⏎

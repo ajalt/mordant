@@ -1,16 +1,14 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.rendering.BorderStyle
+import com.github.ajalt.mordant.rendering.BorderType
 import com.github.ajalt.mordant.table.Borders.*
-import com.github.ajalt.mordant.table.SectionBuilder
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import kotlin.test.Test
 
 class TableBorderStyleTest : RenderingTest() {
     @Test
-    fun square() = doTest(BorderStyle.SQUARE, """
+    fun square() = doTest(BorderType.SQUARE, """
         ┌───┬───┐                   ┌───┬───┐   ╷   ╷   ╷   ╷
         │1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │
         ├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵
@@ -35,7 +33,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun rounded() = doTest(BorderStyle.ROUNDED, """
+    fun rounded() = doTest(BorderType.ROUNDED, """
         ╭───┬───╮                   ╭───┬───╮   ╷   ╷   ╷   ╷
         │1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │
         ├───┼───┤   ╶───────╴       ╰───┴───╯   ╵   ╵   ╵   ╵
@@ -60,7 +58,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun heavy() = doTest(BorderStyle.HEAVY, """
+    fun heavy() = doTest(BorderType.HEAVY, """
         ┏━━━┳━━━┓                   ┏━━━┳━━━┓   ╻   ╻   ╻   ╻
         ┃1  ┃2  ┃3   4   5   6   7  ┃8  ┃9  ┃10 ┃11 ┃12 ┃13 ┃
         ┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹
@@ -85,7 +83,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun double() = doTest(BorderStyle.DOUBLE, """
+    fun double() = doTest(BorderType.DOUBLE, """
         ╔═══╦═══╗                   ╔═══╦═══╗                
         ║1  ║2  ║3   4   5   6   7  ║8  ║9  ║10 ║11 ║12 ║13 ║
         ╠═══╬═══╣    ═══════        ╚═══╩═══╝                
@@ -110,7 +108,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun heavy_head_foot() = doTest(BorderStyle.HEAVY_HEAD_FOOT, """
+    fun heavy_head_foot() = doTest(BorderType.HEAVY_HEAD_FOOT, """
         ┏━━━┳━━━┓                   ┏━━━┳━━━┓   ╻   ╻   ╻   ╻
         ┃1  ┃2  ┃3   4   5   6   7  ┃8  ┃9  ┃10 ┃11 ┃12 ┃13 ┃
         ┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹
@@ -135,7 +133,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun square_double_head_separator() = doTest(BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR, """
+    fun square_double_head_separator() = doTest(BorderType.SQUARE_DOUBLE_SECTION_SEPARATOR, """
         ┌───┬───┐                   ┌───┬───┐   ╷   ╷   ╷   ╷
         │1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │
         ├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵
@@ -160,7 +158,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun ascii() = doTest(BorderStyle.ASCII, """
+    fun ascii() = doTest(BorderType.ASCII, """
         +---+---+                   +---+---+                
         |1  |2  |3   4   5   6   7  |8  |9  |10 |11 |12 |13 |
         +---+---+    -------        +---+---+                
@@ -185,7 +183,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun ascii_double_section_separator() = doTest(BorderStyle.ASCII_DOUBLE_SECTION_SEPARATOR, """
+    fun ascii_double_section_separator() = doTest(BorderType.ASCII_DOUBLE_SECTION_SEPARATOR, """
         +---+---+                   +---+---+                
         |1  |2  |3   4   5   6   7  |8  |9  |10 |11 |12 |13 |
         +---+---+    -------        +---+---+                
@@ -210,7 +208,7 @@ class TableBorderStyleTest : RenderingTest() {
         """)
 
     @Test
-    fun blank() = doTest(BorderStyle.BLANK, """
+    fun blank() = doTest(BorderType.BLANK, """
         |                                                     ⏎
         | 1   2   3   4   5   6   7   8   9   10  11  12  13  ⏎
         |                                                     ⏎
@@ -234,9 +232,9 @@ class TableBorderStyleTest : RenderingTest() {
         |                                                     ⏎
         """.trimMargin(), trimIndent = false)
 
-    private fun doTest(borderStyle: BorderStyle, expected: String, trimIndent: Boolean = true) {
+    private fun doTest(borderType: BorderType, expected: String, trimIndent: Boolean = true) {
         checkRender(table {
-            this.borderStyle = borderStyle
+            this.borderType = borderType
             padding = Padding.none()
 
             var i = 1

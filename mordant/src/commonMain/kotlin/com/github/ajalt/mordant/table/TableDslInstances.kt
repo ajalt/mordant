@@ -23,8 +23,8 @@ internal class ColumnBuilderInstance : ColumnBuilder, CellStyleBuilder by CellSt
 
 @MordantDsl
 internal class TableBuilderInstance : TableBuilder, CellStyleBuilder by CellStyleBuilderMixin() {
-    override var borderStyle: BorderStyle = BorderStyle.SQUARE
-    override var borderTextStyle: TextStyle = DEFAULT_STYLE
+    override var borderType: BorderType = BorderType.SQUARE
+    override var borderStyle: TextStyle = DEFAULT_STYLE
     override var outerBorder: Boolean = true
 
     val columns = mutableMapOf<Int, ColumnBuilder>()

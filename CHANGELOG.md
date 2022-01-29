@@ -7,6 +7,7 @@
 
 ### Changed
 - Update Kotlin to 1.6.10
+- *Breaking change*: Renamed `Table` and `Panel`'s `borderStyle` property to `borderType` and `borderTextStyle` to `borderStyle` 
 
 ### Fixed
 - Fix regression in clearing animations [(#48)](https://github.com/ajalt/mordant/issues/48)

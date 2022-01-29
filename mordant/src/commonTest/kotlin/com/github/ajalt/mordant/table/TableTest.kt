@@ -516,7 +516,7 @@ class TableTest : RenderingTest() {
 
     private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {
         checkRender(table {
-            borderStyle = BorderStyle.HEAVY_HEAD_FOOT
+            borderType = BorderType.HEAVY_HEAD_FOOT
             body(builder)
         }, expected)
     }

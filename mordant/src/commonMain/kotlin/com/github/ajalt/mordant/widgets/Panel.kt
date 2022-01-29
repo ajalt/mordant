@@ -17,9 +17,9 @@ class Panel private constructor(
     private val title: Widget?,
     private val expand: Boolean,
     padding: Padding,
-    private val borderStyle: BorderStyle?,
+    private val borderType: BorderType?,
     private val titleAlign: TextAlign,
-    private val borderTextStyle: ThemeStyle,
+    private val borderStyle: ThemeStyle,
     private val titlePadding: ThemeDimension,
 ) : Widget {
     constructor(
@@ -27,18 +27,18 @@ class Panel private constructor(
         title: Widget? = null,
         expand: Boolean = false,
         padding: Padding = DEFAULT_PADDING,
-        borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+        borderType: BorderType? = BorderType.ROUNDED,
         titleAlign: TextAlign = CENTER,
-        borderTextStyle: TextStyle? = null,
+        borderStyle: TextStyle? = null,
         titlePadding: Int? = null,
     ) : this(
         content = content,
         title = title,
         expand = expand,
         padding = padding,
-        borderStyle = borderStyle,
+        borderType = borderType,
         titleAlign = titleAlign,
-        borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
+        borderStyle = ThemeStyle.of("panel.border", borderStyle),
         titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
@@ -47,23 +47,23 @@ class Panel private constructor(
         title: String? = null,
         expand: Boolean = false,
         padding: Padding = DEFAULT_PADDING,
-        borderStyle: BorderStyle? = BorderStyle.ROUNDED,
+        borderType: BorderType? = BorderType.ROUNDED,
         titleAlign: TextAlign = CENTER,
-        borderTextStyle: TextStyle? = null,
+        borderStyle: TextStyle? = null,
         titlePadding: Int? = null,
     ) : this(
         content = Text(content),
         title = title?.let { Text(it, overflowWrap = ELLIPSES, whitespace = NOWRAP) },
         expand = expand,
         padding = padding,
-        borderStyle = borderStyle,
+        borderType = borderType,
         titleAlign = titleAlign,
-        borderTextStyle = ThemeStyle.of("panel.border", borderTextStyle),
+        borderStyle = ThemeStyle.of("panel.border", borderStyle),
         titlePadding = ThemeDimension.of("panel.title.padding", titlePadding),
     )
 
     private val content: Widget = content.withPadding(padding)
-    private val borderWidth get() = if (borderStyle == null) 0 else 2
+    private val borderWidth get() = if (borderType == null) 0 else 2
 
     private fun maxContentWidth(width: Int) = (width - borderWidth).coerceAtLeast(0)
     private fun maxTitleWidth(titlePadding: Int, width: Int): Int {
@@ -84,7 +84,7 @@ class Panel private constructor(
     override fun render(t: Terminal, width: Int): Lines {
         val measurement = measure(t, width)
         val maxContentWidth = maxContentWidth(width)
-        val borderTextStyle = borderTextStyle[t]
+        val borderStyle = borderStyle[t]
 
         val contentWidth = when {
             expand -> maxContentWidth
@@ -94,13 +94,13 @@ class Panel private constructor(
         val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
         val renderedTitle = HorizontalRule(
             title ?: EmptyWidget,
-            ThemeString.Explicit(borderStyle?.body?.ew ?: " "),
-            this.borderTextStyle,
+            ThemeString.Explicit(borderType?.body?.ew ?: " "),
+            this.borderStyle,
             titleAlign,
             titlePadding
         ).render(t, contentWidth)
 
-        if (borderStyle == null) {
+        if (borderType == null) {
             return when (title) {
                 null -> renderedContent
                 else -> Lines(renderedTitle.lines + renderedContent.lines)
@@ -108,21 +108,21 @@ class Panel private constructor(
         }
 
         val lines = ArrayList<Line>(renderedContent.height + renderedTitle.height + borderWidth)
-        val b = borderStyle.body
-        val horizontalBorder = Span.word(b.ew.repeat(contentWidth), borderTextStyle)
+        val b = borderType.body
+        val horizontalBorder = Span.word(b.ew.repeat(contentWidth), borderStyle)
 
         renderedTitle.lines.mapIndexedTo(lines) { i, it ->
             if (i < renderedTitle.lines.lastIndex) it
-            else flatLine(Span.word(b.es, borderTextStyle), it, Span.word(b.sw, borderTextStyle))
+            else flatLine(Span.word(b.es, borderStyle), it, Span.word(b.sw, borderStyle))
         }
 
-        val vertical = listOf(Span.word(b.ns, borderTextStyle))
+        val vertical = listOf(Span.word(b.ns, borderStyle))
 
         renderedContent.lines.mapTo(lines) { line ->
             flatLine(vertical, line, vertical)
         }
 
-        lines += Line(listOf(Span.word(b.ne, borderTextStyle), horizontalBorder, Span.word(b.nw, borderTextStyle)))
+        lines += Line(listOf(Span.word(b.ne, borderStyle), horizontalBorder, Span.word(b.nw, borderStyle)))
         return Lines(lines)
     }
 }
