@@ -12,9 +12,10 @@ internal object TerminalDetection {
         hyperlinks: Boolean?,
         interactive: Boolean?,
     ): TerminalInfo {
-        val stdoutInteractive = interactive ?: stdoutInteractive()
-        val stdinInteractive = interactive ?: stdinInteractive()
-        val stderrInteractive = interactive ?: stderrInteractive()
+        val ij = isIntellijConsole() // intellij console is interactive, even through System.console == null
+        val stdoutInteractive = interactive ?: stdoutInteractive() || ij
+        val stdinInteractive = interactive ?: stdinInteractive() || ij
+        val stderrInteractive = interactive ?: stderrInteractive() || ij
         val level = ansiLevel ?: ansiLevel(stdoutInteractive)
         val ansiHyperLinks = hyperlinks ?: (stdoutInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()
@@ -25,7 +26,8 @@ internal object TerminalDetection {
             ansiHyperLinks = ansiHyperLinks,
             stdoutInteractive = stdoutInteractive,
             stdinInteractive = stdinInteractive,
-            stderrInteractive = stderrInteractive
+            stderrInteractive = stderrInteractive,
+            crClearsLine = ij
         )
     }
 

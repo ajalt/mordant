@@ -9,7 +9,7 @@ import kotlin.test.Test
 
 @OptIn(ExperimentalTerminalApi::class)
 class TerminalTest {
-    private val vt = VirtualTerminalInterface(width = 8)
+    private val vt = VirtualTerminalInterface(width = 8, )
     private val t = Terminal(terminalInterface = vt)
 
     @Test

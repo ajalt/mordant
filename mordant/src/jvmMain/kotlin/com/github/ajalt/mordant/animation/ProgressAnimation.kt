@@ -114,6 +114,11 @@ class ProgressAnimation internal constructor(
     }
 
     @Synchronized
+    fun update(completed: Int) {
+        update(completed.toLong())
+    }
+
+    @Synchronized
     fun update() {
         update(history.completed)
     }

@@ -11,6 +11,7 @@ class VirtualTerminalInterface(
     stdoutInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
     stdinInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
     stderrInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
+    crClearsLine: Boolean = false,
 ) : TerminalInterface {
     override val info = TerminalInfo(
         width,
@@ -19,7 +20,8 @@ class VirtualTerminalInterface(
         hyperlinks,
         stdoutInteractive = stdoutInteractive,
         stdinInteractive = stdinInteractive,
-        stderrInteractive = stderrInteractive
+        stderrInteractive = stderrInteractive,
+        crClearsLine = crClearsLine,
     )
 
     private val sb = StringBuilder()

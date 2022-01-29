@@ -101,7 +101,7 @@ private fun Table.getContentRows(): List<List<String>> {
             height = Int.MAX_VALUE,
             hyperlinks = false,
             stdoutInteractive = false,
-            stdinInteractive = false
+            stdinInteractive = false,
         )
     )
 
