@@ -1,11 +1,10 @@
 package com.github.ajalt.mordant.samples
 
-import com.github.ajalt.mordant.rendering.BorderStyle.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
+import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.TextAlign.LEFT
 import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.TextStyles.dim
 import com.github.ajalt.mordant.table.Borders.ALL
 import com.github.ajalt.mordant.table.Borders.TOM_BOTTOM
@@ -18,7 +17,7 @@ fun main() {
 
     val table = table {
         outerBorder = false
-        borderStyle = SQUARE_DOUBLE_SECTION_SEPARATOR
+        borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
         align = RIGHT
         column(0) {
             align = LEFT

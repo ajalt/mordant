@@ -69,8 +69,8 @@ internal class TableWithCaption(
 
 internal class TableImpl(
     val rows: List<ImmutableRow>,
-    val borderStyle: BorderStyle,
-    val borderTextStyle: TextStyle,
+    val borderType: BorderType,
+    val borderStyle: TextStyle,
     val headerRowCount: Int,
     val footerRowCount: Int,
     val columnStyles: Map<Int, ColumnWidth>,
@@ -108,8 +108,8 @@ internal class TableImpl(
     override fun render(t: Terminal, width: Int): Lines {
         return TableRenderer(
             rows = rows,
+            borderType = borderType,
             borderStyle = borderStyle,
-            borderTextStyle = borderTextStyle,
             headerRowCount = headerRowCount,
             footerRowCount = footerRowCount,
             columnCount = columnCount,
@@ -205,8 +205,8 @@ internal class TableImpl(
 
 private class TableRenderer(
     val rows: List<ImmutableRow>,
-    val borderStyle: BorderStyle,
-    val borderTextStyle: TextStyle,
+    val borderType: BorderType,
+    val borderStyle: TextStyle,
     val headerRowCount: Int,
     val footerRowCount: Int,
     val columnCount: Int,
@@ -293,7 +293,7 @@ private class TableRenderer(
         if (colWidth == 0 || borderTop == null) return 1
 
         val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) sectionOfRow(y).ew else " "
-        tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderTextStyle))
+        tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderStyle))
         return 1
     }
 
@@ -315,7 +315,7 @@ private class TableRenderer(
             if (borderLeft != null) {
                 val border = when {
                     borderLeft || cellAt(x - 1, y)?.borderRight == true -> {
-                        Span.word(sectionOfRow(y, allowBottom = false).ns, borderTextStyle)
+                        Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
                     }
                     else -> SINGLE_SPACE
                 }
@@ -373,17 +373,17 @@ private class TableRenderer(
             tr?.borderBottom == true || br?.borderTop == true,
             bl?.borderRight == true || br?.borderLeft == true,
             tl?.borderBottom == true || bl?.borderTop == true,
-            borderTextStyle
+            borderStyle
         )
     }
 
-    private fun sectionOfRow(y: Int, allowBottom: Boolean = true): BorderStyleSection {
+    private fun sectionOfRow(y: Int, allowBottom: Boolean = true): BorderTypeSection {
         return when {
-            y < headerRowCount -> borderStyle.head
-            allowBottom && headerRowCount > 0 && y == headerRowCount -> borderStyle.headBottom
-            allowBottom && footerRowCount > 0 && y == rowCount - footerRowCount -> borderStyle.bodyBottom
-            footerRowCount == 0 || y < rowCount - footerRowCount -> borderStyle.body
-            else -> borderStyle.foot
+            y < headerRowCount -> borderType.head
+            allowBottom && headerRowCount > 0 && y == headerRowCount -> borderType.headBottom
+            allowBottom && footerRowCount > 0 && y == rowCount - footerRowCount -> borderType.bodyBottom
+            footerRowCount == 0 || y < rowCount - footerRowCount -> borderType.body
+            else -> borderType.foot
         }
     }
 }

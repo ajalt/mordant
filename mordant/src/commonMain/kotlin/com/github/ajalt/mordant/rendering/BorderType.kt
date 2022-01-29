@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 
 
-class BorderStyleSection(
+class BorderTypeSection(
     private val corners: String,
 ) {
     init {
@@ -35,12 +35,12 @@ class BorderStyleSection(
     }
 }
 
-class BorderStyle(
-    val head: BorderStyleSection,
-    val headBottom: BorderStyleSection,
-    val body: BorderStyleSection,
-    val bodyBottom: BorderStyleSection,
-    val foot: BorderStyleSection,
+class BorderType(
+    val head: BorderTypeSection,
+    val headBottom: BorderTypeSection,
+    val body: BorderTypeSection,
+    val bodyBottom: BorderTypeSection,
+    val foot: BorderTypeSection,
 ) {
     companion object {
         fun build(
@@ -49,12 +49,12 @@ class BorderStyle(
             body: String = head,
             bodyBottom: String = body,
             foot: String = body,
-        ): BorderStyle = BorderStyle(
-            head = BorderStyleSection(head),
-            headBottom = BorderStyleSection(headBottom),
-            body = BorderStyleSection(body),
-            bodyBottom = BorderStyleSection(bodyBottom),
-            foot = BorderStyleSection(foot),
+        ): BorderType = BorderType(
+            head = BorderTypeSection(head),
+            headBottom = BorderTypeSection(headBottom),
+            body = BorderTypeSection(body),
+            bodyBottom = BorderTypeSection(bodyBottom),
+            foot = BorderTypeSection(foot),
         )
 
         /**

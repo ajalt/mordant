@@ -87,8 +87,8 @@ interface ColumnBuilder : CellStyleBuilder {
 
 @MordantDsl
 interface TableBuilder : CellStyleBuilder {
-    var borderStyle: BorderStyle
-    var borderTextStyle: TextStyle
+    var borderType: BorderType
+    var borderStyle: TextStyle
     var outerBorder: Boolean
 
     /** Add a [widget] as a caption oto the top of this table. */
@@ -245,7 +245,7 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
         borders = Borders.LEFT_RIGHT
         outerBorder = false
-        borderStyle = BorderStyle.BLANK
+        borderType = BorderType.BLANK
         padding = Padding.none()
         val gb = GridBuilderInstance(bodySection)
         gb.init()
