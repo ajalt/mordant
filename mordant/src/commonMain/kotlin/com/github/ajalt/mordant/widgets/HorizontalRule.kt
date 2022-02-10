@@ -12,6 +12,7 @@ import com.github.ajalt.mordant.terminal.Terminal
  * @property ruleStyle The style of the rule. By default, uses the theme value `hr.rule`.
  * @property titleAlign If [title] is defined, how to align it within the rule
  * @property titlePadding The amount of space to draw between the [title] and the rule. By default, uses the theme value `hr.title.padding`.
+ * @property titleOverflowTop If true, [title] widgets that are more than one line will have their extra lines above the rule. If false, the extra lines will be below the rule.
  */
 class HorizontalRule internal constructor(
     private val title: Widget,
@@ -19,6 +20,7 @@ class HorizontalRule internal constructor(
     private val ruleStyle: ThemeStyle,
     private val titleAlign: TextAlign,
     private val titlePadding: ThemeDimension,
+    private val titleOverflowTop: Boolean,
 ) : Widget {
     constructor(
         title: Widget = EmptyWidget,
@@ -26,12 +28,14 @@ class HorizontalRule internal constructor(
         ruleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
+        titleOverflowTop: Boolean = true,
     ) : this(
         title = title,
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
+        titleOverflowTop = titleOverflowTop,
     )
 
     constructor(
@@ -40,12 +44,14 @@ class HorizontalRule internal constructor(
         ruleStyle: TextStyle? = null,
         titleAlign: TextAlign = TextAlign.CENTER,
         titlePadding: Int? = null,
+        titleOverflowTop: Boolean = true,
     ) : this(
         title = if (title.isEmpty()) EmptyWidget else Text(title),
         ruleCharacter = ThemeString.of("hr.rule", ruleCharacter, " "),
         ruleStyle = ThemeStyle.of("hr.rule", ruleStyle),
         titleAlign = titleAlign,
         titlePadding = ThemeDimension.of("hr.title.padding", titlePadding),
+        titleOverflowTop = titleOverflowTop,
     )
 
     override fun measure(t: Terminal, width: Int): WidthRange {
@@ -60,8 +66,8 @@ class HorizontalRule internal constructor(
         val lines = if (renderedTitle.isEmpty()) {
             listOf(rule(t, width))
         } else {
-            val lastLine = renderedTitle.lines.last()
-            val ruleWidth = width - lastLine.sumOf { it.cellWidth } - totalPadding
+            val titleRuleLine = if (titleOverflowTop) renderedTitle.lines.last() else renderedTitle.lines.first()
+            val ruleWidth = width - titleRuleLine.sumOf { it.cellWidth } - totalPadding
             val leftRuleWidth = when (titleAlign) {
                 TextAlign.LEFT -> 1
                 TextAlign.RIGHT -> ruleWidth - 1
@@ -73,13 +79,20 @@ class HorizontalRule internal constructor(
             val leftRule = rule(t, leftRuleWidth)
             val rightRule = rule(t, ruleWidth - leftRuleWidth)
             val space = if (padding > 0) Span.space(padding, ruleStyle[t]) else null
-            val rule = flatLine(leftRule, space, lastLine, space, rightRule)
-            if (renderedTitle.lines.size > 1) {
-                val firstLines = Lines(renderedTitle.lines.dropLast(1))
-                    .setSize(width, textAlign = TextAlign.CENTER)
-                firstLines.lines + listOf(rule)
-            } else {
-                listOf(rule)
+            val rule = flatLine(leftRule, space, titleRuleLine, space, rightRule)
+            buildList {
+                fun addT(l: List<Line>) {
+                    addAll(Lines(l).setSize(width, textAlign = TextAlign.CENTER).lines)
+                }
+                if (renderedTitle.lines.size == 1) {
+                    add(rule)
+                } else if (titleOverflowTop) {
+                    addT(renderedTitle.lines.dropLast(1))
+                    add(rule)
+                } else {
+                    add(rule)
+                    addT(renderedTitle.lines.drop(1))
+                }
             }
         }
         return Lines(lines)

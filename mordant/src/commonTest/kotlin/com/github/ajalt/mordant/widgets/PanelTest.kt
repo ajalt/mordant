@@ -86,6 +86,47 @@ class PanelTest : RenderingTest(width = 20) {
     )
 
     @Test
+    @JsName("bottom_title")
+    fun `bottom title`() = checkRender(
+        Panel("text content", bottomTitle = "title"),
+        """
+        |╭────────────╮
+        |│text content│
+        |╰── title ───╯
+        """
+    )
+
+    @Test
+    @JsName("title_widgets")
+    fun `title widgets`() = checkRender(
+        Panel(Text("text content"), title = Text("foo\nbar"), bottomTitle = Text("foo\nbar")),
+        """
+        |     foo      ⏎
+        |╭─── bar ────╮
+        |│text content│
+        |╰─── foo ────╯
+        |     bar      ⏎
+        """
+    )
+
+    @Test
+    @JsName("bottom_align")
+    fun `bottom align`() = checkRender(
+        Panel(
+            "my panel content",
+            title = "title",
+            bottomTitle = "subtitle",
+            titleAlign = TextAlign.LEFT,
+            bottomTitleAlign = TextAlign.RIGHT
+        ),
+        """
+        |╭─ top ──────╮
+        |│text content│
+        |╰────── bot ─╯
+        """
+    )
+
+    @Test
     @JsName("themed_panel")
     fun `themed panel`() = checkRender(
         Panel(green("text content"), title = blue("title")),

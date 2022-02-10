@@ -4,6 +4,7 @@
 ### Added
 - New fields to `TerminalInfo`: `stderrInteractive` and `crClearsLine`.
 - Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
+- Added `bottomTitle` to `Panel`
 
 ### Changed
 - Update Kotlin to 1.6.10
