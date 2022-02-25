@@ -97,10 +97,10 @@ internal object TerminalDetection {
             "cygwin" -> when {
                 // New versions of windows 10 cmd.exe supports truecolor, and most other terminal emulators
                 // like ConEmu and mintty support truecolor, although they might downsample it.
-                getJavaProperty("os.name") == "Windows 10" -> TRUECOLOR
+                getJavaProperty("os.name") in listOf("Windows 10", "Windows 11") -> TRUECOLOR
                 else -> ANSI256
             }
-            "xterm", "vt100", "vt220", "screen", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
+            "xterm", "vt100", "vt220", "screen", "tmux", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
             "dumb" -> NONE
             else -> NONE
         }
