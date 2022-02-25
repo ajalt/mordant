@@ -54,6 +54,12 @@ kotlin {
             }
         }
 
+        val jvmTest by getting {
+            dependencies {
+                api("com.github.stefanbirkner:system-rules:1.19.0")
+            }
+        }
+
         val nativeMain by creating { dependsOn(commonMain) }
         listOf("macosX64", "linuxX64", "mingwX64").forEach { target ->
             getByName(target + "Main").dependsOn(nativeMain)

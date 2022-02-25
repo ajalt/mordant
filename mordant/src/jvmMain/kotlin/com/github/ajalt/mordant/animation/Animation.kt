@@ -47,7 +47,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
     }
 
     init {
-        if (terminal.info.stdoutInteractive) {
+        if (terminal.info.outputInteractive) {
             terminal.addInterceptor(interceptor)
         }
     }

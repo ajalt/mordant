@@ -262,3 +262,18 @@ class Terminal(
         sendInterceptedPrintRequest(request, terminalInterface, interceptors, lock)
     }
 }
+
+/**
+ * Create a terminal that prints to stderr rather than stdout.
+ */
+@OptIn(ExperimentalTerminalApi::class)
+fun StderrTerminal(
+    ansiLevel: AnsiLevel? = null,
+    theme: Theme = Theme.Default,
+    width: Int? = null,
+    height: Int? = null,
+    hyperlinks: Boolean? = null,
+    tabWidth: Int = 8,
+): Terminal {
+    return Terminal(theme, tabWidth, StderrTerminalInterface(ansiLevel, width, height, hyperlinks))
+}

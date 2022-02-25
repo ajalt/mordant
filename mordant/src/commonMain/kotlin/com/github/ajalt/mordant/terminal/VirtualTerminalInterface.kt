@@ -8,9 +8,8 @@ class VirtualTerminalInterface(
     width: Int = 79,
     height: Int = 24,
     hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
-    stdoutInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-    stdinInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-    stderrInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
+    outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
+    inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
     crClearsLine: Boolean = false,
 ) : TerminalInterface {
     override val info = TerminalInfo(
@@ -18,9 +17,8 @@ class VirtualTerminalInterface(
         height,
         ansiLevel,
         hyperlinks,
-        stdoutInteractive = stdoutInteractive,
-        stdinInteractive = stdinInteractive,
-        stderrInteractive = stderrInteractive,
+        outputInteractive = outputInteractive,
+        inputInteractive = inputInteractive,
         crClearsLine = crClearsLine,
     )
 

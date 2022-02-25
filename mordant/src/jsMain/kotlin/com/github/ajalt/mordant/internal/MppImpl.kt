@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.internal
 import com.github.ajalt.mordant.terminal.*
 
 private external val process: dynamic
+private external val console: dynamic
 private external val Symbol: dynamic
 
 internal actual class AtomicInt actual constructor(initial: Int) {
@@ -28,6 +29,7 @@ private interface JsMppImpls {
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
     fun getTerminalSize(): Pair<Int, Int>?
+    fun printStderr(message: String, newline: Boolean)
 }
 
 private object BrowserMppImpls : JsMppImpls {
@@ -37,6 +39,10 @@ private object BrowserMppImpls : JsMppImpls {
     override fun stdinInteractive(): Boolean = false
     override fun stderrInteractive(): Boolean = false
     override fun getTerminalSize(): Pair<Int, Int>? = null
+    override fun printStderr(message: String, newline: Boolean) {
+        // No way to avoid the newline on browsers
+        console.error(message)
+    }
 }
 
 private object NodeMppImpls : JsMppImpls {
@@ -51,6 +57,11 @@ private object NodeMppImpls : JsMppImpls {
         if (process.stdout.getWindowSize == undefined) return null
         val s = process.stdout.getWindowSize()
         return s[0] as Int to s[1] as Int
+    }
+
+    override fun printStderr(message: String, newline: Boolean) {
+        val s = if (newline) message + "\n" else message
+        process.stderr.write(s)
     }
 }
 
@@ -70,6 +81,7 @@ internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
+internal actual fun printStderr(message: String, newline: Boolean) = impls.printStderr(message, newline)
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     val it = string.asDynamic()[Symbol.iterator]()

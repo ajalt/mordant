@@ -3,16 +3,28 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
 
+/**
+ * Information about the current terminal
+ *
+ * [width] and [height] don't automatically change if the terminal is resized. Call [updateTerminalSize] to get the
+ * latest values.
+ *
+ * @property width The terminal width, in cells
+ * @property height The terminal height, in cells
+ * @property ansiLevel The level of ANSI codes to use when printing to the terminal
+ * @property ansiHyperLinks If true, ANSI hyperlink codes can be used
+ * @property outputInteractive If false the output stream is not an interactive terminal, such as when it's redirected to a file
+ * @property inputInteractive If false the output stream is not an interactive terminal, such as when it's redirected from a file
+ * @property crClearsLine If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
+ *   `\r` will only move the cursor
+ */
 class TerminalInfo(
     width: Int,
     height: Int,
     var ansiLevel: AnsiLevel,
     var ansiHyperLinks: Boolean,
-    val stdoutInteractive: Boolean,
-    val stdinInteractive: Boolean,
-    val stderrInteractive: Boolean,
-    /**  If true, `\r` will clear the entire line it's printed on in the current terminal, if false, `\r` will only move
-     * the cursor */
+    val outputInteractive: Boolean,
+    val inputInteractive: Boolean,
     val crClearsLine: Boolean,
 ) {
     var width: Int = width
@@ -21,8 +33,8 @@ class TerminalInfo(
         private set
 
 
-    /** Return true if both stdin and stdout are interactive */
-    val interactive: Boolean get() = stdinInteractive && stdinInteractive
+    /** Return true if both input and output are interactive */
+    val interactive: Boolean get() = inputInteractive && inputInteractive
 
     /**
      * Query the terminal for its current size, updating [width] and [height] if successful.

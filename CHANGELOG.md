@@ -2,13 +2,14 @@
 
 # Unreleased
 ### Added
-- New fields to `TerminalInfo`: `stderrInteractive` and `crClearsLine`.
 - Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
 - Added `bottomTitle` to `Panel`
+- `StderrTerminal` for printing to stderr rather than stdout
 
 ### Changed
 - Update Kotlin to 1.6.10
-- *Breaking change*: Renamed `Table` and `Panel`'s `borderStyle` property to `borderType` and `borderTextStyle` to `borderStyle` 
+- *Breaking change*: Renamed `Table` and `Panel`'s `borderStyle` property to `borderType` and `borderTextStyle` to `borderStyle`
+- *Breaking change*: Renamed `TerminalInfo`'s `stdinInteractive` and `stdoutInteractive` to `inputInteractive` and `outputInteractive`, respectively
 
 ### Fixed
 - Fix regression in clearing animations [(#48)](https://github.com/ajalt/mordant/issues/48)
