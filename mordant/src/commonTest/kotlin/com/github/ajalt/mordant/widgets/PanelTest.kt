@@ -120,9 +120,9 @@ class PanelTest : RenderingTest(width = 20) {
             bottomTitleAlign = TextAlign.RIGHT
         ),
         """
-        |╭─ top ──────╮
-        |│text content│
-        |╰────── bot ─╯
+        |╭─ title ────────╮
+        |│my panel content│
+        |╰───── subtitle ─╯
         """
     )
 
