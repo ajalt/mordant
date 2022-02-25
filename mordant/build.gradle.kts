@@ -28,6 +28,7 @@ kotlin {
     }
 
     macosX64()
+    macosArm64()
     linuxX64()
     mingwX64()
 
@@ -61,7 +62,11 @@ kotlin {
         }
 
         val nativeMain by creating { dependsOn(commonMain) }
-        listOf("macosX64", "linuxX64", "mingwX64").forEach { target ->
+        val macosMain by creating { dependsOn(nativeMain) }
+        listOf("macosX64", "macosArm64").forEach { target ->
+            getByName(target + "Main").dependsOn(macosMain)
+        }
+        listOf("macos", "linuxX64", "mingwX64").forEach { target ->
             getByName(target + "Main").dependsOn(nativeMain)
         }
 
