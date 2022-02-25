@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.rendering.AnsiLevel.*
 
 internal object TerminalDetection {
     fun detectTerminal(
+        stderr:Boolean,
         ansiLevel: AnsiLevel?,
         width: Int?,
         height: Int?,
@@ -13,20 +14,18 @@ internal object TerminalDetection {
         interactive: Boolean?,
     ): TerminalInfo {
         val ij = isIntellijConsole() // intellij console is interactive, even through System.console == null
-        val stdoutInteractive = interactive ?: stdoutInteractive() || ij
-        val stdinInteractive = interactive ?: stdinInteractive() || ij
-        val stderrInteractive = interactive ?: stderrInteractive() || ij
-        val level = ansiLevel ?: ansiLevel(stdoutInteractive)
-        val ansiHyperLinks = hyperlinks ?: (stdoutInteractive && level != NONE && ansiHyperLinks())
+        val inputInteractive = interactive ?: if (stderr) false else (ij || stdinInteractive())
+        val outputInteractive = interactive ?: (ij ||  (if (stderr) stderrInteractive() else stdoutInteractive()))
+        val level = ansiLevel ?: ansiLevel(outputInteractive)
+        val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()
         return TerminalInfo(
             width = width ?: w,
             height = height ?: h,
             ansiLevel = level,
             ansiHyperLinks = ansiHyperLinks,
-            stdoutInteractive = stdoutInteractive,
-            stdinInteractive = stdinInteractive,
-            stderrInteractive = stderrInteractive,
+            outputInteractive = outputInteractive,
+            inputInteractive = inputInteractive,
             crClearsLine = ij
         )
     }
@@ -36,10 +35,10 @@ internal object TerminalDetection {
 
     private fun detectInitialSize(): Pair<Int, Int> {
         val detected = when {
-            terminalSizeDetectionIsFast() -> getTerminalSize(100)
+            terminalSizeDetectionIsFast() -> getTerminalSize(timeoutMs = 100)
             else -> null
         }
-        return detected ?: ((getEnv("COLUMNS")?.toInt() ?: 79) to (getEnv("LINES")?.toInt() ?: 24))
+        return detected ?: ((getEnv("COLUMNS")?.toIntOrNull() ?: 79) to (getEnv("LINES")?.toIntOrNull() ?: 24))
     }
 
     // https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
@@ -52,15 +51,15 @@ internal object TerminalDetection {
     }
 
 
-    private fun ansiLevel(stdoutInteractive: Boolean): AnsiLevel {
+    private fun ansiLevel(interactive: Boolean): AnsiLevel {
         forcedColor()?.let { return it }
 
         // Terminals embedded in some IDEs support color even though stdout isn't interactive. Check
         // those terminals before checking stdout.
         if (isIntellijConsole() || isVsCodeTerminal()) return TRUECOLOR
 
-        // If stdout isn't interactive, never output colors, since we might be redirected to a file etc.
-        if (!stdoutInteractive) return NONE
+        // If output isn't interactive, never output colors, since we might be redirected to a file etc.
+        if (!interactive) return NONE
 
         // Otherwise check the large variety of environment variables set by various terminal
         // emulators to detect color support

@@ -90,6 +90,14 @@ internal actual fun codepointSequence(string: String): Sequence<Int> {
     return string.codePoints().iterator().asSequence()
 }
 
+internal actual fun printStderr(message: String, newline: Boolean) {
+    if (newline) {
+        System.err.println(message)
+    } else {
+        System.err.print(message)
+    }
+}
+
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = JvmTerminalCursor(terminal)
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {

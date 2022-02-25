@@ -31,6 +31,8 @@ internal expect fun codepointSequence(string: String): Sequence<Int>
 
 internal expect fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor
 
+internal expect fun printStderr(message: String, newline: Boolean)
+
 @OptIn(ExperimentalTerminalApi::class)
 internal expect fun sendInterceptedPrintRequest(
     request: PrintRequest,

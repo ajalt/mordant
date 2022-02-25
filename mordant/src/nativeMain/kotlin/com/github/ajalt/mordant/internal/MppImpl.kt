@@ -48,6 +48,12 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
     }
 }
 
+internal actual fun printStderr(message: String, newline: Boolean) {
+    val s = if (newline) message + "\n"  else message
+    fprintf(stderr, s)
+    fflush(stderr)
+}
+
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
 
 
