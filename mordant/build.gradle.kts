@@ -44,7 +44,7 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api("com.github.ajalt.colormath:colormath:3.2.0")
-                implementation("org.jetbrains:markdown:0.2.4")
+                implementation("org.jetbrains:markdown:0.3.1")
             }
         }
         val commonTest by getting {
