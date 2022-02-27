@@ -1,6 +1,6 @@
 # Changelog
 
-# Unreleased
+# 2.0.0-beta5
 ### Added
 - Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
 - Added `bottomTitle` to `Panel`
