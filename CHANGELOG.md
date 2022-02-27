@@ -4,7 +4,7 @@
 ### Added
 - Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
 - Added `bottomTitle` to `Panel`
-- `StderrTerminal` for printing to stderr rather than stdout
+- `Terminal.forStdErr` for printing to stderr rather than stdout
 - Add `macosArm64` target for native M1 macs
 
 ### Changed

@@ -18,8 +18,8 @@ class StderrTerminalTest : RenderingTest() {
 
     @Test
     fun stderrTerminal() {
-        val errterm = StderrTerminal()
         val outterm = Terminal()
+        val errterm = Terminal().forStdErr()
 
         errterm.print("foo")
         outterm.print("bar")
