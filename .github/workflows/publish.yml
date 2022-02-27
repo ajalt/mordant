@@ -15,7 +15,7 @@ jobs:
         os: [macos-latest,  windows-latest, ubuntu-latest]
         include:
           - os: macos-latest
-            NATIVE_TEST_TASK: :mordant:macosX64Test
+            NATIVE_TEST_TASK: :mordant:linkDebugTestMacosArm64 :mordant:macosX64Test
           - os: windows-latest
             NATIVE_TEST_TASK: :mordant:mingwX64Test
           - os: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
         with:
           name: error-report
           path: build-reports.zip
-  deploy-mac-and-linux:
+  publish-all-targets:
     needs: test
     runs-on: macos-latest
     steps:
@@ -52,20 +52,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: :mordant:publish -PinferVersion=true
-  deploy-windows:
-    needs: test
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Fetch git tags
-        run: git fetch origin +refs/tags/*:refs/tags/*
-      - uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Deploy to sonatype
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: :mordant:publishMingwX64PublicationToMavenRepository -PinferVersion=true
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx5g -XX:MaxPermSize=2g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
