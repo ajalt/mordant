@@ -36,5 +36,7 @@ class VirtualTerminalInterface(
             sb.append("\n")
         }
     }
+
+    override fun forStdErr(): TerminalInterface = this
 }
 

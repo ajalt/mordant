@@ -242,6 +242,13 @@ class Terminal(
         return renderLinesAnsi(widget.render(this), info.ansiLevel, info.ansiHyperLinks)
     }
 
+    /**
+     * Create a copy of this terminal that prints to stderr if possible.
+     */
+    fun forStdErr(): Terminal {
+        return Terminal(theme, tabWidth, terminalInterface.forStdErr())
+    }
+
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
         interceptors += interceptor
     }
@@ -261,19 +268,4 @@ class Terminal(
     private fun sendPrintRequest(request: PrintRequest) {
         sendInterceptedPrintRequest(request, terminalInterface, interceptors, lock)
     }
-}
-
-/**
- * Create a terminal that prints to stderr rather than stdout.
- */
-@OptIn(ExperimentalTerminalApi::class)
-fun StderrTerminal(
-    ansiLevel: AnsiLevel? = null,
-    theme: Theme = Theme.Default,
-    width: Int? = null,
-    height: Int? = null,
-    hyperlinks: Boolean? = null,
-    tabWidth: Int = 8,
-): Terminal {
-    return Terminal(theme, tabWidth, StderrTerminalInterface(ansiLevel, width, height, hyperlinks))
 }

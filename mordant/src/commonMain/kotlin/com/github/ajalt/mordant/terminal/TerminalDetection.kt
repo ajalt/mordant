@@ -6,7 +6,7 @@ import com.github.ajalt.mordant.rendering.AnsiLevel.*
 
 internal object TerminalDetection {
     fun detectTerminal(
-        stderr:Boolean,
+        stderr: Boolean,
         ansiLevel: AnsiLevel?,
         width: Int?,
         height: Int?,
@@ -15,7 +15,7 @@ internal object TerminalDetection {
     ): TerminalInfo {
         val ij = isIntellijConsole() // intellij console is interactive, even through System.console == null
         val inputInteractive = interactive ?: if (stderr) false else (ij || stdinInteractive())
-        val outputInteractive = interactive ?: (ij ||  (if (stderr) stderrInteractive() else stdoutInteractive()))
+        val outputInteractive = interactive ?: (ij || (if (stderr) stderrInteractive() else stdoutInteractive()))
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()

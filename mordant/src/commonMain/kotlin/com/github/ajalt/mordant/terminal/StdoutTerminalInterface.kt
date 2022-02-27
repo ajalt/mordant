@@ -4,16 +4,26 @@ import com.github.ajalt.mordant.internal.printStderr
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
 @ExperimentalTerminalApi
-internal class StdoutTerminalInterface(
-    ansiLevel: AnsiLevel?,
-    width: Int?,
-    height: Int?,
-    hyperlinks: Boolean?,
-    interactive: Boolean?,
+internal class StdoutTerminalInterface private constructor(
+    override val info: TerminalInfo,
+    private val errInfo: TerminalInfo,
+    private val useStdErr: Boolean,
 ) : TerminalInterface {
-    override val info = TerminalDetection.detectTerminal(false, ansiLevel, width, height, hyperlinks, interactive)
+    constructor(
+        ansiLevel: AnsiLevel?,
+        width: Int?,
+        height: Int?,
+        hyperlinks: Boolean?,
+        interactive: Boolean?,
+    ) : this(TerminalDetection.detectTerminal(false, ansiLevel, width, height, hyperlinks, interactive),
+        TerminalDetection.detectTerminal(true, ansiLevel, width, height, hyperlinks, interactive), false)
 
     override fun completePrintRequest(request: PrintRequest) {
+        if (useStdErr) {
+            printStderr(request.text, request.trailingLinebreak)
+            return
+        }
+
         if (request.trailingLinebreak) {
             if (request.text.isEmpty()) {
                 println()
@@ -24,18 +34,8 @@ internal class StdoutTerminalInterface(
             print(request.text)
         }
     }
-}
 
-@ExperimentalTerminalApi
-internal class StderrTerminalInterface(
-    ansiLevel: AnsiLevel?,
-    width: Int?,
-    height: Int?,
-    hyperlinks: Boolean?,
-) : TerminalInterface {
-    override val info = TerminalDetection.detectTerminal(true, ansiLevel, width, height, hyperlinks, null)
-
-    override fun completePrintRequest(request: PrintRequest) {
-        printStderr(request.text, request.trailingLinebreak)
+    override fun forStdErr(): TerminalInterface {
+        return StdoutTerminalInterface(info, errInfo, true)
     }
 }
