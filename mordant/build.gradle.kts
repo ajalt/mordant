@@ -7,16 +7,18 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     kotlin("multiplatform")
+    alias(libs.plugins.dokka)
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka") version "1.6.0"
 }
+
 
 buildscript {
     dependencies {
-        classpath("org.jetbrains.dokka:dokka-base:1.6.0")
+        classpath(libs.dokka.base)
     }
 }
 
@@ -44,20 +46,20 @@ kotlin {
         val commonMain by getting {
             dependsOn(gen)
             dependencies {
-                api("com.github.ajalt.colormath:colormath:3.2.0")
-                implementation("org.jetbrains:markdown:0.3.1")
+                api(libs.colormath)
+                implementation(libs.markdown)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("io.kotest:kotest-assertions-core:5.0.2")
+                implementation(libs.kotest)
             }
         }
 
         val jvmTest by getting {
             dependencies {
-                api("com.github.stefanbirkner:system-rules:1.19.0")
+                api(libs.systemrules)
             }
         }
 
@@ -95,7 +97,7 @@ tasks.withType<KotlinCompile>().configureEach {
 tasks.dokkaHtml.configure {
     outputDirectory.set(rootDir.resolve("docs/api"))
     pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-        footerMessage = "Copyright &copy; 2021 AJ Alt"
+        footerMessage = "Copyright &copy; 2022 AJ Alt"
     }
     dokkaSourceSets {
         configureEach {

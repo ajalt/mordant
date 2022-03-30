@@ -5,7 +5,7 @@ site_description: "Mordant: Multiplatform text styling for Kotlin command-line a
 site_author: AJ Alt
 remote_branch: gh-pages
 
-copyright: 'Copyright &copy; 2021 AJ Alt'
+copyright: 'Copyright &copy; 2022 AJ Alt'
 
 theme:
   name: 'material'
