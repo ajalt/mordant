@@ -1,8 +1,9 @@
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 import java.io.ByteArrayOutputStream
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("multiplatform").version(libs.versions.kotlin).apply(false)
 }
 
 val VERSION_NAME: String by project

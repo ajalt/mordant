@@ -1,4 +1,6 @@
 # Changelog
+### Unreleased
+- Update Kotlin to 1.6.20
 
 # 2.0.0-beta5
 ### Added

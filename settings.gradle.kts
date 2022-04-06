@@ -7,7 +7,7 @@ include("samples:table")
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("kotlin", "1.6.20-RC2")
+            version("kotlin", "1.6.20")
 
             plugin("dokka", "org.jetbrains.dokka").version("1.6.10")
 
