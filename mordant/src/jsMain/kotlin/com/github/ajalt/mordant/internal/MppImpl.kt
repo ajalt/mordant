@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.terminal.*
 private external val process: dynamic
 private external val console: dynamic
 private external val Symbol: dynamic
+private external val Buffer: dynamic
 
 internal actual class AtomicInt actual constructor(initial: Int) {
     private var backing = initial
@@ -30,6 +31,7 @@ private interface JsMppImpls {
     fun stderrInteractive(): Boolean
     fun getTerminalSize(): Pair<Int, Int>?
     fun printStderr(message: String, newline: Boolean)
+    fun readLineOrNull(): String?
 }
 
 private object BrowserMppImpls : JsMppImpls {
@@ -43,9 +45,12 @@ private object BrowserMppImpls : JsMppImpls {
         // No way to avoid the newline on browsers
         console.error(message)
     }
+
+    // readlnOrNull will just throw an exception on browsers
+    override fun readLineOrNull(): String? = readlnOrNull()
 }
 
-private object NodeMppImpls : JsMppImpls {
+private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
     override fun readEnvvar(key: String): String? = process.env[key] as? String
     override fun isWindowsMpp(): Boolean = process.platform == "win32"
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
@@ -63,11 +68,27 @@ private object NodeMppImpls : JsMppImpls {
         val s = if (newline) message + "\n" else message
         process.stderr.write(s)
     }
+
+    override fun readLineOrNull(): String? {
+        return try {
+            buildString {
+                var char: String
+                val buf = Buffer.alloc(1)
+                do {
+                    fs.readSync(fd = 0, bufer = buf, offset = 0, len = 1, position = null)
+                    char = buf.toString()
+                    append(char)
+                } while (char != "\n")
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
 
-private val impls: JsMppImpls = if (isNode) {
-    NodeMppImpls
-} else {
+private val impls: JsMppImpls = try {
+    NodeMppImpls(nodeRequire("fs"))
+} catch (e: Exception) {
     BrowserMppImpls
 }
 
@@ -82,6 +103,10 @@ internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
 internal actual fun printStderr(message: String, newline: Boolean) = impls.printStderr(message, newline)
+
+// hideInput is not currently implemented
+internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readLineOrNull()
+
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     val it = string.asDynamic()[Symbol.iterator]()

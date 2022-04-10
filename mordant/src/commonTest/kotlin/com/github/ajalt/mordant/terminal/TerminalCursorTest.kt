@@ -21,7 +21,7 @@ class TerminalCursorTest {
     @Test
     @JsName("disabled_commands")
     fun `disabled commands`() {
-        val vt = VirtualTerminalInterface(AnsiLevel.NONE, )
+        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
         val c = t.cursor
         forAll(
@@ -67,7 +67,7 @@ class TerminalCursorTest {
     @Test
     @JsName("disabled_cursor_show_and_hide")
     fun `disabled cursor show and hide`() {
-        val vt = VirtualTerminalInterface(AnsiLevel.NONE, )
+        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
         vt.buffer() shouldBe ""

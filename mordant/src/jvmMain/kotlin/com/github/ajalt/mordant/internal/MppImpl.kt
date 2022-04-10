@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
+import java.io.Console
 import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit
@@ -96,6 +97,16 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     } else {
         System.err.print(message)
     }
+}
+
+internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
+    if (hideInput) {
+        val console = System.console()
+        if (console != null) {
+            return console.readPassword().toString()
+        }
+    }
+    return readlnOrNull()
 }
 
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = JvmTerminalCursor(terminal)

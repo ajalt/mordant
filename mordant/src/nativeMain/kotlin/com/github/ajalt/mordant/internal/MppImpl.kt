@@ -54,6 +54,10 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     fflush(stderr)
 }
 
+
+// hideInput is not currently implemented
+internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = readlnOrNull()
+
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
 
 

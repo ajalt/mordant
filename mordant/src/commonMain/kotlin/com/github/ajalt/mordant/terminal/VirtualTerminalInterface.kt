@@ -22,6 +22,11 @@ class VirtualTerminalInterface(
         crClearsLine = crClearsLine,
     )
 
+    /**
+     * Lines of input to return from [readLineOrNull].
+     */
+    var inputLines: MutableList<String> = mutableListOf()
+
     private val sb = StringBuilder()
 
     fun clearBuffer() {
@@ -38,5 +43,6 @@ class VirtualTerminalInterface(
     }
 
     override fun forStdErr(): TerminalInterface = this
+    override fun readLineOrNull(hideInput: Boolean): String? = inputLines.removeFirstOrNull()
 }
 

@@ -260,6 +260,16 @@ class Terminal private constructor(
         return Terminal(theme, tabWidth, terminalInterface.forStdErr(), interceptors, lock)
     }
 
+    /**
+     * Read a line of input from stdin.
+     *
+     * This is similar to [readlnOrNull], but is supported on NodeJS, and uses this terminal's
+     * [interface][TerminalInterface.readLineOrNull], so it can be customized or mocked for testing.
+     */
+    fun readLineOrNull(hideInput: Boolean): String? {
+        return terminalInterface.readLineOrNull(hideInput)
+    }
+
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
         synchronizeJvm(lock) {
             interceptors += interceptor
