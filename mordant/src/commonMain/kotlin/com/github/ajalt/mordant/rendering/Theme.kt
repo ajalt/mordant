@@ -30,6 +30,10 @@ sealed class Theme(
                 "hr.rule" to DEFAULT_STYLE,
                 "panel.border" to DEFAULT_STYLE,
 
+                "prompt.prompt" to DEFAULT_STYLE,
+                "prompt.default" to TextStyle(DEFAULT_HIGHLIGHT, bold = true),
+                "prompt.choices" to DEFAULT_STYLE,
+
                 "progressbar.pending" to TextStyle(DEFAULT_GRAY),
                 "progressbar.complete" to TextStyle(DEFAULT_HIGHLIGHT),
                 "progressbar.indeterminate" to TextStyle(DEFAULT_HIGHLIGHT),

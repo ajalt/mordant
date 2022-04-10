@@ -33,6 +33,8 @@ internal expect fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 
 internal expect fun printStderr(message: String, newline: Boolean)
 
+internal expect fun readLineOrNullMpp(hideInput: Boolean): String?
+
 @OptIn(ExperimentalTerminalApi::class)
 internal expect fun sendInterceptedPrintRequest(
     request: PrintRequest,

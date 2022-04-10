@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.internal.printStderr
+import com.github.ajalt.mordant.internal.readLineOrNullMpp
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
 @ExperimentalTerminalApi
@@ -38,4 +39,6 @@ internal class StdoutTerminalInterface private constructor(
     override fun forStdErr(): TerminalInterface {
         return StdoutTerminalInterface(info, errInfo, true)
     }
+
+    override fun readLineOrNull(hideInput: Boolean): String? = readLineOrNullMpp(hideInput)
 }
