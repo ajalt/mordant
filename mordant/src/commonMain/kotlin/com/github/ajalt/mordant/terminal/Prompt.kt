@@ -13,7 +13,7 @@ class PromptInputInvalid(message: String) : Exception(message)
  *
  */
 abstract class Prompt<T>(
-    // TODO: docs
+    // TODO: docs, and docs on the defualt themes
     protected val prompt: String,
     protected val terminal: Terminal,
     protected val default: T? = null,
@@ -22,6 +22,7 @@ abstract class Prompt<T>(
     protected val hideInput: Boolean = false,
     protected val choices: Collection<T> = emptyList(),
     protected val promptSuffix: String = ": ",
+    protected val invalidChoiceMessage: String = "Invalid value, choose from ",
 ) {
     /**
      * Convert the string entered by the user into the final type
@@ -43,17 +44,29 @@ abstract class Prompt<T>(
      */
     open protected fun makePrompt(): Widget {
         return Text(buildString {
-            append(terminal.theme.style("prompt.prompt")(prompt + promptSuffix))
+            append(terminal.theme.style("prompt.prompt")(prompt))
             if (showChoices && choices.isNotEmpty()) {
-                append(terminal.theme.style("prompt.choices")(choices.joinToString(prefix = " [",
+                append(" ")
+                append(terminal.theme.style("prompt.choices")(choices.joinToString(prefix = "[",
                     postfix = "]") { renderValue(it) }))
             }
 
             if (showDefault && default != null) {
-                append(terminal.theme.style("prompt.default")(choices.joinToString(prefix = " (",
-                    postfix = ")") { renderValue(it) }))
+                append(" ")
+                append(terminal.theme.style("prompt.default")("(${renderValue(default)})"))
             }
+            append(promptSuffix)
         })
+    }
+
+    /**
+     * Create the message to show the user when [choices] is defined and the entered value isn't a valid choice
+     */
+    open protected fun makeInvalidChoiceMessage(): Widget {
+        return Text(terminal.theme.style("prompt.choices.invalid")(buildString {
+            append(invalidChoiceMessage)
+            choices.joinTo(this, prefix = "[", postfix = "]") { renderValue(it) }
+        }))
     }
 
     /**
@@ -87,12 +100,19 @@ abstract class Prompt<T>(
             if (line.isEmpty() && default != null) {
                 return default
             }
-            try {
-                val value = convert(line)
+            val value = try {
+                convert(line)
             } catch (e: PromptInputInvalid) {
                 handleInvalidInput(e.message!!)
+                continue
             }
 
+            if (choices.isNotEmpty() && value !in choices) {
+                terminal.println(makeInvalidChoiceMessage())
+                continue
+            }
+
+            return value
         }
     }
 }
@@ -106,11 +126,12 @@ class StringPrompt(
     prompt: String,
     terminal: Terminal,
     default: String? = null,
-    showDefault: Boolean = true,
+    showDefault: Boolean = !default.isNullOrBlank(),
     showChoices: Boolean = true,
     hideInput: Boolean = false,
     choices: List<String> = emptyList(),
     promptSuffix: String = ": ",
+    invalidChoiceMessage: String = "Invalid value, choose from ",
     private val allowBlank: Boolean = true,
 ) : Prompt<String>(
     prompt,
@@ -121,6 +142,7 @@ class StringPrompt(
     hideInput,
     choices,
     promptSuffix,
+    invalidChoiceMessage
 ) {
     override fun convert(input: String): String {
         if (!allowBlank && input.isBlank()) {
