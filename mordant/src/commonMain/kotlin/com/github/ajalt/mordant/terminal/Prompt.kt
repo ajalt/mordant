@@ -8,12 +8,31 @@ class PromptInputInvalid(message: String) : Exception(message)
 /**
  * The base class for prompts.
  *
- * [ask] will print the prompt and ask for a line of user input. If [convert] raises a [PromptInputInvalid], its message
- * will be printed. This will repeat in a loop until the user input is valid.
+ * [ask] will print the [prompt][makePrompt] and ask for a line of user input and return the result of passing that line
+ * to [convert]. If [convert] instead raises [PromptInputInvalid], its message will be printed and the user will be
+ * asked for input again.
  *
+ *
+ * ### Themes used
+ *  - `prompt.prompt`: applied to the [prompt] string
+ *  - `prompt.choices`: applied to the rendered [choices] values when shown in the prompt
+ *  - `prompt.default`: applied to the rendered [default] value when shown in the prompt
+ *  - `prompt.choices.invalid`: applied to the [invalidChoiceMessage] when shown
+ *  - `danger`: applied to the [error message][PromptInputInvalid.message] raised by [convert]
+ *
+ * @property prompt The message asking for input to show the user
+ * @property terminal The terminal to use
+ * @property default The value to return if the user enters an empty line, or `null` to require a value
+ * @property showDefault If true and a [default] is specified, [makePrompt] will add the
+ *   [rendered][renderValue] default to the prompt
+ * @property hideInput If true, the user's input will be treated like a password and hidden from
+ *   the screen. [hideInput] will be ignored on platforms where it is not supported.
+ * @property choices The set of values that the user must choose from.
+ * @property promptSuffix A string to append after [prompt] when showing the user the prompt
+ * @property invalidChoiceMessage The message to show the user if [choices] is specified,
+ *   and they enter a value that isn't one of the choices.
  */
 abstract class Prompt<T>(
-    // TODO: docs, and docs on the defualt themes
     protected val prompt: String,
     protected val terminal: Terminal,
     protected val default: T? = null,
