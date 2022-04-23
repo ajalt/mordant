@@ -270,6 +270,69 @@ class Terminal private constructor(
         return terminalInterface.readLineOrNull(hideInput)
     }
 
+    inline fun <T> prompt(
+        prompt: String,
+        default: T? = null,
+        showDefault: Boolean = true,
+        showChoices: Boolean = true,
+        hideInput: Boolean = false,
+        choices: Collection<T> = emptyList(),
+        promptSuffix: String = ": ",
+        invalidChoiceMessage: String = "Invalid value, choose from ",
+        crossinline convert: (String) -> ConversionResult<T>,
+    ): T? {
+        return object : Prompt<T>(
+            prompt = prompt,
+            terminal = this,
+            default = default,
+            showDefault = showDefault,
+            showChoices = showChoices,
+            hideInput = hideInput,
+            choices = choices,
+            promptSuffix = promptSuffix,
+            invalidChoiceMessage = invalidChoiceMessage,
+        ) {
+            override fun convert(input: String): ConversionResult<T> {
+                return convert(input)
+            }
+        }.ask()
+    }
+
+    /**
+     * Print a [prompt] to the user and return the value they enter.
+     *
+     * To customize the prompt behavior, see the [Prompt] class.
+     *
+     * @param prompt The message asking for input to show the user
+     * @param default The value to return if the user enters an empty line, or `null` to require a value
+     * @param showDefault If true and a [default] is specified, add the default value to the prompt
+     * @param hideInput If true, the user's input will be treated like a password and hidden from
+     *   the screen. This value will be ignored on platforms where it is not supported.
+     * @param choices The set of values that the user must choose from.
+     * @param promptSuffix A string to append after [prompt] when showing the user the prompt
+     * @param invalidChoiceMessage The message to show the user if [choices] is specified,
+     *   and they enter a value that isn't one of the choices.
+     */
+    inline fun prompt(
+        prompt: String,
+        default: String? = null,
+        showDefault: Boolean = true,
+        showChoices: Boolean = true,
+        hideInput: Boolean = false,
+        choices: Collection<String> = emptyList(),
+        promptSuffix: String = ": ",
+        invalidChoiceMessage: String = "Invalid value, choose from ",
+    ): String? = prompt(
+        prompt,
+        default,
+        showDefault,
+        showChoices,
+        hideInput,
+        choices,
+        promptSuffix,
+        invalidChoiceMessage
+    ) { ConversionResult.Valid(it) }
+
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
         synchronizeJvm(lock) {
             interceptors += interceptor

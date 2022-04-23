@@ -17,6 +17,14 @@ class PromptTest {
     }
 
     @Test
+    @JsName("terminal_prompt")
+    fun `terminal prompt`() {
+        vt.inputLines = mutableListOf("answer")
+        t.prompt("pr") shouldBe "answer"
+        vt.buffer() shouldBe "pr: "
+    }
+
+    @Test
     @JsName("StringPrompt_with_default")
     fun `StringPrompt with default`() {
         vt.inputLines = mutableListOf("")
