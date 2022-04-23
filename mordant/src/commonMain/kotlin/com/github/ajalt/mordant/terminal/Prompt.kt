@@ -3,7 +3,10 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.widgets.Text
 
-class PromptInputInvalid(message: String) : Exception(message)
+sealed class ConversionResult<out T> {
+    data class Valid<T>(val value: T) : ConversionResult<T>()
+    data class Invalid(val message: String) : ConversionResult<Nothing>()
+}
 
 /**
  * The base class for prompts.
@@ -18,7 +21,7 @@ class PromptInputInvalid(message: String) : Exception(message)
  *  - `prompt.choices`: applied to the rendered [choices] values when shown in the prompt
  *  - `prompt.default`: applied to the rendered [default] value when shown in the prompt
  *  - `prompt.choices.invalid`: applied to the [invalidChoiceMessage] when shown
- *  - `danger`: applied to the [error message][PromptInputInvalid.message] raised by [convert]
+ *  - `danger`: applied to the [error message][ConversionResult.Invalid.message] returned by [convert]
  *
  * @property prompt The message asking for input to show the user
  * @property terminal The terminal to use
@@ -26,7 +29,7 @@ class PromptInputInvalid(message: String) : Exception(message)
  * @property showDefault If true and a [default] is specified, [makePrompt] will add the
  *   [rendered][renderValue] default to the prompt
  * @property hideInput If true, the user's input will be treated like a password and hidden from
- *   the screen. [hideInput] will be ignored on platforms where it is not supported.
+ *   the screen. This value will be ignored on platforms where it is not supported.
  * @property choices The set of values that the user must choose from.
  * @property promptSuffix A string to append after [prompt] when showing the user the prompt
  * @property invalidChoiceMessage The message to show the user if [choices] is specified,
@@ -46,9 +49,10 @@ abstract class Prompt<T>(
     /**
      * Convert the string entered by the user into the final type
      *
-     * If the input cannot be converted, raise a [PromptInputInvalid] with a message to print to the user
+     * Returns a [Valid][ConversionResult.Valid] result with the converted value or an
+     * [Invalid][ConversionResult.Invalid] with an error message.
      */
-    abstract protected fun convert(input: String): T
+    abstract protected fun convert(input: String): ConversionResult<T>
 
 
     /**
@@ -119,11 +123,12 @@ abstract class Prompt<T>(
             if (line.isEmpty() && default != null) {
                 return default
             }
-            val value = try {
-                convert(line)
-            } catch (e: PromptInputInvalid) {
-                handleInvalidInput(e.message!!)
-                continue
+            val value = when (val result = convert(line)) {
+                is ConversionResult.Valid<T> -> result.value
+                is ConversionResult.Invalid -> {
+                    handleInvalidInput(result.message)
+                    continue
+                }
             }
 
             if (choices.isNotEmpty() && value !in choices) {
@@ -163,10 +168,10 @@ class StringPrompt(
     promptSuffix,
     invalidChoiceMessage
 ) {
-    override fun convert(input: String): String {
+    override fun convert(input: String): ConversionResult<String>  {
         if (!allowBlank && input.isBlank()) {
-            throw PromptInputInvalid("")
+            return ConversionResult.Invalid("")
         }
-        return input
+        return ConversionResult.Valid(input)
     }
 }
