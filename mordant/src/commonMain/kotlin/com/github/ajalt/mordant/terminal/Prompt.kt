@@ -60,7 +60,7 @@ abstract class Prompt<T>(
      *
      * This is called when displaying the [default] or [choices].
      */
-    open protected fun renderValue(default: T): String = default.toString()
+    open protected fun renderValue(value: T): String = value.toString()
 
     /**
      * Given a [prompt] string, return the widget to show to the user.
@@ -168,10 +168,47 @@ class StringPrompt(
     promptSuffix,
     invalidChoiceMessage
 ) {
-    override fun convert(input: String): ConversionResult<String>  {
+    override fun convert(input: String): ConversionResult<String> {
         if (!allowBlank && input.isBlank()) {
             return ConversionResult.Invalid("")
         }
         return ConversionResult.Valid(input)
+    }
+}
+
+class YesNoPrompt(
+    prompt: String,
+    terminal: Terminal,
+    default: Boolean? = null,
+    private val uppercaseDefault: Boolean = true,
+    showChoices: Boolean = true,
+    private val choiceStrings: List<String> = listOf("y", "n"),
+    promptSuffix: String = ": ",
+    invalidChoiceMessage: String = "Invalid value, choose from ",
+) : Prompt<Boolean>(
+    prompt,
+    terminal,
+    default,
+    false,
+    showChoices,
+    false,
+    listOf(true, false),
+    promptSuffix,
+    invalidChoiceMessage
+) {
+    override fun convert(input: String): ConversionResult<Boolean> {
+        return when (input.trim().lowercase()) {
+            choiceStrings[0] -> ConversionResult.Valid(true)
+            choiceStrings[1] -> ConversionResult.Valid(false)
+            else -> ConversionResult.Invalid(buildString {
+                append(invalidChoiceMessage)
+                choices.joinTo(this, prefix = "[", postfix = "]") { renderValue(it) }
+            })
+        }
+    }
+
+    override fun renderValue(value: Boolean): String {
+        val s = if (value) choiceStrings[0] else choiceStrings[1]
+        return if (uppercaseDefault && value == default) s.uppercase() else s
     }
 }

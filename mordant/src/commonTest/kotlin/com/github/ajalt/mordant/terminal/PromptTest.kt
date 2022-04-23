@@ -52,4 +52,22 @@ class PromptTest {
         val p = "pr ${s("[a, b]")}: "
         vt.buffer() shouldBe "$p${e("Invalid value, choose from [a, b]")}\n$p"
     }
+
+    @Test
+    @JsName("YesNoPrompt_no_default")
+    fun `YesNoPrompt no default`() {
+        vt.inputLines = mutableListOf("Y")
+        YesNoPrompt("pr", t).ask() shouldBe true
+        val style = t.theme.style("prompt.default")
+        vt.buffer() shouldBe "pr ${style("[y, n]")}: "
+    }
+
+    @Test
+    @JsName("YesNoPrompt_default")
+    fun `YesNoPrompt default`() {
+        vt.inputLines = mutableListOf("")
+        YesNoPrompt("pr", t, default = false).ask() shouldBe false
+        val style = t.theme.style("prompt.default")
+        vt.buffer() shouldBe "pr ${style("[y, N]")}: "
+    }
 }
