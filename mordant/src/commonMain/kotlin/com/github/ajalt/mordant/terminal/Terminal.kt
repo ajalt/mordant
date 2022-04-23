@@ -313,7 +313,7 @@ class Terminal private constructor(
      * @param invalidChoiceMessage The message to show the user if [choices] is specified,
      *   and they enter a value that isn't one of the choices.
      */
-    inline fun prompt(
+    fun prompt(
         prompt: String,
         default: String? = null,
         showDefault: Boolean = true,

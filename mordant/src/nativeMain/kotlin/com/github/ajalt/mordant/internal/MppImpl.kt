@@ -77,6 +77,7 @@ private fun cursorAtExitCallback() {
 // In case the user already has a sigint handler installed, we need to keep track of it
 private val existingSigintHandler = AtomicReference<CPointer<CFunction<(Int) -> Unit>>?>(null)
 
+@OptIn(UnsafeNumber::class) // for `write`
 private fun cursorSigintHandler(signum: Int) {
     signal(SIGINT, SIG_IGN) // disable sigint handling to avoid recursive calls
     // signal handlers can't safely access most state or functions due to their async nature, so we
