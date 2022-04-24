@@ -15,50 +15,50 @@ class TerminalTest {
     @Test
     fun success() {
         t.success("success")
-        vt.buffer() shouldBe t.theme.success("success") + "\n"
+        vt.output() shouldBe t.theme.success("success") + "\n"
     }
 
     @Test
     fun danger() {
         t.danger("danger")
-        vt.buffer() shouldBe t.theme.danger("danger") + "\n"
+        vt.output() shouldBe t.theme.danger("danger") + "\n"
     }
 
     @Test
     fun warning() {
         t.warning("warning")
-        vt.buffer() shouldBe t.theme.warning("warning") + "\n"
+        vt.output() shouldBe t.theme.warning("warning") + "\n"
     }
 
     @Test
     fun info() {
         t.info("info")
-        vt.buffer() shouldBe t.theme.info("info") + "\n"
+        vt.output() shouldBe t.theme.info("info") + "\n"
     }
 
     @Test
     fun muted() {
         t.muted("muted")
-        vt.buffer() shouldBe t.theme.muted("muted") + "\n"
+        vt.output() shouldBe t.theme.muted("muted") + "\n"
     }
 
     @Test
     fun print() {
         t.print("print")
-        vt.buffer() shouldBe "print"
+        vt.output() shouldBe "print"
     }
 
     @Test
     fun println() {
         t.println("println")
-        vt.buffer() shouldBe "println\n"
+        vt.output() shouldBe "println\n"
     }
 
     @Test
     @JsName("print_customized")
     fun `print customized`() {
         t.print(cyan("print with a wrap"), whitespace = Whitespace.NORMAL, align = TextAlign.RIGHT)
-        vt.buffer() shouldBe """
+        vt.output() shouldBe """
         |${cyan("  print")}
         |${cyan(" with a")}
         |${cyan("    wrap")}
