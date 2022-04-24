@@ -28,6 +28,8 @@ sealed class ConversionResult<out T> {
  * @property default The value to return if the user enters an empty line, or `null` to require a value
  * @property showDefault If true and a [default] is specified, [makePrompt] will add the
  *   [rendered][renderValue] default to the prompt
+ * @property showChoices If true and [choices] are specified, [makePrompt] will add the
+ *   [rendered][renderValue] choices to the prompt
  * @property hideInput If true, the user's input will be treated like a password and hidden from
  *   the screen. This value will be ignored on platforms where it is not supported.
  * @property choices The set of values that the user must choose from.
@@ -70,17 +72,22 @@ abstract class Prompt<T>(
             append(terminal.theme.style("prompt.prompt")(prompt))
             if (showChoices && choices.isNotEmpty()) {
                 append(" ")
-                append(terminal.theme.style("prompt.choices")(choices.joinToString(prefix = "[",
-                    postfix = "]") { renderValue(it) }))
+                append(terminal.theme.style("prompt.choices")(makePromptChoices()))
             }
 
             if (showDefault && default != null) {
                 append(" ")
-                append(terminal.theme.style("prompt.default")("(${renderValue(default)})"))
+                append(terminal.theme.style("prompt.default")(makePromptDefault(default)))
             }
             append(promptSuffix)
         })
     }
+
+    /**  Return a string to add to the prompt to show the user the default. */
+    open protected fun makePromptDefault(default: T) = "(${renderValue(default)})"
+
+    /**  Return a string to add to the prompt to show the user the choices. */
+    open protected fun makePromptChoices() = choices.joinToString(prefix = "[", postfix = "]") { renderValue(it) }
 
     /**
      * Create the message to show the user when [choices] is defined and the entered value isn't a valid choice
@@ -88,7 +95,7 @@ abstract class Prompt<T>(
     open protected fun makeInvalidChoiceMessage(): Widget {
         return Text(terminal.theme.style("prompt.choices.invalid")(buildString {
             append(invalidChoiceMessage)
-            choices.joinTo(this, prefix = "[", postfix = "]") { renderValue(it) }
+            append(makePromptChoices())
         }))
     }
 
@@ -176,6 +183,18 @@ class StringPrompt(
     }
 }
 
+/**
+ * A boolean prompt that asks for a yes or no response.
+ *
+ * @param prompt The message asking for input to show the user
+ * @param terminal The terminal to use
+ * @param default The value to return if the user enters an empty line, or `null` to require a value
+ * @param uppercaseDefault If true and [default] is not `null`, the default choice will be shown in uppercase.
+ * @param showChoices If true, the choices will be added to the [prompt]
+ * @param choiceStrings The strings to accept for `true` and `false` inputs
+ * @param promptSuffix A string to append after [prompt] when showing the user the prompt
+ * @param invalidChoiceMessage The message to show the user if they enter a value that isn't one of the [choiceStrings].
+ */
 class YesNoPrompt(
     prompt: String,
     terminal: Terminal,
@@ -202,9 +221,13 @@ class YesNoPrompt(
             choiceStrings[1] -> ConversionResult.Valid(false)
             else -> ConversionResult.Invalid(buildString {
                 append(invalidChoiceMessage)
-                choices.joinTo(this, prefix = "[", postfix = "]") { renderValue(it) }
+                append(makePromptChoices())
             })
         }
+    }
+
+    override fun makePromptChoices(): String {
+        return choices.joinToString("/", prefix = "[", postfix = "]") { renderValue(it) }
     }
 
     override fun renderValue(value: Boolean): String {

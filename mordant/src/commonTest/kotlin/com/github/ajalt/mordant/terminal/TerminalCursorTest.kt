@@ -14,7 +14,7 @@ private fun c(b: CursorMovements.() -> Unit): String {
     val vt = VirtualTerminalInterface()
     val t = Terminal(terminalInterface = vt)
     t.cursor.move(b)
-    return vt.buffer()
+    return vt.output()
 }
 
 class TerminalCursorTest {
@@ -36,8 +36,8 @@ class TerminalCursorTest {
             row(c.move { clearScreen() }),
             row(c.move { clearScreenAfterCursor() }),
         ) {
-            vt.buffer() shouldBe ""
-            vt.clearBuffer()
+            vt.output() shouldBe ""
+            vt.clearOutput()
         }
     }
 
@@ -58,10 +58,10 @@ class TerminalCursorTest {
         val vt = VirtualTerminalInterface()
         val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
-        vt.buffer() shouldBe "$CSI?25l"
-        vt.clearBuffer()
+        vt.output() shouldBe "$CSI?25l"
+        vt.clearOutput()
         t.cursor.show()
-        vt.buffer() shouldBe "$CSI?25h"
+        vt.output() shouldBe "$CSI?25h"
     }
 
     @Test
@@ -70,9 +70,9 @@ class TerminalCursorTest {
         val vt = VirtualTerminalInterface(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
-        vt.buffer() shouldBe ""
+        vt.output() shouldBe ""
         t.cursor.show()
-        vt.buffer() shouldBe ""
+        vt.output() shouldBe ""
     }
 
     @Test

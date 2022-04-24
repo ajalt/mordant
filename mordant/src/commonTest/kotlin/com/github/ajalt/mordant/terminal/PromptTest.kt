@@ -13,7 +13,7 @@ class PromptTest {
     fun stringPrompt() {
         vt.inputLines = mutableListOf("answer")
         StringPrompt("pr", t).ask() shouldBe "answer"
-        vt.buffer() shouldBe "pr: "
+        vt.output() shouldBe "pr: "
     }
 
     @Test
@@ -21,7 +21,7 @@ class PromptTest {
     fun `terminal prompt`() {
         vt.inputLines = mutableListOf("answer")
         t.prompt("pr") shouldBe "answer"
-        vt.buffer() shouldBe "pr: "
+        vt.output() shouldBe "pr: "
     }
 
     @Test
@@ -30,7 +30,7 @@ class PromptTest {
         vt.inputLines = mutableListOf("")
         StringPrompt("pr", t, default = "def").ask() shouldBe "def"
         val style = t.theme.style("prompt.default")
-        vt.buffer() shouldBe "pr ${style("(def)")}: "
+        vt.output() shouldBe "pr ${style("(def)")}: "
     }
 
     @Test
@@ -39,7 +39,7 @@ class PromptTest {
         vt.inputLines = mutableListOf("b")
         StringPrompt("pr", t, choices = listOf("a", "b")).ask() shouldBe "b"
         val s = t.theme.style("prompt.choices")
-        vt.buffer() shouldBe "pr ${s("[a, b]")}: "
+        vt.output() shouldBe "pr ${s("[a, b]")}: "
     }
 
     @Test
@@ -50,7 +50,7 @@ class PromptTest {
         val s = t.theme.style("prompt.choices")
         val e = t.theme.danger
         val p = "pr ${s("[a, b]")}: "
-        vt.buffer() shouldBe "$p${e("Invalid value, choose from [a, b]")}\n$p"
+        vt.output() shouldBe "$p${e("Invalid value, choose from [a, b]")}\n$p"
     }
 
     @Test
@@ -59,7 +59,7 @@ class PromptTest {
         vt.inputLines = mutableListOf("Y")
         YesNoPrompt("pr", t).ask() shouldBe true
         val style = t.theme.style("prompt.default")
-        vt.buffer() shouldBe "pr ${style("[y, n]")}: "
+        vt.output() shouldBe "pr ${style("[y/n]")}: "
     }
 
     @Test
@@ -68,6 +68,6 @@ class PromptTest {
         vt.inputLines = mutableListOf("")
         YesNoPrompt("pr", t, default = false).ask() shouldBe false
         val style = t.theme.style("prompt.default")
-        vt.buffer() shouldBe "pr ${style("[y, N]")}: "
+        vt.output() shouldBe "pr ${style("[y/N]")}: "
     }
 }
