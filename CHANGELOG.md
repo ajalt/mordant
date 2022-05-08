@@ -1,6 +1,9 @@
 # Changelog
 ### Unreleased
+
+### Changed
 - Update Kotlin to 1.6.20
+- Publish JS target with the IR format in addition to LEGACY
 
 # 2.0.0-beta5
 ### Added
