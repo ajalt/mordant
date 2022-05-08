@@ -38,5 +38,6 @@ internal expect fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
-    lock: Any,
 )
+
+internal expect inline fun synchronizeJvm(lock: Any, block: () -> Unit)

@@ -5,6 +5,9 @@
 - Update Kotlin to 1.6.20
 - Publish JS target with the IR format in addition to LEGACY
 
+### Fixed
+- Fix race condition when using ProgressAnimation and adding interceptors in JVM [(#55)](https://github.com/ajalt/mordant/issues/55)
+
 # 2.0.0-beta5
 ### Added
 - Progress bars and other single-line animations are now supported in the IntelliJ console [(#49)](https://github.com/ajalt/mordant/issues/49)
