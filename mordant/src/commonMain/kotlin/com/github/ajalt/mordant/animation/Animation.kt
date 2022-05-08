@@ -15,7 +15,7 @@ import com.github.ajalt.mordant.widgets.Text
  * Note that [Animation] doesn't render the widget automatically: you need to call [update] yourself when your data
  * changes. If your terminal is not [interactive][TerminalInfo.interactive], the animation will not render anything.
  *
- * You can create instances of Animations with [animation], [textAnimation], and [progressAnimation], or by creating a
+ * You can create instances of Animations with [animation], [textAnimation], and `progressAnimation` (on JVM), or by creating a
  * subclass.
  */
 @OptIn(ExperimentalTerminalApi::class)
