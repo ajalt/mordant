@@ -110,9 +110,10 @@ internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
-    lock: Any,
 ) {
     terminalInterface.completePrintRequest(
         interceptors.fold(request) { acc, it -> it.intercept(acc) }
     )
 }
+
+internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = block()

@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.mordant.internal.makePrintingTerminalCursor
 import com.github.ajalt.mordant.internal.renderLinesAnsi
 import com.github.ajalt.mordant.internal.sendInterceptedPrintRequest
+import com.github.ajalt.mordant.internal.synchronizeJvm
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.widgets.HorizontalRule
@@ -250,11 +251,15 @@ class Terminal(
     }
 
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
-        interceptors += interceptor
+        synchronizeJvm(lock) {
+            interceptors += interceptor
+        }
     }
 
     internal fun removeInterceptor(interceptor: TerminalInterceptor) {
-        interceptors.remove(interceptor)
+        synchronizeJvm(lock) {
+            interceptors.remove(interceptor)
+        }
     }
 
     private fun rawPrintln(message: String) {
@@ -266,6 +271,8 @@ class Terminal(
     }
 
     private fun sendPrintRequest(request: PrintRequest) {
-        sendInterceptedPrintRequest(request, terminalInterface, interceptors, lock)
+        synchronizeJvm(lock) {
+            sendInterceptedPrintRequest(request, terminalInterface, interceptors)
+        }
     }
 }
