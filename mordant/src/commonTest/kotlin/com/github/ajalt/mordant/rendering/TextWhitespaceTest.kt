@@ -10,47 +10,57 @@ import kotlin.test.Test
 
 class TextWhitespaceTest : RenderingTest() {
     @Test
-    fun normal() = doTest(NORMAL, 18, """
-        |Lorem ipsum dolor⏎
-        |sit amet,⏎
-        |consectetur⏎
-        |adipiscing elit,
-        |sed⏎
-    """)
+    fun normal() = doTest(
+        NORMAL, 18, """
+        ░Lorem ipsum dolor░
+        ░sit amet,░
+        ░consectetur░
+        ░adipiscing elit,
+        ░sed░
+        """
+    )
 
     @Test
-    fun nowrap() = doTest(NOWRAP, 18, """
-        |Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed⏎
-    """)
+    fun nowrap() = doTest(
+        NOWRAP, 18, """
+        ░Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed░
+        """
+    )
 
     @Test
-    fun pre() = doTest(PRE, 19, """
-        |Lorem ipsum dolor ⏎
-        |⏎
-        |sit amet, consectetur ⏎
-        |    adipiscing        ⏎
-        |elit,   sed⏎
-    """)
+    fun pre() = doTest(
+        PRE, 19, """
+        ░Lorem ipsum dolor ░
+        ░░
+        ░sit amet, consectetur ░
+        ░    adipiscing        ░
+        ░elit,   sed░
+        """
+    )
 
     @Test
-    fun pre_wrap() = doTest(PRE_WRAP, 19, """
-        |Lorem ipsum dolor⏎
-        |⏎
-        |sit amet,⏎
-        |consectetur⏎
-        |    adipiscing⏎
-        |elit,   sed⏎
-    """)
+    fun pre_wrap() = doTest(
+        PRE_WRAP, 19, """
+        ░Lorem ipsum dolor░
+        ░░
+        ░sit amet,░
+        ░consectetur░
+        ░    adipiscing░
+        ░elit,   sed░
+        """
+    )
 
     @Test
-    fun pre_line() = doTest(PRE_LINE, 19, """
-        |Lorem ipsum dolor⏎
-        |⏎
-        |sit amet,⏎
-        |consectetur⏎
-        |adipiscing⏎
-        |elit, sed⏎
-    """)
+    fun pre_line() = doTest(
+        PRE_LINE, 19, """
+        ░Lorem ipsum dolor░
+        ░░
+        ░sit amet,░
+        ░consectetur░
+        ░adipiscing░
+        ░elit, sed░
+        """
+    )
 
     @Test
     @JsName("consecutive_whitespace_spans")
@@ -60,26 +70,28 @@ class TextWhitespaceTest : RenderingTest() {
         checkRender(
             Text(Lines(listOf(line1, line2)), whitespace = PRE_WRAP),
             """
-                |a
-                | b
-                """,
+            ░a
+            ░ b
+            """,
             width = 2
         )
     }
 
     private fun doTest(ws: Whitespace, width: Int, expected: String) {
         val text = """
-        |Lorem ipsum dolor ⏎
-        |⏎
-        |sit amet, consectetur ⏎
-        |␉adipiscing        ⏎
-        |elit,   sed⏎
-        """.trimMargin().replace("⏎", "").replace("␉", "\t")
-        checkRender(Text(
-            text,
-            whitespace = ws,
-            align = NONE,
-            tabWidth = 4
-        ), expected, width = width)
+        ░Lorem ipsum dolor ░
+        ░░
+        ░sit amet, consectetur ░
+        ░␉adipiscing        ░
+        ░elit,   sed░
+        """.trimMargin("░").replace("░", "").replace("␉", "\t")
+        checkRender(
+            Text(
+                text,
+                whitespace = ws,
+                align = NONE,
+                tabWidth = 4
+            ), expected, width = width
+        )
     }
 }

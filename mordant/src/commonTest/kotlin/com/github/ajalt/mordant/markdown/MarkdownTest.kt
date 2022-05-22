@@ -649,7 +649,7 @@ line break with spaces.
 A hard\
   line break with a backslash.
   
-A *hard   ⏎
+A *hard   ░
 line* break with emph.
 
 Code spans `don't\
@@ -714,7 +714,7 @@ LS
 ┌─────┬─────┐
 │${bold(" abc ")}│${bold(" def ")}│
 ╞═════╪═════╛
-│ bar │      ⏎
+│ bar │      ░
 ├─────┼─────┐
 │ bar │ baz │
 └─────┴─────┘
@@ -930,7 +930,7 @@ link(c.com)
         theme: Theme = Theme.Default,
         hyperlinks: Boolean = false,
     ) {
-        val md = markdown.replace("⏎", "")
+        val md = markdown.replace("░", "")
         try {
             val terminal = Terminal(
                 ansiLevel = AnsiLevel.TRUECOLOR,
@@ -940,7 +940,7 @@ link(c.com)
             )
             val actual = terminal.render(Markdown(md, showHtml)).normalizeHyperlinks()
             try {
-                actual shouldBe expected.replace("⏎", "")
+                actual shouldBe expected.replace("░", "")
             } catch (e: Throwable) {
                 println(actual)
                 throw e

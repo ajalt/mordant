@@ -25,9 +25,9 @@ class TextTest : RenderingTest() {
     Lorem ipsum dolor
     sit amet
     """, whitespace = Whitespace.NORMAL, width = 12), """
-    |Lorem ipsum
-    |dolor sit
-    |amet
+    ░Lorem ipsum
+    ░dolor sit
+    ░amet
     """, width = 79)
 
     @Test
@@ -36,10 +36,10 @@ class TextTest : RenderingTest() {
     Lorem${NEL}ipsum dolor $LS
     sit $LS  amet
     """, whitespace = Whitespace.NORMAL), """
-    |Lorem
-    |ipsum dolor
-    |sit
-    |amet
+    ░Lorem
+    ░ipsum dolor
+    ░sit
+    ░amet
     """)
 
     @Test
@@ -60,9 +60,9 @@ class TextTest : RenderingTest() {
     ${CSI}255munknown
     ${CSI}6ndevice status report
     """.trimIndent(), whitespace = PRE), """
-    |${CSI}31;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}31;47m red${CSI}39;49m
-    |unknown
-    |device status report
+    ░${CSI}31;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}31;47m red${CSI}39;49m
+    ░unknown
+    ░device status report
     """, width = 79)
 
     @Test
@@ -85,8 +85,8 @@ class TextTest : RenderingTest() {
     ${TextStyle(RGB(1, 0, 0), white)("red ${TextStyle(blue)("blue ${TextStyle(bgColor = gray)("gray.bg")}")} red")}
     ${TextStyle(hyperlink = "foo.com")("foo.${TextStyle(hyperlink = "bar.com")("bar")}.com")}/baz
     """.trimIndent(), whitespace = PRE), """
-    |${CSI}38;2;255;0;0;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}38;2;255;0;0;47m red${CSI}39;49m
-    |${OSC}8;id=1;foo.com${ST}foo.${OSC}8;id=2;bar.com${ST}bar${OSC}8;id=1;foo.com$ST.com${OSC}8;;$ST/baz
+    ░${CSI}38;2;255;0;0;47mred ${CSI}34mblue ${CSI}100mgray.bg${CSI}38;2;255;0;0;47m red${CSI}39;49m
+    ░${OSC}8;id=1;foo.com${ST}foo.${OSC}8;id=2;bar.com${ST}bar${OSC}8;id=1;foo.com$ST.com${OSC}8;;$ST/baz
     """, width = 79) { it.normalizeHyperlinks() }
 
     @Test
