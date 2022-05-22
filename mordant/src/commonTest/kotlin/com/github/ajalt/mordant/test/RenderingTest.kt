@@ -23,8 +23,8 @@ abstract class RenderingTest(
         val t = Terminal(AnsiLevel.TRUECOLOR, theme, width, height, hyperlinks, tabWidth)
         val actual = transformActual(t.render(widget))
         try {
-            val trimmed = if (trimMargin) expected.trimMargin() else expected
-            actual shouldBe trimmed.replace("⏎", "")
+            val trimmed = if (trimMargin) expected.trimMargin("░") else expected
+            actual shouldBe trimmed.replace("░", "")
         } catch (e: Throwable) {
             println(actual)
             throw e

@@ -48,8 +48,8 @@ class HorizontalRuleTest : RenderingTest() {
         checkRender(
             HorizontalRule(title = Text("Multiline\nHeader Text", whitespace = Whitespace.PRE_WRAP)),
             """
-            |     Multiline     ⏎
-            |─── Header Text ───⏎
+            ░     Multiline     ░
+            ░─── Header Text ───░
             """,
             width = 19
         )
