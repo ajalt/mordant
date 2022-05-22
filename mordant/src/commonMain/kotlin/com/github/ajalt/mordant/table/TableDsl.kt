@@ -8,11 +8,14 @@ import com.github.ajalt.mordant.widgets.Padding
 interface CellStyleBuilder {
     var padding: Padding?
     var style: TextStyle?
-    var borders: Borders?
+    var cellBorders: Borders?
     var whitespace: Whitespace?
     var align: TextAlign?
     var verticalAlign: VerticalAlign?
     var overflowWrap: OverflowWrap?
+
+    @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
+    var borders: Borders?
 
     fun style(
         color: Color? = null,
@@ -87,9 +90,19 @@ interface ColumnBuilder : CellStyleBuilder {
 
 @MordantDsl
 interface TableBuilder : CellStyleBuilder {
+    /** The characters to use to draw cell edges */
     var borderType: BorderType
+
+    /** A text style to apply to the cell border characters */
     var borderStyle: TextStyle
-    var outerBorder: Boolean
+
+    /**
+     * Which borders to draw on the outer edge of the table.
+     *
+     * This overrides [cellBorders] for borders on the outer edges of the table. The default values of `null` will not
+     * override [cellBorders].
+     */
+    var tableBorders: Borders?
 
     /** Add a [widget] as a caption oto the top of this table. */
     fun captionTop(widget: Widget)
@@ -114,6 +127,9 @@ interface TableBuilder : CellStyleBuilder {
 
     /** Configure the footer section. */
     fun footer(init: SectionBuilder.() -> Unit)
+
+    @Deprecated("`outerBorder=false` has been replaced with `tableBorders=Borders.NONE`")
+    var outerBorder: Boolean
 }
 
 @MordantDsl
@@ -238,13 +254,13 @@ fun table(init: TableBuilder.() -> Unit): Table {
  * This builder functions like a [table] builder, but has no sections and no borders.
  *
  * By default, there is one space between cells in a row. You can increase this by adding
- * [padding][SectionBuilder.padding], or remove it by setting [borders][SectionBuilder.borders] to
+ * [padding][SectionBuilder.padding], or remove it by setting [borders][SectionBuilder.cellBorders] to
  * [NONE][Borders.NONE].
  */
 fun grid(init: GridBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
-        borders = Borders.LEFT_RIGHT
-        outerBorder = false
+        cellBorders = Borders.LEFT_RIGHT
+        tableBorders = Borders.NONE
         borderType = BorderType.BLANK
         padding = Padding.none()
         val gb = GridBuilderInstance(bodySection)
@@ -263,7 +279,7 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
  */
 fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
-        borders = Borders.NONE
+        cellBorders = Borders.NONE
         this.padding = Padding.of(left = padding)
         val b = SingleRowBuilderInstance(bodySection)
         b.init()
@@ -284,7 +300,7 @@ fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
  */
 fun column(padding: Int = 0, init: SingleColumnBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
-        borders = Borders.NONE
+        cellBorders = Borders.NONE
         this.padding = Padding.none()
         val b = SingleColumnBuilderInstance(bodySection, padding)
         b.init()

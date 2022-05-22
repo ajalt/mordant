@@ -241,33 +241,33 @@ class TableBorderStyleTest : RenderingTest() {
             fun SectionBuilder.sectionRows() {
                 row {
                     cells(i++, i++)
-                    cell(i++) { borders = NONE }
-                    cells(i++, i++) { borders = BOTTOM }
-                    cells(i++, i++) { borders = NONE }
-                    cells(i++, i++) { borders = ALL }
-                    cell(i++) { borders = NONE }
-                    cells(i++, i++, i++) { borders = LEFT_RIGHT }
+                    cell(i++) { cellBorders = NONE }
+                    cells(i++, i++) { cellBorders = BOTTOM }
+                    cells(i++, i++) { cellBorders = NONE }
+                    cells(i++, i++) { cellBorders = ALL }
+                    cell(i++) { cellBorders = NONE }
+                    cells(i++, i++, i++) { cellBorders = LEFT_RIGHT }
                 }
                 row {
                     cells(i++, i++)
-                    cell(i++) { borders = NONE }
-                    cell(i++) { borders = TOP }
-                    cells(i++, i++, i++, i++, i++, i++, i++, i++, i++) { borders = NONE }
+                    cell(i++) { cellBorders = NONE }
+                    cell(i++) { cellBorders = TOP }
+                    cells(i++, i++, i++, i++, i++, i++, i++, i++, i++) { cellBorders = NONE }
                 }
             }
 
             fun SectionBuilder.transitionRow(top: Boolean) {
                 row {
                     cells(i++, i++) { ALL }
-                    cell(i++) { borders = NONE }
-                    cells(i++, i++) { borders = if (top) NONE else ALL }
-                    cell(i++) { borders = RIGHT }
-                    cell(i++) { borders = NONE }
-                    cells(i++, i++) { borders = if (top) ALL else NONE }
-                    cell(i++) { borders = NONE }
-                    cell(i++) { borders = if (top) BOTTOM else NONE }
-                    cell(i++) { borders = if (top) RIGHT else NONE }
-                    cell(i++) { borders = if (top) NONE else RIGHT }
+                    cell(i++) { cellBorders = NONE }
+                    cells(i++, i++) { cellBorders = if (top) NONE else ALL }
+                    cell(i++) { cellBorders = RIGHT }
+                    cell(i++) { cellBorders = NONE }
+                    cells(i++, i++) { cellBorders = if (top) ALL else NONE }
+                    cell(i++) { cellBorders = NONE }
+                    cell(i++) { cellBorders = if (top) BOTTOM else NONE }
+                    cell(i++) { cellBorders = if (top) RIGHT else NONE }
+                    cell(i++) { cellBorders = if (top) NONE else RIGHT }
 
                 }
             }

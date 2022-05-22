@@ -35,7 +35,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = TOP
+                cellBorders = TOP
             }
         }
     }
@@ -47,7 +47,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = RIGHT
+                cellBorders = RIGHT
             }
         }
     }
@@ -60,7 +60,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = BOTTOM
+                cellBorders = BOTTOM
             }
         }
     }
@@ -72,7 +72,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = LEFT
+                cellBorders = LEFT
             }
         }
     }
@@ -88,7 +88,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = TOP
+                cellBorders = TOP
             }
         }
         row(2)
@@ -104,7 +104,7 @@ class TableTest : RenderingTest() {
         row {
             cell(1)
             cell(2) {
-                borders = RIGHT
+                cellBorders = RIGHT
             }
         }
     }
@@ -121,7 +121,7 @@ class TableTest : RenderingTest() {
         row(1)
         row {
             cell(2) {
-                borders = BOTTOM
+                cellBorders = BOTTOM
             }
         }
     }
@@ -135,7 +135,7 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = LEFT
+                cellBorders = LEFT
             }
             cell(2)
         }
@@ -150,18 +150,18 @@ class TableTest : RenderingTest() {
     """) {
         row {
             cell(1) {
-                borders = RIGHT
+                cellBorders = RIGHT
             }
             cell(2) {
-                borders = BOTTOM
+                cellBorders = BOTTOM
             }
         }
         row {
             cell(3) {
-                borders = TOP
+                cellBorders = TOP
             }
             cell(4) {
-                borders = LEFT
+                cellBorders = LEFT
             }
         }
     }
@@ -197,7 +197,7 @@ class TableTest : RenderingTest() {
         row(1)
         row {
             cells(2, 3)
-            cell(4) { borders = NONE }
+            cell(4) { cellBorders = NONE }
         }
         row(5)
     }
@@ -272,7 +272,7 @@ class TableTest : RenderingTest() {
     ░    2
     ░3 4 5
     """) {
-        borders = NONE
+        cellBorders = NONE
         padding = Padding.none()
         row {
             cell("span") {
@@ -340,8 +340,8 @@ class TableTest : RenderingTest() {
 
 
     @Test
-    @JsName("outer_border")
-    fun `outer border`() = doTest("""
+    @JsName("outer_border_none")
+    fun `outer border none`() = doTest("""
     ░ 1  │ 2  │ 3  
     ░────┼────┼────
     ░ 4  │ 5  │ 6  
@@ -349,15 +349,34 @@ class TableTest : RenderingTest() {
     ░────┼────┼────
     ░ 11 │ 12 │ 13 
     """) {
-        outerBorder = false
+        tableBorders = NONE
         header { row(1, 2, 3) }
         body {
-            borders = LEFT_RIGHT
+            cellBorders = LEFT_RIGHT
             row(4, 5, 6)
             row(7, 8, 9)
         }
         footer {
             row(11, 12, 13)
+        }
+    }
+
+    @Test
+    @JsName("outer_border_all")
+    fun `outer border all`() = doTest("""
+    ░┌───┬───┬───┐
+    ░│ 1 │ 2 │ 3 │
+    ░├───┼───┼───┤
+    ░│ 4 │ 5 │ 6 │
+    ░│ 7 │ 8 │ 9 │
+    ░└───╵───╵───┘
+    """) {
+        tableBorders = ALL
+        header { row(1, 2, 3) }
+        body {
+            cellBorders = LEFT_RIGHT
+            row(4, 5, 6)
+            row(7, 8, 9)
         }
     }
 

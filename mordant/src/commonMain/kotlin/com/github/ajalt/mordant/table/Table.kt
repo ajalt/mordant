@@ -74,7 +74,7 @@ internal class TableImpl(
     val headerRowCount: Int,
     val footerRowCount: Int,
     val columnStyles: Map<Int, ColumnWidth>,
-    val outerBorder: Boolean,
+    val tableBorders: Borders?,
 ) : Table() {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -82,14 +82,26 @@ internal class TableImpl(
 
     private val expand = columnStyles.values.any { it is ColumnWidth.Expand }
     private val columnCount = rows.maxOf { it.size }
+
+    /** Whether any cell in row `i` has a border above it */
     private val rowBorders = List(rows.size + 1) { y ->
-        (outerBorder || y in 1 until rows.size) && (0 until columnCount).any { x ->
-            getCell(x, y)?.borderTop == true || getCell(x, y - 1)?.borderBottom == true
+        when {
+            y == 0 && tableBorders != null -> tableBorders.top
+            y == rows.size && tableBorders != null -> tableBorders.bottom
+            else -> (0 until columnCount).any { x ->
+                getCell(x, y)?.borderTop == true || getCell(x, y - 1)?.borderBottom == true
+            }
         }
     }
+
+    /** Whether any cell in column `i` has a border to its left */
     private val columnBorders = List(columnCount + 1) { x ->
-        (outerBorder || x in 1 until columnCount) && rows.indices.any { y ->
-            getCell(x, y)?.borderLeft == true || getCell(x - 1, y)?.borderRight == true
+        when {
+            x == 0 && tableBorders != null -> tableBorders.left
+            x == columnCount && tableBorders != null -> tableBorders.right
+            else -> rows.indices.any { y ->
+                getCell(x, y)?.borderLeft == true || getCell(x - 1, y)?.borderRight == true
+            }
         }
     }
     private val borderWidth = columnBorders.count { it }
@@ -116,6 +128,7 @@ internal class TableImpl(
             columnWidths = calculateColumnWidths(t, width),
             columnBorders = columnBorders,
             rowBorders = rowBorders,
+            tableBorders = tableBorders,
             t = t
         ).render()
     }
@@ -204,16 +217,17 @@ internal class TableImpl(
 }
 
 private class TableRenderer(
-    val rows: List<ImmutableRow>,
-    val borderType: BorderType,
-    val borderStyle: TextStyle,
-    val headerRowCount: Int,
-    val footerRowCount: Int,
-    val columnCount: Int,
-    val columnWidths: List<Int>,
-    val columnBorders: List<Boolean>,
-    val rowBorders: List<Boolean>,
-    val t: Terminal,
+    private val rows: List<ImmutableRow>,
+    private val borderType: BorderType,
+    private val borderStyle: TextStyle,
+    private val headerRowCount: Int,
+    private val footerRowCount: Int,
+    private val columnCount: Int,
+    private val columnWidths: List<Int>,
+    private val columnBorders: List<Boolean>,
+    private val rowBorders: List<Boolean>,
+    private val tableBorders: Borders?,
+    private val t: Terminal,
 ) {
     private val rowCount get() = rows.size
     private val renderedRows = rows.map { r ->
@@ -290,9 +304,20 @@ private class TableRenderer(
     /** Return 1 if any cell in row [y] has a top border, or 0 if they don't */
     private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, colWidth: Int, borderTop: Boolean?): Int {
         if (!rowBorders[y]) return 0
-        if (colWidth == 0 || borderTop == null) return 1
 
-        val char = if (borderTop || cellAt(x, y - 1)?.borderBottom == true) sectionOfRow(y).ew else " "
+        if (colWidth == 0 || borderTop == null) {
+            // no char to draw here, but return 1 since some cell in this row has a top border
+            return 1
+        }
+
+        val char = if (
+            y == 0 && tableBorders?.top == true ||
+            y == rowCount && tableBorders?.bottom == true ||
+            borderTop ||
+            cellAt(x, y - 1)?.borderBottom == true
+        ) {
+            sectionOfRow(y).ew
+        } else " "
         tableLines[tableLineY].add(Span.word(char.repeat(colWidth), borderStyle))
         return 1
     }
@@ -313,12 +338,15 @@ private class TableRenderer(
             val topBorderHeight = if (rowBorders[y]) 1 else 0
 
             if (borderLeft != null) {
-                val border = when {
-                    borderLeft || cellAt(x - 1, y)?.borderRight == true -> {
-                        Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
-                    }
-                    else -> SINGLE_SPACE
+                val border = if (
+                    x == 0 && tableBorders?.left == true ||
+                    x == columnCount && tableBorders?.right == true ||
+                    borderLeft ||
+                    cellAt(x - 1, y)?.borderRight == true
+                ) {
+                    Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
                 }
+                else SINGLE_SPACE
                 for (i in 0 until rowHeight) {
                     tableLines[tableLineY + i + topBorderHeight].add(border)
                 }
@@ -369,11 +397,11 @@ private class TableRenderer(
             return null
         }
         return sectionOfRow(y).getCorner(
-            tl?.borderRight == true || tr?.borderLeft == true,
-            tr?.borderBottom == true || br?.borderTop == true,
-            bl?.borderRight == true || br?.borderLeft == true,
-            tl?.borderBottom == true || bl?.borderTop == true,
-            borderStyle
+            n = tl?.borderRight == true || tr?.borderLeft == true || y == rowCount && tableBorders?.bottom == true,
+            e = tr?.borderBottom == true || br?.borderTop == true || x == 0 && tableBorders?.left == true,
+            s = bl?.borderRight == true || br?.borderLeft == true || y == 0 && tableBorders?.bottom == true,
+            w = tl?.borderBottom == true || bl?.borderTop == true || x == columnCount && tableBorders?.right == true,
+            textStyle = borderStyle
         )
     }
 

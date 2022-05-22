@@ -122,7 +122,7 @@ class TableColumnWidthTest : RenderingTest() {
             column(2) { width = ColumnWidth.Expand() }
             column(3) { width = ColumnWidth.Expand(2) }
             body {
-                this.borders = borders
+                this.cellBorders = borders
                 row {
                     cells(11, "22 foo", 33, 44)
                 }
