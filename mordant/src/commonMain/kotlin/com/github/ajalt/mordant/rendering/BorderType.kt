@@ -3,31 +3,45 @@ package com.github.ajalt.mordant.rendering
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 
 
+/**
+ * Characters to use for one section of a [BorderType]
+ */
 class BorderTypeSection(
-    private val corners: String,
+    val es: String,
+    val esw: String,
+    val sw: String,
+    val nes: String,
+    val nesw: String,
+    val nsw: String,
+    val ne: String,
+    val new: String,
+    val nw: String,
+    val ew: String,
+    val ns: String,
+    val s: String,
+    val n: String,
+    val w: String,
+    val e: String,
 ) {
-    init {
-        require(corners.length == 15) { "string of corners must have length==15" }
-    }
+    constructor(corners: String) : this(
+        es = corners[0].toString(),
+        esw = corners[1].toString(),
+        sw = corners[2].toString(),
+        nes = corners[3].toString(),
+        nesw = corners[4].toString(),
+        nsw = corners[5].toString(),
+        ne = corners[6].toString(),
+        new = corners[7].toString(),
+        nw = corners[8].toString(),
+        ew = corners[9].toString(),
+        ns = corners[10].toString(),
+        s = corners[11].toString(),
+        n = corners[12].toString(),
+        w = corners[13].toString(),
+        e = corners[14].toString(),
+    )
 
-    // Indexing into this array is ~2x faster than if we indexed into `corners` directly.
     private val array = arrayOf(" ", w, s, sw, e, ew, es, esw, n, nw, ns, nsw, ne, new, nes, nesw)
-
-    val es: String get() = corners[0].toString()
-    val esw: String get() = corners[1].toString()
-    val sw: String get() = corners[2].toString()
-    val nes: String get() = corners[3].toString()
-    val nesw: String get() = corners[4].toString()
-    val nsw: String get() = corners[5].toString()
-    val ne: String get() = corners[6].toString()
-    val new: String get() = corners[7].toString()
-    val nw: String get() = corners[8].toString()
-    val ew: String get() = corners[9].toString()
-    val ns: String get() = corners[10].toString()
-    val s: String get() = corners[11].toString()
-    val n: String get() = corners[12].toString()
-    val w: String get() = corners[13].toString()
-    val e: String get() = corners[14].toString()
 
     fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
         val i = (if (n) 8 else 0) or (if (e) 4 else 0) or (if (s) 2 else 0) or (if (w) 1 else 0)
@@ -35,6 +49,9 @@ class BorderTypeSection(
     }
 }
 
+/**
+ * Characters to use to draw borders on a table or other box widget.
+ */
 class BorderType(
     val head: BorderTypeSection,
     val headBottom: BorderTypeSection,
