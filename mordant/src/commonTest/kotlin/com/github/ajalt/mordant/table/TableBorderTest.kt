@@ -1,8 +1,6 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.Borders.*
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.test.Test
 
@@ -137,7 +135,7 @@ class TableBorderTest : RenderingTest() {
     )
 
     private fun doTest(borders: Borders, expected: String) = checkRender(table {
-        this.borders = borders
+        this.cellBorders = borders
         body {
             row("×")
         }

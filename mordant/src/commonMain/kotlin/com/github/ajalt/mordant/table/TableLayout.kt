@@ -8,6 +8,10 @@ import com.github.ajalt.mordant.widgets.withPadding
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
 
+/**
+ * Takes a table builder and computes the locations, spans, and styles of all [Cell]s.
+ * Returns a [TableImpl] that will compute the row and column sizes and draw the table.
+ */
 internal class TableLayout(private val table: TableBuilderInstance) {
     fun buildTable(): TableImpl {
         val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
@@ -24,7 +28,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             headerRowCount = header.size,
             footerRowCount = footer.size,
             columnStyles = table.columns.mapValues { it.value.width },
-            outerBorder = table.outerBorder
+            tableBorders = table.tableBorders
         )
     }
 
@@ -66,7 +70,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             ?: tableCol?.let(getter) ?: getter(section) ?: getter(table) ?: default
         }
 
-        val borders = getStyle(Borders.ALL) { it.borders }
+        val borders = getStyle(Borders.ALL) { it.cellBorders }
         val padding = getStyle(Padding.horizontal(1)) { it.padding }
         val whitespace = getStyle(Whitespace.PRE) { it.whitespace }
         val textAlign = getStyle(TextAlign.LEFT) { it.align }

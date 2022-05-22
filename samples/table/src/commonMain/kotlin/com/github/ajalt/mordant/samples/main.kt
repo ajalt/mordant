@@ -6,8 +6,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.dim
-import com.github.ajalt.mordant.table.Borders.ALL
-import com.github.ajalt.mordant.table.Borders.TOM_BOTTOM
+import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 
@@ -16,7 +15,7 @@ fun main() {
     val terminal = Terminal()
 
     val table = table {
-        outerBorder = false
+        tableBorders = NONE
         borderType = SQUARE_DOUBLE_SECTION_SEPARATOR
         align = RIGHT
         column(0) {
@@ -31,14 +30,14 @@ fun main() {
             row("", "Projected Cost", "Actual Cost", "Difference")
         }
         body {
-            borders = TOM_BOTTOM
+            cellBorders = TOM_BOTTOM
             column(0) {
                 style = TextStyle(bold = true)
-                borders = ALL
+                cellBorders = ALL
             }
             column(3) {
                 style = TextStyle(bold = true)
-                borders = ALL
+                cellBorders = ALL
             }
             rowStyles(blue, brightBlue)
 
