@@ -4,6 +4,9 @@
 ### Changed
 - When building tables, `borders` has been renamed `cellBorders`, and `outerBorder: Boolean` has been replaced with `tableBorders: Borders?`, which allows more control over the table's outside borders. [(#58)](https://github.com/ajalt/mordant/issues/58)
 
+### Fixed
+- Avoid clobbering output when using `Terminal.forStdErr` while an animation is running. [(#54)](https://github.com/ajalt/mordant/issues/54)
+
 ## 2.0.0-beta6
 ### Changed
 - Update Kotlin to 1.6.20

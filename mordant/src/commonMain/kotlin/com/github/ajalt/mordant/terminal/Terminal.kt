@@ -21,10 +21,12 @@ import com.github.ajalt.mordant.widgets.Text
  * `interactive`.
  */
 @OptIn(ExperimentalTerminalApi::class)
-class Terminal(
-    val theme: Theme = Theme.Default,
-    val tabWidth: Int = 8,
-    private val terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null),
+class Terminal private constructor(
+    val theme: Theme,
+    val tabWidth: Int,
+    private val terminalInterface: TerminalInterface,
+    private val interceptors: MutableList<TerminalInterceptor>,
+    private val lock: Any,
 ) {
     /**
      * @param ansiLevel The level of color support to use, or `null` to detect the level of the current terminal
@@ -52,6 +54,17 @@ class Terminal(
     ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive))
 
     /**
+     * @param theme The theme to use for widgets and styles like [success]
+     * @param tabWidth The number of spaces to use for `\t` characters
+     * @param terminalInterface The [TerminalInterface] to use to read and write
+     */
+    constructor(
+         theme: Theme = Theme.Default,
+         tabWidth: Int = 8,
+         terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null),
+    ): this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
+
+    /**
      * The terminal capabilities that were detected or set in the constructor.
      */
     val info: TerminalInfo = terminalInterface.info
@@ -71,9 +84,6 @@ class Terminal(
      * If the terminal is not interactive, all of the cursor functions are no-ops.
      */
     val cursor: TerminalCursor = if (info.interactive) makePrintingTerminalCursor(this) else DisabledTerminalCursor
-
-    private val interceptors: MutableList<TerminalInterceptor> = mutableListOf()
-    private val lock = Any()
 
     /**
      * Print a line styled with the theme's [success][Theme.success] style.
@@ -247,7 +257,7 @@ class Terminal(
      * Create a copy of this terminal that prints to stderr if possible.
      */
     fun forStdErr(): Terminal {
-        return Terminal(theme, tabWidth, terminalInterface.forStdErr())
+        return Terminal(theme, tabWidth, terminalInterface.forStdErr(), interceptors, lock)
     }
 
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
