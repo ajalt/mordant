@@ -89,7 +89,7 @@ internal class TableImpl(
             y == 0 && tableBorders != null -> tableBorders.top
             y == rows.size && tableBorders != null -> tableBorders.bottom
             else -> (0 until columnCount).any { x ->
-                getCell(x, y)?.borderTop == true || getCell(x, y - 1)?.borderBottom == true
+                getCell(x, y).t || getCell(x, y - 1).b
             }
         }
     }
@@ -100,7 +100,7 @@ internal class TableImpl(
             x == 0 && tableBorders != null -> tableBorders.left
             x == columnCount && tableBorders != null -> tableBorders.right
             else -> rows.indices.any { y ->
-                getCell(x, y)?.borderLeft == true || getCell(x - 1, y)?.borderRight == true
+                getCell(x, y).l || getCell(x - 1, y).r
             }
         }
     }
@@ -311,10 +311,7 @@ private class TableRenderer(
         }
 
         val char = if (
-            y == 0 && tableBorders?.top == true ||
-            y == rowCount && tableBorders?.bottom == true ||
-            borderTop ||
-            cellAt(x, y - 1)?.borderBottom == true
+            borderTop || y == 0 && tableBorders.t || y == rowCount && tableBorders.b || cellAt(x, y - 1).b
         ) {
             sectionOfRow(y).ew
         } else " "
@@ -339,14 +336,10 @@ private class TableRenderer(
 
             if (borderLeft != null) {
                 val border = if (
-                    x == 0 && tableBorders?.left == true ||
-                    x == columnCount && tableBorders?.right == true ||
-                    borderLeft ||
-                    cellAt(x - 1, y)?.borderRight == true
+                    x == 0 && tableBorders.l || x == columnCount && tableBorders.r || borderLeft || cellAt(x - 1, y).r
                 ) {
                     Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
-                }
-                else SINGLE_SPACE
+                } else SINGLE_SPACE
                 for (i in 0 until rowHeight) {
                     tableLines[tableLineY + i + topBorderHeight].add(border)
                 }
@@ -397,10 +390,10 @@ private class TableRenderer(
             return null
         }
         return sectionOfRow(y).getCorner(
-            n = tl?.borderRight == true || tr?.borderLeft == true || y == rowCount && tableBorders?.bottom == true,
-            e = tr?.borderBottom == true || br?.borderTop == true || x == 0 && tableBorders?.left == true,
-            s = bl?.borderRight == true || br?.borderLeft == true || y == 0 && tableBorders?.bottom == true,
-            w = tl?.borderBottom == true || bl?.borderTop == true || x == columnCount && tableBorders?.right == true,
+            n = tl.r || tr.l || y > 0 && (x == 0 && tableBorders.l || x == columnCount && tableBorders.r),
+            e = tr.b || br.t || x < columnCount && (y == 0 && tableBorders.t || y == rowCount && tableBorders.b),
+            s = bl.r || br.l || y < rowCount && (x == 0 && tableBorders.l || x == columnCount && tableBorders.r),
+            w = tl.b || bl.t || x > 0 && (y == 0 && tableBorders.t || y == rowCount && tableBorders.b),
             textStyle = borderStyle
         )
     }
@@ -415,3 +408,13 @@ private class TableRenderer(
         }
     }
 }
+
+private val Borders?.l get() = this?.left == true
+private val Borders?.r get() = this?.right == true
+private val Borders?.t get() = this?.top == true
+private val Borders?.b get() = this?.bottom == true
+
+private val Cell?.l get() = this?.borderLeft == true
+private val Cell?.r get() = this?.borderRight == true
+private val Cell?.t get() = this?.borderTop == true
+private val Cell?.b get() = this?.borderBottom == true

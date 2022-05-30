@@ -362,20 +362,46 @@ class TableTest : RenderingTest() {
     }
 
     @Test
-    @JsName("outer_border_all")
-    fun `outer border all`() = doTest("""
+    @JsName("border_outer_all_inner_left_right")
+    fun `border outer all inner left right`() = doTest("""
     ░┌───┬───┬───┐
     ░│ 1 │ 2 │ 3 │
     ░├───┼───┼───┤
     ░│ 4 │ 5 │ 6 │
     ░│ 7 │ 8 │ 9 │
-    ░└───╵───╵───┘
+    ░└───┴───┴───┘
     """) {
         tableBorders = ALL
         header { row(1, 2, 3) }
         body {
             cellBorders = LEFT_RIGHT
             row(4, 5, 6)
+            row(7, 8, 9)
+        }
+    }
+
+    @Test
+    @JsName("border_outer_all_inner_none")
+    fun `border outer all inner none`() = doTest("""
+    ░┌───────────┐
+    ░│ 1   2   3 │
+    ░│   ┌───┐   │
+    ░│ 4 │ 5 │ 6 │
+    ░│   └───┘   │
+    ░│ 7   8   9 │
+    ░└───────────┘
+    """) {
+        tableBorders = ALL
+        body {
+            cellBorders = NONE
+            row(1, 2, 3)
+            row {
+                cell(4)
+                cell(5){
+                    cellBorders = ALL
+                }
+                cell(6)
+            }
             row(7, 8, 9)
         }
     }
