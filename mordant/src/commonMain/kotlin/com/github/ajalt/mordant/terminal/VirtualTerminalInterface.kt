@@ -54,6 +54,9 @@ class VirtualTerminalInterface private constructor(
     /** The combined content of [stdout] and [stderr] */
     fun output(): String = output.toString()
 
+    /** Return [stdout] by default, or [stderr] instead if this interface was returned from [forStdErr] */
+    fun currentContent(): String = if (useStdErr) stderr() else stdout()
+
     override fun completePrintRequest(request: PrintRequest) {
         val sb = if (useStdErr) stderr else stdout
         sb.append(request.text)

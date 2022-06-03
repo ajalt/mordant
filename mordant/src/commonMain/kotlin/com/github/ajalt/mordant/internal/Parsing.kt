@@ -17,8 +17,8 @@ private data class Chunk(val text: String, val style: TextStyle)
  *
  * Unknown ANSI codes are discarded.
  */
-internal fun parseText(text: String, style: TextStyle): Lines {
-    val parseAnsi = parseAnsi(text, style)
+internal fun parseText(text: String, defaultStyle: TextStyle): Lines {
+    val parseAnsi = parseAnsi(text, defaultStyle)
     val words = parseAnsi.flatMap { splitWords(it) }.toList()
     val splitLines = splitLines(words)
     return Lines(splitLines)

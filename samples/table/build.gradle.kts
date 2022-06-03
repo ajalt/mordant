@@ -28,4 +28,5 @@ kotlin {
 
 application {
     mainClass.set("com.github.ajalt.mordant.samples.MainKt")
+    applicationDefaultJvmArgs = listOf("-Dfile.encoding=utf-8")
 }
