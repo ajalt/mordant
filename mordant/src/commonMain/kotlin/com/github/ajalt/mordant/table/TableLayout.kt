@@ -76,8 +76,10 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         val textAlign = getStyle(TextAlign.LEFT) { it.align }
         val verticalAlign = getStyle(VerticalAlign.TOP) { it.verticalAlign }
         val overflowWrap = getStyle(OverflowWrap.ELLIPSES) { it.overflowWrap }
-        val stripedStyle =
-            if (section.rowStyles.isNotEmpty()) section.rowStyles[startingY % section.rowStyles.size] else null
+        val stripedStyle = when {
+            section.rowStyles.isNotEmpty() -> section.rowStyles[startingY % section.rowStyles.size]
+            else -> null
+        }
         val style = foldStyles(
             cell.style,
             row.style,
