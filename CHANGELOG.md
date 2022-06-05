@@ -1,11 +1,19 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Functionality for reading user input: `Terminal.readLineOrNull`, `Terminal.prompt` and various `Prompt` classes
+- `TerminalRecorder` that saves output to memory rather than printing it.
+- `TerminalRecorder.outputAsHtml()` that can render recorded output as an html file.
+- 
 ### Changed
 - When building tables, `borders` has been renamed `cellBorders`, and `outerBorder: Boolean` has been replaced with `tableBorders: Borders?`, which allows more control over the table's outside borders. [(#58)](https://github.com/ajalt/mordant/issues/58)
 
 ### Fixed
 - Avoid clobbering output when using `Terminal.forStdErr` while an animation is running. [(#54)](https://github.com/ajalt/mordant/issues/54)
+
+### Deprecated
+- Deprecated the `VirtualTerminalInterface`. Use `TerminalRecorder` instead.
 
 ## 2.0.0-beta6
 ### Changed

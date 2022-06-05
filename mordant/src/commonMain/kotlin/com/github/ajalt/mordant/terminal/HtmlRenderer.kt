@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.TextStyle
 
 @ExperimentalTerminalApi
-fun VirtualTerminalInterface.outputAsHtml(): String = buildString {
+fun TerminalRecorder.outputAsHtml(): String = buildString {
     val lines = parseText(output(), DEFAULT_STYLE)
 
     appendLine("<html><body>")

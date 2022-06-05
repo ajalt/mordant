@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 @OptIn(ExperimentalTerminalApi::class)
 class PromptTest {
-    private val vt = VirtualTerminalInterface(width = 8)
+    private val vt = TerminalRecorder(width = 8)
     private val t = Terminal(terminalInterface = vt)
 
     @Test

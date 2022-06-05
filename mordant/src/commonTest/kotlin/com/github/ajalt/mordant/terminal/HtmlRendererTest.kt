@@ -6,7 +6,7 @@ import kotlin.test.Test
 
 @OptIn(ExperimentalTerminalApi::class)
 class HtmlRendererTest {
-    private val vt = VirtualTerminalInterface()
+    private val vt = TerminalRecorder()
     private val t = Terminal(terminalInterface = vt)
 
     @Test
