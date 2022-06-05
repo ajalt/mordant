@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
+import com.github.ajalt.mordant.terminal.TerminalRecorder
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 import java.util.concurrent.TimeUnit
@@ -16,7 +16,7 @@ class ProgressAnimationTest : RenderingTest() {
 
     @Test
     fun throttling() {
-        val vt = VirtualTerminalInterface()
+        val vt = TerminalRecorder()
         val t = Terminal(terminalInterface = vt)
         val pt = t.progressAnimation {
             timeSource = { (now * TimeUnit.SECONDS.toNanos(1)).toLong() }
@@ -51,7 +51,7 @@ class ProgressAnimationTest : RenderingTest() {
 
     @Test
     fun animation() {
-        val vt = VirtualTerminalInterface(width = 56)
+        val vt = TerminalRecorder(width = 56)
         val t = Terminal(
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
             terminalInterface = vt
@@ -98,7 +98,7 @@ class ProgressAnimationTest : RenderingTest() {
         vt.normalizedBuffer() shouldBe ""
     }
 
-    private fun VirtualTerminalInterface.normalizedBuffer(): String {
+    private fun TerminalRecorder.normalizedBuffer(): String {
         return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimEnd()
     }
 }

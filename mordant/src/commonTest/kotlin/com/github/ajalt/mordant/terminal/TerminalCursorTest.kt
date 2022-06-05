@@ -11,7 +11,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 private fun c(b: CursorMovements.() -> Unit): String {
-    val vt = VirtualTerminalInterface()
+    val vt = TerminalRecorder()
     val t = Terminal(terminalInterface = vt)
     t.cursor.move(b)
     return vt.output()
@@ -21,7 +21,7 @@ class TerminalCursorTest {
     @Test
     @JsName("disabled_commands")
     fun `disabled commands`() {
-        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
+        val vt = TerminalRecorder(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
         val c = t.cursor
         forAll(
@@ -55,7 +55,7 @@ class TerminalCursorTest {
     @Test
     @JsName("cursor_show_and_hide")
     fun `cursor show and hide`() {
-        val vt = VirtualTerminalInterface()
+        val vt = TerminalRecorder()
         val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
         vt.output() shouldBe "$CSI?25l"
@@ -67,7 +67,7 @@ class TerminalCursorTest {
     @Test
     @JsName("disabled_cursor_show_and_hide")
     fun `disabled cursor show and hide`() {
-        val vt = VirtualTerminalInterface(AnsiLevel.NONE)
+        val vt = TerminalRecorder(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
         t.cursor.hide(showOnExit = false)
         vt.output() shouldBe ""

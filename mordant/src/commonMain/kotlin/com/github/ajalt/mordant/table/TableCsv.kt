@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.VirtualTerminalInterface
+import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.Padded
 import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.widgets.withAlign
@@ -95,7 +95,7 @@ private fun Table.getContentRows(): List<List<String>> {
     }
 
     val t = Terminal(
-        terminalInterface = VirtualTerminalInterface(
+        terminalInterface = TerminalRecorder(
             ansiLevel = AnsiLevel.NONE,
             width = Int.MAX_VALUE,
             height = Int.MAX_VALUE,
