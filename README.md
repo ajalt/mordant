@@ -234,6 +234,26 @@ manually.
 Call `progress.start` to animate the progress, and `progress.update` or `progress.advance` as your
 task completes.
 
+## Prompting for input
+
+You can ask the user to enter text and wait for a response with `Terminal.prompt`:
+
+```kotlin
+val t = Terminal()
+val response = t.prompt("Choose a size", choices=listOf("small", "large"))
+t.println("You chose: $response")
+```
+
+```text
+$ ./example
+Choose a size [small, large]: small
+You chose: small
+```
+
+You can customize the prompt behavior further or convert the response to other types 
+creating a subclass of the `Prompt` class.
+
+
 ## Installation
 
 Mordant is distributed through Maven Central.
