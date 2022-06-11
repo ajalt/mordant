@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 include("mordant")
 include("samples:markdown")
 include("samples:progress")
@@ -7,11 +9,11 @@ include("samples:table")
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("kotlin", "1.6.20")
+            version("kotlin", "1.7.0")
 
-            plugin("dokka", "org.jetbrains.dokka").version("1.6.10")
+            plugin("dokka", "org.jetbrains.dokka").version("1.6.21")
 
-            library("dokka-base", "org.jetbrains.dokka:dokka-base:1.6.10")
+            library("dokka-base", "org.jetbrains.dokka:dokka-base:1.6.21")
             library("colormath", "com.github.ajalt.colormath:colormath:3.2.0")
             library("markdown", "org.jetbrains:markdown:0.3.1")
 
