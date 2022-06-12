@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta7
 ### Added
 - Functionality for reading user input: `Terminal.readLineOrNull`, `Terminal.prompt` and various `Prompt` classes
 - `TerminalRecorder` that saves output to memory rather than printing it.
