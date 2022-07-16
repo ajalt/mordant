@@ -54,7 +54,7 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     fflush(stderr)
 }
 
-expect fun ttySetEcho(echo: Boolean)
+internal expect fun ttySetEcho(echo: Boolean)
 
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
     if (hideInput) {

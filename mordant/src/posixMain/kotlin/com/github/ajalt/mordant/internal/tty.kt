@@ -4,7 +4,7 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 @OptIn(UnsafeNumber::class)
-actual fun ttySetEcho(echo: Boolean) {
+internal actual fun ttySetEcho(echo: Boolean) {
   updateTermios {
     c_lflag = if (echo) {
       c_lflag.or(ECHO.convert())
