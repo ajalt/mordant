@@ -60,7 +60,7 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
     if (hideInput) {
         ttySetEcho(false)
     }
-    val lineOrNull =  readlnOrNull()
+    val lineOrNull = readlnOrNull()
     if (hideInput) {
         ttySetEcho(true)
     }
