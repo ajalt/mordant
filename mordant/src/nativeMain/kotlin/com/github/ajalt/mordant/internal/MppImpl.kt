@@ -54,9 +54,19 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     fflush(stderr)
 }
 
+expect fun ttySetEcho(echo: Boolean)
 
-// hideInput is not currently implemented
-internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = readlnOrNull()
+internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
+    if (hideInput) {
+        ttySetEcho(false)
+    }
+    val lineOrNull =  readlnOrNull()
+    if (hideInput) {
+        ttySetEcho(true)
+    }
+
+    return lineOrNull
+}
 
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
 

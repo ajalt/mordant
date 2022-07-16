@@ -64,12 +64,12 @@ kotlin {
         }
 
         val nativeMain by creating { dependsOn(commonMain) }
-        val macosMain by creating { dependsOn(nativeMain) }
+        val mingwX64Main by getting { dependsOn(nativeMain) }
+        val posixMain by creating { dependsOn(nativeMain) }
+        val linuxX64Main by getting { dependsOn(posixMain) }
+        val macosMain by creating { dependsOn(posixMain) }
         listOf("macosX64", "macosArm64").forEach { target ->
             getByName(target + "Main").dependsOn(macosMain)
-        }
-        listOf("macos", "linuxX64", "mingwX64").forEach { target ->
-            getByName(target + "Main").dependsOn(nativeMain)
         }
 
         targets.withType<KotlinNativeTargetWithTests<*>> {
