@@ -1,4 +1,7 @@
 # Changelog
+## Unreleased
+### Added
+- Implemented `hideInput` for prompts on native targets [(#63)](https://github.com/ajalt/mordant/issues/63)
 
 ## 2.0.0-beta7
 ### Added

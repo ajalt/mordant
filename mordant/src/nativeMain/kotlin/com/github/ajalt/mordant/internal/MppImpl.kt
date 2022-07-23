@@ -57,15 +57,12 @@ internal actual fun printStderr(message: String, newline: Boolean) {
 internal expect fun ttySetEcho(echo: Boolean)
 
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
-    if (hideInput) {
-        ttySetEcho(false)
+    if (hideInput) ttySetEcho(false)
+    try {
+        return readlnOrNull()
+    } finally {
+        if (hideInput) ttySetEcho(true)
     }
-    val lineOrNull = readlnOrNull()
-    if (hideInput) {
-        ttySetEcho(true)
-    }
-
-    return lineOrNull
 }
 
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)

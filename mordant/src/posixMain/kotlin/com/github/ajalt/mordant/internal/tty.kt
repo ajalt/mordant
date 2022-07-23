@@ -3,28 +3,18 @@ package com.github.ajalt.mordant.internal
 import kotlinx.cinterop.*
 import platform.posix.*
 
-@OptIn(UnsafeNumber::class)
-internal actual fun ttySetEcho(echo: Boolean) {
-  updateTermios {
-    c_lflag = if (echo) {
-      c_lflag.or(ECHO.convert())
-    } else {
-      c_lflag.and(ECHO.inv().convert())
-    }
-  }
-}
-
-private fun updateTermios(block: termios.() -> Unit) {
-  memScoped {
+// https://www.gnu.org/software/libc/manual/html_node/getpass.html
+internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     val termios = alloc<termios>()
-    check(tcgetattr(0, termios.ptr) == 0) {
-      error("tcgetattr() error: $errno")
+    if (tcgetattr(STDOUT_FILENO, termios.ptr) != 0) {
+        return@memScoped
     }
 
-    block(termios)
-
-    check(tcsetattr(0, TCSADRAIN, termios.ptr) == 0) {
-      error("tcsetattr() error: $errno")
+    termios.c_lflag = if (echo) {
+        termios.c_lflag or ECHO.convert()
+    } else {
+        termios.c_lflag and ECHO.inv().convert()
     }
-  }
+
+    tcsetattr(0, TCSAFLUSH, termios.ptr)
 }
