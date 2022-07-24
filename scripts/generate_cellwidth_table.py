@@ -15,11 +15,12 @@ def parse_categories():
     # 0591..05BD    ; Mn #  [45] HEBREW ACCENT ETNAHTA..HEBREW POINT METEG
     # 05BF          ; Mn #       HEBREW POINT RAFE
     text = requests.get(categories_url).text
-    categories = ('Pc', 'Pd', 'Pe', 'Pf', 'Pi', 'Po', 'Ps')
+    categories = ('Me', 'Mn', 'Cc')
     ranges = []
 
-    for i, line in enumerate(text.splitlines()):
-        if not line or line.startswith("#"): continue
+    for line in text.splitlines():
+        if not line or line.startswith("#"):
+            continue
         points, _, category, _, desc = line.split(maxsplit=4)
 
         if category in categories:
@@ -59,15 +60,21 @@ def parse_east_asian():
     override_ranges = [
         (0x1f000, 0x1f02f, 2, 'Mahjong Tiles'),
         (0x1f0a0, 0x1f0ff, 2, 'Playing Cards'),
-        (0x1f300, 0x1f5ff, 2, 'Miscellaneous Symbols and Pictographs'),
+        (0x1f300, 0x1f3fa, 2, 'Miscellaneous Symbols and Pictographs..AMPHORA'),
+        # emoji modifiers are listed as wide, but they're combining characters that are usually not displayed separately
+        (0x1f3fb, 0x1f3ff, 0, 'Emoji Modifier Fitzpatrick'),
+        (0x1f400, 0x1f5ff, 2, 'RAT..Miscellaneous Symbols and Pictographs (end)'),
         (0x1f600, 0x1f64f, 2, 'Emoticons'),
         (0x1f680, 0x1f6ff, 2, 'Transport and Map Symbols'),
-        (0x1f900, 0x1f9ff, 2, 'Supplemental Symbols and Pictographs'),
+        (0x1f900, 0x1f9af, 2, 'Supplemental Symbols and Pictographs..PROBING CANE'),
+        (0x1f9b0, 0x1f9b3, 0, 'Emoji components'),  # More emoji modifiers
+        (0x1f9b4, 0x1f9ff, 2, 'BONE..Supplemental Symbols and Pictographs (end)'),
         (0x1fa70, 0x1faff, 2, 'Symbols and Pictographs Extended-A'),
     ]
 
-    for i, line in enumerate(text.splitlines()):
-        if not line or line.startswith("#"): continue
+    for line in text.splitlines():
+        if not line or line.startswith("#"):
+            continue
         field, _, _, desc = line.split(maxsplit=3)
         points, prop = field.split(";")
 
@@ -111,7 +118,7 @@ def parse_points(points):
 
 
 def parse_all():
-    combined = sorted(parse_categories(), key=lambda it: it[0])
+    combined = sorted(parse_categories() + parse_east_asian() + parse_cf(), key=lambda it: it[0])
     # concat adjacent ranges
     ranges = []
     iterator = iter(combined)
@@ -131,12 +138,15 @@ def parse_all():
 def main():
     print('''package com.github.ajalt.mordant.internal.gen
 
+import kotlin.native.concurrent.SharedImmutable
+
 internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 
-internal val CELL_WIDTH_TABLE : Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>('''
+@SharedImmutable
+internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>('''
           )
     for low, high, width, desc in parse_all():
-        print(f"    '{hex(low)}'..'{hex(high)}',// {desc}".replace('0x', '\\u'))
+        print(f"    CellWidthTableEntry({hex(low)}, {hex(high)}, {width}), // {desc}")
     print(')')
 
 

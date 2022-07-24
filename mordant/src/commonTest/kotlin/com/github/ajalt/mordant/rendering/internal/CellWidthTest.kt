@@ -38,6 +38,9 @@ internal class CellWidthTest {
         row("媒人", 4),
         row("🙊🙉🙈", 6),
         row("en\u0303e", 3),
+        row("👍🏿", 2),
+        row("🇩🇪", 2),
+        row("\uD83D\uDC68\uD83C\uDFFE\u200D\uD83E\uDDB1", 2), // MAN, FITZPATRICK TYPE-5, ZWJ, CURLY HAIR
     ) { str, width ->
         stringCellWidth(str) shouldBe width
     }
