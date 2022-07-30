@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.gen.CELL_WIDTH_TABLE
+import com.github.ajalt.mordant.internal.gen.*
 
 
 /*
@@ -42,5 +42,38 @@ internal fun cellWidth(codepoint: Int): Int {
 
 /** Return the width, in terminal cells, of the given [string]*/
 internal fun stringCellWidth(string: String): Int {
-    return codepointSequence(string).sumOf { cellWidth(it) }
+    var sum = 0
+    var sumSinceZwj = 0
+    var zwjSeq: IntTrie? = null
+    for (codepoint in codepointSequence(string)) {
+        val width = cellWidth(codepoint)
+        if (zwjSeq != null) {
+            sumSinceZwj += width
+            if (codepoint in zwjSeq.values) {
+                sumSinceZwj = 0
+            }
+            zwjSeq = zwjSeq.children[codepoint]
+            if (zwjSeq == null) {
+                // all ZWJ sequences combine to one glyph, which is always an emoji, so add 2 for the width of the
+                // emoji, plus the width of any codepoints since the end of the last complete sequence. Unfortunately,
+                // some of these emoji are wider than two cells, but given that their size is font-dependant and usually
+                // not cell-aligned anyway, there's no perfect solution here. Thanks, unicode.
+                sum += sumSinceZwj + 2
+                sumSinceZwj = 0
+            } else {
+                sumSinceZwj += width
+            }
+        } else {
+            // We do a fast range check to skip ZWJ sequence processing for most codepoints
+            if (couldStartEmojiSeq(codepoint)) {
+                zwjSeq = EMOJI_SEQUENCES.children[codepoint]
+            }
+            if (zwjSeq == null) {
+                sum += width
+            }
+        }
+    }
+    // If we were in a zwj sequence at the end of the string, add whatever was left to the sum
+    return sum + sumSinceZwj
+
 }
