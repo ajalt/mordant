@@ -32,7 +32,7 @@ internal actual fun getTerminalSize(timeoutMs: Long, throwExceptions: Boolean): 
                 "-noprofile",
                 "-command",
                 "\$host.ui.rawui")
-            else -> ProcessBuilder("stty", "size")
+            else -> ProcessBuilder("/usr/bin/env", "stty", "size")
         }
         cmd.redirectInput(ProcessBuilder.Redirect.INHERIT)
             .start()
