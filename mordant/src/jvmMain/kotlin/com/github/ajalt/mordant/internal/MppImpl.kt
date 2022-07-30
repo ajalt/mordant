@@ -1,10 +1,10 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
-import java.io.Console
 import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicInteger
 
 internal actual class AtomicInt actual constructor(initial: Int) {
@@ -25,7 +25,7 @@ internal actual class AtomicInt actual constructor(initial: Int) {
 // We have to shell out to another program on JVM, which takes ~10ms for stty and ~100ms for powershell
 internal actual fun terminalSizeDetectionIsFast(): Boolean = false
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
+internal actual fun getTerminalSize(timeoutMs: Long, throwExceptions: Boolean): Pair<Int, Int>? {
     val process = try {
         val cmd = when {
             isWindows() -> ProcessBuilder("powershell.exe",
@@ -37,13 +37,16 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
         cmd.redirectInput(ProcessBuilder.Redirect.INHERIT)
             .start()
     } catch (e: IOException) {
+        if (throwExceptions) throw e
         return null
     }
     try {
         if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
+            if (throwExceptions) throw throw TimeoutException("timed out")
             return null
         }
     } catch (e: InterruptedException) {
+        if (throwExceptions) throw e
         return null
     }
 

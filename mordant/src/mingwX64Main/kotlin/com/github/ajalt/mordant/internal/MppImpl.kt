@@ -5,7 +5,7 @@ import platform.windows.*
 
 
 // https://docs.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = memScoped {
+internal actual fun getTerminalSize(timeoutMs: Long, throwExceptions: Boolean): Pair<Int, Int>? = memScoped {
     val csbi = alloc<CONSOLE_SCREEN_BUFFER_INFO>()
     val stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE)
     if (stdoutHandle == INVALID_HANDLE_VALUE) {

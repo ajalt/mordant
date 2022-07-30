@@ -96,7 +96,7 @@ internal actual fun terminalSizeDetectionIsFast(): Boolean = true
 internal actual fun getJavaProperty(key: String): String? = null
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = impls.getTerminalSize()
+internal actual fun getTerminalSize(timeoutMs: Long, throwExceptions: Boolean): Pair<Int, Int>? = impls.getTerminalSize()
 internal actual fun isWindows(): Boolean = impls.isWindowsMpp()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
