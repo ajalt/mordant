@@ -1,7 +1,9 @@
 import requests
 
-categories_url = 'https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedGeneralCategory.txt'
-east_asian_url = 'https://www.unicode.org/Public/UCD/latest/ucd/EastAsianWidth.txt'
+categories_url = (
+    "https://www.unicode.org/Public/UCD/latest/ucd/extracted/DerivedGeneralCategory.txt"
+)
+east_asian_url = "https://www.unicode.org/Public/UCD/latest/ucd/EastAsianWidth.txt"
 
 
 def parse_categories():
@@ -15,7 +17,7 @@ def parse_categories():
     # 0591..05BD    ; Mn #  [45] HEBREW ACCENT ETNAHTA..HEBREW POINT METEG
     # 05BF          ; Mn #       HEBREW POINT RAFE
     text = requests.get(categories_url).text
-    categories = ('Me', 'Mn', 'Cc')
+    categories = ("Me", "Mn", "Cc")
     ranges = []
 
     for line in text.splitlines():
@@ -42,7 +44,7 @@ def parse_east_asian():
     # 2322..2328;N     # So     [7] FROWN..KEYBOARD
     # 2329;W           # Ps         LEFT-POINTING ANGLE BRACKET
     text = requests.get(east_asian_url).text
-    properties = ('F', 'W')
+    properties = ("F", "W")
     ranges = []
 
     # All glyphs in the following blocks have an emoji representation (see
@@ -53,23 +55,18 @@ def parse_east_asian():
     # For example, U+1F004 🀄 MAHJONG TILE RED DRAGON is listed as 'W',
     # but U+1F005 🀅 MAHJONG TILE GREEN DRAGON is listed as 'N'.
     #
-    # Since most modern terminals display all of these codepoints as emojii, we list them as 2 cells
+    # Since most modern terminals display all of these codepoints as emoji, we list them as 2 cells
     # wide. This list could be refined further; for example, the Miscellaneous Symbols block
     # includes both single and double width characters, but not all of the double width characters
     # are listed as such.
     override_ranges = [
-        (0x1f000, 0x1f02f, 2, 'Mahjong Tiles'),
-        (0x1f0a0, 0x1f0ff, 2, 'Playing Cards'),
-        (0x1f300, 0x1f3fa, 2, 'Miscellaneous Symbols and Pictographs..AMPHORA'),
-        # emoji modifiers are listed as wide, but they're combining characters that are usually not displayed separately
-        (0x1f3fb, 0x1f3ff, 0, 'Emoji Modifier Fitzpatrick'),
-        (0x1f400, 0x1f5ff, 2, 'RAT..Miscellaneous Symbols and Pictographs (end)'),
-        (0x1f600, 0x1f64f, 2, 'Emoticons'),
-        (0x1f680, 0x1f6ff, 2, 'Transport and Map Symbols'),
-        (0x1f900, 0x1f9af, 2, 'Supplemental Symbols and Pictographs..PROBING CANE'),
-        (0x1f9b0, 0x1f9b3, 0, 'Emoji components'),  # More emoji modifiers
-        (0x1f9b4, 0x1f9ff, 2, 'BONE..Supplemental Symbols and Pictographs (end)'),
-        (0x1fa70, 0x1faff, 2, 'Symbols and Pictographs Extended-A'),
+        (0x1F000, 0x1F02F, 2, "Mahjong Tiles"),
+        (0x1F0A0, 0x1F0FF, 2, "Playing Cards"),
+        (0x1F300, 0x1F5FF, 2, "Miscellaneous Symbols and Pictographs"),
+        (0x1F600, 0x1F64F, 2, "Emoticons"),
+        (0x1F680, 0x1F6FF, 2, "Transport and Map Symbols"),
+        (0x1F900, 0x1F9FF, 2, "Supplemental Symbols and Pictographs"),
+        (0x1FA70, 0x1FAFF, 2, "Symbols and Pictographs Extended-A"),
     ]
 
     for line in text.splitlines():
@@ -95,22 +92,22 @@ def parse_cf():
     provide enough info to parse these.
     """
     return [
-        (0x034F, 0x034F, 0, 'COMBINING GRAPHEME JOINER'),
-        (0x200B, 0x200F, 0, 'ZERO WIDTH SPACE..RIGHT-TO-LEFT MARK'),
-        (0x2028, 0x202E, 0, 'LINE SEPARATOR..RIGHT-TO-LEFT OVERRIDE'),
-        (0x2060, 0x2063, 0, 'WORD JOINER..INVISIBLE SEPARATOR'),
+        (0x034F, 0x034F, 0, "COMBINING GRAPHEME JOINER"),
+        (0x200B, 0x200F, 0, "ZERO WIDTH SPACE..RIGHT-TO-LEFT MARK"),
+        (0x2028, 0x202E, 0, "LINE SEPARATOR..RIGHT-TO-LEFT OVERRIDE"),
+        (0x2060, 0x2063, 0, "WORD JOINER..INVISIBLE SEPARATOR"),
     ]
 
 
 def parse_desc(desc):
-    if desc.startswith('['):
-        return desc[desc.index(']') + 2:]
+    if desc.startswith("["):
+        return desc[desc.index("]") + 2 :]
     return desc
 
 
 def parse_points(points):
-    if '..' in points:
-        low, high = points.split('..')
+    if ".." in points:
+        low, high = points.split("..")
         return int(low, 16), int(high, 16)
     else:
         point = int(points, 16)
@@ -118,16 +115,18 @@ def parse_points(points):
 
 
 def parse_all():
-    combined = sorted(parse_categories() + parse_east_asian() + parse_cf(), key=lambda it: it[0])
+    combined = sorted(
+        parse_categories() + parse_east_asian() + parse_cf(), key=lambda it: it[0]
+    )
     # concat adjacent ranges
     ranges = []
     iterator = iter(combined)
     prev = next(iterator)
     for low, high, width, desc in iterator:
         if width == prev[2] and prev[1] + 1 == low:
-            p1, p2 = prev[3].split('..') if '..' in prev[3] else (prev[3], prev[3])
-            d1, d2 = desc.split('..') if '..' in desc else (desc, desc)
-            prev = prev[0], high, width, f'{p1}..{d2}'
+            p1, p2 = prev[3].split("..") if ".." in prev[3] else (prev[3], prev[3])
+            d1, d2 = desc.split("..") if ".." in desc else (desc, desc)
+            prev = prev[0], high, width, f"{p1}..{d2}"
         else:
             ranges.append(prev)
             prev = (low, high, width, desc)
@@ -136,19 +135,20 @@ def parse_all():
 
 
 def main():
-    print('''package com.github.ajalt.mordant.internal.gen
+    print(
+        """package com.github.ajalt.mordant.internal.gen
 
 import kotlin.native.concurrent.SharedImmutable
 
 internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 
 @SharedImmutable
-internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>('''
-          )
+internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>("""
+    )
     for low, high, width, desc in parse_all():
         print(f"    CellWidthTableEntry({hex(low)}, {hex(high)}, {width}), // {desc}")
-    print(')')
+    print(")")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

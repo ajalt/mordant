@@ -41,6 +41,10 @@ internal class CellWidthTest {
         row("👍🏿", 2),
         row("🇩🇪", 2),
         row("\uD83D\uDC68\uD83C\uDFFE\u200D\uD83E\uDDB1", 2), // MAN, FITZPATRICK TYPE-5, ZWJ, CURLY HAIR
+        row("\uD83D\uDC69\u200D\uD83D\uDC67", 2), // Emoji_ZWJ_Sequence ; family: woman, girl (👩‍👧)
+        row("\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC66", 2), //Emoji_ZWJ_Sequence ; family: woman, girl, boy (👩‍👧‍👦)
+        row("\uD83D\uDC69\u200D\uD83D\uDC69\u200D\uD83D\uDC66\u200D\uD83D\uDC66", 2), // Emoji_ZWJ_Sequence ; family: woman, woman, boy, boy (👩‍👩‍👦‍👦)
+
     ) { str, width ->
         stringCellWidth(str) shouldBe width
     }

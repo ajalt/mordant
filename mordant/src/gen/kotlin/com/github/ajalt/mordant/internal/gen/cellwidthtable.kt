@@ -426,15 +426,11 @@ internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTab
     CellWidthTableEntry(0x1f240, 0x1f248, 2), // TORTOISE SHELL BRACKETED CJK UNIFIED IDEOGRAPH-672C..TORTOISE SHELL BRACKETED CJK UNIFIED IDEOGRAPH-6557
     CellWidthTableEntry(0x1f250, 0x1f251, 2), // CIRCLED IDEOGRAPH ADVANTAGE..CIRCLED IDEOGRAPH ACCEPT
     CellWidthTableEntry(0x1f260, 0x1f265, 2), // ROUNDED SYMBOL FOR FU..ROUNDED SYMBOL FOR CAI
-    CellWidthTableEntry(0x1f300, 0x1f3fa, 2), // Miscellaneous Symbols and Pictographs..AMPHORA
-    CellWidthTableEntry(0x1f3fb, 0x1f3ff, 0), // Emoji Modifier Fitzpatrick
-    CellWidthTableEntry(0x1f400, 0x1f64f, 2), // RAT..Emoticons
+    CellWidthTableEntry(0x1f300, 0x1f64f, 2), // Miscellaneous Symbols and Pictographs..Emoticons
     CellWidthTableEntry(0x1f680, 0x1f6ff, 2), // Transport and Map Symbols
     CellWidthTableEntry(0x1f7e0, 0x1f7eb, 2), // LARGE ORANGE CIRCLE..LARGE BROWN SQUARE
     CellWidthTableEntry(0x1f7f0, 0x1f7f0, 2), // HEAVY EQUALS SIGN
-    CellWidthTableEntry(0x1f900, 0x1f9af, 2), // Supplemental Symbols and Pictographs..PROBING CANE
-    CellWidthTableEntry(0x1f9b0, 0x1f9b3, 0), // Emoji components
-    CellWidthTableEntry(0x1f9b4, 0x1f9ff, 2), // BONE..Supplemental Symbols and Pictographs (end)
+    CellWidthTableEntry(0x1f900, 0x1f9ff, 2), // Supplemental Symbols and Pictographs
     CellWidthTableEntry(0x1fa70, 0x1faff, 2), // Symbols and Pictographs Extended-A
     CellWidthTableEntry(0x20000, 0x2fffd, 2), // CJK UNIFIED IDEOGRAPH-20000..<reserved-2FFFD>
     CellWidthTableEntry(0x30000, 0x3fffd, 2), // CJK UNIFIED IDEOGRAPH-30000..<reserved-3FFFD>

@@ -2,6 +2,7 @@
 ## Unreleased
 ### Added
 - Implemented `hideInput` for prompts on native targets [(#63)](https://github.com/ajalt/mordant/issues/63)
+- Improve cell-width calculation for emoji sequences like skin tone modifiers. [(#64)](https://github.com/ajalt/mordant/issues/64)
 
 ## 2.0.0-beta7
 ### Added
