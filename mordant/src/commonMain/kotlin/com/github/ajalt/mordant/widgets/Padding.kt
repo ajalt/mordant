@@ -13,8 +13,9 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
         fun none(): Padding = Padding(0)
         fun vertical(padding: Int = 0): Padding = Padding(padding, 0)
         fun horizontal(padding: Int = 0): Padding = Padding(0, padding)
-        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding =
-            Padding(top, right, bottom, left)
+        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding {
+            return Padding(top, right, bottom, left)
+        }
     }
 
     init {
@@ -41,6 +42,18 @@ fun Widget.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Bo
 
 fun Widget.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
+
+fun Widget.withTopPadding(top: Int): Widget =
+    withPadding(top = top, right = 0, bottom = 0, left = 0)
+
+fun Widget.withRightPadding(right: Int, padEmptyLines: Boolean = true): Widget =
+    withPadding(top = 0, right = right, bottom = 0, left = 0, padEmptyLines)
+
+fun Widget.withBottomPadding(bottom: Int): Widget =
+    withPadding(top = 0, right = 0, bottom = bottom, left = 0)
+
+fun Widget.withLeftPadding(left: Int, padEmptyLines: Boolean = true): Widget =
+    withPadding(top = 0, right = 0, bottom = 0, left = left, padEmptyLines)
 
 fun Widget.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
     withPadding(Padding.vertical(padding), padEmptyLines)
