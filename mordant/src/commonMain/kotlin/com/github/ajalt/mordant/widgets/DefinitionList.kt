@@ -50,7 +50,7 @@ private class DefinitionList(
             }
             if (termMeasurements[i].max > termWidth) {
                 lines += term.render(t, width).lines
-                lines += desc.withPadding(0, 0, 0, descOffset).render(t, width).lines
+                lines += desc.withPadding { left = descOffset }.render(t, width).lines
                 continue
             }
             val termLines = term.render(t, termWidth).lines

@@ -6,15 +6,11 @@ import com.github.ajalt.mordant.terminal.Terminal
 
 data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int) {
     constructor(all: Int) : this(all, all, all, all)
-    constructor(vertical: Int, horizontal: Int) : this(vertical, horizontal, vertical, horizontal)
-    constructor(top: Int, horizontal: Int, bottom: Int) : this(top, horizontal, bottom, horizontal)
 
     companion object {
-        fun none(): Padding = Padding(0)
-        fun vertical(padding: Int = 0): Padding = Padding(padding, 0)
-        fun horizontal(padding: Int = 0): Padding = Padding(0, padding)
-        fun of(top: Int = 0, right: Int = 0, bottom: Int = 0, left: Int = 0): Padding {
-            return Padding(top, right, bottom, left)
+        inline operator fun invoke(block: Builder.() -> Unit): Padding {
+            val b = Builder(0,0,0,0).apply(block)
+            return Padding(b.top, b.right, b.bottom, b.left)
         }
     }
 
@@ -26,6 +22,29 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
     }
 
     val isEmpty get() = top == 0 && right == 0 && bottom == 0 && left == 0
+
+    data class Builder(var top: Int, var right: Int, var bottom: Int, var left: Int) {
+        var horizontal: Int
+            get() = maxOf(left, right)
+            set(value) {
+                left = value
+                right = value
+            }
+
+        var vertical: Int
+            get() = maxOf(top, bottom)
+            set(value) {
+                top = value
+                bottom = value
+            }
+
+        var all: Int
+            get() = maxOf(top, bottom, left, right)
+            set(value) {
+                top = value
+                bottom = value
+            }
+    }
 }
 
 fun Widget.withPadding(padding: Padding, padEmptyLines: Boolean = true): Widget =
@@ -34,32 +53,11 @@ fun Widget.withPadding(padding: Padding, padEmptyLines: Boolean = true): Widget 
 fun Widget.withPadding(all: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(all), padEmptyLines)
 
-fun Widget.withPadding(vertical: Int, horizontal: Int, padEmptyLines: Boolean = true): Widget =
-    Padded.get(this, Padding(vertical, horizontal), padEmptyLines)
-
-fun Widget.withPadding(top: Int, horizontal: Int, bottom: Int, padEmptyLines: Boolean = true): Widget =
-    Padded.get(this, Padding(top, horizontal, bottom), padEmptyLines)
-
 fun Widget.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
 
-fun Widget.withTopPadding(top: Int): Widget =
-    withPadding(top = top, right = 0, bottom = 0, left = 0)
-
-fun Widget.withRightPadding(right: Int, padEmptyLines: Boolean = true): Widget =
-    withPadding(top = 0, right = right, bottom = 0, left = 0, padEmptyLines)
-
-fun Widget.withBottomPadding(bottom: Int): Widget =
-    withPadding(top = 0, right = 0, bottom = bottom, left = 0)
-
-fun Widget.withLeftPadding(left: Int, padEmptyLines: Boolean = true): Widget =
-    withPadding(top = 0, right = 0, bottom = 0, left = left, padEmptyLines)
-
-fun Widget.withVerticalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
-    withPadding(Padding.vertical(padding), padEmptyLines)
-
-fun Widget.withHorizontalPadding(padding: Int, padEmptyLines: Boolean = true): Widget =
-    withPadding(Padding.horizontal(padding), padEmptyLines)
+fun Widget.withPadding(padEmptyLines: Boolean = true, padding: Padding.Builder.() -> Unit): Widget =
+    Padded.get(this, Padding(padding), padEmptyLines)
 
 internal class Padded private constructor(
     internal val content: Widget,

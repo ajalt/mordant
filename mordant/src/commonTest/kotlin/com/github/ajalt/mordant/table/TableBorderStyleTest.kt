@@ -235,7 +235,7 @@ class TableBorderStyleTest : RenderingTest() {
     private fun doTest(borderType: BorderType, expected: String) {
         checkRender(table {
             this.borderType = borderType
-            padding = Padding.none()
+            padding = Padding(0)
 
             var i = 1
             fun SectionBuilder.sectionRows() {

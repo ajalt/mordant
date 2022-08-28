@@ -35,17 +35,10 @@ interface CellStyleBuilder {
         padding = Padding(all)
     }
 
-    fun padding(vertical: Int, horizontal: Int) {
-        padding = Padding(vertical, horizontal, vertical, horizontal)
+    fun padding(block: Padding.Builder.() -> Unit) {
+        padding = Padding(block)
     }
 
-    fun padding(top: Int, horizontal: Int, bottom: Int) {
-        padding = Padding(top, horizontal, bottom, horizontal)
-    }
-
-    fun padding(top: Int, right: Int, bottom: Int, left: Int) {
-        padding = Padding(top, right, bottom, left)
-    }
 }
 
 sealed class ColumnWidth {
@@ -244,6 +237,7 @@ fun table(init: TableBuilder.() -> Unit): Table {
                 Caption(table, tableBuilder.captionTop, tableBuilder.captionBottom),
             )
         }
+
         else -> table
     }
 }
@@ -262,7 +256,7 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
         cellBorders = Borders.LEFT_RIGHT
         tableBorders = Borders.NONE
         borderType = BorderType.BLANK
-        padding = Padding.none()
+        padding = Padding(0)
         val gb = GridBuilderInstance(bodySection)
         gb.init()
         columns.putAll(gb.columns)
@@ -280,12 +274,12 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
 fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
         cellBorders = Borders.NONE
-        this.padding = Padding.of(left = padding)
+        this.padding = Padding { left = padding }
         val b = SingleRowBuilderInstance(bodySection)
         b.init()
         bodySection.rows += b.row
         columns.putAll(b.columns)
-        column(0) { this.padding = this.padding ?: Padding.none() }
+        column(0) { this.padding = this.padding ?: Padding(0) }
     }
 
     return TableLayout(tableBuilder).buildTable()
@@ -301,7 +295,7 @@ fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
 fun column(padding: Int = 0, init: SingleColumnBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
         cellBorders = Borders.NONE
-        this.padding = Padding.none()
+        this.padding = Padding(0)
         val b = SingleColumnBuilderInstance(bodySection, padding)
         b.init()
         column(0) { width = b.width }

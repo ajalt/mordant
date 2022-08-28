@@ -185,7 +185,7 @@ internal class SingleColumnBuilderInstance(
             if (empty) {
                 empty = false
             } else {
-                padding = Padding.of(top = defaultPadding)
+                padding = Padding { top = defaultPadding }
             }
         }
         init()

@@ -7,30 +7,10 @@ class PaddingTest : RenderingTest() {
     private val w = Text("x")
 
     @Test
-    fun oneValue() = checkRender(
+    fun all() = checkRender(
         w.withPadding(1), """
     ░░
     ░ x ░
-    ░░
-    """
-    )
-
-    @Test
-    fun twoValues() = checkRender(
-        w.withPadding(1, 2), """
-    ░░
-    ░  x  ░
-    ░░
-    """
-    )
-
-    @Test
-    fun threeValues() = checkRender(
-        w.withPadding(1, 2, 3), """
-    ░░
-    ░  x  ░
-    ░░
-    ░░
     ░░
     """
     )
@@ -48,7 +28,7 @@ class PaddingTest : RenderingTest() {
 
     @Test
     fun vertical() = checkRender(
-        w.withVerticalPadding(1), """
+        w.withPadding { vertical = 1 }, """
     ░░
     ░x░
     ░░
@@ -57,7 +37,7 @@ class PaddingTest : RenderingTest() {
 
     @Test
     fun horizontal() = checkRender(
-        w.withHorizontalPadding(1), """
+        w.withPadding { horizontal = 1 }, """
     ░ x ░
     """
     )
@@ -86,7 +66,7 @@ class PaddingTest : RenderingTest() {
 
     @Test
     fun withTopPadding() = checkRender(
-        w.withTopPadding(1), """
+        w.withPadding { top = 1 }, """
     ░░
     ░x░
     """
@@ -94,14 +74,14 @@ class PaddingTest : RenderingTest() {
 
     @Test
     fun withRightPadding() = checkRender(
-        w.withRightPadding(1), """
+        w.withPadding { right = 1 }, """
     ░x ░
     """
     )
 
     @Test
     fun withBottomPadding() = checkRender(
-        w.withBottomPadding(1), """
+        w.withPadding { bottom = 1 }, """
     ░x░
     ░░
     """
@@ -109,7 +89,7 @@ class PaddingTest : RenderingTest() {
 
     @Test
     fun withLeftPadding() = checkRender(
-        w.withLeftPadding(1), """
+        w.withPadding { left = 1 }, """
     ░ x░
     """
     )

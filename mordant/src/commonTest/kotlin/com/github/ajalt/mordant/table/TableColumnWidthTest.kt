@@ -115,7 +115,7 @@ class TableColumnWidthTest : RenderingTest() {
     private fun doTest(tableWidth: Int, expected: String, borders: Borders = LEFT_RIGHT) {
         checkRender(table {
             borderType = BorderType.ASCII
-            padding = Padding.none()
+            padding = Padding(0)
             overflowWrap = OverflowWrap.TRUNCATE
             whitespace = Whitespace.NORMAL
             column(0) { width = ColumnWidth.Fixed(3) }

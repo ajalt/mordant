@@ -22,7 +22,7 @@ internal val EMPTY_LINE: Line = Line(emptyList(), DEFAULT_STYLE)
 internal val SINGLE_SPACE = Span.space(1)
 
 @SharedImmutable
-internal val DEFAULT_PADDING = Padding.none()
+internal val DEFAULT_PADDING = Padding(0)
 
 @Suppress("RegExpRedundantEscape") // JS requires escaping the lone `]` at the beginning of the pattern, so we can't use $OSC
 @SharedImmutable
