@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.gen
 
-import kotlin.native.concurrent.SharedImmutable
 
 internal fun couldStartEmojiSeq(codepoint: Int): Boolean {
     return codepoint in 0x261d..0x2764 || codepoint in 0x1f385..0x1faf6
@@ -11,7 +10,6 @@ internal data class IntTrie(val children: MutableMap<Int, IntTrie>, val values: 
             : this(mutableMapOf(*children), values)
 }
 
-@SharedImmutable
 internal val EMOJI_SEQUENCES: IntTrie = buildSeqTrie()
 
 private fun buildSeqTrie(): IntTrie {
@@ -261,15 +259,63 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x200d, 0x1f467, 0x200d, 0x1f466), // family: man, girl, boy (👨‍👧‍👦)
         intArrayOf(0x1f468, 0x200d, 0x1f467, 0x200d, 0x1f467), // family: man, girl, girl (👨‍👧‍👧)
         intArrayOf(0x1f468, 0x200d, 0x1f468, 0x200d, 0x1f466), // family: man, man, boy (👨‍👨‍👦)
-        intArrayOf(0x1f468, 0x200d, 0x1f468, 0x200d, 0x1f466, 0x200d, 0x1f466), // family: man, man, boy, boy (👨‍👨‍👦‍👦)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f468,
+            0x200d,
+            0x1f466,
+            0x200d,
+            0x1f466
+        ), // family: man, man, boy, boy (👨‍👨‍👦‍👦)
         intArrayOf(0x1f468, 0x200d, 0x1f468, 0x200d, 0x1f467), // family: man, man, girl (👨‍👨‍👧)
-        intArrayOf(0x1f468, 0x200d, 0x1f468, 0x200d, 0x1f467, 0x200d, 0x1f466), // family: man, man, girl, boy (👨‍👨‍👧‍👦)
-        intArrayOf(0x1f468, 0x200d, 0x1f468, 0x200d, 0x1f467, 0x200d, 0x1f467), // family: man, man, girl, girl (👨‍👨‍👧‍👧)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f468,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f466
+        ), // family: man, man, girl, boy (👨‍👨‍👧‍👦)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f468,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f467
+        ), // family: man, man, girl, girl (👨‍👨‍👧‍👧)
         intArrayOf(0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f466), // family: man, woman, boy (👨‍👩‍👦)
-        intArrayOf(0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f466, 0x200d, 0x1f466), // family: man, woman, boy, boy (👨‍👩‍👦‍👦)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f466,
+            0x200d,
+            0x1f466
+        ), // family: man, woman, boy, boy (👨‍👩‍👦‍👦)
         intArrayOf(0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467), // family: man, woman, girl (👨‍👩‍👧)
-        intArrayOf(0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f466), // family: man, woman, girl, boy (👨‍👩‍👧‍👦)
-        intArrayOf(0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f467), // family: man, woman, girl, girl (👨‍👩‍👧‍👧)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f466
+        ), // family: man, woman, girl, boy (👨‍👩‍👧‍👦)
+        intArrayOf(
+            0x1f468,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f467
+        ), // family: man, woman, girl, girl (👨‍👩‍👧‍👧)
         intArrayOf(0x1f468, 0x200d, 0x1f4bb), // man technologist (👨‍💻)
         intArrayOf(0x1f468, 0x200d, 0x1f4bc), // man office worker (👨‍💼)
         intArrayOf(0x1f468, 0x200d, 0x1f527), // man mechanic (👨‍🔧)
@@ -287,9 +333,36 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2695, 0xfe0f), // man health worker: light skin tone (👨🏻‍⚕️)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2696, 0xfe0f), // man judge: light skin tone (👨🏻‍⚖️)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2708, 0xfe0f), // man pilot: light skin tone (👨🏻‍✈️)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fb), // couple with heart: man, man, light skin tone (👨🏻‍❤️‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fd), // couple with heart: man, man, light skin tone, medium skin tone (👨🏻‍❤️‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3ff), // couple with heart: man, man, light skin tone, dark skin tone (👨🏻‍❤️‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // couple with heart: man, man, light skin tone (👨🏻‍❤️‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // couple with heart: man, man, light skin tone, medium skin tone (👨🏻‍❤️‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // couple with heart: man, man, light skin tone, dark skin tone (👨🏻‍❤️‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f33e), // man farmer: light skin tone (👨🏻‍🌾)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f373), // man cook: light skin tone (👨🏻‍🍳)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f37c), // man feeding baby: light skin tone (👨🏻‍🍼)
@@ -304,10 +377,42 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f52c), // man scientist: light skin tone (👨🏻‍🔬)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f680), // man astronaut: light skin tone (👨🏻‍🚀)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f692), // man firefighter: light skin tone (👨🏻‍🚒)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fc), // men holding hands: light skin tone, medium-light skin tone (👨🏻‍🤝‍👨🏼)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // men holding hands: light skin tone, medium skin tone (👨🏻‍🤝‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fe), // men holding hands: light skin tone, medium-dark skin tone (👨🏻‍🤝‍👨🏾)
-        intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // men holding hands: light skin tone, dark skin tone (👨🏻‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fc
+        ), // men holding hands: light skin tone, medium-light skin tone (👨🏻‍🤝‍👨🏼)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // men holding hands: light skin tone, medium skin tone (👨🏻‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fe
+        ), // men holding hands: light skin tone, medium-dark skin tone (👨🏻‍🤝‍👨🏾)
+        intArrayOf(
+            0x1f468,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // men holding hands: light skin tone, dark skin tone (👨🏻‍🤝‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f9af), // man with white cane: light skin tone (👨🏻‍🦯)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f9b0), // man: light skin tone, red hair (👨🏻‍🦰)
         intArrayOf(0x1f468, 0x1f3fb, 0x200d, 0x1f9b1), // man: light skin tone, curly hair (👨🏻‍🦱)
@@ -319,7 +424,16 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x2695, 0xfe0f), // man health worker: medium-light skin tone (👨🏼‍⚕️)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x2696, 0xfe0f), // man judge: medium-light skin tone (👨🏼‍⚖️)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x2708, 0xfe0f), // man pilot: medium-light skin tone (👨🏼‍✈️)
-        intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fc), // couple with heart: man, man, medium-light skin tone (👨🏼‍❤️‍👨🏼)
+        intArrayOf(
+            0x1f468,
+            0x1f3fc,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fc
+        ), // couple with heart: man, man, medium-light skin tone (👨🏼‍❤️‍👨🏼)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f33e), // man farmer: medium-light skin tone (👨🏼‍🌾)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f373), // man cook: medium-light skin tone (👨🏼‍🍳)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f37c), // man feeding baby: medium-light skin tone (👨🏼‍🍼)
@@ -334,9 +448,33 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f52c), // man scientist: medium-light skin tone (👨🏼‍🔬)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f680), // man astronaut: medium-light skin tone (👨🏼‍🚀)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f692), // man firefighter: medium-light skin tone (👨🏼‍🚒)
-        intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // men holding hands: medium-light skin tone, light skin tone (👨🏼‍🤝‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // men holding hands: medium-light skin tone, medium skin tone (👨🏼‍🤝‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // men holding hands: medium-light skin tone, dark skin tone (👨🏼‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // men holding hands: medium-light skin tone, light skin tone (👨🏼‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // men holding hands: medium-light skin tone, medium skin tone (👨🏼‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // men holding hands: medium-light skin tone, dark skin tone (👨🏼‍🤝‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f9af), // man with white cane: medium-light skin tone (👨🏼‍🦯)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f9b0), // man: medium-light skin tone, red hair (👨🏼‍🦰)
         intArrayOf(0x1f468, 0x1f3fc, 0x200d, 0x1f9b1), // man: medium-light skin tone, curly hair (👨🏼‍🦱)
@@ -348,9 +486,36 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2695, 0xfe0f), // man health worker: medium skin tone (👨🏽‍⚕️)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2696, 0xfe0f), // man judge: medium skin tone (👨🏽‍⚖️)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2708, 0xfe0f), // man pilot: medium skin tone (👨🏽‍✈️)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fb), // couple with heart: man, man, medium skin tone, light skin tone (👨🏽‍❤️‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fd), // couple with heart: man, man, medium skin tone (👨🏽‍❤️‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3ff), // couple with heart: man, man, medium skin tone, dark skin tone (👨🏽‍❤️‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // couple with heart: man, man, medium skin tone, light skin tone (👨🏽‍❤️‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // couple with heart: man, man, medium skin tone (👨🏽‍❤️‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // couple with heart: man, man, medium skin tone, dark skin tone (👨🏽‍❤️‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f33e), // man farmer: medium skin tone (👨🏽‍🌾)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f373), // man cook: medium skin tone (👨🏽‍🍳)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f37c), // man feeding baby: medium skin tone (👨🏽‍🍼)
@@ -365,10 +530,42 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f52c), // man scientist: medium skin tone (👨🏽‍🔬)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f680), // man astronaut: medium skin tone (👨🏽‍🚀)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f692), // man firefighter: medium skin tone (👨🏽‍🚒)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // men holding hands: medium skin tone, light skin tone (👨🏽‍🤝‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fc), // men holding hands: medium skin tone, medium-light skin tone (👨🏽‍🤝‍👨🏼)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fe), // men holding hands: medium skin tone, medium-dark skin tone (👨🏽‍🤝‍👨🏾)
-        intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // men holding hands: medium skin tone, dark skin tone (👨🏽‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // men holding hands: medium skin tone, light skin tone (👨🏽‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fc
+        ), // men holding hands: medium skin tone, medium-light skin tone (👨🏽‍🤝‍👨🏼)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fe
+        ), // men holding hands: medium skin tone, medium-dark skin tone (👨🏽‍🤝‍👨🏾)
+        intArrayOf(
+            0x1f468,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // men holding hands: medium skin tone, dark skin tone (👨🏽‍🤝‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f9af), // man with white cane: medium skin tone (👨🏽‍🦯)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f9b0), // man: medium skin tone, red hair (👨🏽‍🦰)
         intArrayOf(0x1f468, 0x1f3fd, 0x200d, 0x1f9b1), // man: medium skin tone, curly hair (👨🏽‍🦱)
@@ -380,7 +577,16 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x2695, 0xfe0f), // man health worker: medium-dark skin tone (👨🏾‍⚕️)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x2696, 0xfe0f), // man judge: medium-dark skin tone (👨🏾‍⚖️)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x2708, 0xfe0f), // man pilot: medium-dark skin tone (👨🏾‍✈️)
-        intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fe), // couple with heart: man, man, medium-dark skin tone (👨🏾‍❤️‍👨🏾)
+        intArrayOf(
+            0x1f468,
+            0x1f3fe,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fe
+        ), // couple with heart: man, man, medium-dark skin tone (👨🏾‍❤️‍👨🏾)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f33e), // man farmer: medium-dark skin tone (👨🏾‍🌾)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f373), // man cook: medium-dark skin tone (👨🏾‍🍳)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f37c), // man feeding baby: medium-dark skin tone (👨🏾‍🍼)
@@ -395,9 +601,33 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f52c), // man scientist: medium-dark skin tone (👨🏾‍🔬)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f680), // man astronaut: medium-dark skin tone (👨🏾‍🚀)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f692), // man firefighter: medium-dark skin tone (👨🏾‍🚒)
-        intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // men holding hands: medium-dark skin tone, light skin tone (👨🏾‍🤝‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // men holding hands: medium-dark skin tone, medium skin tone (👨🏾‍🤝‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // men holding hands: medium-dark skin tone, dark skin tone (👨🏾‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // men holding hands: medium-dark skin tone, light skin tone (👨🏾‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // men holding hands: medium-dark skin tone, medium skin tone (👨🏾‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // men holding hands: medium-dark skin tone, dark skin tone (👨🏾‍🤝‍👨🏿)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f9af), // man with white cane: medium-dark skin tone (👨🏾‍🦯)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f9b0), // man: medium-dark skin tone, red hair (👨🏾‍🦰)
         intArrayOf(0x1f468, 0x1f3fe, 0x200d, 0x1f9b1), // man: medium-dark skin tone, curly hair (👨🏾‍🦱)
@@ -409,9 +639,36 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2695, 0xfe0f), // man health worker: dark skin tone (👨🏿‍⚕️)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2696, 0xfe0f), // man judge: dark skin tone (👨🏿‍⚖️)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2708, 0xfe0f), // man pilot: dark skin tone (👨🏿‍✈️)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fb), // couple with heart: man, man, dark skin tone, light skin tone (👨🏿‍❤️‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fd), // couple with heart: man, man, dark skin tone, medium skin tone (👨🏿‍❤️‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3ff), // couple with heart: man, man, dark skin tone (👨🏿‍❤️‍👨🏿)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // couple with heart: man, man, dark skin tone, light skin tone (👨🏿‍❤️‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // couple with heart: man, man, dark skin tone, medium skin tone (👨🏿‍❤️‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // couple with heart: man, man, dark skin tone (👨🏿‍❤️‍👨🏿)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f33e), // man farmer: dark skin tone (👨🏿‍🌾)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f373), // man cook: dark skin tone (👨🏿‍🍳)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f37c), // man feeding baby: dark skin tone (👨🏿‍🍼)
@@ -426,10 +683,42 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f52c), // man scientist: dark skin tone (👨🏿‍🔬)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f680), // man astronaut: dark skin tone (👨🏿‍🚀)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f692), // man firefighter: dark skin tone (👨🏿‍🚒)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // men holding hands: dark skin tone, light skin tone (👨🏿‍🤝‍👨🏻)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fc), // men holding hands: dark skin tone, medium-light skin tone (👨🏿‍🤝‍👨🏼)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // men holding hands: dark skin tone, medium skin tone (👨🏿‍🤝‍👨🏽)
-        intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fe), // men holding hands: dark skin tone, medium-dark skin tone (👨🏿‍🤝‍👨🏾)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // men holding hands: dark skin tone, light skin tone (👨🏿‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fc
+        ), // men holding hands: dark skin tone, medium-light skin tone (👨🏿‍🤝‍👨🏼)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // men holding hands: dark skin tone, medium skin tone (👨🏿‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f468,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fe
+        ), // men holding hands: dark skin tone, medium-dark skin tone (👨🏿‍🤝‍👨🏾)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f9af), // man with white cane: dark skin tone (👨🏿‍🦯)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f9b0), // man: dark skin tone, red hair (👨🏿‍🦰)
         intArrayOf(0x1f468, 0x1f3ff, 0x200d, 0x1f9b1), // man: dark skin tone, curly hair (👨🏿‍🦱)
@@ -443,7 +732,16 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468), // couple with heart: woman, man (👩‍❤️‍👨)
         intArrayOf(0x1f469, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469), // couple with heart: woman, woman (👩‍❤️‍👩)
         intArrayOf(0x1f469, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f48b, 0x200d, 0x1f468), // kiss: woman, man (👩‍❤️‍💋‍👨)
-        intArrayOf(0x1f469, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f48b, 0x200d, 0x1f469), // kiss: woman, woman (👩‍❤️‍💋‍👩)
+        intArrayOf(
+            0x1f469,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f48b,
+            0x200d,
+            0x1f469
+        ), // kiss: woman, woman (👩‍❤️‍💋‍👩)
         intArrayOf(0x1f469, 0x200d, 0x1f33e), // woman farmer (👩‍🌾)
         intArrayOf(0x1f469, 0x200d, 0x1f373), // woman cook (👩‍🍳)
         intArrayOf(0x1f469, 0x200d, 0x1f37c), // woman feeding baby (👩‍🍼)
@@ -458,10 +756,34 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f466), // family: woman, girl, boy (👩‍👧‍👦)
         intArrayOf(0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f467), // family: woman, girl, girl (👩‍👧‍👧)
         intArrayOf(0x1f469, 0x200d, 0x1f469, 0x200d, 0x1f466), // family: woman, woman, boy (👩‍👩‍👦)
-        intArrayOf(0x1f469, 0x200d, 0x1f469, 0x200d, 0x1f466, 0x200d, 0x1f466), // family: woman, woman, boy, boy (👩‍👩‍👦‍👦)
+        intArrayOf(
+            0x1f469,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f466,
+            0x200d,
+            0x1f466
+        ), // family: woman, woman, boy, boy (👩‍👩‍👦‍👦)
         intArrayOf(0x1f469, 0x200d, 0x1f469, 0x200d, 0x1f467), // family: woman, woman, girl (👩‍👩‍👧)
-        intArrayOf(0x1f469, 0x200d, 0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f466), // family: woman, woman, girl, boy (👩‍👩‍👧‍👦)
-        intArrayOf(0x1f469, 0x200d, 0x1f469, 0x200d, 0x1f467, 0x200d, 0x1f467), // family: woman, woman, girl, girl (👩‍👩‍👧‍👧)
+        intArrayOf(
+            0x1f469,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f466
+        ), // family: woman, woman, girl, boy (👩‍👩‍👧‍👦)
+        intArrayOf(
+            0x1f469,
+            0x200d,
+            0x1f469,
+            0x200d,
+            0x1f467,
+            0x200d,
+            0x1f467
+        ), // family: woman, woman, girl, girl (👩‍👩‍👧‍👧)
         intArrayOf(0x1f469, 0x200d, 0x1f4bb), // woman technologist (👩‍💻)
         intArrayOf(0x1f469, 0x200d, 0x1f4bc), // woman office worker (👩‍💼)
         intArrayOf(0x1f469, 0x200d, 0x1f527), // woman mechanic (👩‍🔧)
@@ -479,9 +801,36 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2695, 0xfe0f), // woman health worker: light skin tone (👩🏻‍⚕️)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2696, 0xfe0f), // woman judge: light skin tone (👩🏻‍⚖️)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2708, 0xfe0f), // woman pilot: light skin tone (👩🏻‍✈️)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fb), // couple with heart: woman, man, light skin tone (👩🏻‍❤️‍👨🏻)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3ff), // couple with heart: woman, man, light skin tone, dark skin tone (👩🏻‍❤️‍👨🏿)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469, 0x1f3fb), // couple with heart: woman, woman, light skin tone (👩🏻‍❤️‍👩🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // couple with heart: woman, man, light skin tone (👩🏻‍❤️‍👨🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // couple with heart: woman, man, light skin tone, dark skin tone (👩🏻‍❤️‍👨🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f469,
+            0x1f3fb
+        ), // couple with heart: woman, woman, light skin tone (👩🏻‍❤️‍👩🏻)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f33e), // woman farmer: light skin tone (👩🏻‍🌾)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f373), // woman cook: light skin tone (👩🏻‍🍳)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f37c), // woman feeding baby: light skin tone (👩🏻‍🍼)
@@ -496,12 +845,60 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f52c), // woman scientist: light skin tone (👩🏻‍🔬)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f680), // woman astronaut: light skin tone (👩🏻‍🚀)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f692), // woman firefighter: light skin tone (👩🏻‍🚒)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // woman and man holding hands: light skin tone, medium skin tone (👩🏻‍🤝‍👨🏽)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // woman and man holding hands: light skin tone, dark skin tone (👩🏻‍🤝‍👨🏿)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fc), // women holding hands: light skin tone, medium-light skin tone (👩🏻‍🤝‍👩🏼)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fd), // women holding hands: light skin tone, medium skin tone (👩🏻‍🤝‍👩🏽)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fe), // women holding hands: light skin tone, medium-dark skin tone (👩🏻‍🤝‍👩🏾)
-        intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3ff), // women holding hands: light skin tone, dark skin tone (👩🏻‍🤝‍👩🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // woman and man holding hands: light skin tone, medium skin tone (👩🏻‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // woman and man holding hands: light skin tone, dark skin tone (👩🏻‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fc
+        ), // women holding hands: light skin tone, medium-light skin tone (👩🏻‍🤝‍👩🏼)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fd
+        ), // women holding hands: light skin tone, medium skin tone (👩🏻‍🤝‍👩🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fe
+        ), // women holding hands: light skin tone, medium-dark skin tone (👩🏻‍🤝‍👩🏾)
+        intArrayOf(
+            0x1f469,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3ff
+        ), // women holding hands: light skin tone, dark skin tone (👩🏻‍🤝‍👩🏿)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f9af), // woman with white cane: light skin tone (👩🏻‍🦯)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f9b0), // woman: light skin tone, red hair (👩🏻‍🦰)
         intArrayOf(0x1f469, 0x1f3fb, 0x200d, 0x1f9b1), // woman: light skin tone, curly hair (👩🏻‍🦱)
@@ -513,8 +910,26 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x2695, 0xfe0f), // woman health worker: medium-light skin tone (👩🏼‍⚕️)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x2696, 0xfe0f), // woman judge: medium-light skin tone (👩🏼‍⚖️)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x2708, 0xfe0f), // woman pilot: medium-light skin tone (👩🏼‍✈️)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fc), // couple with heart: woman, man, medium-light skin tone (👩🏼‍❤️‍👨🏼)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469, 0x1f3fc), // couple with heart: woman, woman, medium-light skin tone (👩🏼‍❤️‍👩🏼)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fc
+        ), // couple with heart: woman, man, medium-light skin tone (👩🏼‍❤️‍👨🏼)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f469,
+            0x1f3fc
+        ), // couple with heart: woman, woman, medium-light skin tone (👩🏼‍❤️‍👩🏼)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f33e), // woman farmer: medium-light skin tone (👩🏼‍🌾)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f373), // woman cook: medium-light skin tone (👩🏼‍🍳)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f37c), // woman feeding baby: medium-light skin tone (👩🏼‍🍼)
@@ -529,22 +944,69 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f52c), // woman scientist: medium-light skin tone (👩🏼‍🔬)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f680), // woman astronaut: medium-light skin tone (👩🏼‍🚀)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f692), // woman firefighter: medium-light skin tone (👩🏼‍🚒)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fb), // women holding hands: medium-light skin tone, light skin tone (👩🏼‍🤝‍👩🏻)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fd), // women holding hands: medium-light skin tone, medium skin tone (👩🏼‍🤝‍👩🏽)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3ff), // women holding hands: medium-light skin tone, dark skin tone (👩🏼‍🤝‍👩🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fb
+        ), // women holding hands: medium-light skin tone, light skin tone (👩🏼‍🤝‍👩🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fd
+        ), // women holding hands: medium-light skin tone, medium skin tone (👩🏼‍🤝‍👩🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3ff
+        ), // women holding hands: medium-light skin tone, dark skin tone (👩🏼‍🤝‍👩🏿)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9af), // woman with white cane: medium-light skin tone (👩🏼‍🦯)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9b0), // woman: medium-light skin tone, red hair (👩🏼‍🦰)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9b1), // woman: medium-light skin tone, curly hair (👩🏼‍🦱)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9b2), // woman: medium-light skin tone, bald (👩🏼‍🦲)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9b3), // woman: medium-light skin tone, white hair (👩🏼‍🦳)
-        intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9bc), // woman in motorized wheelchair: medium-light skin tone (👩🏼‍🦼)
+        intArrayOf(
+            0x1f469,
+            0x1f3fc,
+            0x200d,
+            0x1f9bc
+        ), // woman in motorized wheelchair: medium-light skin tone (👩🏼‍🦼)
         intArrayOf(0x1f469, 0x1f3fc, 0x200d, 0x1f9bd), // woman in manual wheelchair: medium-light skin tone (👩🏼‍🦽)
         intArrayOf(0x1f469, 0x1f3fd), // woman: medium skin tone (👩🏽)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x2695, 0xfe0f), // woman health worker: medium skin tone (👩🏽‍⚕️)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x2696, 0xfe0f), // woman judge: medium skin tone (👩🏽‍⚖️)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x2708, 0xfe0f), // woman pilot: medium skin tone (👩🏽‍✈️)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fd), // couple with heart: woman, man, medium skin tone (👩🏽‍❤️‍👨🏽)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469, 0x1f3fd), // couple with heart: woman, woman, medium skin tone (👩🏽‍❤️‍👩🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // couple with heart: woman, man, medium skin tone (👩🏽‍❤️‍👨🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f469,
+            0x1f3fd
+        ), // couple with heart: woman, woman, medium skin tone (👩🏽‍❤️‍👩🏽)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f33e), // woman farmer: medium skin tone (👩🏽‍🌾)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f373), // woman cook: medium skin tone (👩🏽‍🍳)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f37c), // woman feeding baby: medium skin tone (👩🏽‍🍼)
@@ -559,12 +1021,60 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f52c), // woman scientist: medium skin tone (👩🏽‍🔬)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f680), // woman astronaut: medium skin tone (👩🏽‍🚀)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f692), // woman firefighter: medium skin tone (👩🏽‍🚒)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // woman and man holding hands: medium skin tone, light skin tone (👩🏽‍🤝‍👨🏻)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3ff), // woman and man holding hands: medium skin tone, dark skin tone (👩🏽‍🤝‍👨🏿)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fb), // women holding hands: medium skin tone, light skin tone (👩🏽‍🤝‍👩🏻)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fc), // women holding hands: medium skin tone, medium-light skin tone (👩🏽‍🤝‍👩🏼)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fe), // women holding hands: medium skin tone, medium-dark skin tone (👩🏽‍🤝‍👩🏾)
-        intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3ff), // women holding hands: medium skin tone, dark skin tone (👩🏽‍🤝‍👩🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // woman and man holding hands: medium skin tone, light skin tone (👩🏽‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // woman and man holding hands: medium skin tone, dark skin tone (👩🏽‍🤝‍👨🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fb
+        ), // women holding hands: medium skin tone, light skin tone (👩🏽‍🤝‍👩🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fc
+        ), // women holding hands: medium skin tone, medium-light skin tone (👩🏽‍🤝‍👩🏼)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fe
+        ), // women holding hands: medium skin tone, medium-dark skin tone (👩🏽‍🤝‍👩🏾)
+        intArrayOf(
+            0x1f469,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3ff
+        ), // women holding hands: medium skin tone, dark skin tone (👩🏽‍🤝‍👩🏿)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f9af), // woman with white cane: medium skin tone (👩🏽‍🦯)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f9b0), // woman: medium skin tone, red hair (👩🏽‍🦰)
         intArrayOf(0x1f469, 0x1f3fd, 0x200d, 0x1f9b1), // woman: medium skin tone, curly hair (👩🏽‍🦱)
@@ -576,8 +1086,26 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x2695, 0xfe0f), // woman health worker: medium-dark skin tone (👩🏾‍⚕️)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x2696, 0xfe0f), // woman judge: medium-dark skin tone (👩🏾‍⚖️)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x2708, 0xfe0f), // woman pilot: medium-dark skin tone (👩🏾‍✈️)
-        intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fe), // couple with heart: woman, man, medium-dark skin tone (👩🏾‍❤️‍👨🏾)
-        intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469, 0x1f3fe), // couple with heart: woman, woman, medium-dark skin tone (👩🏾‍❤️‍👩🏾)
+        intArrayOf(
+            0x1f469,
+            0x1f3fe,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fe
+        ), // couple with heart: woman, man, medium-dark skin tone (👩🏾‍❤️‍👨🏾)
+        intArrayOf(
+            0x1f469,
+            0x1f3fe,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f469,
+            0x1f3fe
+        ), // couple with heart: woman, woman, medium-dark skin tone (👩🏾‍❤️‍👩🏾)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f33e), // woman farmer: medium-dark skin tone (👩🏾‍🌾)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f373), // woman cook: medium-dark skin tone (👩🏾‍🍳)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f37c), // woman feeding baby: medium-dark skin tone (👩🏾‍🍼)
@@ -592,9 +1120,33 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f52c), // woman scientist: medium-dark skin tone (👩🏾‍🔬)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f680), // woman astronaut: medium-dark skin tone (👩🏾‍🚀)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f692), // woman firefighter: medium-dark skin tone (👩🏾‍🚒)
-        intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fb), // women holding hands: medium-dark skin tone, light skin tone (👩🏾‍🤝‍👩🏻)
-        intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fd), // women holding hands: medium-dark skin tone, medium skin tone (👩🏾‍🤝‍👩🏽)
-        intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3ff), // women holding hands: medium-dark skin tone, dark skin tone (👩🏾‍🤝‍👩🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fb
+        ), // women holding hands: medium-dark skin tone, light skin tone (👩🏾‍🤝‍👩🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fd
+        ), // women holding hands: medium-dark skin tone, medium skin tone (👩🏾‍🤝‍👩🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3ff
+        ), // women holding hands: medium-dark skin tone, dark skin tone (👩🏾‍🤝‍👩🏿)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f9af), // woman with white cane: medium-dark skin tone (👩🏾‍🦯)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f9b0), // woman: medium-dark skin tone, red hair (👩🏾‍🦰)
         intArrayOf(0x1f469, 0x1f3fe, 0x200d, 0x1f9b1), // woman: medium-dark skin tone, curly hair (👩🏾‍🦱)
@@ -606,9 +1158,36 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2695, 0xfe0f), // woman health worker: dark skin tone (👩🏿‍⚕️)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2696, 0xfe0f), // woman judge: dark skin tone (👩🏿‍⚖️)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2708, 0xfe0f), // woman pilot: dark skin tone (👩🏿‍✈️)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3fb), // couple with heart: woman, man, dark skin tone, light skin tone (👩🏿‍❤️‍👨🏻)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f468, 0x1f3ff), // couple with heart: woman, man, dark skin tone (👩🏿‍❤️‍👨🏿)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x2764, 0xfe0f, 0x200d, 0x1f469, 0x1f3ff), // couple with heart: woman, woman, dark skin tone (👩🏿‍❤️‍👩🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // couple with heart: woman, man, dark skin tone, light skin tone (👩🏿‍❤️‍👨🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f468,
+            0x1f3ff
+        ), // couple with heart: woman, man, dark skin tone (👩🏿‍❤️‍👨🏿)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x2764,
+            0xfe0f,
+            0x200d,
+            0x1f469,
+            0x1f3ff
+        ), // couple with heart: woman, woman, dark skin tone (👩🏿‍❤️‍👩🏿)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f33e), // woman farmer: dark skin tone (👩🏿‍🌾)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f373), // woman cook: dark skin tone (👩🏿‍🍳)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f37c), // woman feeding baby: dark skin tone (👩🏿‍🍼)
@@ -623,12 +1202,60 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f52c), // woman scientist: dark skin tone (👩🏿‍🔬)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f680), // woman astronaut: dark skin tone (👩🏿‍🚀)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f692), // woman firefighter: dark skin tone (👩🏿‍🚒)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fb), // woman and man holding hands: dark skin tone, light skin tone (👩🏿‍🤝‍👨🏻)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f468, 0x1f3fd), // woman and man holding hands: dark skin tone, medium skin tone (👩🏿‍🤝‍👨🏽)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fb), // women holding hands: dark skin tone, light skin tone (👩🏿‍🤝‍👩🏻)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fc), // women holding hands: dark skin tone, medium-light skin tone (👩🏿‍🤝‍👩🏼)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fd), // women holding hands: dark skin tone, medium skin tone (👩🏿‍🤝‍👩🏽)
-        intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f469, 0x1f3fe), // women holding hands: dark skin tone, medium-dark skin tone (👩🏿‍🤝‍👩🏾)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fb
+        ), // woman and man holding hands: dark skin tone, light skin tone (👩🏿‍🤝‍👨🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f468,
+            0x1f3fd
+        ), // woman and man holding hands: dark skin tone, medium skin tone (👩🏿‍🤝‍👨🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fb
+        ), // women holding hands: dark skin tone, light skin tone (👩🏿‍🤝‍👩🏻)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fc
+        ), // women holding hands: dark skin tone, medium-light skin tone (👩🏿‍🤝‍👩🏼)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fd
+        ), // women holding hands: dark skin tone, medium skin tone (👩🏿‍🤝‍👩🏽)
+        intArrayOf(
+            0x1f469,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f469,
+            0x1f3fe
+        ), // women holding hands: dark skin tone, medium-dark skin tone (👩🏿‍🤝‍👩🏾)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f9af), // woman with white cane: dark skin tone (👩🏿‍🦯)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f9b0), // woman: dark skin tone, red hair (👩🏿‍🦰)
         intArrayOf(0x1f469, 0x1f3ff, 0x200d, 0x1f9b1), // woman: dark skin tone, curly hair (👩🏿‍🦱)
@@ -747,14 +1374,38 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f477, 0x1f3fb, 0x200d, 0x2640, 0xfe0f), // woman construction worker: light skin tone (👷🏻‍♀️)
         intArrayOf(0x1f477, 0x1f3fb, 0x200d, 0x2642, 0xfe0f), // man construction worker: light skin tone (👷🏻‍♂️)
         intArrayOf(0x1f477, 0x1f3fc), // construction worker: medium-light skin tone (👷🏼)
-        intArrayOf(0x1f477, 0x1f3fc, 0x200d, 0x2640, 0xfe0f), // woman construction worker: medium-light skin tone (👷🏼‍♀️)
-        intArrayOf(0x1f477, 0x1f3fc, 0x200d, 0x2642, 0xfe0f), // man construction worker: medium-light skin tone (👷🏼‍♂️)
+        intArrayOf(
+            0x1f477,
+            0x1f3fc,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman construction worker: medium-light skin tone (👷🏼‍♀️)
+        intArrayOf(
+            0x1f477,
+            0x1f3fc,
+            0x200d,
+            0x2642,
+            0xfe0f
+        ), // man construction worker: medium-light skin tone (👷🏼‍♂️)
         intArrayOf(0x1f477, 0x1f3fd), // construction worker: medium skin tone (👷🏽)
         intArrayOf(0x1f477, 0x1f3fd, 0x200d, 0x2640, 0xfe0f), // woman construction worker: medium skin tone (👷🏽‍♀️)
         intArrayOf(0x1f477, 0x1f3fd, 0x200d, 0x2642, 0xfe0f), // man construction worker: medium skin tone (👷🏽‍♂️)
         intArrayOf(0x1f477, 0x1f3fe), // construction worker: medium-dark skin tone (👷🏾)
-        intArrayOf(0x1f477, 0x1f3fe, 0x200d, 0x2640, 0xfe0f), // woman construction worker: medium-dark skin tone (👷🏾‍♀️)
-        intArrayOf(0x1f477, 0x1f3fe, 0x200d, 0x2642, 0xfe0f), // man construction worker: medium-dark skin tone (👷🏾‍♂️)
+        intArrayOf(
+            0x1f477,
+            0x1f3fe,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman construction worker: medium-dark skin tone (👷🏾‍♀️)
+        intArrayOf(
+            0x1f477,
+            0x1f3fe,
+            0x200d,
+            0x2642,
+            0xfe0f
+        ), // man construction worker: medium-dark skin tone (👷🏾‍♂️)
         intArrayOf(0x1f477, 0x1f3ff), // construction worker: dark skin tone (👷🏿)
         intArrayOf(0x1f477, 0x1f3ff, 0x200d, 0x2640, 0xfe0f), // woman construction worker: dark skin tone (👷🏿‍♀️)
         intArrayOf(0x1f477, 0x1f3ff, 0x200d, 0x2642, 0xfe0f), // man construction worker: dark skin tone (👷🏿‍♂️)
@@ -1269,13 +1920,31 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f93d, 0x1f3fb, 0x200d, 0x2640, 0xfe0f), // woman playing water polo: light skin tone (🤽🏻‍♀️)
         intArrayOf(0x1f93d, 0x1f3fb, 0x200d, 0x2642, 0xfe0f), // man playing water polo: light skin tone (🤽🏻‍♂️)
         intArrayOf(0x1f93d, 0x1f3fc), // person playing water polo: medium-light skin tone (🤽🏼)
-        intArrayOf(0x1f93d, 0x1f3fc, 0x200d, 0x2640, 0xfe0f), // woman playing water polo: medium-light skin tone (🤽🏼‍♀️)
-        intArrayOf(0x1f93d, 0x1f3fc, 0x200d, 0x2642, 0xfe0f), // man playing water polo: medium-light skin tone (🤽🏼‍♂️)
+        intArrayOf(
+            0x1f93d,
+            0x1f3fc,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman playing water polo: medium-light skin tone (🤽🏼‍♀️)
+        intArrayOf(
+            0x1f93d,
+            0x1f3fc,
+            0x200d,
+            0x2642,
+            0xfe0f
+        ), // man playing water polo: medium-light skin tone (🤽🏼‍♂️)
         intArrayOf(0x1f93d, 0x1f3fd), // person playing water polo: medium skin tone (🤽🏽)
         intArrayOf(0x1f93d, 0x1f3fd, 0x200d, 0x2640, 0xfe0f), // woman playing water polo: medium skin tone (🤽🏽‍♀️)
         intArrayOf(0x1f93d, 0x1f3fd, 0x200d, 0x2642, 0xfe0f), // man playing water polo: medium skin tone (🤽🏽‍♂️)
         intArrayOf(0x1f93d, 0x1f3fe), // person playing water polo: medium-dark skin tone (🤽🏾)
-        intArrayOf(0x1f93d, 0x1f3fe, 0x200d, 0x2640, 0xfe0f), // woman playing water polo: medium-dark skin tone (🤽🏾‍♀️)
+        intArrayOf(
+            0x1f93d,
+            0x1f3fe,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman playing water polo: medium-dark skin tone (🤽🏾‍♀️)
         intArrayOf(0x1f93d, 0x1f3fe, 0x200d, 0x2642, 0xfe0f), // man playing water polo: medium-dark skin tone (🤽🏾‍♂️)
         intArrayOf(0x1f93d, 0x1f3ff), // person playing water polo: dark skin tone (🤽🏿)
         intArrayOf(0x1f93d, 0x1f3ff, 0x200d, 0x2640, 0xfe0f), // woman playing water polo: dark skin tone (🤽🏿‍♀️)
@@ -1286,7 +1955,13 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f93e, 0x1f3fb, 0x200d, 0x2640, 0xfe0f), // woman playing handball: light skin tone (🤾🏻‍♀️)
         intArrayOf(0x1f93e, 0x1f3fb, 0x200d, 0x2642, 0xfe0f), // man playing handball: light skin tone (🤾🏻‍♂️)
         intArrayOf(0x1f93e, 0x1f3fc), // person playing handball: medium-light skin tone (🤾🏼)
-        intArrayOf(0x1f93e, 0x1f3fc, 0x200d, 0x2640, 0xfe0f), // woman playing handball: medium-light skin tone (🤾🏼‍♀️)
+        intArrayOf(
+            0x1f93e,
+            0x1f3fc,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman playing handball: medium-light skin tone (🤾🏼‍♀️)
         intArrayOf(0x1f93e, 0x1f3fc, 0x200d, 0x2642, 0xfe0f), // man playing handball: medium-light skin tone (🤾🏼‍♂️)
         intArrayOf(0x1f93e, 0x1f3fd), // person playing handball: medium skin tone (🤾🏽)
         intArrayOf(0x1f93e, 0x1f3fd, 0x200d, 0x2640, 0xfe0f), // woman playing handball: medium skin tone (🤾🏽‍♀️)
@@ -1447,11 +2122,51 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f52c), // scientist: light skin tone (🧑🏻‍🔬)
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f680), // astronaut: light skin tone (🧑🏻‍🚀)
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f692), // firefighter: light skin tone (🧑🏻‍🚒)
-        intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fb), // people holding hands: light skin tone (🧑🏻‍🤝‍🧑🏻)
-        intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fc), // people holding hands: light skin tone, medium-light skin tone (🧑🏻‍🤝‍🧑🏼)
-        intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fd), // people holding hands: light skin tone, medium skin tone (🧑🏻‍🤝‍🧑🏽)
-        intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fe), // people holding hands: light skin tone, medium-dark skin tone (🧑🏻‍🤝‍🧑🏾)
-        intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3ff), // people holding hands: light skin tone, dark skin tone (🧑🏻‍🤝‍🧑🏿)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fb
+        ), // people holding hands: light skin tone (🧑🏻‍🤝‍🧑🏻)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fc
+        ), // people holding hands: light skin tone, medium-light skin tone (🧑🏻‍🤝‍🧑🏼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fd
+        ), // people holding hands: light skin tone, medium skin tone (🧑🏻‍🤝‍🧑🏽)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fe
+        ), // people holding hands: light skin tone, medium-dark skin tone (🧑🏻‍🤝‍🧑🏾)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fb,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3ff
+        ), // people holding hands: light skin tone, dark skin tone (🧑🏻‍🤝‍🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f9af), // person with white cane: light skin tone (🧑🏻‍🦯)
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f9b0), // person: light skin tone, red hair (🧑🏻‍🦰)
         intArrayOf(0x1f9d1, 0x1f3fb, 0x200d, 0x1f9b1), // person: light skin tone, curly hair (🧑🏻‍🦱)
@@ -1478,16 +2193,53 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f52c), // scientist: medium-light skin tone (🧑🏼‍🔬)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f680), // astronaut: medium-light skin tone (🧑🏼‍🚀)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f692), // firefighter: medium-light skin tone (🧑🏼‍🚒)
-        intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fb), // people holding hands: medium-light skin tone, light skin tone (🧑🏼‍🤝‍🧑🏻)
-        intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fc), // people holding hands: medium-light skin tone (🧑🏼‍🤝‍🧑🏼)
-        intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fd), // people holding hands: medium-light skin tone, medium skin tone (🧑🏼‍🤝‍🧑🏽)
-        intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3ff), // people holding hands: medium-light skin tone, dark skin tone (🧑🏼‍🤝‍🧑🏿)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fb
+        ), // people holding hands: medium-light skin tone, light skin tone (🧑🏼‍🤝‍🧑🏻)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fc
+        ), // people holding hands: medium-light skin tone (🧑🏼‍🤝‍🧑🏼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fd
+        ), // people holding hands: medium-light skin tone, medium skin tone (🧑🏼‍🤝‍🧑🏽)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fc,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3ff
+        ), // people holding hands: medium-light skin tone, dark skin tone (🧑🏼‍🤝‍🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9af), // person with white cane: medium-light skin tone (🧑🏼‍🦯)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9b0), // person: medium-light skin tone, red hair (🧑🏼‍🦰)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9b1), // person: medium-light skin tone, curly hair (🧑🏼‍🦱)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9b2), // person: medium-light skin tone, bald (🧑🏼‍🦲)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9b3), // person: medium-light skin tone, white hair (🧑🏼‍🦳)
-        intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9bc), // person in motorized wheelchair: medium-light skin tone (🧑🏼‍🦼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fc,
+            0x200d,
+            0x1f9bc
+        ), // person in motorized wheelchair: medium-light skin tone (🧑🏼‍🦼)
         intArrayOf(0x1f9d1, 0x1f3fc, 0x200d, 0x1f9bd), // person in manual wheelchair: medium-light skin tone (🧑🏼‍🦽)
         intArrayOf(0x1f9d1, 0x1f3fd), // person: medium skin tone (🧑🏽)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x2695, 0xfe0f), // health worker: medium skin tone (🧑🏽‍⚕️)
@@ -1508,11 +2260,51 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f52c), // scientist: medium skin tone (🧑🏽‍🔬)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f680), // astronaut: medium skin tone (🧑🏽‍🚀)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f692), // firefighter: medium skin tone (🧑🏽‍🚒)
-        intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fb), // people holding hands: medium skin tone, light skin tone (🧑🏽‍🤝‍🧑🏻)
-        intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fc), // people holding hands: medium skin tone, medium-light skin tone (🧑🏽‍🤝‍🧑🏼)
-        intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fd), // people holding hands: medium skin tone (🧑🏽‍🤝‍🧑🏽)
-        intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fe), // people holding hands: medium skin tone, medium-dark skin tone (🧑🏽‍🤝‍🧑🏾)
-        intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3ff), // people holding hands: medium skin tone, dark skin tone (🧑🏽‍🤝‍🧑🏿)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fb
+        ), // people holding hands: medium skin tone, light skin tone (🧑🏽‍🤝‍🧑🏻)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fc
+        ), // people holding hands: medium skin tone, medium-light skin tone (🧑🏽‍🤝‍🧑🏼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fd
+        ), // people holding hands: medium skin tone (🧑🏽‍🤝‍🧑🏽)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fe
+        ), // people holding hands: medium skin tone, medium-dark skin tone (🧑🏽‍🤝‍🧑🏾)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fd,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3ff
+        ), // people holding hands: medium skin tone, dark skin tone (🧑🏽‍🤝‍🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f9af), // person with white cane: medium skin tone (🧑🏽‍🦯)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f9b0), // person: medium skin tone, red hair (🧑🏽‍🦰)
         intArrayOf(0x1f9d1, 0x1f3fd, 0x200d, 0x1f9b1), // person: medium skin tone, curly hair (🧑🏽‍🦱)
@@ -1539,16 +2331,53 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f52c), // scientist: medium-dark skin tone (🧑🏾‍🔬)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f680), // astronaut: medium-dark skin tone (🧑🏾‍🚀)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f692), // firefighter: medium-dark skin tone (🧑🏾‍🚒)
-        intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fb), // people holding hands: medium-dark skin tone, light skin tone (🧑🏾‍🤝‍🧑🏻)
-        intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fd), // people holding hands: medium-dark skin tone, medium skin tone (🧑🏾‍🤝‍🧑🏽)
-        intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fe), // people holding hands: medium-dark skin tone (🧑🏾‍🤝‍🧑🏾)
-        intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3ff), // people holding hands: medium-dark skin tone, dark skin tone (🧑🏾‍🤝‍🧑🏿)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fb
+        ), // people holding hands: medium-dark skin tone, light skin tone (🧑🏾‍🤝‍🧑🏻)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fd
+        ), // people holding hands: medium-dark skin tone, medium skin tone (🧑🏾‍🤝‍🧑🏽)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fe
+        ), // people holding hands: medium-dark skin tone (🧑🏾‍🤝‍🧑🏾)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fe,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3ff
+        ), // people holding hands: medium-dark skin tone, dark skin tone (🧑🏾‍🤝‍🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9af), // person with white cane: medium-dark skin tone (🧑🏾‍🦯)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9b0), // person: medium-dark skin tone, red hair (🧑🏾‍🦰)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9b1), // person: medium-dark skin tone, curly hair (🧑🏾‍🦱)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9b2), // person: medium-dark skin tone, bald (🧑🏾‍🦲)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9b3), // person: medium-dark skin tone, white hair (🧑🏾‍🦳)
-        intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9bc), // person in motorized wheelchair: medium-dark skin tone (🧑🏾‍🦼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3fe,
+            0x200d,
+            0x1f9bc
+        ), // person in motorized wheelchair: medium-dark skin tone (🧑🏾‍🦼)
         intArrayOf(0x1f9d1, 0x1f3fe, 0x200d, 0x1f9bd), // person in manual wheelchair: medium-dark skin tone (🧑🏾‍🦽)
         intArrayOf(0x1f9d1, 0x1f3ff), // person: dark skin tone (🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x2695, 0xfe0f), // health worker: dark skin tone (🧑🏿‍⚕️)
@@ -1569,11 +2398,51 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f52c), // scientist: dark skin tone (🧑🏿‍🔬)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f680), // astronaut: dark skin tone (🧑🏿‍🚀)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f692), // firefighter: dark skin tone (🧑🏿‍🚒)
-        intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fb), // people holding hands: dark skin tone, light skin tone (🧑🏿‍🤝‍🧑🏻)
-        intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fc), // people holding hands: dark skin tone, medium-light skin tone (🧑🏿‍🤝‍🧑🏼)
-        intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fd), // people holding hands: dark skin tone, medium skin tone (🧑🏿‍🤝‍🧑🏽)
-        intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3fe), // people holding hands: dark skin tone, medium-dark skin tone (🧑🏿‍🤝‍🧑🏾)
-        intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f91d, 0x200d, 0x1f9d1, 0x1f3ff), // people holding hands: dark skin tone (🧑🏿‍🤝‍🧑🏿)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fb
+        ), // people holding hands: dark skin tone, light skin tone (🧑🏿‍🤝‍🧑🏻)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fc
+        ), // people holding hands: dark skin tone, medium-light skin tone (🧑🏿‍🤝‍🧑🏼)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fd
+        ), // people holding hands: dark skin tone, medium skin tone (🧑🏿‍🤝‍🧑🏽)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3fe
+        ), // people holding hands: dark skin tone, medium-dark skin tone (🧑🏿‍🤝‍🧑🏾)
+        intArrayOf(
+            0x1f9d1,
+            0x1f3ff,
+            0x200d,
+            0x1f91d,
+            0x200d,
+            0x1f9d1,
+            0x1f3ff
+        ), // people holding hands: dark skin tone (🧑🏿‍🤝‍🧑🏿)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f9af), // person with white cane: dark skin tone (🧑🏿‍🦯)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f9b0), // person: dark skin tone, red hair (🧑🏿‍🦰)
         intArrayOf(0x1f9d1, 0x1f3ff, 0x200d, 0x1f9b1), // person: dark skin tone, curly hair (🧑🏿‍🦱)
@@ -1653,13 +2522,25 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1f9d8, 0x1f3fb, 0x200d, 0x2640, 0xfe0f), // woman in lotus position: light skin tone (🧘🏻‍♀️)
         intArrayOf(0x1f9d8, 0x1f3fb, 0x200d, 0x2642, 0xfe0f), // man in lotus position: light skin tone (🧘🏻‍♂️)
         intArrayOf(0x1f9d8, 0x1f3fc), // person in lotus position: medium-light skin tone (🧘🏼)
-        intArrayOf(0x1f9d8, 0x1f3fc, 0x200d, 0x2640, 0xfe0f), // woman in lotus position: medium-light skin tone (🧘🏼‍♀️)
+        intArrayOf(
+            0x1f9d8,
+            0x1f3fc,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman in lotus position: medium-light skin tone (🧘🏼‍♀️)
         intArrayOf(0x1f9d8, 0x1f3fc, 0x200d, 0x2642, 0xfe0f), // man in lotus position: medium-light skin tone (🧘🏼‍♂️)
         intArrayOf(0x1f9d8, 0x1f3fd), // person in lotus position: medium skin tone (🧘🏽)
         intArrayOf(0x1f9d8, 0x1f3fd, 0x200d, 0x2640, 0xfe0f), // woman in lotus position: medium skin tone (🧘🏽‍♀️)
         intArrayOf(0x1f9d8, 0x1f3fd, 0x200d, 0x2642, 0xfe0f), // man in lotus position: medium skin tone (🧘🏽‍♂️)
         intArrayOf(0x1f9d8, 0x1f3fe), // person in lotus position: medium-dark skin tone (🧘🏾)
-        intArrayOf(0x1f9d8, 0x1f3fe, 0x200d, 0x2640, 0xfe0f), // woman in lotus position: medium-dark skin tone (🧘🏾‍♀️)
+        intArrayOf(
+            0x1f9d8,
+            0x1f3fe,
+            0x200d,
+            0x2640,
+            0xfe0f
+        ), // woman in lotus position: medium-dark skin tone (🧘🏾‍♀️)
         intArrayOf(0x1f9d8, 0x1f3fe, 0x200d, 0x2642, 0xfe0f), // man in lotus position: medium-dark skin tone (🧘🏾‍♂️)
         intArrayOf(0x1f9d8, 0x1f3ff), // person in lotus position: dark skin tone (🧘🏿)
         intArrayOf(0x1f9d8, 0x1f3ff, 0x200d, 0x2640, 0xfe0f), // woman in lotus position: dark skin tone (🧘🏿‍♀️)
@@ -1772,30 +2653,150 @@ private fun buildSeqTrie(): IntTrie {
         intArrayOf(0x1faf0, 0x1f3fd), // hand with index finger and thumb crossed: medium skin tone (🫰🏽)
         intArrayOf(0x1faf0, 0x1f3ff), // hand with index finger and thumb crossed: dark skin tone (🫰🏿)
         intArrayOf(0x1faf1, 0x1f3fb), // rightwards hand: light skin tone (🫱🏻)
-        intArrayOf(0x1faf1, 0x1f3fb, 0x200d, 0x1faf2, 0x1f3fc), // handshake: light skin tone, medium-light skin tone (🫱🏻‍🫲🏼)
-        intArrayOf(0x1faf1, 0x1f3fb, 0x200d, 0x1faf2, 0x1f3fd), // handshake: light skin tone, medium skin tone (🫱🏻‍🫲🏽)
-        intArrayOf(0x1faf1, 0x1f3fb, 0x200d, 0x1faf2, 0x1f3fe), // handshake: light skin tone, medium-dark skin tone (🫱🏻‍🫲🏾)
-        intArrayOf(0x1faf1, 0x1f3fb, 0x200d, 0x1faf2, 0x1f3ff), // handshake: light skin tone, dark skin tone (🫱🏻‍🫲🏿)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fb,
+            0x200d,
+            0x1faf2,
+            0x1f3fc
+        ), // handshake: light skin tone, medium-light skin tone (🫱🏻‍🫲🏼)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fb,
+            0x200d,
+            0x1faf2,
+            0x1f3fd
+        ), // handshake: light skin tone, medium skin tone (🫱🏻‍🫲🏽)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fb,
+            0x200d,
+            0x1faf2,
+            0x1f3fe
+        ), // handshake: light skin tone, medium-dark skin tone (🫱🏻‍🫲🏾)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fb,
+            0x200d,
+            0x1faf2,
+            0x1f3ff
+        ), // handshake: light skin tone, dark skin tone (🫱🏻‍🫲🏿)
         intArrayOf(0x1faf1, 0x1f3fc), // rightwards hand: medium-light skin tone (🫱🏼)
-        intArrayOf(0x1faf1, 0x1f3fc, 0x200d, 0x1faf2, 0x1f3fb), // handshake: medium-light skin tone, light skin tone (🫱🏼‍🫲🏻)
-        intArrayOf(0x1faf1, 0x1f3fc, 0x200d, 0x1faf2, 0x1f3fd), // handshake: medium-light skin tone, medium skin tone (🫱🏼‍🫲🏽)
-        intArrayOf(0x1faf1, 0x1f3fc, 0x200d, 0x1faf2, 0x1f3fe), // handshake: medium-light skin tone, medium-dark skin tone (🫱🏼‍🫲🏾)
-        intArrayOf(0x1faf1, 0x1f3fc, 0x200d, 0x1faf2, 0x1f3ff), // handshake: medium-light skin tone, dark skin tone (🫱🏼‍🫲🏿)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fc,
+            0x200d,
+            0x1faf2,
+            0x1f3fb
+        ), // handshake: medium-light skin tone, light skin tone (🫱🏼‍🫲🏻)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fc,
+            0x200d,
+            0x1faf2,
+            0x1f3fd
+        ), // handshake: medium-light skin tone, medium skin tone (🫱🏼‍🫲🏽)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fc,
+            0x200d,
+            0x1faf2,
+            0x1f3fe
+        ), // handshake: medium-light skin tone, medium-dark skin tone (🫱🏼‍🫲🏾)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fc,
+            0x200d,
+            0x1faf2,
+            0x1f3ff
+        ), // handshake: medium-light skin tone, dark skin tone (🫱🏼‍🫲🏿)
         intArrayOf(0x1faf1, 0x1f3fd), // rightwards hand: medium skin tone (🫱🏽)
-        intArrayOf(0x1faf1, 0x1f3fd, 0x200d, 0x1faf2, 0x1f3fb), // handshake: medium skin tone, light skin tone (🫱🏽‍🫲🏻)
-        intArrayOf(0x1faf1, 0x1f3fd, 0x200d, 0x1faf2, 0x1f3fc), // handshake: medium skin tone, medium-light skin tone (🫱🏽‍🫲🏼)
-        intArrayOf(0x1faf1, 0x1f3fd, 0x200d, 0x1faf2, 0x1f3fe), // handshake: medium skin tone, medium-dark skin tone (🫱🏽‍🫲🏾)
-        intArrayOf(0x1faf1, 0x1f3fd, 0x200d, 0x1faf2, 0x1f3ff), // handshake: medium skin tone, dark skin tone (🫱🏽‍🫲🏿)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fd,
+            0x200d,
+            0x1faf2,
+            0x1f3fb
+        ), // handshake: medium skin tone, light skin tone (🫱🏽‍🫲🏻)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fd,
+            0x200d,
+            0x1faf2,
+            0x1f3fc
+        ), // handshake: medium skin tone, medium-light skin tone (🫱🏽‍🫲🏼)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fd,
+            0x200d,
+            0x1faf2,
+            0x1f3fe
+        ), // handshake: medium skin tone, medium-dark skin tone (🫱🏽‍🫲🏾)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fd,
+            0x200d,
+            0x1faf2,
+            0x1f3ff
+        ), // handshake: medium skin tone, dark skin tone (🫱🏽‍🫲🏿)
         intArrayOf(0x1faf1, 0x1f3fe), // rightwards hand: medium-dark skin tone (🫱🏾)
-        intArrayOf(0x1faf1, 0x1f3fe, 0x200d, 0x1faf2, 0x1f3fb), // handshake: medium-dark skin tone, light skin tone (🫱🏾‍🫲🏻)
-        intArrayOf(0x1faf1, 0x1f3fe, 0x200d, 0x1faf2, 0x1f3fc), // handshake: medium-dark skin tone, medium-light skin tone (🫱🏾‍🫲🏼)
-        intArrayOf(0x1faf1, 0x1f3fe, 0x200d, 0x1faf2, 0x1f3fd), // handshake: medium-dark skin tone, medium skin tone (🫱🏾‍🫲🏽)
-        intArrayOf(0x1faf1, 0x1f3fe, 0x200d, 0x1faf2, 0x1f3ff), // handshake: medium-dark skin tone, dark skin tone (🫱🏾‍🫲🏿)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fe,
+            0x200d,
+            0x1faf2,
+            0x1f3fb
+        ), // handshake: medium-dark skin tone, light skin tone (🫱🏾‍🫲🏻)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fe,
+            0x200d,
+            0x1faf2,
+            0x1f3fc
+        ), // handshake: medium-dark skin tone, medium-light skin tone (🫱🏾‍🫲🏼)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fe,
+            0x200d,
+            0x1faf2,
+            0x1f3fd
+        ), // handshake: medium-dark skin tone, medium skin tone (🫱🏾‍🫲🏽)
+        intArrayOf(
+            0x1faf1,
+            0x1f3fe,
+            0x200d,
+            0x1faf2,
+            0x1f3ff
+        ), // handshake: medium-dark skin tone, dark skin tone (🫱🏾‍🫲🏿)
         intArrayOf(0x1faf1, 0x1f3ff), // rightwards hand: dark skin tone (🫱🏿)
-        intArrayOf(0x1faf1, 0x1f3ff, 0x200d, 0x1faf2, 0x1f3fb), // handshake: dark skin tone, light skin tone (🫱🏿‍🫲🏻)
-        intArrayOf(0x1faf1, 0x1f3ff, 0x200d, 0x1faf2, 0x1f3fc), // handshake: dark skin tone, medium-light skin tone (🫱🏿‍🫲🏼)
-        intArrayOf(0x1faf1, 0x1f3ff, 0x200d, 0x1faf2, 0x1f3fd), // handshake: dark skin tone, medium skin tone (🫱🏿‍🫲🏽)
-        intArrayOf(0x1faf1, 0x1f3ff, 0x200d, 0x1faf2, 0x1f3fe), // handshake: dark skin tone, medium-dark skin tone (🫱🏿‍🫲🏾)
+        intArrayOf(
+            0x1faf1,
+            0x1f3ff,
+            0x200d,
+            0x1faf2,
+            0x1f3fb
+        ), // handshake: dark skin tone, light skin tone (🫱🏿‍🫲🏻)
+        intArrayOf(
+            0x1faf1,
+            0x1f3ff,
+            0x200d,
+            0x1faf2,
+            0x1f3fc
+        ), // handshake: dark skin tone, medium-light skin tone (🫱🏿‍🫲🏼)
+        intArrayOf(
+            0x1faf1,
+            0x1f3ff,
+            0x200d,
+            0x1faf2,
+            0x1f3fd
+        ), // handshake: dark skin tone, medium skin tone (🫱🏿‍🫲🏽)
+        intArrayOf(
+            0x1faf1,
+            0x1f3ff,
+            0x200d,
+            0x1faf2,
+            0x1f3fe
+        ), // handshake: dark skin tone, medium-dark skin tone (🫱🏿‍🫲🏾)
         intArrayOf(0x1faf2, 0x1f3fb), // leftwards hand: light skin tone (🫲🏻)
         intArrayOf(0x1faf2, 0x1f3fc), // leftwards hand: medium-light skin tone (🫲🏼)
         intArrayOf(0x1faf2, 0x1f3fd), // leftwards hand: medium skin tone (🫲🏽)

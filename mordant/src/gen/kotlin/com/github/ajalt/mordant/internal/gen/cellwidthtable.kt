@@ -1,10 +1,8 @@
 package com.github.ajalt.mordant.internal.gen
 
-import kotlin.native.concurrent.SharedImmutable
 
 internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 
-@SharedImmutable
 internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>(
     CellWidthTableEntry(0x0, 0x1f, 0), // <control-0000>..<control-001F>
     CellWidthTableEntry(0x7f, 0x9f, 0), // <control-007F>..<control-009F>

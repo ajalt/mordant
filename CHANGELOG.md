@@ -10,6 +10,8 @@
 ### Changed
 - Replaced most of the `Padding` constructor and `Widget.withPadding` overloads with a unified builder interface
 - Renamed the top level `row` and `column` builders to `horizonalLayout` and `verticalLayout`, respectively
+- Update Kotlin to 1.7.20
+- Kotlin/Native: use new default memory manager. Objects are no longer frozen.
 
 ### Removed 
 - Removed `buildWidget`. Use `horizonalLayout` and `verticalLayout` instead.

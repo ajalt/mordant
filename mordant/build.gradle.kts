@@ -2,12 +2,9 @@
 
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage") // https://youtrack.jetbrains.com/issue/KTIJ-19369
+@Suppress("DSL_SCOPE_VIOLATION") // https://youtrack.jetbrains.com/issue/KTIJ-19369
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.dokka)
@@ -70,20 +67,6 @@ kotlin {
         val macosMain by creating { dependsOn(posixMain) }
         listOf("macosX64", "macosArm64").forEach { target ->
             getByName(target + "Main").dependsOn(macosMain)
-        }
-
-        targets.withType<KotlinNativeTargetWithTests<*>> {
-            binaries {
-                // Configure a separate test where code runs in background
-                test("background", setOf(NativeBuildType.DEBUG)) {
-                    freeCompilerArgs = freeCompilerArgs + "-trw"
-                }
-            }
-            testRuns {
-                val background by creating {
-                    setExecutionSourceFrom(binaries.getByName("backgroundDebugTest") as TestExecutable)
-                }
-            }
         }
     }
 }

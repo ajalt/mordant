@@ -56,8 +56,6 @@ def main():
     print(
         """package com.github.ajalt.mordant.internal.gen
 
-import kotlin.native.concurrent.SharedImmutable
-
 internal fun couldStartEmojiSeq(codepoint: Int): Boolean {"""
     )
 
@@ -73,7 +71,6 @@ internal data class IntTrie(val children: MutableMap<Int, IntTrie>, val values: 
             : this(mutableMapOf(*children), values)
 }
 
-@SharedImmutable
 internal val EMOJI_SEQUENCES: IntTrie = buildSeqTrie()
 
 private fun buildSeqTrie(): IntTrie {

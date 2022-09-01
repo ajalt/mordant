@@ -138,11 +138,8 @@ def main():
     print(
         """package com.github.ajalt.mordant.internal.gen
 
-import kotlin.native.concurrent.SharedImmutable
-
 internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 
-@SharedImmutable
 internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>("""
     )
     for low, high, width, desc in parse_all():
