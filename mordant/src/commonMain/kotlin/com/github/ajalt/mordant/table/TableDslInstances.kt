@@ -137,9 +137,9 @@ internal class GridBuilderInstance(
 }
 
 @MordantDsl
-internal class SingleRowBuilderInstance(
+internal class HorizontalLayoutBuilderInstance(
     private val section: SectionBuilder,
-) : SingleRowBuilder, CellStyleBuilder by section {
+) : HorizontalLayoutBuilder, CellStyleBuilder by section {
     val columns = mutableMapOf<Int, ColumnBuilder>()
     val row = RowBuilderInstance(mutableListOf())
 
@@ -159,10 +159,10 @@ internal class SingleRowBuilderInstance(
 }
 
 @MordantDsl
-internal class SingleColumnBuilderInstance(
+internal class VerticalLayoutBuilderInstance(
     private val section: SectionBuilder,
     private val defaultPadding: Int,
-) : SingleColumnBuilder, CellStyleBuilder by section {
+) : VerticalLayoutBuilder, CellStyleBuilder by section {
     override var width: ColumnWidth = ColumnWidth.Auto
     private var empty = true
 

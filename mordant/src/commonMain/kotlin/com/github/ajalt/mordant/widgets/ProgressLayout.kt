@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.table.row
+import com.github.ajalt.mordant.table.horizontalLayout
 
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
@@ -91,7 +91,7 @@ class ProgressLayout internal constructor(
             completedPerSecond = cps,
             elapsedSeconds = elapsedSeconds,
         )
-        return row(paddingSize) {
+        return horizontalLayout(paddingSize) {
             align = TextAlign.RIGHT
             cellsFrom(cells.map { it.run { state.run { makeWidget() } } })
             cells.forEachIndexed { i, it ->

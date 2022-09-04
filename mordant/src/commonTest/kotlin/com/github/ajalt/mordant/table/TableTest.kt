@@ -541,8 +541,8 @@ class TableTest : RenderingTest() {
     )
 
     @Test
-    fun row() = checkRender(
-        row {
+    fun horizontalLayout() = checkRender(
+        horizontalLayout {
             column(1) { width = ColumnWidth.Expand() }
             val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
             cells(1, bar, 2)
@@ -552,8 +552,8 @@ class TableTest : RenderingTest() {
     )
 
     @Test
-    fun rowPadding() = checkRender(
-        row(padding = 2) {
+    fun horizontalLayoutPadding() = checkRender(
+        horizontalLayout(padding = 2) {
             column(1) { width = ColumnWidth.Expand() }
             val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
             cells(1, bar, 2)
@@ -563,8 +563,8 @@ class TableTest : RenderingTest() {
     )
 
     @Test
-    fun column() = checkRender(
-        column {
+    fun verticalLayout() = checkRender(
+        verticalLayout {
             cell("1111")
             cells("2", "3") { align = TextAlign.RIGHT }
             cellsFrom(listOf(Text("4 4")))
@@ -577,8 +577,8 @@ class TableTest : RenderingTest() {
     )
 
     @Test
-    fun columnPadding() = checkRender(
-        column(padding = 1) {
+    fun verticalLayoutPadding() = checkRender(
+        verticalLayout(padding = 1) {
             cell("1")
             cell("2")
             cell("3") { padding = Padding { top = 2 } }
@@ -599,11 +599,11 @@ class TableTest : RenderingTest() {
     )
 
     @Test
-    @JsName("nesting_rows_in_columns")
-    fun `nesting rows in columns`() = checkRender(
-        column {
-            cell(row { cells("1", "1") })
-            cell(row { cells("222", "2") })
+    @JsName("nesting_horizontalLayouts_in_verticalLayouts")
+    fun `nesting horizontalLayouts in verticalLayouts`() = checkRender(
+        verticalLayout {
+            cell(horizontalLayout { cells("1", "1") })
+            cell(horizontalLayout { cells("222", "2") })
 
         }, """
         ░1 1  ░

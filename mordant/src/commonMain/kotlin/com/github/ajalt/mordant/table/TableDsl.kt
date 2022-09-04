@@ -31,10 +31,12 @@ interface CellStyleBuilder {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
 
+    /** The padding around each cell */
     fun padding(all: Int) {
         padding = Padding(all)
     }
 
+    /** The padding around each cell */
     fun padding(block: Padding.Builder.() -> Unit) {
         padding = Padding(block)
     }
@@ -171,13 +173,13 @@ interface RowBuilder : CellStyleBuilder {
 
 @MordantDsl
 interface SingleLineBuilder : CellStyleBuilder {
-    /** Add multiple cells to this row */
+    /** Add multiple cells to this builder */
     fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit = {})
 
-    /** Add all [cells] from an iterable to this row */
+    /** Add all [cells] from an iterable to this builder */
     fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit = {})
 
-    /** Add a cell to this row.
+    /** Add a cell to this builder.
      *
      * The [content] can be a [Widget] to render, or any other type of object which will be
      * converted to a string.
@@ -186,13 +188,13 @@ interface SingleLineBuilder : CellStyleBuilder {
 }
 
 @MordantDsl
-interface SingleRowBuilder : SingleLineBuilder {
+interface HorizontalLayoutBuilder : SingleLineBuilder {
     /** Configure a single column, with the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit)
 }
 
 @MordantDsl
-interface SingleColumnBuilder : ColumnBuilder, SingleLineBuilder
+interface VerticalLayoutBuilder : ColumnBuilder, SingleLineBuilder
 
 @MordantDsl
 interface CellBuilder : CellStyleBuilder {
@@ -271,11 +273,11 @@ fun grid(init: GridBuilder.() -> Unit): Widget {
  * This builder functions like a single row in a [grid]. Cells have optional [padding], which sets the default left
  * padding of all cells after the first.
  */
-fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
+fun horizontalLayout(padding: Int = 1, init: HorizontalLayoutBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
         cellBorders = Borders.NONE
         this.padding = Padding { left = padding }
-        val b = SingleRowBuilderInstance(bodySection)
+        val b = HorizontalLayoutBuilderInstance(bodySection)
         b.init()
         bodySection.rows += b.row
         columns.putAll(b.columns)
@@ -292,11 +294,11 @@ fun row(padding: Int = 1, init: SingleRowBuilder.() -> Unit): Widget {
  * This builder functions like a single column in a [grid]. Cells have optional [padding], which sets the default top
  * padding of all cells after the first.
  */
-fun column(padding: Int = 0, init: SingleColumnBuilder.() -> Unit): Widget {
+fun verticalLayout(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget {
     val tableBuilder = TableBuilderInstance().apply {
         cellBorders = Borders.NONE
         this.padding = Padding(0)
-        val b = SingleColumnBuilderInstance(bodySection, padding)
+        val b = VerticalLayoutBuilderInstance(bodySection, padding)
         b.init()
         column(0) { width = b.width }
     }
