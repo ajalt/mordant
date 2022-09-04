@@ -47,6 +47,12 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
     }
 }
 
+/**
+ * Add padding around this widget.
+ *
+ * By default, horizontal padding will be added to every line of the output, even if the line is empty. If you set
+ * [padEmptyLines] to `false`, no padding will be added to empty lines.
+ */
 fun Widget.withPadding(padding: Padding, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, padding, padEmptyLines)
 

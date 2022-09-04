@@ -8,6 +8,9 @@
 - Replaced most of the `Padding` constructor and `Widget.withPadding` overloads with a unified builder interface
 - Renamed the top level `row` and `column` builders to `horizonalLayout` and `verticalLayout`, respectively
 
+### Removed 
+- Removed `buildWidget`. Use `horizonalLayout` and `verticalLayout` instead.
+
 ## 2.0.0-beta7
 ### Added
 - Functionality for reading user input: `Terminal.readLineOrNull`, `Terminal.prompt` and various `Prompt` classes

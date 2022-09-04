@@ -4,8 +4,14 @@ import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
+import com.github.ajalt.mordant.widgets.withPadding
 
 interface CellStyleBuilder {
+    /**
+     * The padding around each cell
+     *
+     * If you want to set the padding on around the entire widget, use [withPadding].
+     */
     var padding: Padding?
     var style: TextStyle?
     var cellBorders: Borders?
@@ -31,12 +37,15 @@ interface CellStyleBuilder {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
 
-    /** The padding around each cell */
+    /**
+     * The padding around each cell
+     *
+     * If you want to set the padding on around the entire widget, use [withPadding].
+     */
     fun padding(all: Int) {
         padding = Padding(all)
     }
 
-    /** The padding around each cell */
     fun padding(block: Padding.Builder.() -> Unit) {
         padding = Padding(block)
     }
