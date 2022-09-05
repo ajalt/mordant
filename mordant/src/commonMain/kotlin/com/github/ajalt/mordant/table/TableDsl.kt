@@ -296,6 +296,8 @@ fun horizontalLayout(padding: Int = 1, init: HorizontalLayoutBuilder.() -> Unit)
     return TableLayout(tableBuilder).buildTable()
 }
 
+@Deprecated("row is renamed to horizontalLayout", replaceWith = ReplaceWith("horizontalLayout"))
+fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget = horizontalLayout(padding, init)
 
 /**
  * Build a column widget that can be used to lay out text and other widgets.
@@ -314,3 +316,6 @@ fun verticalLayout(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Wi
 
     return TableLayout(tableBuilder).buildTable()
 }
+
+@Deprecated("column is renamed to verticalLayout", replaceWith = ReplaceWith("verticalLayout"))
+fun column(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget = verticalLayout(padding, init)
