@@ -147,6 +147,17 @@ sealed class Theme(
     fun dimensionOrNull(dimension: String): Int? = dimensions[dimension]
 }
 
+
+/**
+ * Create a new theme by replacing or adding entries to this theme from an [other] theme.
+ */
+operator fun Theme.plus(other: Theme): Theme = BuiltTheme(
+    styles = styles + other.styles,
+    strings = strings + other.strings,
+    flags = flags + other.flags,
+    dimensions = dimensions + other.dimensions
+)
+
 class ThemeBuilder internal constructor(
     val styles: MutableMap<String, TextStyle>,
     val strings: MutableMap<String, String>,
@@ -157,7 +168,6 @@ class ThemeBuilder internal constructor(
 }
 
 
-@Suppress("FunctionName")
 fun Theme(from: Theme = Theme.Default, init: ThemeBuilder.() -> Unit): Theme {
     return ThemeBuilder(
         from.styles.toMutableMap(),

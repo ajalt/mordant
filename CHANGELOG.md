@@ -3,6 +3,7 @@
 ### Added
 - Implemented `hideInput` for prompts on native targets [(#63)](https://github.com/ajalt/mordant/issues/63)
 - Improve cell-width calculation for emoji sequences like skin tone modifiers [(#64)](https://github.com/ajalt/mordant/issues/64)
+- Added `Theme.plus`  to combine two themes
 
 ### Changed
 - Replaced most of the `Padding` constructor and `Widget.withPadding` overloads with a unified builder interface
