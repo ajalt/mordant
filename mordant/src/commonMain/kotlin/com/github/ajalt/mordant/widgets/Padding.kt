@@ -9,7 +9,7 @@ data class Padding(val top: Int, val right: Int, val bottom: Int, val left: Int)
 
     companion object {
         inline operator fun invoke(block: Builder.() -> Unit): Padding {
-            val b = Builder(0,0,0,0).apply(block)
+            val b = Builder(0, 0, 0, 0).apply(block)
             return Padding(b.top, b.right, b.bottom, b.left)
         }
     }
@@ -65,6 +65,15 @@ fun Widget.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLin
 fun Widget.withPadding(padEmptyLines: Boolean = true, padding: Padding.Builder.() -> Unit): Widget =
     Padded.get(this, Padding(padding), padEmptyLines)
 
+operator fun Padding.plus(other: Padding): Padding {
+    return Padding(
+        top = top + other.top,
+        right = right + other.right,
+        bottom = bottom + other.bottom,
+        left = left + other.left
+    )
+}
+
 internal class Padded private constructor(
     internal val content: Widget,
     private val padding: Padding,
@@ -72,7 +81,11 @@ internal class Padded private constructor(
 ) : Widget {
     companion object {
         fun get(content: Widget, padding: Padding, padEmptyLines: Boolean): Widget {
-            return if (padding.isEmpty) content else Padded(content, padding, padEmptyLines)
+            return when {
+                padding.isEmpty -> content
+                content is Padded -> Padded(content.content, content.padding + padding, padEmptyLines)
+                else -> Padded(content, padding, padEmptyLines)
+            }
         }
     }
 

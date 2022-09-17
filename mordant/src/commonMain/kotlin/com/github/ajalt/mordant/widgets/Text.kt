@@ -43,8 +43,11 @@ class Text internal constructor(
     override fun measure(t: Terminal, width: Int): WidthRange {
         // measure without word wrap or padding from alignment
         val lines = wrap(this.width ?: width, tabWidth ?: t.tabWidth, NONE, OverflowWrap.NORMAL)
-        val min = lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
+        val min = when {
+            whitespace.wrap -> lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
+            else -> max
+        }
         return WidthRange(min, max)
     }
 

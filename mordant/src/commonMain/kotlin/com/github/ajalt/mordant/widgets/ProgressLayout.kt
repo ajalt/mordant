@@ -91,7 +91,8 @@ class ProgressLayout internal constructor(
             completedPerSecond = cps,
             elapsedSeconds = elapsedSeconds,
         )
-        return horizontalLayout(paddingSize) {
+        return horizontalLayout {
+            spacing = paddingSize
             align = TextAlign.RIGHT
             cellsFrom(cells.map { it.run { state.run { makeWidget() } } })
             cells.forEachIndexed { i, it ->

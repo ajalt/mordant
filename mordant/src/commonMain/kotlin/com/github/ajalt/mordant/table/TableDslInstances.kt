@@ -2,8 +2,11 @@ package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.text.Typography.paragraph
+import kotlin.text.Typography.section
 
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
@@ -113,11 +116,18 @@ internal class SectionBuilderInstance : SectionBuilder, CellStyleBuilder by Cell
 
 @MordantDsl
 internal class GridBuilderInstance(
-    private val section: SectionBuilder,
-) : GridBuilder, CellStyleBuilder by section {
-    val columns = mutableMapOf<Int, ColumnBuilder>()
+    private val tableBuilder: TableBuilderInstance = TableBuilderInstance(),
+) : GridBuilder, CellStyleBuilder by tableBuilder {
+    private val section = tableBuilder.bodySection
 
-    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilderInstance(), init)
+    init {
+        tableBuilder.cellBorders = Borders.LEFT_RIGHT
+        tableBuilder.tableBorders = Borders.NONE
+        tableBuilder.borderType = BorderType.BLANK
+        tableBuilder.padding = Padding(0)
+    }
+
+    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = tableBuilder.column(i, init)
 
     override fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
         section.rowStyles(style1, style2, *styles)
@@ -134,61 +144,99 @@ internal class GridBuilderInstance(
     override fun row(init: RowBuilder.() -> Unit) {
         section.row(init)
     }
+
+    fun build(): Widget {
+        return TableLayout(tableBuilder).buildTable()
+    }
 }
 
 @MordantDsl
 internal class HorizontalLayoutBuilderInstance(
-    private val section: SectionBuilder,
-) : HorizontalLayoutBuilder, CellStyleBuilder by section {
-    val columns = mutableMapOf<Int, ColumnBuilder>()
-    val row = RowBuilderInstance(mutableListOf())
+    private val tableBuilder: TableBuilderInstance = TableBuilderInstance(),
+) : HorizontalLayoutBuilder, CellStyleBuilderBase by tableBuilder {
+    private val row = RowBuilderInstance(mutableListOf())
+    override var spacing: Int = 1
+    override var verticalAlign: VerticalAlign? = null
 
-    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit) {
+    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit) {
         row.cells(cell1, cell2, *cells, init = init)
     }
 
-    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit) {
+    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilderBase.() -> Unit) {
         row.cellsFrom(cells, init)
     }
 
-    override fun cell(content: Any?, init: CellStyleBuilder.() -> Unit) {
+    override fun cell(content: Any?, init: CellStyleBuilderBase.() -> Unit) {
         row.cell(content, init)
     }
 
-    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = initColumn(columns, i, ColumnBuilderInstance(), init)
+    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = tableBuilder.column(i, init)
+
+    fun build(): Widget {
+        if (spacing > 0) {
+            for ((i, cell) in row.cells.withIndex()) {
+                if (i == 0) continue
+                cell.padding = cell.padding?.let { it.copy(left = it.left + spacing) } ?: Padding { left = spacing }
+            }
+        }
+        tableBuilder.verticalAlign = verticalAlign
+        tableBuilder.cellBorders = Borders.NONE
+        tableBuilder.padding = Padding(0)
+        tableBuilder.bodySection.rows += row
+        return TableLayout(tableBuilder).buildTable()
+    }
 }
 
 @MordantDsl
 internal class VerticalLayoutBuilderInstance(
-    private val section: SectionBuilder,
-    private val defaultPadding: Int,
-) : VerticalLayoutBuilder, CellStyleBuilder by section {
+    private val tableBuilder: TableBuilderInstance = TableBuilderInstance(),
+) : VerticalLayoutBuilder, CellStyleBuilderBase by tableBuilder {
+    private val section = tableBuilder.bodySection
     override var width: ColumnWidth = ColumnWidth.Auto
-    private var empty = true
+    override var spacing: Int = 0
 
-    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit) {
-        section.row(cell1, init = pad(init))
-        section.row(cell2, init = pad(init))
-        cells.forEach { section.row(it, init = pad(init)) }
+    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit) {
+        section.row(cell1, init = init)
+        section.row(cell2, init = init)
+        cells.forEach { section.row(it, init = init) }
     }
 
-    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit) {
-        cells.forEach { section.row(it, init = pad(init)) }
+    override fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilderBase.() -> Unit) {
+        cells.forEach { section.row(it, init = init) }
     }
 
-    override fun cell(content: Any?, init: CellStyleBuilder.() -> Unit) {
-        section.row(content, init = pad(init))
+    override fun cell(content: Any?, init: CellStyleBuilderBase.() -> Unit) {
+        section.row(content, init = init)
     }
 
-    private fun pad(init: CellStyleBuilder.() -> Unit): CellStyleBuilder.() -> Unit = {
-        if (defaultPadding > 0) {
-            if (empty) {
-                empty = false
-            } else {
-                padding = Padding { top = defaultPadding }
+    fun build(): Widget {
+        tableBuilder.padding = Padding(0)
+        tableBuilder.cellBorders = Borders.NONE
+        tableBuilder.column(0) { this@column.width = this@VerticalLayoutBuilderInstance.width }
+        if (spacing > 0) {
+            for ((i, row) in section.rows.withIndex()) {
+                if (i == 0) continue
+                row.padding = row.padding?.let { it.copy(top = it.top + spacing) } ?: Padding { top = spacing }
             }
         }
-        init()
+        val shouldTrim = width == ColumnWidth.Auto && (tableBuilder.align ?: TextAlign.NONE) == TextAlign.NONE
+        return VerticalLayout(TableLayout(tableBuilder).buildTable(), shouldTrim)
+    }
+}
+
+private class VerticalLayout(
+    private val table: Widget,
+    private val trimLines: Boolean,
+) : Widget {
+    override fun measure(t: Terminal, width: Int): WidthRange = table.measure(t, width)
+
+    override fun render(t: Terminal, width: Int): Lines {
+        val lines = table.render(t, width)
+        if (!trimLines) return lines
+        // Copying the lines isn't the most efficient way to do avoid trailing whitespace, but it's the easiest
+        return Lines(lines.lines.map { line ->
+            line.copy(spans = line.spans.dropLastWhile { it.style == DEFAULT_STYLE && it.isWhitespace() })
+        })
     }
 }
 

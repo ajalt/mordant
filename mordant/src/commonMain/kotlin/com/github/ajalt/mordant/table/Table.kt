@@ -187,9 +187,18 @@ internal class TableImpl(
 
         setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth, maxFixedWidth)
         setWeights(expandIdxs, expandIdxs.map { (columnStyles[it] as ColumnWidth.Expand).weight }, allocatedExpandWidth)
-        // Setting a column's weight to its max width allows us to shrink the columns while
-        // maintaining their relative widths
-        setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth, maxAutoWidth)
+
+        // If the allocated auto width is greater than the min, we want to give every column its min and
+        // distribute the remaining
+        if (allocatedAutoWidth > minAutoWidth) {
+            val flexWidths = autoIdxs.map { (measurements[it].max - measurements[it].min).toFloat() }
+            setWeights(autoIdxs, flexWidths, allocatedAutoWidth - minAutoWidth, maxAutoWidth)
+            autoIdxs.forEach { widths[it] += measurements[it].min }
+        } else {
+            // Setting a column's weight to its max width allows us to shrink the columns while
+            // maintaining their relative widths
+            setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth, maxAutoWidth)
+        }
 
         return widths
     }
@@ -353,10 +362,12 @@ private class TableRenderer(
             is Cell.SpanRef -> {
                 emptyList()
             }
+
             is Cell.Empty -> {
                 val space = listOf(Span.space(columnWidths[x]))
                 List(rowHeights[y]) { space }
             }
+
             is Cell.Content -> {
                 val cellWidth = ((x until x + cell.columnSpan).sumOf { columnWidths[it] } +
                         ((x + 1) until (x + cell.columnSpan)).count { columnBorders[it + 1] }

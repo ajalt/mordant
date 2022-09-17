@@ -6,18 +6,10 @@ import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.withPadding
 
-interface CellStyleBuilder {
-    /**
-     * The padding around each cell
-     *
-     * If you want to set the padding on around the entire widget, use [withPadding].
-     */
-    var padding: Padding?
+interface CellStyleBuilderBase {
     var style: TextStyle?
-    var cellBorders: Borders?
     var whitespace: Whitespace?
     var align: TextAlign?
-    var verticalAlign: VerticalAlign?
     var overflowWrap: OverflowWrap?
 
     @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
@@ -36,11 +28,23 @@ interface CellStyleBuilder {
     ) {
         style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
     }
+}
+
+interface CellStyleBuilder : CellStyleBuilderBase {
+    var cellBorders: Borders?
+    var verticalAlign: VerticalAlign?
 
     /**
      * The padding around each cell
      *
      * If you want to set the padding on around the entire widget, use [withPadding].
+     */
+    var padding: Padding?
+
+    /**
+     * Set the padding around each cell
+     *
+     * If you want to set the padding around the entire widget, use [withPadding].
      */
     fun padding(all: Int) {
         padding = Padding(all)
@@ -49,7 +53,6 @@ interface CellStyleBuilder {
     fun padding(block: Padding.Builder.() -> Unit) {
         padding = Padding(block)
     }
-
 }
 
 sealed class ColumnWidth {
@@ -181,29 +184,37 @@ interface RowBuilder : CellStyleBuilder {
 }
 
 @MordantDsl
-interface SingleLineBuilder : CellStyleBuilder {
+interface LinearLayoutBuilder : CellStyleBuilderBase {
     /** Add multiple cells to this builder */
-    fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilder.() -> Unit = {})
+    fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit = {})
 
     /** Add all [cells] from an iterable to this builder */
-    fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilder.() -> Unit = {})
+    fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilderBase.() -> Unit = {})
 
     /** Add a cell to this builder.
      *
      * The [content] can be a [Widget] to render, or any other type of object which will be
      * converted to a string.
      */
-    fun cell(content: Any?, init: CellStyleBuilder.() -> Unit = {})
+    fun cell(content: Any?, init: CellStyleBuilderBase.() -> Unit = {})
+
+    /** The amount of padding between each cell */
+    var spacing: Int
 }
 
 @MordantDsl
-interface HorizontalLayoutBuilder : SingleLineBuilder {
+interface HorizontalLayoutBuilder : LinearLayoutBuilder {
+    var verticalAlign: VerticalAlign?
+
     /** Configure a single column, with the first column at index 0. */
     fun column(i: Int, init: ColumnBuilder.() -> Unit)
 }
 
 @MordantDsl
-interface VerticalLayoutBuilder : ColumnBuilder, SingleLineBuilder
+interface VerticalLayoutBuilder : LinearLayoutBuilder {
+    /** Set the width for this layout. By default, the width is `Auto` and lines are not padded to equal width. */
+    var width: ColumnWidth
+}
 
 @MordantDsl
 interface CellBuilder : CellStyleBuilder {
@@ -259,63 +270,44 @@ fun table(init: TableBuilder.() -> Unit): Table {
  * This builder functions like a [table] builder, but has no sections and no borders.
  *
  * By default, there is one space between cells in a row. You can increase this by adding
- * [padding][SectionBuilder.padding], or remove it by setting [borders][SectionBuilder.cellBorders] to
+ * [padding][SectionBuilder.padding], or remove it by setting [cellBorders][SectionBuilder.cellBorders] to
  * [NONE][Borders.NONE].
  */
 fun grid(init: GridBuilder.() -> Unit): Widget {
-    val tableBuilder = TableBuilderInstance().apply {
-        cellBorders = Borders.LEFT_RIGHT
-        tableBorders = Borders.NONE
-        borderType = BorderType.BLANK
-        padding = Padding(0)
-        val gb = GridBuilderInstance(bodySection)
-        gb.init()
-        columns.putAll(gb.columns)
-    }
-
-    return TableLayout(tableBuilder).buildTable()
+    return GridBuilderInstance().apply(init).build()
 }
 
 /**
- * Build a row widget that can be used to lay out text and other widgets.
+ * Lay out widget in a horizontal row.
  *
- * This builder functions like a single row in a [grid]. Cells have optional [padding], which sets the default left
- * padding of all cells after the first.
+ * You can set the [spacing][HorizontalLayoutBuilder.spacing] between each widget in the layout.
  */
-fun horizontalLayout(padding: Int = 1, init: HorizontalLayoutBuilder.() -> Unit): Widget {
-    val tableBuilder = TableBuilderInstance().apply {
-        cellBorders = Borders.NONE
-        this.padding = Padding { left = padding }
-        val b = HorizontalLayoutBuilderInstance(bodySection)
-        b.init()
-        bodySection.rows += b.row
-        columns.putAll(b.columns)
-        column(0) { this.padding = this.padding ?: Padding(0) }
-    }
-
-    return TableLayout(tableBuilder).buildTable()
+fun horizontalLayout(init: HorizontalLayoutBuilder.() -> Unit): Widget {
+    return HorizontalLayoutBuilderInstance().apply(init).build()
 }
-
-@Deprecated("row is renamed to horizontalLayout", replaceWith = ReplaceWith("horizontalLayout"))
-fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget = horizontalLayout(padding, init)
 
 /**
- * Build a column widget that can be used to lay out text and other widgets.
+ * Lay out widgets in a vertical column.
  *
- * This builder functions like a single column in a [grid]. Cells have optional [padding], which sets the default top
- * padding of all cells after the first.
+ * You can set the [spacing][VerticalLayoutBuilder.spacing] between each widget in the layout.
+ *
+ * By default, the rendered layout won't include any trailing whitespace. You can change this behavior by setting
+ * [align][VerticalLayoutBuilder.align] to a value other than [NONE][TextAlign.NONE]
  */
-fun verticalLayout(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget {
-    val tableBuilder = TableBuilderInstance().apply {
-        cellBorders = Borders.NONE
-        this.padding = Padding(0)
-        val b = VerticalLayoutBuilderInstance(bodySection, padding)
-        b.init()
-        column(0) { width = b.width }
-    }
-
-    return TableLayout(tableBuilder).buildTable()
+fun verticalLayout(init: VerticalLayoutBuilder.() -> Unit): Widget {
+    return VerticalLayoutBuilderInstance().apply(init).build()
 }
 
-@Deprecated("column is renamed to verticalLayout", replaceWith = ReplaceWith("verticalLayout"))
-fun column(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget = verticalLayout(padding, init)
+@Deprecated("row is renamed to horizontalLayout", replaceWith = ReplaceWith("horizontalLayout(init)"))
+fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget {
+    return horizontalLayout {
+        spacing = padding
+        init()
+    }
+}
+
+@Deprecated("column is renamed to verticalLayout", replaceWith = ReplaceWith("verticalLayout(init)"))
+fun column(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget = verticalLayout {
+    init()
+    this.spacing = padding
+}
