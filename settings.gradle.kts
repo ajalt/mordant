@@ -14,7 +14,7 @@ dependencyResolutionManagement {
             plugin("dokka", "org.jetbrains.dokka").version("1.6.21")
 
             library("dokka-base", "org.jetbrains.dokka:dokka-base:1.6.21")
-            library("colormath", "com.github.ajalt.colormath:colormath:3.2.0")
+            library("colormath", "com.github.ajalt.colormath:colormath:3.2.1")
             library("markdown", "org.jetbrains:markdown:0.3.1")
 
             // used in tests
