@@ -22,7 +22,11 @@ private class DefinitionList(
     override fun measure(t: Terminal, width: Int): WidthRange {
         val termMeasurement = keys.maxWidthRange(t, width)
         val descMeasurement = measureDescriptions(t, width)
-        return termMeasurement + descMeasurement + descriptionSpacing
+        return if (inline) {
+            termMeasurement + descMeasurement + descriptionSpacing
+        } else {
+            listOf(termMeasurement, descMeasurement).maxWidthRange { it }
+        }
     }
 
     private fun measureDescriptions(t: Terminal, width: Int) = values.maxWidthRange(t, width)
