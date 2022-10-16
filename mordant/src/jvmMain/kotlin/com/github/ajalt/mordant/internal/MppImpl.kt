@@ -25,20 +25,21 @@ internal actual class AtomicInt actual constructor(initial: Int) {
 // We have to shell out to another program on JVM, which takes ~10ms for stty and ~100ms for powershell
 internal actual fun terminalSizeDetectionIsFast(): Boolean = false
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
-    val process = try {
-        val cmd = when {
-            isWindows() -> ProcessBuilder("powershell.exe",
-                "-noprofile",
-                "-command",
-                "\$host.ui.rawui")
-            else -> ProcessBuilder("stty", "size")
-        }
-        cmd.redirectInput(ProcessBuilder.Redirect.INHERIT)
+private fun runCommand(vararg args: String): Process? {
+    return try {
+        ProcessBuilder(*args)
+            .redirectInput(ProcessBuilder.Redirect.INHERIT)
             .start()
     } catch (e: IOException) {
-        return null
+        null
     }
+}
+internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
+    val process = when {
+        isWindows() -> runCommand("powershell.exe", "-noprofile", "-command", "\$host.ui.rawui")
+        // Try running stty both directly and via env, since neither one works on all systems
+        else -> runCommand("stty", "size") ?: runCommand("/use/bin/env", "stty", "size")
+    } ?: return null
     try {
         if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
             return null

@@ -18,6 +18,7 @@
 
 ### Fixed
 - Terminal detection would sometimes incorrectly identify the process as running in IntelliJ [(#72)](https://github.com/ajalt/mordant/issues/72)
+- `updateTerminalSize` would sometimes fail to find the `stty` command [(#66)](https://github.com/ajalt/mordant/issues/66)
 
 ## 2.0.0-beta7
 ### Added
