@@ -16,6 +16,9 @@
 ### Removed 
 - Removed `buildWidget`. Use `horizonalLayout` and `verticalLayout` instead.
 
+### Fixed
+- Terminal detection would sometimes incorrectly identify the process as running in IntelliJ [(#72)](https://github.com/ajalt/mordant/issues/72)
+
 ## 2.0.0-beta7
 ### Added
 - Functionality for reading user input: `Terminal.readLineOrNull`, `Terminal.prompt` and various `Prompt` classes

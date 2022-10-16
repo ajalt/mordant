@@ -168,6 +168,5 @@ internal object TerminalDetection {
         return getEnv("IDEA_INITIAL_DIRECTORY") != null
                 || getEnv("__INTELLIJ_COMMAND_HISTFILE__") != null
                 || getEnv("TERMINAL_EMULATOR")?.contains("jetbrains", ignoreCase = true) == true
-                || getJavaProperty("sun.java.command")?.contains("idea", ignoreCase = true) == true
     }
 }
