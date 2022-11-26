@@ -78,7 +78,7 @@ private fun splitWords(chunk: Chunk): List<Chunk> {
 }
 
 /** Split a flat list of chunks into a list of lines, removing linebreak chunks */
-private fun splitLines(words: Iterable<Chunk>): List<Line> {
+private fun splitLines(words: List<Chunk>): List<Line> {
     val lines = mutableListOf<Line>()
     var line = mutableListOf<Span>()
 
@@ -92,6 +92,11 @@ private fun splitLines(words: Iterable<Chunk>): List<Line> {
     }
 
     if (line.isNotEmpty()) lines += Line(line)
+    words.lastOrNull()?.let {
+        if (it.text.endsWith("\n")) {
+            lines.add(Line(listOf(), endStyle = it.style))
+        }
+    }
 
     return lines
 }
