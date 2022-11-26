@@ -2,9 +2,7 @@ package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.colormath.model.Ansi256
 import com.github.ajalt.colormath.model.RGB
-import com.github.ajalt.mordant.internal.CSI
-import com.github.ajalt.mordant.internal.OSC
-import com.github.ajalt.mordant.internal.ST
+import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.OverflowWrap.BREAK_WORD
 import com.github.ajalt.mordant.rendering.OverflowWrap.NORMAL
@@ -19,6 +17,12 @@ import kotlin.test.Test
 
 
 class TextTest : RenderingTest() {
+    @Test
+    @JsName("trailing_line_break")
+    fun `trailing line break`() {
+        checkRender(Text("x\n"), "x\n", trimMargin = false)
+    }
+
     @Test
     @JsName("override_width")
     fun `override width`() = checkRender(Text("""

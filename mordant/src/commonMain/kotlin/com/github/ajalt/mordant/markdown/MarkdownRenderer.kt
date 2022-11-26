@@ -287,9 +287,8 @@ internal class MarkdownRenderer(
             }
 
             MarkdownTokenTypes.EOL -> {
-                // Add an extra linebreak, since the first one will get folded away by foldLines.
                 // Parse the text rather than hard coding the return value to support NEL and LS.
-                Lines(listOf(EMPTY_LINE) + parseText(node.nodeText(), DEFAULT_STYLE).lines)
+                Lines(parseText(node.nodeText(), DEFAULT_STYLE).lines)
             }
 
             else -> error("Unexpected token when parsing inlines: $node; [${node.type}:'${node.nodeText().take(10)}'}]")

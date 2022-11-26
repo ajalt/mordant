@@ -1,6 +1,11 @@
 # Changelog
 
 ## 2.0.0-beta8
+### Changed
+- Stop stripping trailing newline from text when using `Whitespace.PRE` [(#75)](https://github.com/ajalt/mordant/issues/75)
+
+
+## 2.0.0-beta8
 ### Added
 - Implemented `hideInput` for prompts on native targets [(#63)](https://github.com/ajalt/mordant/issues/63)
 - Improve cell-width calculation for emoji sequences like skin tone modifiers [(#64)](https://github.com/ajalt/mordant/issues/64)
