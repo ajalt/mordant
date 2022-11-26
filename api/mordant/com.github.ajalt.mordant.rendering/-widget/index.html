@@ -1,226 +1,248 @@
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>Widget</title>
-<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script><script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../../scripts/main.js" async="async"></script>  </head>
-  <body>
-    <div id="container">
-      <div id="leftColumn"><a href="../../../index.html">
-          <div id="logo"></div>
-        </a>
-        <div id="paneSearch"></div>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>mordant</span>
+            </a>
+    </div>
+    <div>
+2.0.0-beta9    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtml/gen">common</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div id="leftToggler"><span class="icon-toggler"></span></div>
-<script type="text/javascript" src="../../../scripts/main.js"></script>        <div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.rendering/Widget///PointingToDeclaration//-1759575997">
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <div class="breadcrumbs"><a href="../../../index.html">mordant</a>/<a href="../index.html">com.github.ajalt.mordant.rendering</a>/<a href="index.html">Widget</a></div>
-            <div class="pull-right d-flex">
-              <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtml/gen">common</button></div>
-              <div id="searchBar"></div>
-            </div>
-          </div>
-          <div class="cover ">
-            <h1 class="cover"><span>Widget</span></h1>
-            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">interface <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-          </div>
-          <div class="tabbedcontent">
-            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Extensions">Extensions</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
-            <div class="tabs-section-body">
-              <h2 class="">Functions</h2>
-              <div class="table" data-togglable="Functions"><a data-name="2000089668%2FFunctions%2F-1759575997" anchor-label="measure" id="2000089668%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="measure.html">measure</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2000089668%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">abstract fun <a href="measure.html">measure</a>(t: <a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a>, width: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = t.info.width): <a href="../-width-range/index.html">WidthRange</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.rendering/Widget///PointingToDeclaration//-1759575997">
+  <div class="breadcrumbs"><a href="../../../index.html">mordant</a><span class="delimiter">/</span><a href="../index.html">com.github.ajalt.mordant.rendering</a><span class="delimiter">/</span><a href="index.html">Widget</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Widget</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>    </div>
   </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-110645346%2FFunctions%2F-1759575997" anchor-label="render" id="-110645346%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="render.html">render</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-110645346%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">abstract fun <a href="render.html">render</a>(t: <a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a>, width: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = t.info.width): <a href="../-lines/index.html">Lines</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="">Inheritors</h2>
-              <div class="table" data-togglable="Inheritors"><a data-name="-508408663%2FInheritors%2F-1759575997" anchor-label="Markdown" id="-508408663%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.markdown/-markdown/index.html">Markdown</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-508408663%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="2135322539%2FInheritors%2F-1759575997" anchor-label="Table" id="2135322539%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.table/-table/index.html">Table</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2135322539%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-667610606%2FInheritors%2F-1759575997" anchor-label="Caption" id="-667610606%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-caption/index.html">Caption</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-667610606%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-393237494%2FInheritors%2F-1759575997" anchor-label="HorizontalRule" id="-393237494%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-horizontal-rule/index.html">HorizontalRule</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-393237494%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-1775228563%2FInheritors%2F-1759575997" anchor-label="OrderedList" id="-1775228563%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-ordered-list/index.html">OrderedList</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1775228563%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-1659472524%2FInheritors%2F-1759575997" anchor-label="Panel" id="-1659472524%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-panel/index.html">Panel</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1659472524%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="1082667474%2FInheritors%2F-1759575997" anchor-label="ProgressBar" id="1082667474%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-progress-bar/index.html">ProgressBar</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1082667474%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="1677032445%2FInheritors%2F-1759575997" anchor-label="Text" id="1677032445%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-text/index.html">Text</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1677032445%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-<a data-name="-518923834%2FInheritors%2F-1759575997" anchor-label="UnorderedList" id="-518923834%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/-unordered-list/index.html">UnorderedList</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-518923834%2FInheritors%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div></div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="tabbedcontent">Extensions</h2>
-              <div class="table" data-togglable="Extensions"><a data-name="1583581819%2FExtensions%2F-1759575997" anchor-label="withHorizontalPadding" id="1583581819%2FExtensions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/with-horizontal-padding.html">withHorizontalPadding</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1583581819%2FExtensions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-horizontal-padding.html">withHorizontalPadding</a>(padding: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1927989440%2FExtensions%2F-1759575997" anchor-label="withPadding" id="1927989440%2FExtensions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1927989440%2FExtensions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a>(padding: <a href="../../com.github.ajalt.mordant.widgets/-padding/index.html">Padding</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a>(all: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a>(vertical: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, horizontal: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a>(top: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, horizontal: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, bottom: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-padding.html">withPadding</a>(top: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, right: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, bottom: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, left: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="851094733%2FExtensions%2F-1759575997" anchor-label="withVerticalPadding" id="851094733%2FExtensions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../../com.github.ajalt.mordant.widgets/with-vertical-padding.html">withVerticalPadding</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="851094733%2FExtensions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="index.html">Widget</a>.<a href="../../com.github.ajalt.mordant.widgets/with-vertical-padding.html">withVerticalPadding</a>(padding: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, padEmptyLines: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true): <a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Extensions">Extensions</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="2000089668%2FFunctions%2F-1759575997" anchor-label="measure" id="2000089668%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="measure.html"><span><span>measure</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2000089668%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="measure.html"><span class="token function">measure</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">t<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a><span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>t.info.width</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-width-range/index.html">WidthRange</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>Copyright &copy; 2021 AJ Alt</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+<a data-name="-110645346%2FFunctions%2F-1759575997" anchor-label="render" id="-110645346%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="render.html"><span><span>render</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-110645346%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="render.html"><span class="token function">render</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">t<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a><span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>t.info.width</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-lines/index.html">Lines</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Inheritors</h2>
+      <div class="table" data-togglable="Inheritors"><a data-name="-508408663%2FInheritors%2F-1759575997" anchor-label="Markdown" id="-508408663%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.markdown/-markdown/index.html">Markdown</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-508408663%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="2135322539%2FInheritors%2F-1759575997" anchor-label="Table" id="2135322539%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.table/-table/index.html">Table</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2135322539%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-667610606%2FInheritors%2F-1759575997" anchor-label="Caption" id="-667610606%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-caption/index.html">Caption</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-667610606%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1174403865%2FInheritors%2F-1759575997" anchor-label="EmptyWidget" id="-1174403865%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-empty-widget/index.html">EmptyWidget</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1174403865%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-393237494%2FInheritors%2F-1759575997" anchor-label="HorizontalRule" id="-393237494%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-horizontal-rule/index.html">HorizontalRule</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-393237494%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1775228563%2FInheritors%2F-1759575997" anchor-label="OrderedList" id="-1775228563%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-ordered-list/index.html">OrderedList</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1775228563%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-1659472524%2FInheritors%2F-1759575997" anchor-label="Panel" id="-1659472524%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-panel/index.html">Panel</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1659472524%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="1082667474%2FInheritors%2F-1759575997" anchor-label="ProgressBar" id="1082667474%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-progress-bar/index.html">ProgressBar</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1082667474%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="378833215%2FInheritors%2F-1759575997" anchor-label="Spinner" id="378833215%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-spinner/index.html">Spinner</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="378833215%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="1677032445%2FInheritors%2F-1759575997" anchor-label="Text" id="1677032445%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-text/index.html">Text</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1677032445%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+<a data-name="-518923834%2FInheritors%2F-1759575997" anchor-label="UnorderedList" id="-518923834%2FInheritors%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/-unordered-list/index.html">UnorderedList</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-518923834%2FInheritors%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+      <h2 class="tabbedcontent">Extensions</h2>
+      <div class="table" data-togglable="Extensions"><a data-name="-1653354521%2FExtensions%2F-1759575997" anchor-label="withPadding" id="-1653354521%2FExtensions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="../../com.github.ajalt.mordant.widgets/with-padding.html"><span>with</span><wbr></wbr><span><span>Padding</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1653354521%2FExtensions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Widget</a><span class="token punctuation">.</span><a href="../../com.github.ajalt.mordant.widgets/with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padding<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.widgets/-padding/index.html">Padding</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Add padding around this widget.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Widget</a><span class="token punctuation">.</span><a href="../../com.github.ajalt.mordant.widgets/with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">all<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Widget</a><span class="token punctuation">.</span><a href="../../com.github.ajalt.mordant.widgets/with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html">Widget</a><span class="token punctuation">.</span><a href="../../com.github.ajalt.mordant.widgets/with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">padding<span class="token operator">: </span><span class="token keyword"></span><a href="../../com.github.ajalt.mordant.widgets/-padding/-builder/index.html">Padding.Builder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright &copy; 2022 AJ Alt</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
 </html>
-

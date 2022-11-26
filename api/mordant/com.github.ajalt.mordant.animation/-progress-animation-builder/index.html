@@ -1,227 +1,261 @@
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>ProgressAnimationBuilder</title>
-<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script><script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../../scripts/main.js" async="async"></script>  </head>
-  <body>
-    <div id="container">
-      <div id="leftColumn"><a href="../../../index.html">
-          <div id="logo"></div>
-        </a>
-        <div id="paneSearch"></div>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>mordant</span>
+            </a>
+    </div>
+    <div>
+2.0.0-beta9    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":mordant:dokkaHtml/jvmMain">jvm</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div id="leftToggler"><span class="icon-toggler"></span></div>
-<script type="text/javascript" src="../../../scripts/main.js"></script>        <div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.animation/ProgressAnimationBuilder///PointingToDeclaration//-86276957">
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <div class="breadcrumbs"><a href="../../../index.html">mordant</a>/<a href="../index.html">com.github.ajalt.mordant.animation</a>/<a href="index.html">ProgressAnimationBuilder</a></div>
-            <div class="pull-right d-flex">
-              <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":mordant:dokkaHtml/jvmMain">jvm</button></div>
-              <div id="searchBar"></div>
-            </div>
-          </div>
-          <div class="cover ">
-            <h1 class="cover"><span>Progress</span><wbr></wbr><span>Animation</span><wbr></wbr><span>Builder</span></h1>
-            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">class <a href="index.html">ProgressAnimationBuilder</a> : <span data-unresolved-link="com.github.ajalt.mordant.widgets/ProgressBuilder///PointingToDeclaration/">ProgressBuilder</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-          </div>
-          <div class="tabbedcontent">
-            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
-            <div class="tabs-section-body">
-              <h2 class="">Functions</h2>
-              <div class="table" data-togglable="Functions"><a data-name="-415387478%2FFunctions%2F-86276957" anchor-label="completed" id="-415387478%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#-415387478%2FFunctions%2F-86276957">completed</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-415387478%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#-415387478%2FFunctions%2F-86276957">completed</a>(suffix: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> = &quot;&quot;, includeTotal: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = true, style: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span> = DEFAULT_STYLE)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.animation/ProgressAnimationBuilder///PointingToDeclaration//-86276957">
+  <div class="breadcrumbs"><a href="../../../index.html">mordant</a><span class="delimiter">/</span><a href="../index.html">com.github.ajalt.mordant.animation</a><span class="delimiter">/</span><a href="index.html">ProgressAnimationBuilder</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Progress</span><wbr></wbr><span>Animation</span><wbr></wbr><span><span>Builder</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ProgressAnimationBuilder</a> : <span data-unresolved-link="com.github.ajalt.mordant.widgets/ProgressBuilder///PointingToDeclaration/">ProgressBuilder</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>    </div>
   </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-851481829%2FFunctions%2F-86276957" anchor-label="percentage" id="-851481829%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#-851481829%2FFunctions%2F-86276957">percentage</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-851481829%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#-851481829%2FFunctions%2F-86276957">percentage</a>()<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="655331187%2FFunctions%2F-86276957" anchor-label="progressBar" id="655331187%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#655331187%2FFunctions%2F-86276957">progressBar</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="655331187%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#655331187%2FFunctions%2F-86276957">progressBar</a>(width: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>? = null, pendingChar: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>? = null, separatorChar: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>? = null, completeChar: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>? = null, pendingStyle: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span>? = null, separatorStyle: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span>? = null, completeStyle: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span>? = null, finishedStyle: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span>? = null, indeterminateStyle: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span>? = null)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1823154402%2FFunctions%2F-86276957" anchor-label="speed" id="-1823154402%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#-1823154402%2FFunctions%2F-86276957">speed</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1823154402%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#-1823154402%2FFunctions%2F-86276957">speed</a>(suffix: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> = &quot;it/s&quot;, style: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span> = DEFAULT_STYLE)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1527049244%2FFunctions%2F-86276957" anchor-label="text" id="1527049244%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#1527049244%2FFunctions%2F-86276957">text</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1527049244%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#1527049244%2FFunctions%2F-86276957">text</a>(text: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-78559620%2FFunctions%2F-86276957" anchor-label="timeRemaining" id="-78559620%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#-78559620%2FFunctions%2F-86276957">timeRemaining</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-78559620%2FFunctions%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace">fun <a href="index.html#-78559620%2FFunctions%2F-86276957">timeRemaining</a>(prefix: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> = &quot;eta &quot;, style: <span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span> = DEFAULT_STYLE)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="">Properties</h2>
-              <div class="table" data-togglable="Properties"><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="animation-frame-rate.html">animationFrameRate</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="856253275%2FProperties%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace">var <a href="animation-frame-rate.html">animationFrameRate</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 30<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>The maximum number of times per second to update idle animations like the progress bar pulse (default: 30fps)</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="history-length.html">historyLength</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130371140%2FProperties%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace">var <a href="history-length.html">historyLength</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a> = 30f<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>The number of seconds worth of history to keep track of for estimating progress speed and time remaining (default: 30s)</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-843894043%2FProperties%2F-86276957" anchor-label="padding" id="-843894043%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#-843894043%2FProperties%2F-86276957">padding</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-843894043%2FProperties%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="-843894043%2FProperties%2F-86276957" anchor-label="padding" id="-843894043%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace">var <a href="index.html#-843894043%2FProperties%2F-86276957">padding</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 2<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="text-frame-rate.html">textFrameRate</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="928141782%2FProperties%2F-86276957"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag jvm-like">jvm</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace">var <a href="text-frame-rate.html">textFrameRate</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 5<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>The maximum number of times per second to update text like the estimated time remaining.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="-415387478%2FFunctions%2F-86276957" anchor-label="completed" id="-415387478%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#-415387478%2FFunctions%2F-86276957"><span><span>completed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-415387478%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-415387478%2FFunctions%2F-86276957"><span class="token function">completed</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;suffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">&quot;&quot;</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;includeTotal<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;style<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator"> = </span>DEFAULT_STYLE</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>Copyright &copy; 2021 AJ Alt</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+<a data-name="-851481829%2FFunctions%2F-86276957" anchor-label="percentage" id="-851481829%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#-851481829%2FFunctions%2F-86276957"><span><span>percentage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-851481829%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-851481829%2FFunctions%2F-86276957"><span class="token function">percentage</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="655331187%2FFunctions%2F-86276957" anchor-label="progressBar" id="655331187%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#655331187%2FFunctions%2F-86276957"><span>progress</span><wbr></wbr><span><span>Bar</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="655331187%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#655331187%2FFunctions%2F-86276957"><span class="token function">progressBar</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;pendingChar<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;separatorChar<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;completeChar<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;pendingStyle<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;separatorStyle<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;completeStyle<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;finishedStyle<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;indeterminateStyle<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1823154402%2FFunctions%2F-86276957" anchor-label="speed" id="-1823154402%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#-1823154402%2FFunctions%2F-86276957"><span><span>speed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1823154402%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-1823154402%2FFunctions%2F-86276957"><span class="token function">speed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">suffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">&quot;it/s&quot;</span><span class="token punctuation">, </span></span><span class="parameter ">style<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator"> = </span>DEFAULT_STYLE</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1881942628%2FFunctions%2F-86276957" anchor-label="spinner" id="1881942628%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#1881942628%2FFunctions%2F-86276957"><span><span>spinner</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1881942628%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#1881942628%2FFunctions%2F-86276957"><span class="token function">spinner</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">spinner<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.widgets/Spinner///PointingToDeclaration/">Spinner</span><span class="token punctuation">, </span></span><span class="parameter ">frameRate<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">8</span></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Add a <span data-unresolved-link="com.github.ajalt.mordant.widgets/Spinner///PointingToDeclaration/">Spinner</span> to this layout.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1527049244%2FFunctions%2F-86276957" anchor-label="text" id="1527049244%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#1527049244%2FFunctions%2F-86276957"><span><span>text</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1527049244%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#1527049244%2FFunctions%2F-86276957"><span class="token function">text</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">text<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-78559620%2FFunctions%2F-86276957" anchor-label="timeRemaining" id="-78559620%2FFunctions%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#-78559620%2FFunctions%2F-86276957"><span>time</span><wbr></wbr><span><span>Remaining</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-78559620%2FFunctions%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#-78559620%2FFunctions%2F-86276957"><span class="token function">timeRemaining</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prefix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">&quot;eta &quot;</span><span class="token punctuation">, </span></span><span class="parameter ">style<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.mordant.rendering/TextStyle///PointingToDeclaration/">TextStyle</span><span class="token operator"> = </span>DEFAULT_STYLE</span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="animation-frame-rate.html"><span>animation</span><wbr></wbr><span>Frame</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="856253275%2FProperties%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="animation-frame-rate.html">animationFrameRate</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">30</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="856253275%2FProperties%2F-86276957" anchor-label="animationFrameRate" id="856253275%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><p class="paragraph">The maximum number of times per second to update idle animations like the progress bar pulse (default: 30fps)</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="history-length.html"><span>history</span><wbr></wbr><span><span>Length</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1130371140%2FProperties%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="history-length.html">historyLength</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html">Float</a><span class="token operator"> = </span><span class="token constant">30.0f</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1130371140%2FProperties%2F-86276957" anchor-label="historyLength" id="-1130371140%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><p class="paragraph">The number of seconds worth of history to keep track of for estimating progress speed and time remaining (default: 30s)</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1926590228%2FProperties%2F-86276957" anchor-label="padding" id="1926590228%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="index.html#1926590228%2FProperties%2F-86276957"><span><span>padding</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1926590228%2FProperties%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="1926590228%2FProperties%2F-86276957" anchor-label="padding" id="1926590228%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="index.html#1926590228%2FProperties%2F-86276957">padding</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="text-frame-rate.html"><span>text</span><wbr></wbr><span>Frame</span><wbr></wbr><span><span>Rate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="928141782%2FProperties%2F-86276957"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark jvm-like" data-filterable-current=":mordant:dokkaHtml/jvmMain" data-filterable-set=":mordant:dokkaHtml/jvmMain" data-active="" data-toggle=":mordant:dokkaHtml/jvmMain">jvm</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/jvmMain"><a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">var </span><a href="text-frame-rate.html">textFrameRate</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">5</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="928141782%2FProperties%2F-86276957" anchor-label="textFrameRate" id="928141782%2FProperties%2F-86276957" data-filterable-set=":mordant:dokkaHtml/jvmMain"></a><p class="paragraph">The maximum number of times per second to update text like the estimated time remaining. (default: 5fps)</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright &copy; 2022 AJ Alt</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
 </html>
-

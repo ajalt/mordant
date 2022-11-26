@@ -1,657 +1,686 @@
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>TerminalColors</title>
-<link href="../../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script><script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../../scripts/main.js" async="async"></script>  </head>
-  <body>
-    <div id="container">
-      <div id="leftColumn"><a href="../../../index.html">
-          <div id="logo"></div>
-        </a>
-        <div id="paneSearch"></div>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../index.html">
+                    <span>mordant</span>
+            </a>
+    </div>
+    <div>
+2.0.0-beta9    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtml/gen">common</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div id="leftToggler"><span class="icon-toggler"></span></div>
-<script type="text/javascript" src="../../../scripts/main.js"></script>        <div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.terminal/TerminalColors///PointingToDeclaration//-1759575997">
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <div class="breadcrumbs"><a href="../../../index.html">mordant</a>/<a href="../index.html">com.github.ajalt.mordant.terminal</a>/<a href="index.html">TerminalColors</a></div>
-            <div class="pull-right d-flex">
-              <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtml/gen">common</button></div>
-              <div id="searchBar"></div>
-            </div>
-          </div>
-          <div class="cover ">
-            <h1 class="cover"><span>Terminal</span><wbr></wbr><span>Colors</span></h1>
-            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">class <a href="index.html">TerminalColors</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">TextStyles that are automatically downsampled to the level supported by the current terminal.</p><p class="paragraph">Strings decorated with these styles will be downsampled correctly even if they are printed directly rather than through <a href="../-terminal/print.html">Terminal.print</a>.</p></div></div>
-          </div>
-          <div class="tabbedcontent">
-            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
-            <div class="tabs-section-body">
-              <h2 class="">Functions</h2>
-              <div class="table" data-togglable="Functions"><a data-name="-506638795%2FFunctions%2F-1759575997" anchor-label="cmyk" id="-506638795%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="cmyk.html">cmyk</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-506638795%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="cmyk.html">cmyk</a>(c: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, m: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, y: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, k: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.terminal/TerminalColors///PointingToDeclaration//-1759575997">
+  <div class="breadcrumbs"><a href="../../../index.html">mordant</a><span class="delimiter">/</span><a href="../index.html">com.github.ajalt.mordant.terminal</a><span class="delimiter">/</span><a href="index.html">TerminalColors</a></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Terminal</span><wbr></wbr><span><span>Colors</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">TerminalColors</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">TextStyles that are automatically downsampled to the level supported by the current terminal.</p><p class="paragraph">Strings decorated with these styles will be downsampled correctly even if they are printed directly rather than through <a href="../-terminal/print.html">Terminal.print</a>.</p></div>    </div>
   </div>
-<a data-name="-506638795%2FFunctions%2F-1759575997" anchor-label="cmyk" id="-506638795%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="-506638795%2FFunctions%2F-1759575997" anchor-label="cmyk" id="-506638795%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from a CMYK color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="318196349%2FFunctions%2F-1759575997" anchor-label="color" id="318196349%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="color.html">color</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="318196349%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="color.html">color</a>(color: <span data-unresolved-link="com.github.ajalt.colormath/Color///PointingToDeclaration/">Color</span>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="318196349%2FFunctions%2F-1759575997" anchor-label="color" id="318196349%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="318196349%2FFunctions%2F-1759575997" anchor-label="color" id="318196349%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a> with a foreground of <a href="color.html">color</a>, downsampled to a given <span data-unresolved-link="com.github.ajalt.mordant.terminal/TerminalColors/level/#/PointingToDeclaration/">level</span>.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1148879489%2FFunctions%2F-1759575997" anchor-label="gray" id="1148879489%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="gray.html">gray</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1148879489%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="gray.html">gray</a>(fraction: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="1148879489%2FFunctions%2F-1759575997" anchor-label="gray" id="1148879489%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="1148879489%2FFunctions%2F-1759575997" anchor-label="gray" id="1148879489%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a grayscale color code from a fraction in the range \[0, 1].</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1514943249%2FFunctions%2F-1759575997" anchor-label="hsl" id="1514943249%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="hsl.html">hsl</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1514943249%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="hsl.html">hsl</a>(h: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, s: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, l: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="1514943249%2FFunctions%2F-1759575997" anchor-label="hsl" id="1514943249%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="1514943249%2FFunctions%2F-1759575997" anchor-label="hsl" id="1514943249%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from an HSL color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-611378617%2FFunctions%2F-1759575997" anchor-label="hsv" id="-611378617%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="hsv.html">hsv</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-611378617%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="hsv.html">hsv</a>(h: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, s: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, v: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="-611378617%2FFunctions%2F-1759575997" anchor-label="hsv" id="-611378617%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="-611378617%2FFunctions%2F-1759575997" anchor-label="hsv" id="-611378617%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from an HSV color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="858080231%2FFunctions%2F-1759575997" anchor-label="lab" id="858080231%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="lab.html">lab</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="858080231%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="lab.html">lab</a>(l: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>, a: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>, b: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="858080231%2FFunctions%2F-1759575997" anchor-label="lab" id="858080231%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="858080231%2FFunctions%2F-1759575997" anchor-label="lab" id="858080231%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from a CIE LAB color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1962817110%2FFunctions%2F-1759575997" anchor-label="rgb" id="1962817110%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="rgb.html">rgb</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1962817110%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="rgb.html">rgb</a>(hex: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-<div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="rgb.html">rgb</a>(r: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, g: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, b: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="1286186117%2FFunctions%2F-1759575997" anchor-label="rgb" id="1286186117%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="1286186117%2FFunctions%2F-1759575997" anchor-label="rgb" id="1286186117%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from an RGB color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-949272333%2FFunctions%2F-1759575997" anchor-label="xyz" id="-949272333%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="xyz.html">xyz</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-949272333%2FFunctions%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace">fun <a href="xyz.html">xyz</a>(x: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>, y: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>, z: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a>): <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-<a data-name="-949272333%2FFunctions%2F-1759575997" anchor-label="xyz" id="-949272333%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="brief "><a data-name="-949272333%2FFunctions%2F-1759575997" anchor-label="xyz" id="-949272333%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Create a color code from a CIE XYZ color.</div></div>
-</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <h2 class="">Properties</h2>
-              <div class="table" data-togglable="Properties"><a data-name="-1336516395%2FProperties%2F-1759575997" anchor-label="black" id="-1336516395%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="black.html">black</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1336516395%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1336516395%2FProperties%2F-1759575997" anchor-label="black" id="-1336516395%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="black.html">black</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="643344780%2FProperties%2F-1759575997" anchor-label="blue" id="643344780%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="blue.html">blue</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="643344780%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="643344780%2FProperties%2F-1759575997" anchor-label="blue" id="643344780%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="blue.html">blue</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bold.html">bold</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-216476223%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bold.html">bold</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text as bold or increased intensity.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-665931278%2FProperties%2F-1759575997" anchor-label="brightBlue" id="-665931278%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-blue.html">brightBlue</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-665931278%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-665931278%2FProperties%2F-1759575997" anchor-label="brightBlue" id="-665931278%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-blue.html">brightBlue</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-762670263%2FProperties%2F-1759575997" anchor-label="brightCyan" id="-762670263%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-cyan.html">brightCyan</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-762670263%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-762670263%2FProperties%2F-1759575997" anchor-label="brightCyan" id="-762670263%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-cyan.html">brightCyan</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1943163563%2FProperties%2F-1759575997" anchor-label="brightGreen" id="1943163563%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-green.html">brightGreen</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1943163563%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1943163563%2FProperties%2F-1759575997" anchor-label="brightGreen" id="1943163563%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-green.html">brightGreen</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1526460293%2FProperties%2F-1759575997" anchor-label="brightMagenta" id="1526460293%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-magenta.html">brightMagenta</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1526460293%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1526460293%2FProperties%2F-1759575997" anchor-label="brightMagenta" id="1526460293%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-magenta.html">brightMagenta</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1631032605%2FProperties%2F-1759575997" anchor-label="brightRed" id="1631032605%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-red.html">brightRed</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1631032605%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1631032605%2FProperties%2F-1759575997" anchor-label="brightRed" id="1631032605%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-red.html">brightRed</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-270644155%2FProperties%2F-1759575997" anchor-label="brightWhite" id="-270644155%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-white.html">brightWhite</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-270644155%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-270644155%2FProperties%2F-1759575997" anchor-label="brightWhite" id="-270644155%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-white.html">brightWhite</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-888580264%2FProperties%2F-1759575997" anchor-label="brightYellow" id="-888580264%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="bright-yellow.html">brightYellow</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-888580264%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-888580264%2FProperties%2F-1759575997" anchor-label="brightYellow" id="-888580264%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="bright-yellow.html">brightYellow</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="546605795%2FProperties%2F-1759575997" anchor-label="cyan" id="546605795%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="cyan.html">cyan</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="546605795%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="546605795%2FProperties%2F-1759575997" anchor-label="cyan" id="546605795%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="cyan.html">cyan</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="danger.html">danger</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1556746659%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="danger.html">danger</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/danger.html">danger</a> style from the current theme</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="dim.html">dim</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-887289300%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="dim.html">dim</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text as faint or decreased intensity.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1148418979%2FProperties%2F-1759575997" anchor-label="gray" id="1148418979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="gray.html">gray</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1148418979%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1148418979%2FProperties%2F-1759575997" anchor-label="gray" id="1148418979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="gray.html">gray</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-418951599%2FProperties%2F-1759575997" anchor-label="green" id="-418951599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="green.html">green</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-418951599%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-418951599%2FProperties%2F-1759575997" anchor-label="green" id="-418951599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="green.html">green</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="info.html">info</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-538494024%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="info.html">info</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/info.html">info</a> style from the current theme</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="inverse.html">inverse</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1600662788%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="inverse.html">inverse</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with background and foreground colors switched.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="italic.html">italic</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="917874230%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="italic.html">italic</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text as italic.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-723478101%2FProperties%2F-1759575997" anchor-label="magenta" id="-723478101%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="magenta.html">magenta</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-723478101%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-723478101%2FProperties%2F-1759575997" anchor-label="magenta" id="-723478101%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="magenta.html">magenta</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="muted.html">muted</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1891971305%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="muted.html">muted</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/muted.html">muted</a> style from the current theme</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="plain.html">plain</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="389685610%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="plain.html">plain</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>No style.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="10699331%2FProperties%2F-1759575997" anchor-label="red" id="10699331%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="red.html">red</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="10699331%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="10699331%2FProperties%2F-1759575997" anchor-label="red" id="10699331%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="red.html">red</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="strikethrough.html">strikethrough</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-465968767%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="strikethrough.html">strikethrough</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with a strikethrough.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="success.html">success</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1015231599%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="success.html">success</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/success.html">success</a> style from the current theme</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="underline.html">underline</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2060744920%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="underline.html">underline</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Underline text.</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="warning.html">warning</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1592137192%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="warning.html">warning</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/warning.html">warning</a> style from the current theme</div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="1662207979%2FProperties%2F-1759575997" anchor-label="white" id="1662207979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="white.html">white</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1662207979%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1662207979%2FProperties%2F-1759575997" anchor-label="white" id="1662207979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="white.html">white</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1099706254%2FProperties%2F-1759575997" anchor-label="yellow" id="-1099706254%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-                <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="yellow.html">yellow</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1099706254%2FProperties%2F-1759575997"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1099706254%2FProperties%2F-1759575997" anchor-label="yellow" id="-1099706254%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace">val <a href="yellow.html">yellow</a>: <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section-body">
+      <h2 class="">Functions</h2>
+      <div class="table" data-togglable="Functions"><a data-name="-506638795%2FFunctions%2F-1759575997" anchor-label="cmyk" id="-506638795%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="cmyk.html"><span><span>cmyk</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-506638795%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="cmyk.html"><span class="token function">cmyk</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;c<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;m<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;y<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;k<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from a CMYK color.</p></div></div>                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>Copyright &copy; 2021 AJ Alt</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+<a data-name="318196349%2FFunctions%2F-1759575997" anchor-label="color" id="318196349%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="color.html"><span><span>color</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="318196349%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="color.html"><span class="token function">color</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">color<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.colormath/Color///PointingToDeclaration/">Color</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a <a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a> with a foreground of <a href="color.html">color</a>, downsampled to a given <span data-unresolved-link="com.github.ajalt.mordant.terminal/TerminalColors/level/#/PointingToDeclaration/">level</span>.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-356959223%2FFunctions%2F-1759575997" anchor-label="gray" id="-356959223%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="gray.html"><span><span>gray</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-356959223%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="gray.html"><span class="token function">gray</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">fraction<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a grayscale color code from a fraction in the range \[0, 1].</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-2091885389%2FFunctions%2F-1759575997" anchor-label="hsl" id="-2091885389%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="hsl.html"><span><span>hsl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2091885389%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="hsl.html"><span class="token function">hsl</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;h<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;s<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;l<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from an HSL color.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="417280573%2FFunctions%2F-1759575997" anchor-label="hsv" id="417280573%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="hsv.html"><span><span>hsv</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="417280573%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="hsv.html"><span class="token function">hsv</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;h<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;s<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;v<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from an HSV color.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1286863233%2FFunctions%2F-1759575997" anchor-label="lab" id="-1286863233%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="lab.html"><span><span>lab</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1286863233%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="lab.html"><span class="token function">lab</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;l<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;a<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;b<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from a CIE LAB color.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="176247952%2FFunctions%2F-1759575997" anchor-label="rgb" id="176247952%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="rgb.html"><span><span>rgb</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="176247952%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="rgb.html"><span class="token function">rgb</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">hex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><br><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="rgb.html"><span class="token function">rgb</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;r<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;g<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;b<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from an RGB color.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1200751499%2FFunctions%2F-1759575997" anchor-label="xyz" id="1200751499%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="xyz.html"><span><span>xyz</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1200751499%2FFunctions%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="xyz.html"><span class="token function">xyz</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;x<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;y<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;z<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-number/index.html">Number</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Create a color code from a CIE XYZ color.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2 class="">Properties</h2>
+      <div class="table" data-togglable="Properties"><a data-name="-1336516395%2FProperties%2F-1759575997" anchor-label="black" id="-1336516395%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="black.html"><span><span>black</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1336516395%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1336516395%2FProperties%2F-1759575997" anchor-label="black" id="-1336516395%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="black.html">black</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="643344780%2FProperties%2F-1759575997" anchor-label="blue" id="643344780%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="blue.html"><span><span>blue</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="643344780%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="643344780%2FProperties%2F-1759575997" anchor-label="blue" id="643344780%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="blue.html">blue</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bold.html"><span><span>bold</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-216476223%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bold.html">bold</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-216476223%2FProperties%2F-1759575997" anchor-label="bold" id="-216476223%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text as bold or increased intensity.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-665931278%2FProperties%2F-1759575997" anchor-label="brightBlue" id="-665931278%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-blue.html"><span>bright</span><wbr></wbr><span><span>Blue</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-665931278%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-665931278%2FProperties%2F-1759575997" anchor-label="brightBlue" id="-665931278%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-blue.html">brightBlue</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-762670263%2FProperties%2F-1759575997" anchor-label="brightCyan" id="-762670263%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-cyan.html"><span>bright</span><wbr></wbr><span><span>Cyan</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-762670263%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-762670263%2FProperties%2F-1759575997" anchor-label="brightCyan" id="-762670263%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-cyan.html">brightCyan</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1943163563%2FProperties%2F-1759575997" anchor-label="brightGreen" id="1943163563%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-green.html"><span>bright</span><wbr></wbr><span><span>Green</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1943163563%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1943163563%2FProperties%2F-1759575997" anchor-label="brightGreen" id="1943163563%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-green.html">brightGreen</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1526460293%2FProperties%2F-1759575997" anchor-label="brightMagenta" id="1526460293%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-magenta.html"><span>bright</span><wbr></wbr><span><span>Magenta</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1526460293%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1526460293%2FProperties%2F-1759575997" anchor-label="brightMagenta" id="1526460293%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-magenta.html">brightMagenta</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1631032605%2FProperties%2F-1759575997" anchor-label="brightRed" id="1631032605%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-red.html"><span>bright</span><wbr></wbr><span><span>Red</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1631032605%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1631032605%2FProperties%2F-1759575997" anchor-label="brightRed" id="1631032605%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-red.html">brightRed</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-270644155%2FProperties%2F-1759575997" anchor-label="brightWhite" id="-270644155%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-white.html"><span>bright</span><wbr></wbr><span><span>White</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-270644155%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-270644155%2FProperties%2F-1759575997" anchor-label="brightWhite" id="-270644155%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-white.html">brightWhite</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-888580264%2FProperties%2F-1759575997" anchor-label="brightYellow" id="-888580264%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="bright-yellow.html"><span>bright</span><wbr></wbr><span><span>Yellow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-888580264%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-888580264%2FProperties%2F-1759575997" anchor-label="brightYellow" id="-888580264%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="bright-yellow.html">brightYellow</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="546605795%2FProperties%2F-1759575997" anchor-label="cyan" id="546605795%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="cyan.html"><span><span>cyan</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="546605795%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="546605795%2FProperties%2F-1759575997" anchor-label="cyan" id="546605795%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="cyan.html">cyan</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="danger.html"><span><span>danger</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1556746659%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="danger.html">danger</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1556746659%2FProperties%2F-1759575997" anchor-label="danger" id="1556746659%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/danger.html">danger</a> style from the current theme</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="dim.html"><span><span>dim</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-887289300%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="dim.html">dim</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-887289300%2FProperties%2F-1759575997" anchor-label="dim" id="-887289300%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text as faint or decreased intensity.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1148418979%2FProperties%2F-1759575997" anchor-label="gray" id="1148418979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="gray.html"><span><span>gray</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1148418979%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1148418979%2FProperties%2F-1759575997" anchor-label="gray" id="1148418979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="gray.html">gray</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-418951599%2FProperties%2F-1759575997" anchor-label="green" id="-418951599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="green.html"><span><span>green</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-418951599%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-418951599%2FProperties%2F-1759575997" anchor-label="green" id="-418951599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="green.html">green</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="info.html"><span><span>info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-538494024%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="info.html">info</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-538494024%2FProperties%2F-1759575997" anchor-label="info" id="-538494024%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/info.html">info</a> style from the current theme</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="inverse.html"><span><span>inverse</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1600662788%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="inverse.html">inverse</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1600662788%2FProperties%2F-1759575997" anchor-label="inverse" id="1600662788%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with background and foreground colors switched.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="italic.html"><span><span>italic</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="917874230%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="italic.html">italic</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="917874230%2FProperties%2F-1759575997" anchor-label="italic" id="917874230%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text as italic.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-723478101%2FProperties%2F-1759575997" anchor-label="magenta" id="-723478101%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="magenta.html"><span><span>magenta</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-723478101%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-723478101%2FProperties%2F-1759575997" anchor-label="magenta" id="-723478101%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="magenta.html">magenta</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="muted.html"><span><span>muted</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1891971305%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="muted.html">muted</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1891971305%2FProperties%2F-1759575997" anchor-label="muted" id="1891971305%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/muted.html">muted</a> style from the current theme</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="plain.html"><span><span>plain</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="389685610%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="plain.html">plain</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="389685610%2FProperties%2F-1759575997" anchor-label="plain" id="389685610%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">No style.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="10699331%2FProperties%2F-1759575997" anchor-label="red" id="10699331%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="red.html"><span><span>red</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="10699331%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="10699331%2FProperties%2F-1759575997" anchor-label="red" id="10699331%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="red.html">red</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="strikethrough.html"><span><span>strikethrough</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-465968767%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="strikethrough.html">strikethrough</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-465968767%2FProperties%2F-1759575997" anchor-label="strikethrough" id="-465968767%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with a strikethrough.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="success.html"><span><span>success</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1015231599%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="success.html">success</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1015231599%2FProperties%2F-1759575997" anchor-label="success" id="-1015231599%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/success.html">success</a> style from the current theme</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="underline.html"><span><span>underline</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2060744920%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="underline.html">underline</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-2060744920%2FProperties%2F-1759575997" anchor-label="underline" id="-2060744920%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Underline text.</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="warning.html"><span><span>warning</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1592137192%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="warning.html">warning</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1592137192%2FProperties%2F-1759575997" anchor-label="warning" id="-1592137192%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><p class="paragraph">Render text with the <a href="../../com.github.ajalt.mordant.rendering/-theme/warning.html">warning</a> style from the current theme</p></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="1662207979%2FProperties%2F-1759575997" anchor-label="white" id="1662207979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="white.html"><span><span>white</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1662207979%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="1662207979%2FProperties%2F-1759575997" anchor-label="white" id="1662207979%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="white.html">white</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+<a data-name="-1099706254%2FProperties%2F-1759575997" anchor-label="yellow" id="-1099706254%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+          <div class="main-subrow keyValue ">
+            <div class=""><span class="inline-flex">
+                <div><a href="yellow.html"><span><span>yellow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1099706254%2FProperties%2F-1759575997"></span>
+                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                </span></span></div>
+            <div>
+              <div class="title">
+                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted" data-togglable="Properties">
+                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
+<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><a data-name="-1099706254%2FProperties%2F-1759575997" anchor-label="yellow" id="-1099706254%2FProperties%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="yellow.html">yellow</a><span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright &copy; 2022 AJ Alt</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
 </html>
-
