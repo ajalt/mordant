@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0-beta8
+## 2.0.0-beta9
 ### Changed
 - Stop stripping trailing newline from text when using `Whitespace.PRE` [(#75)](https://github.com/ajalt/mordant/issues/75)
 
