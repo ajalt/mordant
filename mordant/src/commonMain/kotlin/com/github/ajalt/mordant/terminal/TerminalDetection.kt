@@ -46,7 +46,10 @@ internal object TerminalDetection {
         return forcedColor() != NONE && (isWindowsTerminal() || when (getTermProgram()) {
             "hyper", "wezterm" -> true
             "iterm.app" -> isRecentITerm()
-            else -> false
+            else -> when (getTerm()) {
+                "xterm-kitty", "alacritty" -> true
+                else -> false
+            }
         })
     }
 
