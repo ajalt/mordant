@@ -4,7 +4,6 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import platform.posix.*
 
-@OptIn(ExperimentalUnsignedTypes::class)
 internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
     return memScoped {
         val size = alloc<winsize>()

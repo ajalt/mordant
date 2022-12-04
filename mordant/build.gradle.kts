@@ -45,6 +45,8 @@ kotlin {
             dependencies {
                 api(libs.colormath)
                 implementation(libs.markdown)
+                implementation(libs.jna.core)
+                implementation(libs.jna.platform)
             }
         }
         val commonTest by getting {

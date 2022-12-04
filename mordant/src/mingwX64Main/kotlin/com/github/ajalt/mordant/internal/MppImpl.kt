@@ -15,7 +15,7 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = memScope
     if (GetConsoleScreenBufferInfo(stdoutHandle, csbi.ptr) == 0) {
         return@memScoped null
     }
-    csbi.dwSize.run { X.toInt() to Y.toInt() }
+    csbi.srWindow.run { Right - Left + 1 to Bottom - Top + 1 }
 }
 
 internal actual fun isWindows(): Boolean = true
