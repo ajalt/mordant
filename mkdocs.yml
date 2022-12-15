@@ -11,11 +11,24 @@ theme:
   name: 'material'
   logo: img/gradient_white_24dp.svg
   favicon: img/favicon.ico
-  palette:
-    primary: indigo
-    accent: indigo
   icon:
     repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 markdown_extensions:
   - smarty
