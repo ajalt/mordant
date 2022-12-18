@@ -1,9 +1,13 @@
 # Changelog
 
+## Unreleased
 ### Changed
 - JVM: terminal detection now uses JNA to call kernel functions directly. 
 - Interactive state of stdin and stdout are now detected separately. 
 - Terminal size detection is now fast since it does not need a subprocess.
+
+### Fixed
+- Detect terminal correctly when running in the IntelliJ terminal tab, but not through a run action. [(#76)](https://github.com/ajalt/mordant/issues/76)
 
 ### Deprecated 
 - `timeoutMs` parameter to `TerminalDetection.updateTerminalSize`. This function is now fast on all platforms. 
