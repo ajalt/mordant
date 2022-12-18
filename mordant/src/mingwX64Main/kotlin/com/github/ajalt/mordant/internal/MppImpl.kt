@@ -18,8 +18,6 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = memScope
     csbi.srWindow.run { Right - Left + 1 to Bottom - Top + 1 }
 }
 
-internal actual fun isWindows(): Boolean = true
-
 // https://docs.microsoft.com/en-us/windows/console/setconsolemode
 // https://docs.microsoft.com/en-us/windows/console/getconsolemode
 internal actual fun ttySetEcho(echo: Boolean) = memScoped {

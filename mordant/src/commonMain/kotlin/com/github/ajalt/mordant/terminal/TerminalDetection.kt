@@ -96,12 +96,9 @@ internal object TerminalDetection {
         // If there's no explicit level (like "xterm") or the level is ansi16 (like "rxvt-16color"),
         // just look at the terminal value
         return when (term) {
-            "cygwin" -> when {
-                // New versions of windows 10 cmd.exe supports truecolor, and most other terminal emulators
-                // like ConEmu and mintty support truecolor, although they might downsample it.
-                getJavaProperty("os.name") in listOf("Windows 10", "Windows 11") -> TRUECOLOR
-                else -> ANSI256
-            }
+            // New versions of windows 10 cmd.exe supports truecolor, and most other terminal emulators
+            // like ConEmu and mintty support truecolor, although they might downsample it.
+            "cygwin" -> TRUECOLOR
             "xterm", "vt100", "vt220", "screen", "tmux", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
             "dumb" -> NONE
             else -> NONE

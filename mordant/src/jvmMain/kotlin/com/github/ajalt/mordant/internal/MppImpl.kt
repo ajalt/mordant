@@ -34,26 +34,6 @@ private fun runCommand(vararg args: String): Process? {
         null
     }
 }
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
-    val process = when {
-        isWindows() -> runCommand("powershell.exe", "-noprofile", "-command", "\$host.ui.rawui")
-        // Try running stty both directly and via env, since neither one works on all systems
-        else -> runCommand("stty", "size") ?: runCommand("/use/bin/env", "stty", "size")
-    } ?: return null
-    try {
-        if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
-            return null
-        }
-    } catch (e: InterruptedException) {
-        return null
-    }
-
-    val output = process.inputStream.bufferedReader().readText().trim()
-    return when {
-        isWindows() -> parseWindowsPowershellSize(output)
-        else -> parseSttySize(output)
-    }
-}
 
 private fun parseWindowsPowershellSize(output: String): Pair<Int, Int>? {
     val groups = Regex("""[Ww]indow[Ss]ize\s+:?\s+(\d+),(\d+)""").find(output)?.groupValues ?: return null
@@ -66,11 +46,8 @@ private fun parseSttySize(output: String): Pair<Int, Int>? {
     return dimens[1] to dimens[0]
 }
 
-internal actual fun isWindows(): Boolean = "win" in System.getProperty("os.name").lowercase()
 
 internal actual fun getEnv(key: String): String? = System.getenv(key)
-
-internal actual fun getJavaProperty(key: String): String? = System.getProperty(key)
 
 // Depending on how IntelliJ is configured, it might use its own Java agent
 internal actual fun runningInIdeaJavaAgent() = try {
@@ -81,12 +58,7 @@ internal actual fun runningInIdeaJavaAgent() = try {
     false
 }
 
-// Unfortunately, the JVM doesn't let us check stdin, stdout or stderr separately.
-internal actual fun stdoutInteractive(): Boolean = System.console() != null
 
-internal actual fun stdinInteractive(): Boolean = System.console() != null
-
-internal actual fun stderrInteractive(): Boolean = System.console() != null
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     return string.codePoints().iterator().asSequence()
@@ -150,3 +122,15 @@ internal actual fun sendInterceptedPrintRequest(
 }
 
 internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = synchronized(lock, block)
+
+private val impls : JnaMppImpls = System.getProperty("os.name").let { os ->
+    when {
+        os.startsWith("Windows") -> Win32MppImpls()
+        else -> TODO()
+    }
+}
+
+internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
+internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
+internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
+internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = impls.getTerminalSize()

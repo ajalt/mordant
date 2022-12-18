@@ -25,7 +25,6 @@ internal actual class AtomicInt actual constructor(initial: Int) {
 
 private interface JsMppImpls {
     fun readEnvvar(key: String): String?
-    fun isWindowsMpp(): Boolean
     fun stdoutInteractive(): Boolean
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
@@ -36,7 +35,6 @@ private interface JsMppImpls {
 
 private object BrowserMppImpls : JsMppImpls {
     override fun readEnvvar(key: String): String? = null
-    override fun isWindowsMpp(): Boolean = false
     override fun stdoutInteractive(): Boolean = false
     override fun stdinInteractive(): Boolean = false
     override fun stderrInteractive(): Boolean = false
@@ -52,7 +50,6 @@ private object BrowserMppImpls : JsMppImpls {
 
 private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
     override fun readEnvvar(key: String): String? = process.env[key] as? String
-    override fun isWindowsMpp(): Boolean = process.platform == "win32"
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
     override fun stderrInteractive(): Boolean = js("Boolean(process.stderr.isTTY)") as Boolean
@@ -93,11 +90,9 @@ private val impls: JsMppImpls = try {
 }
 
 internal actual fun terminalSizeDetectionIsFast(): Boolean = true
-internal actual fun getJavaProperty(key: String): String? = null
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
 internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = impls.getTerminalSize()
-internal actual fun isWindows(): Boolean = impls.isWindowsMpp()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()

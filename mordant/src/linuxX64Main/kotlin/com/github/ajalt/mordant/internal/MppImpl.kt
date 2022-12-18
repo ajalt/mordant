@@ -14,5 +14,3 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
         }
     }
 }
-
-internal actual fun isWindows(): Boolean = false
