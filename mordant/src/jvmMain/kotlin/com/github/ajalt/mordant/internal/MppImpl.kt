@@ -97,6 +97,7 @@ private val impls: JnaMppImpls = System.getProperty("os.name").let { os ->
     when {
         os.startsWith("Windows") -> Win32MppImpls()
         os == "Linux" -> LinuxMppImpls()
+        os == "Mac OS X" -> MacosMppImpls()
         else -> FallbackJnaMppImpls()
     }
 }

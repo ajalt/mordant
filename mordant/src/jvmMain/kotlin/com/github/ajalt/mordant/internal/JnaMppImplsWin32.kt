@@ -1,8 +1,6 @@
 package com.github.ajalt.mordant.internal
 
 import com.sun.jna.*
-import com.sun.jna.platform.win32.WinBase
-import com.sun.jna.platform.win32.Wincon
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.win32.W32APIOptions
 
@@ -11,33 +9,12 @@ import com.sun.jna.win32.W32APIOptions
 // copied here so that we don't need the entire platform dependency
 @Suppress("FunctionName", "PropertyName", "ClassName", "unused")
 private interface WinKernel32Lib : Library {
-    class HANDLE : PointerType {
-        private var immutable = false
-
-        constructor()
-        constructor(p: Pointer) {
-            pointer = p
-            immutable = true
-        }
-
-        override fun fromNative(nativeValue: Any, context: FromNativeContext): Any {
-            val o = super.fromNative(nativeValue, context)
-            return if (WinBase.INVALID_HANDLE_VALUE == o) {
-                WinBase.INVALID_HANDLE_VALUE
-            } else o
-        }
-
-        override fun setPointer(p: Pointer) {
-            if (immutable) {
-                throw UnsupportedOperationException("immutable reference")
-            }
-            super.setPointer(p)
-        }
-
-        override fun toString(): String {
-            return pointer.toString()
-        }
+    companion object {
+        const val STD_INPUT_HANDLE = -10
+        const val STD_OUTPUT_HANDLE = -11
+        const val STD_ERROR_HANDLE = -12
     }
+    class HANDLE : PointerType()
 
     @Structure.FieldOrder("X", "Y")
     class COORD : Structure() {
@@ -66,19 +43,19 @@ private interface WinKernel32Lib : Library {
     @Structure.FieldOrder("dwSize", "dwCursorPosition", "wAttributes", "srWindow", "dwMaximumWindowSize")
     class CONSOLE_SCREEN_BUFFER_INFO : Structure() {
         @JvmField
-        var dwSize: Wincon.COORD? = null
+        var dwSize: COORD? = null
 
         @JvmField
-        var dwCursorPosition: Wincon.COORD? = null
+        var dwCursorPosition: COORD? = null
 
         @JvmField
         var wAttributes: Short = 0
 
         @JvmField
-        var srWindow: Wincon.SMALL_RECT? = null
+        var srWindow: SMALL_RECT? = null
 
         @JvmField
-        var dwMaximumWindowSize: Wincon.COORD? = null
+        var dwMaximumWindowSize: COORD? = null
     }
 
     fun GetStdHandle(nStdHandle: Int): HANDLE
@@ -91,9 +68,9 @@ private interface WinKernel32Lib : Library {
 
 internal class Win32MppImpls : JnaMppImpls {
     private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
-    private val stdoutHandle = kernel.GetStdHandle(Wincon.STD_OUTPUT_HANDLE)
-    private val stdinHandle = kernel.GetStdHandle(Wincon.STD_INPUT_HANDLE)
-    private val stderrHandle = kernel.GetStdHandle(Wincon.STD_ERROR_HANDLE)
+    private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
+    private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)
+    private val stderrHandle = kernel.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE)
     override fun stdoutInteractive(): Boolean {
         return kernel.GetConsoleMode(stdoutHandle, IntByReference())
     }
