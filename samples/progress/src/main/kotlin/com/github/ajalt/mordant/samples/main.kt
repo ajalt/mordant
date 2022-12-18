@@ -8,9 +8,6 @@ import com.github.ajalt.mordant.widgets.Spinner
 fun main() {
     val terminal = Terminal()
 
-    // Detect the terminal size so our progress bar is as wide as the screen
-    terminal.info.updateTerminalSize()
-
     val progress = terminal.progressAnimation {
         spinner(Spinner.Dots(brightBlue))
         text("my-file.bin")
