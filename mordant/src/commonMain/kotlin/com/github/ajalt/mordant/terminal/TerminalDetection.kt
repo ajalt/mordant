@@ -13,7 +13,7 @@ internal object TerminalDetection {
         hyperlinks: Boolean?,
         interactive: Boolean?,
     ): TerminalInfo {
-        val ij = isIntellijConsole() // intellij console is interactive, even through System.console == null
+        val ij = isIntellijRunActionConsole() // intellij console is interactive, even though isatty returns false
         val inputInteractive = interactive ?: if (stderr) false else (ij || stdinInteractive())
         val outputInteractive = interactive ?: (ij || (if (stderr) stderrInteractive() else stdoutInteractive()))
         val level = ansiLevel ?: ansiLevel(outputInteractive)
@@ -56,7 +56,7 @@ internal object TerminalDetection {
 
         // Terminals embedded in some IDEs support color even though stdout isn't interactive. Check
         // those terminals before checking stdout.
-        if (isIntellijConsole() || isVsCodeTerminal()) return TRUECOLOR
+        if (isIntellijRunActionConsole() || isVsCodeTerminal()) return TRUECOLOR
 
         // If output isn't interactive, never output colors, since we might be redirected to a file etc.
         if (!interactive) return NONE
@@ -65,6 +65,8 @@ internal object TerminalDetection {
         // emulators to detect color support
 
         if (isWindowsTerminal() || isDomTerm()) return TRUECOLOR
+
+        if (isJediTerm()) return TRUECOLOR
 
         when (getColorTerm()) {
             "24bit", "24bits", "truecolor" -> return TRUECOLOR
@@ -135,6 +137,9 @@ internal object TerminalDetection {
     // https://domterm.org/Detecting-domterm-terminal.html
     private fun isDomTerm() = !getEnv("DOMTERM").isNullOrEmpty()
 
+    // https://github.com/JetBrains/intellij-community/blob/master/plugins/terminal/src/org/jetbrains/plugins/terminal/LocalTerminalDirectRunner.java#L141
+    private fun isJediTerm() = getEnv("TERMINAL_EMULATOR") == "JetBrains-JediTerm"
+
     private fun isRecentITerm(): Boolean {
         val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.firstOrNull()?.toIntOrNull()
         return ver != null && ver >= 3
@@ -156,14 +161,9 @@ internal object TerminalDetection {
         ).any { getEnv(it) != null }
     }
 
-    private fun isIntellijConsole(): Boolean {
-        return hasIdeaEnvvar() || runningInIdeaJavaAgent()
-    }
-
-    // Some versions of IntelliJ set various environment variables
-    private fun hasIdeaEnvvar(): Boolean {
-        return getEnv("IDEA_INITIAL_DIRECTORY") != null
-                || getEnv("__INTELLIJ_COMMAND_HISTFILE__") != null
-                || getEnv("TERMINAL_EMULATOR")?.contains("jetbrains", ignoreCase = true) == true
+    private fun isIntellijRunActionConsole(): Boolean {
+        // For some reason, IntelliJ's terminal behaves differently when running from an IDE run action vs running from
+        // their terminal tab. In the latter case, the JediTerm envvar is set, in the former it's missing.
+        return !isJediTerm() && runningInIdeaJavaAgent()
     }
 }
