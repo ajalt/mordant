@@ -7,7 +7,7 @@ import platform.posix.TIOCGWINSZ
 import platform.posix.ioctl
 import platform.posix.winsize
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
+internal actual fun getTerminalSize(): Pair<Int, Int>? {
     return memScoped {
         val size = alloc<winsize>()
         if (ioctl(STDIN_FILENO, TIOCGWINSZ, size) < 0) {
@@ -17,5 +17,3 @@ internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
         }
     }
 }
-
-internal actual fun isWindows(): Boolean = false

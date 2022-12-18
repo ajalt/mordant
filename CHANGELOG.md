@@ -1,5 +1,13 @@
 # Changelog
 
+### Changed
+- JVM: terminal detection now uses JNA to call kernel functions directly. 
+- Interactive state of stdin and stdout are now detected separately. 
+- Terminal size detection is now fast since it does not need a subprocess.
+
+### Deprecated 
+- `timeoutMs` parameter to `TerminalDetection.updateTerminalSize`. This function is now fast on all platforms. 
+
 ## 2.0.0-beta9
 ### Changed
 - Stop stripping trailing newline from text when using `Whitespace.PRE` [(#75)](https://github.com/ajalt/mordant/issues/75)

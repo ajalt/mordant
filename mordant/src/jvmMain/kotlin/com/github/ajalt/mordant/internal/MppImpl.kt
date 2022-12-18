@@ -1,10 +1,8 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
-import java.io.Console
 import java.io.IOException
 import java.lang.management.ManagementFactory
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 internal actual class AtomicInt actual constructor(initial: Int) {
@@ -22,55 +20,7 @@ internal actual class AtomicInt actual constructor(initial: Int) {
     }
 }
 
-// We have to shell out to another program on JVM, which takes ~10ms for stty and ~100ms for powershell
-internal actual fun terminalSizeDetectionIsFast(): Boolean = false
-
-private fun runCommand(vararg args: String): Process? {
-    return try {
-        ProcessBuilder(*args)
-            .redirectInput(ProcessBuilder.Redirect.INHERIT)
-            .start()
-    } catch (e: IOException) {
-        null
-    }
-}
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
-    val process = when {
-        isWindows() -> runCommand("powershell.exe", "-noprofile", "-command", "\$host.ui.rawui")
-        // Try running stty both directly and via env, since neither one works on all systems
-        else -> runCommand("stty", "size") ?: runCommand("/use/bin/env", "stty", "size")
-    } ?: return null
-    try {
-        if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
-            return null
-        }
-    } catch (e: InterruptedException) {
-        return null
-    }
-
-    val output = process.inputStream.bufferedReader().readText().trim()
-    return when {
-        isWindows() -> parseWindowsPowershellSize(output)
-        else -> parseSttySize(output)
-    }
-}
-
-private fun parseWindowsPowershellSize(output: String): Pair<Int, Int>? {
-    val groups = Regex("""[Ww]indow[Ss]ize\s+:?\s+(\d+),(\d+)""").find(output)?.groupValues ?: return null
-    return groups[1].toInt() to groups[2].toInt()
-}
-
-private fun parseSttySize(output: String): Pair<Int, Int>? {
-    val dimens = output.split(" ").mapNotNull { it.toIntOrNull() }
-    if (dimens.size != 2) return null
-    return dimens[1] to dimens[0]
-}
-
-internal actual fun isWindows(): Boolean = "win" in System.getProperty("os.name").lowercase()
-
 internal actual fun getEnv(key: String): String? = System.getenv(key)
-
-internal actual fun getJavaProperty(key: String): String? = System.getProperty(key)
 
 // Depending on how IntelliJ is configured, it might use its own Java agent
 internal actual fun runningInIdeaJavaAgent() = try {
@@ -81,12 +31,6 @@ internal actual fun runningInIdeaJavaAgent() = try {
     false
 }
 
-// Unfortunately, the JVM doesn't let us check stdin, stdout or stderr separately.
-internal actual fun stdoutInteractive(): Boolean = System.console() != null
-
-internal actual fun stdinInteractive(): Boolean = System.console() != null
-
-internal actual fun stderrInteractive(): Boolean = System.console() != null
 
 internal actual fun codepointSequence(string: String): Sequence<Int> {
     return string.codePoints().iterator().asSequence()
@@ -144,9 +88,21 @@ internal actual fun sendInterceptedPrintRequest(
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
 ) {
-    terminalInterface.completePrintRequest(
-        interceptors.fold(request) { acc, it -> it.intercept(acc) }
-    )
+    terminalInterface.completePrintRequest(interceptors.fold(request) { acc, it -> it.intercept(acc) })
 }
 
 internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = synchronized(lock, block)
+
+private val impls: JnaMppImpls = System.getProperty("os.name").let { os ->
+    when {
+        os.startsWith("Windows") -> Win32MppImpls()
+        os == "Linux" -> LinuxMppImpls()
+        os == "Mac OS X" -> MacosMppImpls()
+        else -> FallbackJnaMppImpls()
+    }
+}
+
+internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
+internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
+internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
+internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
