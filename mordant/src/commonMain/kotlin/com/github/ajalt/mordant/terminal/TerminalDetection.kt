@@ -31,13 +31,10 @@ internal object TerminalDetection {
     }
 
     /** Returns a pair of `[width, height]`, or `null` if the size can't be detected */
-    fun detectSize(timeoutMs: Long): Pair<Int, Int>? = getTerminalSize(timeoutMs)
+    fun detectSize(): Pair<Int, Int>? = getTerminalSize()
 
     private fun detectInitialSize(): Pair<Int, Int> {
-        val detected = when {
-            terminalSizeDetectionIsFast() -> getTerminalSize(timeoutMs = 100)
-            else -> null
-        }
+        val detected = getTerminalSize()
         return detected ?: ((getEnv("COLUMNS")?.toIntOrNull() ?: 79) to (getEnv("LINES")?.toIntOrNull() ?: 24))
     }
 

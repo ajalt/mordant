@@ -19,7 +19,6 @@ dependencyResolutionManagement {
             library("markdown", "org.jetbrains:markdown:0.3.1")
 
             library("jna-core", "net.java.dev.jna", "jna").versionRef("jna")
-            library("jna-platform", "net.java.dev.jna", "jna-platform").versionRef("jna")
 
             // used in tests
             library("kotest", "io.kotest:kotest-assertions-core:5.2.1")

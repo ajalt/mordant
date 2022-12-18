@@ -39,15 +39,18 @@ class TerminalInfo(
     /**
      * Query the terminal for its current size, updating [width] and [height] if successful.
      *
-     * On JVM, this call will create a subprocess and block for up to [timeoutMs] waiting for it to complete.
-     * On other platforms, this call doesn't require a subprocess, and [timeoutMs] is ignored.
-     *
      * @return `true` if the size was updated, of `false` if it was not
      */
-    fun updateTerminalSize(timeoutMs: Long = 5000): Boolean {
-        val (w, h) = TerminalDetection.detectSize(timeoutMs) ?: return false
+    fun updateTerminalSize(): Boolean {
+        val (w, h) = TerminalDetection.detectSize() ?: return false
         width = w
         height = h
         return true
     }
+
+    @Deprecated(
+        "The timeoutMs parameter is no longer used; this function does not open a subprocess",
+        ReplaceWith("updateTerminalSize()")
+    )
+    fun updateTerminalSize(timeoutMs: Long): Boolean = updateTerminalSize()
 }

@@ -21,8 +21,6 @@ internal actual class AtomicInt actual constructor(initial: Int) {
     }
 }
 
-internal actual fun terminalSizeDetectionIsFast(): Boolean = true
-
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
 internal actual fun getEnv(key: String): String? = getenv(key)?.toKStringFromUtf8()

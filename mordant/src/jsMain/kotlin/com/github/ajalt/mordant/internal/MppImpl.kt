@@ -89,10 +89,9 @@ private val impls: JsMppImpls = try {
     BrowserMppImpls
 }
 
-internal actual fun terminalSizeDetectionIsFast(): Boolean = true
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? = impls.getTerminalSize()
+internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()

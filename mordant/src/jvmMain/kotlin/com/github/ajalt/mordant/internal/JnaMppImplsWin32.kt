@@ -90,7 +90,6 @@ private interface WinKernel32Lib : Library {
 }
 
 internal class Win32MppImpls : JnaMppImpls {
-    override val isWindows: Boolean get() = true
     private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
     private val stdoutHandle = kernel.GetStdHandle(Wincon.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(Wincon.STD_INPUT_HANDLE)

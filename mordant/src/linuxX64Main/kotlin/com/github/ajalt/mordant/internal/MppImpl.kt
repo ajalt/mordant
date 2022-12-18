@@ -4,7 +4,7 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import platform.posix.*
 
-internal actual fun getTerminalSize(timeoutMs: Long): Pair<Int, Int>? {
+internal actual fun getTerminalSize(): Pair<Int, Int>? {
     return memScoped {
         val size = alloc<winsize>()
         if (ioctl(STDIN_FILENO, TIOCGWINSZ, size) < 0) {
