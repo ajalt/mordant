@@ -261,7 +261,7 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-   implementation("com.github.ajalt.mordant:mordant:2.0.0-beta9")
+   implementation("com.github.ajalt.mordant:mordant:2.0.0-beta11")
 }
 ```
 
@@ -291,7 +291,7 @@ repositories {
 
 ## License
 
-    Copyright 2018-2022 AJ Alt
+    Copyright 2018 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
