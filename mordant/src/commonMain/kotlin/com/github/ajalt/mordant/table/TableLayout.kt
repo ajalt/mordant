@@ -1,12 +1,14 @@
 package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
 import com.github.ajalt.mordant.widgets.withPadding
 
 internal typealias ImmutableRow = List<Cell>
 internal typealias MutableRow = MutableList<Cell>
+
 
 /**
  * Takes a table builder and computes the locations, spans, and styles of all [Cell]s.
@@ -20,9 +22,15 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         val header = buildSection(table.headerSection, builderWidth)
         val body = buildSection(table.bodySection, builderWidth)
         val footer = buildSection(table.footerSection, builderWidth)
-
+        val rows = listOf(header, body, footer).flatten().ifEmpty {
+            val b = table.tableBorders ?: Borders.ALL
+            val cell = Cell.Content(
+                EmptyWidget, 1, 1, b.left, b.top, b.right, b.bottom, null, TextAlign.LEFT, VerticalAlign.TOP
+            )
+            listOf(listOf(cell))
+        }
         return TableImpl(
-            rows = listOf(header, body, footer).flatten(),
+            rows = rows,
             borderType = table.borderType,
             borderStyle = table.borderStyle,
             headerRowCount = header.size,

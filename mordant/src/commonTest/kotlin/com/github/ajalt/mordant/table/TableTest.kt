@@ -17,6 +17,16 @@ import kotlin.test.Test
 
 class TableTest : RenderingTest() {
     @Test
+    @JsName("empty_table")
+    fun `empty table`() = doBodyTest(
+        """
+    ░┌┐
+    ░││
+    ░└┘
+    """
+    ) {}
+
+    @Test
     @JsName("empty_cell")
     fun `empty cell`() = doBodyTest(
         """

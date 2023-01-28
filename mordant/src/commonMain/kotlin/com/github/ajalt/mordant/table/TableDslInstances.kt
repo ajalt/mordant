@@ -212,6 +212,7 @@ internal class VerticalLayoutBuilderInstance(
     fun build(): Widget {
         tableBuilder.padding = Padding(0)
         tableBuilder.cellBorders = Borders.NONE
+        tableBuilder.tableBorders = Borders.NONE
         tableBuilder.column(0) { this@column.width = this@VerticalLayoutBuilderInstance.width }
         if (spacing > 0) {
             for ((i, row) in section.rows.withIndex()) {
