@@ -21,7 +21,7 @@ buildscript {
 
 kotlin {
     jvm()
-    js(BOTH) {
+    js(IR) {
         nodejs()
         browser()
     }
@@ -32,13 +32,6 @@ kotlin {
     mingwX64()
 
     sourceSets {
-        all {
-            with(languageSettings) {
-                languageVersion = "1.6"
-                apiVersion = "1.6"
-                optIn("kotlin.RequiresOptIn")
-            }
-        }
         val gen by creating { }
         val commonMain by getting {
             dependsOn(gen)
