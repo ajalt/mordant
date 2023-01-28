@@ -31,20 +31,28 @@ interface CellStyleBuilderBase {
 }
 
 interface CellStyleBuilder : CellStyleBuilderBase {
+    /**
+     * Borders around each individual cell.
+     *
+     * For cells on the edges of the table, the outside borders can be overridden by
+     * [tableBorders][TableBuilder.tableBorders]
+     */
     var cellBorders: Borders?
+
+    /** Vertical alignment of cell contents */
     var verticalAlign: VerticalAlign?
 
     /**
      * The padding around each cell
      *
-     * If you want to set the padding on around the entire widget, use [withPadding].
+     * If you want to set the padding around the entire layout, use [withPadding].
      */
     var padding: Padding?
 
     /**
      * Set the padding around each cell
      *
-     * If you want to set the padding around the entire widget, use [withPadding].
+     * If you want to set the padding around the entire layout, use [withPadding].
      */
     fun padding(all: Int) {
         padding = Padding(all)

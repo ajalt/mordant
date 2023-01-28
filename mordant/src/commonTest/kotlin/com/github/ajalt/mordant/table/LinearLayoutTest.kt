@@ -17,6 +17,10 @@ import kotlin.test.Test
 
 class LinearLayoutTest : RenderingTest() {
     @Test
+    fun horizontalLayoutEmpty() = checkRender(
+        horizontalLayout {}, "", width = 10
+    )
+    @Test
     fun horizontalLayout() = checkRender(
         horizontalLayout {
             column(1) { width = ColumnWidth.Expand() }
@@ -39,6 +43,12 @@ class LinearLayoutTest : RenderingTest() {
         """, width = 10
     )
 
+    @Test
+    fun verticalLayoutEmpty() = checkRender(
+        verticalLayout {}, """
+        ░
+        """
+    )
     @Test
     fun verticalLayout() = checkRender(
         verticalLayout {

@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Tables and other layouts can now be completely empty [(#82)](https://github.com/ajalt/mordant/issues/82)
+
 ### Changed
 - JVM: terminal detection now uses JNA to call kernel functions directly. 
 - Interactive state of stdin and stdout are now detected separately. 
