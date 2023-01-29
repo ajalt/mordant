@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
+
 ## 2.0.0-beta11
 ### Added
 - Tables and other layouts can now be completely empty [(#82)](https://github.com/ajalt/mordant/issues/82)
