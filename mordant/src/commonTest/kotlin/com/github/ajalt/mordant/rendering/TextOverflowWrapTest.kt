@@ -30,9 +30,22 @@ class TextOverflowWrapTest : RenderingTest() {
     """)
 
     @Test
+    fun truncateNoWrap() = doTestNoWrap(OverflowWrap.TRUNCATE, """
+        ░The weather today is 21
+        ░Llanfairpwllgwyngyllgog
+    """)
+
+    @Test
     fun ellipses() = doTest(OverflowWrap.ELLIPSES, """
         ░The weather today is
         ░21°C in
+        ░Llanfairpwllgwyngyllgo…
+    """)
+
+
+    @Test
+    fun ellipsesNoWrap() = doTestNoWrap(OverflowWrap.ELLIPSES, """
+        ░The weather today is 2…
         ░Llanfairpwllgwyngyllgo…
     """)
 
@@ -44,6 +57,19 @@ class TextOverflowWrapTest : RenderingTest() {
         checkRender(Text(
             text,
             whitespace = Whitespace.NORMAL,
+            align = TextAlign.NONE,
+            overflowWrap = wrap
+        ), expected, width = 23)
+    }
+
+    private fun doTestNoWrap(wrap: OverflowWrap, expected: String) {
+        val text = """
+        ░The weather today is 21°C in
+        ░Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch
+        """.trimMargin("░")
+        checkRender(Text(
+            text,
+            whitespace = Whitespace.NOWRAP,
             align = TextAlign.NONE,
             overflowWrap = wrap
         ), expected, width = 23)
