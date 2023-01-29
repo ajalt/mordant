@@ -131,15 +131,21 @@ class Text internal constructor(
                 }
 
                 // overflow wrap
-                if (cellWidth > wrapWidth) {
+                if (width + cellWidth > wrapWidth) {
                     when (overflowWrap) {
                         OverflowWrap.NORMAL -> {
                         }
                         OverflowWrap.TRUNCATE -> {
-                            span = Span.word(span.text.take(wrapWidth), span.style)
+                            span = Span.word(span.text.take(wrapWidth - width), span.style)
+                            line.add(span)
+                            breakLine()
+                            break
                         }
                         OverflowWrap.ELLIPSES -> {
-                            span = Span.word(span.text.take((wrapWidth - 1)) + "…", span.style)
+                            span = Span.word(span.text.take((wrapWidth - 1 - width)) + "…", span.style)
+                            line.add(span)
+                            breakLine()
+                            break
                         }
                         OverflowWrap.BREAK_WORD -> {
                             span.text.chunked(wrapWidth).forEach {
