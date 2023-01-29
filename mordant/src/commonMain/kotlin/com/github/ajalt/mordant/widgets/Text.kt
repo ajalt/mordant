@@ -130,8 +130,8 @@ class Text internal constructor(
                     if (pieceIsWhitespace) continue
                 }
 
-                // overflow wrap
-                if (cellWidth > wrapWidth) {
+                // overflow wrap if the span by itself is longer than the line
+                if (whitespace.wrap && cellWidth > wrapWidth) {
                     when (overflowWrap) {
                         OverflowWrap.NORMAL -> {
                         }

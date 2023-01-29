@@ -4,7 +4,7 @@ package com.github.ajalt.mordant.rendering
  * Settings for handling of whitespace and line wrapping.
  *
  * These values correspond to the values of the CSS
- * [white-space][https://developer.mozilla.org/en-US/docs/Web/CSS/white-space] property.
+ * [white-space](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space) property.
  *
  * @property collapseNewlines If true, line breaks in the text will be replaced with spaces.
  * @property collapseSpaces If true, consecutive spaces will be replaced with a single space.

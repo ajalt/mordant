@@ -4,7 +4,9 @@ package com.github.ajalt.mordant.rendering
  * Setting for handling of long words that exceed the line length by themselves.
  *
  * These values correspond to the values of the CSS
- * [overflow-wrap][https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap] property.
+ * [overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap) property.
+ *
+ * Note that `OverflowWrap` has no effect unless [Whitespace].[wrap][Whitespace.wrap] is `true`.
  */
 enum class OverflowWrap {
     /** Don't break or alter long words */
