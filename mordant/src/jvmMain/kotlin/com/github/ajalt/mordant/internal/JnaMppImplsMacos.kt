@@ -35,7 +35,10 @@ internal class MacosMppImpls : JnaMppImpls {
         const val STDOUT_FILENO = 1
         const val STDERR_FILENO = 2
 
-        const val TIOCGWINSZ = 0x40087468L
+        val TIOCGWINSZ = when {
+            Platform.isMIPS() || Platform.isPPC() || Platform.isSPARC() -> 0x40087468L
+            else -> 0x00005413L
+        }
     }
 
     private val libC: MacosLibC = Native.load(Platform.C_LIBRARY_NAME, MacosLibC::class.java)
@@ -45,7 +48,7 @@ internal class MacosMppImpls : JnaMppImpls {
 
     override fun getTerminalSize(): Pair<Int, Int>? {
         val size = MacosLibC.winsize()
-        return if (libC.ioctl(STDIN_FILENO,  NativeLong(TIOCGWINSZ), size) < 0) {
+        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
             null
         } else {
             size.ws_col.toInt() to size.ws_row.toInt()
