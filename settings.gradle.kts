@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 include("mordant")
+include("mordant-markdown")
 include("samples:markdown")
 include("samples:progress")
 include("samples:table")

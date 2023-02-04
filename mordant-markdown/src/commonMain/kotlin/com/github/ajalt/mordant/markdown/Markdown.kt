@@ -19,8 +19,8 @@ class Markdown(
     private val showHtml: Boolean = false,
     private val hyperlinks: Boolean? = null,
 ) : Widget {
-    private var document: MarkdownDocument? = null
-    private fun document(t: Terminal): MarkdownDocument {
+    private var document: Widget? = null
+    private fun document(t: Terminal): Widget {
         if (document == null) {
             document = MarkdownRenderer(markdown, t.theme, showHtml, hyperlinks ?: t.info.ansiHyperLinks).render()
         }

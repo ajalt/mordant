@@ -1,15 +1,11 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.rendering.TextStyles.Companion.hyperlink
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.test.normalizeHyperlinks
-import com.github.ajalt.mordant.widgets.LS
-import com.github.ajalt.mordant.widgets.NEL
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
@@ -24,6 +20,8 @@ import kotlin.test.Test
 
 // Header rules are styled by removing the bold from the theme style
 private val TextStyle.colorOnly get() = TextStyle(color, bgColor)
+private  const val NEL = "\u0085"
+private  const val LS = "\u2028"
 
 class MarkdownTest {
     private val quote = Theme.Default.style("markdown.blockquote")
@@ -55,7 +53,7 @@ class MarkdownTest {
         row(linkText),
         row(linkDest),
         row(imgAlt),
-    ) { it shouldNotBe DEFAULT_STYLE }
+    ) { it shouldNotBe TextStyle() }
 
     @Test
     fun tilde() = doTest("~", "~")
@@ -70,10 +68,18 @@ Paragraph
 two
 wrapped
 line.
+
+
+
+Paragraph three line breaks.
 """, """
 Paragraph one wrapped line.
 
 Paragraph two wrapped line.
+
+
+
+Paragraph three line breaks.
 """)
 
     @Test
@@ -241,6 +247,7 @@ A ${strikethrough("strikethrough span")}.
     fun `test ordered list nested`() = doTest("""
 1. a
     1. b
+    ░
     1. c
 
 1. d
@@ -347,7 +354,6 @@ ${linkText("www.example.com/url")}
 ${linkDest("[a link]: example.com")}
 """)
 
-    @Suppress("MarkdownUnresolvedFileReference")
     @Test
     @JsName("link_with_hyperlinks")
     fun `link with hyperlinks`() = doTest("""
@@ -572,6 +578,23 @@ ${h6.colorOnly("    ${dim("Header Text")}    ")}
 """, width = 19)
 
     @Test
+    @JsName("adjacent_headers")
+    fun `adjacent headers`() = doTest("""
+# Header 1
+
+## Header 2
+""", """
+
+${h1.colorOnly("════ ${bold("Header 1")} ═════")}
+
+
+
+${h2.colorOnly("──── ${bold("Header 2")} ─────")}
+
+""", width = 19)
+
+
+    @Test
     @JsName("header_trailing_chars")
     fun `header trailing chars`() = doTest("""
 # Header Text ##
@@ -714,7 +737,7 @@ LS
 ┌─────┬─────┐
 │${bold(" abc ")}│${bold(" def ")}│
 ╞═════╪═════╛
-│ bar │      ░
+│ bar │
 ├─────┼─────┐
 │ bar │ baz │
 └─────┴─────┘
@@ -942,7 +965,9 @@ link(c.com)
             try {
                 actual shouldBe expected.replace("░", "")
             } catch (e: Throwable) {
+                println("░".repeat(80))
                 println(actual)
+                println("░".repeat(80))
                 throw e
             }
         } catch (e: Throwable) {
@@ -973,4 +998,13 @@ private fun StringBuilder.printNode(text: String, node: ASTNode, indent: Int = 0
         append("\n")
         printNode(text, c, indent + 1)
     }
+}
+
+
+private fun String.normalizeHyperlinks(): String {
+    var i = 1
+    val regex = Regex(";id=([^;]+);")
+    val map = mutableMapOf<String, Int>()
+    regex.findAll(this).forEach { map.getOrPut(it.value) { i++ } }
+    return regex.replace(this) { ";id=${map[it.value]};" }
 }
