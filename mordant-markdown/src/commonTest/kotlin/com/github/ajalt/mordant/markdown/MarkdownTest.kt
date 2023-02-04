@@ -671,7 +671,7 @@ line break with spaces.
 
 A hard\
   line break with a backslash.
-  
+  ░
 A *hard   ░
 line* break with emph.
 
@@ -737,7 +737,7 @@ LS
 ┌─────┬─────┐
 │${bold(" abc ")}│${bold(" def ")}│
 ╞═════╪═════╛
-│ bar │
+│ bar │      ░
 ├─────┼─────┐
 │ bar │ baz │
 └─────┴─────┘

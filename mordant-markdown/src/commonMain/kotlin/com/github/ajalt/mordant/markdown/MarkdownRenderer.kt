@@ -9,7 +9,6 @@ import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.table.verticalLayout
 import com.github.ajalt.mordant.widgets.*
 import org.intellij.markdown.IElementType
-import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.ast.findChildOfType
@@ -19,6 +18,8 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.LinkMap
 import org.intellij.markdown.parser.MarkdownParser
+import org.intellij.markdown.MarkdownElementTypes as Elements
+import org.intellij.markdown.MarkdownTokenTypes.Companion as Tokens
 
 private const val NEL = "\u0085"
 
@@ -48,7 +49,7 @@ internal class MarkdownRenderer(
     }
 
     private fun parseFile(node: ASTNode): Widget {
-        require(node.type == MarkdownElementTypes.MARKDOWN_FILE)
+        require(node.type == Elements.MARKDOWN_FILE)
         if (hyperlinks) linkMap = LinkMap.buildLinkMap(node, input)
         return parseBlocks(node.children)
     }
@@ -57,16 +58,15 @@ internal class MarkdownRenderer(
         return verticalLayout {
             for ((i, node) in nodes.withIndex()) {
                 // skip the extra EOL after top level block, since the layout adds it for us
-                if (node.type == MarkdownTokenTypes.EOL
+                if (node.type == Tokens.EOL
                     && i in 1 until nodes.lastIndex
-                    && nodes[i - 1].type != MarkdownTokenTypes.EOL
+                    && nodes[i - 1].type !in listOf(Tokens.EOL, Tokens.WHITE_SPACE)
                 ) {
                     continue
                 }
-                if (node.type == MarkdownTokenTypes.WHITE_SPACE) {
+                if (node.type == Tokens.WHITE_SPACE) {
                     continue
                 }
-                // TODO: the markdown lib parses CHECK_BOX as a block-level element even though it should be rendered inline
                 cell(parseStructure(node))
             }
         }
@@ -75,27 +75,25 @@ internal class MarkdownRenderer(
     private fun parseStructure(node: ASTNode): Widget {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.UNORDERED_LIST -> {
+            Elements.UNORDERED_LIST -> {
                 UnorderedList(parseListItems(node))
             }
 
-            MarkdownElementTypes.ORDERED_LIST -> {
+            Elements.ORDERED_LIST -> {
                 OrderedList(parseListItems(node))
             }
 
-            MarkdownElementTypes.BLOCK_QUOTE -> {
+            Elements.BLOCK_QUOTE -> {
                 BlockQuote(
                     parseBlocks(
-                        node.children.drop(1).filter { it.type != MarkdownTokenTypes.WHITE_SPACE }
+                        node.children.drop(1).filter { it.type != Tokens.WHITE_SPACE }
                     )
                 )
             }
 
-            MarkdownElementTypes.CODE_FENCE -> {
-                val start =
-                    node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
-                val end =
-                    node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
+            Elements.CODE_FENCE -> {
+                val start = node.children.indexOfFirst { it.type == Tokens.CODE_FENCE_CONTENT }
+                val end = node.children.indexOfLast { it.type == Tokens.CODE_FENCE_CONTENT }
                 val dropLast = if (end < 0) 0 else node.children.lastIndex - end
                 val inner = innerInlines(node, drop = start, dropLast = dropLast)
                 val content = Text(
@@ -105,7 +103,7 @@ internal class MarkdownRenderer(
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
 
-            MarkdownElementTypes.CODE_BLOCK -> {
+            Elements.CODE_BLOCK -> {
                 val content = Text(
                     theme.style("markdown.code.block")(innerInlines(node)),
                     whitespace = Whitespace.PRE_WRAP
@@ -113,16 +111,16 @@ internal class MarkdownRenderer(
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
 
-            MarkdownElementTypes.HTML_BLOCK -> when {
+            Elements.HTML_BLOCK -> when {
                 showHtml -> Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP)
                 else -> Text("")
             }
 
-            MarkdownElementTypes.PARAGRAPH -> {
+            Elements.PARAGRAPH -> {
                 Text(innerInlines(node), whitespace = Whitespace.NORMAL)
             }
 
-            MarkdownElementTypes.LINK_DEFINITION -> {
+            Elements.LINK_DEFINITION -> {
                 if (hyperlinks) EmptyWidget
                 else Text(
                     theme.style("markdown.link.destination")(node.nodeText()),
@@ -130,49 +128,49 @@ internal class MarkdownRenderer(
                 )
             }
 
-            MarkdownElementTypes.SETEXT_1 -> setext(
+            Elements.SETEXT_1 -> setext(
                 theme.string("markdown.h1.rule"),
                 theme.style("markdown.h1"),
                 node
             )
 
-            MarkdownElementTypes.SETEXT_2 -> setext(
+            Elements.SETEXT_2 -> setext(
                 theme.string("markdown.h2.rule"),
                 theme.style("markdown.h2"),
                 node
             )
 
-            MarkdownElementTypes.ATX_1 -> atxHr(
+            Elements.ATX_1 -> atxHr(
                 theme.string("markdown.h1.rule"),
                 theme.style("markdown.h1"),
                 node
             )
 
-            MarkdownElementTypes.ATX_2 -> atxHr(
+            Elements.ATX_2 -> atxHr(
                 theme.string("markdown.h2.rule"),
                 theme.style("markdown.h2"),
                 node
             )
 
-            MarkdownElementTypes.ATX_3 -> atxHr(
+            Elements.ATX_3 -> atxHr(
                 theme.string("markdown.h3.rule"),
                 theme.style("markdown.h3"),
                 node
             )
 
-            MarkdownElementTypes.ATX_4 -> atxHr(
+            Elements.ATX_4 -> atxHr(
                 theme.string("markdown.h4.rule"),
                 theme.style("markdown.h4"),
                 node
             )
 
-            MarkdownElementTypes.ATX_5 -> atxHr(
+            Elements.ATX_5 -> atxHr(
                 theme.string("markdown.h5.rule"),
                 theme.style("markdown.h5"),
                 node
             )
 
-            MarkdownElementTypes.ATX_6 -> atxHr(
+            Elements.ATX_6 -> atxHr(
                 theme.string("markdown.h6.rule"),
                 theme.style("markdown.h6"),
                 node
@@ -198,9 +196,9 @@ internal class MarkdownRenderer(
                 }
             }
 
-            MarkdownTokenTypes.HORIZONTAL_RULE -> HorizontalRule()
-            MarkdownTokenTypes.EOL -> EMPTY_TEXT
-            MarkdownTokenTypes.WHITE_SPACE -> EMPTY_TEXT
+            Tokens.HORIZONTAL_RULE -> HorizontalRule()
+            Tokens.EOL -> EMPTY_TEXT
+            Tokens.WHITE_SPACE -> EMPTY_TEXT
             else -> error("Unexpected token when parsing structure: $node")
         }
     }
@@ -208,7 +206,7 @@ internal class MarkdownRenderer(
     private fun parseInlines(node: ASTNode): String {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.CODE_SPAN -> {
+            Elements.CODE_SPAN -> {
                 // Trim the code as a kludge to prevent the background style from extending if the
                 // code ends with whitespace. It would be better to fix this in the text wrapping code.
                 theme.style("markdown.code.span")(
@@ -219,11 +217,11 @@ internal class MarkdownRenderer(
                 )
             }
 
-            MarkdownElementTypes.EMPH -> {
+            Elements.EMPH -> {
                 theme.style("markdown.emph")(innerInlines(node, drop = 1))
             }
 
-            MarkdownElementTypes.STRONG -> {
+            Elements.STRONG -> {
                 theme.style("markdown.strong")(innerInlines(node, drop = 2))
             }
 
@@ -231,70 +229,70 @@ internal class MarkdownRenderer(
                 theme.style("markdown.stikethrough")(innerInlines(node, drop = 2))
             }
 
-            MarkdownElementTypes.LINK_TEXT -> {
+            Elements.LINK_TEXT -> {
                 theme.style("markdown.link.text")(node.children[1].nodeText())
             }
 
-            MarkdownElementTypes.LINK_LABEL -> {
+            Elements.LINK_LABEL -> {
                 theme.style("markdown.link.destination")(node.nodeText())
             }
 
-            MarkdownElementTypes.LINK_DESTINATION -> {
+            Elements.LINK_DESTINATION -> {
                 // the child might be TEXT or GFM_AUTOLINK
-                val drop = if (node.children.firstOrNull()?.type == MarkdownTokenTypes.LT) 1 else 0
+                val drop = if (node.children.firstOrNull()?.type == Tokens.LT) 1 else 0
                 theme.style("markdown.link.destination")(innerInlines(node, drop = drop))
             }
 
-            MarkdownElementTypes.INLINE_LINK -> {
+            Elements.INLINE_LINK -> {
                 renderInlineLink(node)
             }
 
-            MarkdownElementTypes.FULL_REFERENCE_LINK,
-            MarkdownElementTypes.SHORT_REFERENCE_LINK,
+            Elements.FULL_REFERENCE_LINK,
+            Elements.SHORT_REFERENCE_LINK,
             -> {
                 renderReferenceLink(node)
             }
 
-            MarkdownElementTypes.IMAGE -> {
+            Elements.IMAGE -> {
                 renderImageLink(node)
             }
             // email autolinks are parsed in a plain PARAGRAPH rather than an AUTOLINK, so we'll end
             // up rendering the surrounding <>.
-            MarkdownTokenTypes.EMAIL_AUTOLINK,
+            Tokens.EMAIL_AUTOLINK,
             GFMTokenTypes.GFM_AUTOLINK,
-            MarkdownTokenTypes.AUTOLINK,
+            Tokens.AUTOLINK,
             -> theme.style("markdown.link.text")(node.nodeText())
 
-            MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
-            MarkdownTokenTypes.HTML_TAG -> if (showHtml) node.nodeText() else ""
+            Elements.AUTOLINK -> innerInlines(node, drop = 1)
+            Tokens.HTML_TAG -> if (showHtml) node.nodeText() else ""
 
             // TokenTypes
-            MarkdownTokenTypes.BLOCK_QUOTE -> "" // don't render '>' delimiters in block quotes
-            MarkdownTokenTypes.CODE_LINE -> node.nodeText().drop(4)
-            MarkdownTokenTypes.HARD_LINE_BREAK -> NEL
-            MarkdownTokenTypes.ESCAPED_BACKTICKS -> "`"
-            MarkdownTokenTypes.BAD_CHARACTER -> "�"
-            MarkdownTokenTypes.BACKTICK,
-            MarkdownTokenTypes.CODE_FENCE_CONTENT,
-            MarkdownTokenTypes.COLON,
-            MarkdownTokenTypes.DOUBLE_QUOTE,
-            MarkdownTokenTypes.EMPH,
-            MarkdownTokenTypes.EXCLAMATION_MARK,
-            MarkdownTokenTypes.GT,
-            MarkdownTokenTypes.HTML_BLOCK_CONTENT,
-            MarkdownTokenTypes.LBRACKET,
-            MarkdownTokenTypes.LPAREN,
-            MarkdownTokenTypes.LT,
-            MarkdownTokenTypes.RBRACKET,
-            MarkdownTokenTypes.RPAREN,
-            MarkdownTokenTypes.SINGLE_QUOTE,
-            MarkdownTokenTypes.TEXT,
-            MarkdownTokenTypes.URL,
-            MarkdownTokenTypes.WHITE_SPACE,
+            Tokens.BLOCK_QUOTE -> "" // don't render '>' delimiters in block quotes
+            Tokens.CODE_LINE -> node.nodeText().drop(4)
+            Tokens.HARD_LINE_BREAK -> NEL
+            Tokens.ESCAPED_BACKTICKS -> "`"
+            Tokens.BAD_CHARACTER -> "�"
+            Tokens.BACKTICK,
+            Tokens.CODE_FENCE_CONTENT,
+            Tokens.COLON,
+            Tokens.DOUBLE_QUOTE,
+            Tokens.EMPH,
+            Tokens.EXCLAMATION_MARK,
+            Tokens.GT,
+            Tokens.HTML_BLOCK_CONTENT,
+            Tokens.LBRACKET,
+            Tokens.LPAREN,
+            Tokens.LT,
+            Tokens.RBRACKET,
+            Tokens.RPAREN,
+            Tokens.SINGLE_QUOTE,
+            Tokens.TEXT,
+            Tokens.URL,
+            Tokens.WHITE_SPACE,
             GFMTokenTypes.TILDE,
             -> node.nodeText()
 
-            MarkdownTokenTypes.EOL -> {
+            Tokens.EOL -> {
                 // Return the text rather than hard coding the return value to support NEL and LS.
                 node.nodeText()
             }
@@ -317,7 +315,7 @@ internal class MarkdownRenderer(
 
     private fun parseListItems(node: ASTNode): List<Widget> {
         return node.children
-            .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+            .filter { it.type == Elements.LIST_ITEM }
             .map {
                 if (it.children.size > 1 && it.children[1].type == GFMTokenTypes.CHECK_BOX) {
                     horizontalLayout {
@@ -370,9 +368,9 @@ internal class MarkdownRenderer(
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
-        val drop = if (nodes.firstOrNull()?.type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
+        val drop = if (nodes.firstOrNull()?.type == Tokens.WHITE_SPACE) 1 else 0
         val dropLast =
-            if (nodes.size > 1 && nodes.last().type == MarkdownTokenTypes.WHITE_SPACE) 1 else 0
+            if (nodes.size > 1 && nodes.last().type == Tokens.WHITE_SPACE) 1 else 0
         return drop to dropLast
     }
 
@@ -409,7 +407,7 @@ internal class MarkdownRenderer(
 
         val parsedText = theme.style("markdown.link.text")(text)
         val parsedDest = theme.style("markdown.link.destination")("($dest)")
-        return "$parsedText $parsedDest"
+        return "$parsedText$parsedDest"
     }
 
     private fun renderReferenceLink(node: ASTNode): String {
@@ -426,9 +424,9 @@ internal class MarkdownRenderer(
     }
 
     private fun renderImageLink(node: ASTNode): String {
-        val link = node.findChildOfType(MarkdownElementTypes.INLINE_LINK)
-            ?: node.findChildOfType(MarkdownElementTypes.FULL_REFERENCE_LINK)
-            ?: node.findChildOfType(MarkdownElementTypes.SHORT_REFERENCE_LINK)
+        val link = node.findChildOfType(Elements.INLINE_LINK)
+            ?: node.findChildOfType(Elements.FULL_REFERENCE_LINK)
+            ?: node.findChildOfType(Elements.SHORT_REFERENCE_LINK)
             ?: return ""
         val text = findLinkText(link)
             ?.takeUnless { it.isEmpty() }
@@ -437,18 +435,17 @@ internal class MarkdownRenderer(
     }
 
     private fun findLinkLabel(node: ASTNode): String? {
-        return node.findChildOfType(MarkdownElementTypes.LINK_LABEL)?.children?.get(1)?.nodeText()
+        return node.findChildOfType(Elements.LINK_LABEL)?.children?.get(1)?.nodeText()
     }
 
     private fun findLinkDest(node: ASTNode): String? {
-        return node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION)
-            ?.children?.find { it.type == MarkdownTokenTypes.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
+        return node.findChildOfType(Elements.LINK_DESTINATION)
+            ?.children?.find { it.type == Tokens.TEXT || it.type == GFMTokenTypes.GFM_AUTOLINK }
             ?.nodeText()
     }
 
     private fun findLinkText(node: ASTNode): String? {
-        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)
-            ?.let { innerInlines(it, drop = 1) }
+        return node.findChildOfType(Elements.LINK_TEXT)?.let { innerInlines(it, drop = 1) }
     }
 }
 

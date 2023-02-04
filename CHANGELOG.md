@@ -9,11 +9,13 @@
 - Fix `TerminalInfo.interactive` not including `outputInteractive`
 - Fix prompts on JS targets that were broken by KT-55817 
 
+### Changed
+- verticalLayout{} now defaults `TextAlign.NONE`, meaning it won't add any trailing whitespace to lines. You can return to the old behavior with `align = TextAlign.LEFT`.
+
 ## 2.0.0-beta12
 ### Fixed
 - Switch back to calling `stty` for `detectTerminalSize` on macOS. [(#86)](https://github.com/ajalt/mordant/issues/86)
 - `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
-- Fix exception in ProgressBar when its width is 1 character [(#75)](https://github.com/ajalt/mordant/issues/75)
 
 ## 2.0.0-beta11
 ### Added

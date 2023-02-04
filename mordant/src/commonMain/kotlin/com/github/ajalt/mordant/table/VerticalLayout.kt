@@ -46,7 +46,9 @@ internal class VerticalLayout private constructor(
         }
         for ((i, cell) in cells.withIndex()) {
             if (i > 0) repeat(spacing) { lines += spacingLine }
-            lines += cell.content.render(t, renderWidth).withStyle(cell.style).lines
+            val rendered = cell.content.render(t, renderWidth).withStyle(cell.style).lines
+            // Cells always take up a line, even if empty
+            lines += rendered.ifEmpty { listOf(EMPTY_LINE) }
         }
         return Lines(lines)
     }
