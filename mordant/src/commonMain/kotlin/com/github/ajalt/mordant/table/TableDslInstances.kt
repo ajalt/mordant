@@ -220,7 +220,7 @@ internal class VerticalLayoutBuilderInstance(
     }
 
     fun build(): Widget {
-        return VerticalLayout.fromTableBuilder(tableBuilder, spacing)
+        return VerticalLayout.fromTableBuilder(tableBuilder, spacing, width)
     }
 }
 

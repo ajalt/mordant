@@ -78,7 +78,7 @@ class LinearLayoutTest : RenderingTest() {
         verticalLayout {
             cell("1111")
             cells("2", "3") { align = TextAlign.RIGHT }
-            cell(Text("4", align=TextAlign.LEFT))
+            cell(Text("4", align = TextAlign.LEFT))
             cellsFrom(listOf(Text("5 5")))
         }, """
         ░1111░
@@ -87,6 +87,22 @@ class LinearLayoutTest : RenderingTest() {
         ░4   ░
         ░5 5░
         """
+    )
+
+    @Test
+    fun verticalLayoutCellAlignExpand() = checkRender(
+        verticalLayout {
+            width = ColumnWidth.Expand()
+            align = TextAlign.RIGHT
+            cell("1")
+            cell("2") { align = TextAlign.RIGHT }
+            cell(Text("3", align = TextAlign.LEFT))
+        }, """
+        ░     1░
+        ░     2░
+        ░3     ░
+        """,
+        width = 6
     )
 
     @Test
@@ -121,6 +137,18 @@ class LinearLayoutTest : RenderingTest() {
         ░33░
         """
     )
+
+    @Test
+    fun verticalLayoutFixedTruncation() = checkRender(
+        verticalLayout {
+            whitespace = Whitespace.NOWRAP
+            cell("1111 222")
+            width = ColumnWidth.Fixed(6)
+        }, """
+        ░1111 2░
+        """
+    )
+
 
     @Test
     @JsName("nesting_horizontalLayouts_in_verticalLayouts")

@@ -5,16 +5,25 @@ import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.Terminal
 
-private class VerticalLayoutCell(val content: Widget, val style: TextStyle?)
+private class VerticalLayoutCell(
+    val content: Widget,
+    val style: TextStyle?,
+    val textAlign: TextAlign,
+)
 
 internal class VerticalLayout private constructor(
     private val cells: List<VerticalLayoutCell>,
     private val spacing: Int,
-    private val spacingAlign: TextAlign,
+    private val columnWidth: ColumnWidth,
+    private val textAlign: TextAlign,
     private val hasAlignedCells: Boolean,
 ) : Widget {
     companion object {
-        fun fromTableBuilder(builder: TableBuilderInstance, spacing: Int): VerticalLayout {
+        fun fromTableBuilder(
+            builder: TableBuilderInstance,
+            spacing: Int,
+            columnWidth: ColumnWidth,
+        ): VerticalLayout {
             builder.padding(0)
             builder.cellBorders = Borders.NONE
             builder.tableBorders = Borders.NONE
@@ -23,9 +32,15 @@ internal class VerticalLayout private constructor(
                 check(it.size == 1)
                 val cell = it[0] as Cell.Content
                 aligned = aligned || (cell.textAlign !in listOf(null, TextAlign.NONE))
-                VerticalLayoutCell(cell.content, cell.style)
+                VerticalLayoutCell(cell.content, cell.style, cell.textAlign)
             }
-            return VerticalLayout(cells, spacing, builder.align ?: TextAlign.NONE, aligned)
+            return VerticalLayout(
+                cells,
+                spacing,
+                columnWidth,
+                builder.align ?: TextAlign.NONE,
+                aligned,
+            )
         }
     }
 
@@ -38,17 +53,26 @@ internal class VerticalLayout private constructor(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val renderWidth = if (hasAlignedCells) measure(t, width).max else width
+        val renderWidth = when {
+            columnWidth is ColumnWidth.Expand -> width
+            hasAlignedCells -> measure(t, width).max
+            else -> width
+        }
         val lines = mutableListOf<Line>()
-        val spacingLine = when (spacingAlign) {
+        val spacingLine = when (textAlign) {
             TextAlign.NONE -> EMPTY_LINE
             else -> Line(listOf(Span.space(renderWidth)), DEFAULT_STYLE)
         }
         for ((i, cell) in cells.withIndex()) {
             if (i > 0) repeat(spacing) { lines += spacingLine }
-            val rendered = cell.content.render(t, renderWidth).withStyle(cell.style).lines
+            var rendered = cell.content.render(t, renderWidth).withStyle(cell.style)
+            rendered = when (val w = columnWidth) {
+                ColumnWidth.Auto -> rendered
+                is ColumnWidth.Expand -> rendered.setSize(width, textAlign = cell.textAlign)
+                is ColumnWidth.Fixed -> rendered.setSize(w.width, textAlign = cell.textAlign)
+            }
             // Cells always take up a line, even if empty
-            lines += rendered.ifEmpty { listOf(EMPTY_LINE) }
+            lines += rendered.lines.ifEmpty { listOf(EMPTY_LINE) }
         }
         return Lines(lines)
     }
