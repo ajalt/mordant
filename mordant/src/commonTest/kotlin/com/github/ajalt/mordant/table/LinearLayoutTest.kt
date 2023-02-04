@@ -20,11 +20,16 @@ class LinearLayoutTest : RenderingTest() {
     fun horizontalLayoutEmpty() = checkRender(
         horizontalLayout {}, "", width = 10
     )
+
     @Test
     fun horizontalLayout() = checkRender(
         horizontalLayout {
             column(1) { width = ColumnWidth.Expand() }
-            val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
+            val bar = ProgressBar(
+                indeterminate = true,
+                showPulse = false,
+                indeterminateStyle = TextStyle()
+            )
             cells(1, bar, 2)
         }, """
         ░1 ━━━━━━ 2░
@@ -36,7 +41,11 @@ class LinearLayoutTest : RenderingTest() {
         horizontalLayout {
             spacing = 2
             column(1) { width = ColumnWidth.Expand() }
-            val bar = ProgressBar(indeterminate = true, showPulse = false, indeterminateStyle = TextStyle())
+            val bar = ProgressBar(
+                indeterminate = true,
+                showPulse = false,
+                indeterminateStyle = TextStyle()
+            )
             cells(1, bar, 2)
         }, """
         ░1  ━━━━  2░
@@ -49,17 +58,34 @@ class LinearLayoutTest : RenderingTest() {
         ░
         """
     )
+
     @Test
-    fun verticalLayout() = checkRender(
+    fun verticalLayoutSimple() = checkRender(
+        verticalLayout {
+            cell("1111")
+            cells("2", "3")
+            cellsFrom(listOf(Text("4 4")))
+        }, """
+        ░1111░
+        ░2░
+        ░3░
+        ░4 4░
+        """
+    )
+
+    @Test
+    fun verticalLayoutCellAlign() = checkRender(
         verticalLayout {
             cell("1111")
             cells("2", "3") { align = TextAlign.RIGHT }
-            cellsFrom(listOf(Text("4 4")))
+            cell(Text("4", align=TextAlign.LEFT))
+            cellsFrom(listOf(Text("5 5")))
         }, """
         ░1111░
         ░   2░
         ░   3░
-        ░4 4░
+        ░4   ░
+        ░5 5░
         """
     )
 
@@ -78,6 +104,7 @@ class LinearLayoutTest : RenderingTest() {
         ░3░
         """
     )
+
     @Test
     fun verticalLayoutLeftAlign() = checkRender(
         verticalLayout {

@@ -2,11 +2,8 @@ package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
-import kotlin.text.Typography.paragraph
-import kotlin.text.Typography.section
 
 
 private class CellStyleBuilderMixin : CellStyleBuilder {
@@ -88,7 +85,8 @@ internal class TableBuilderInstance : TableBuilder, CellStyleBuilder by CellStyl
 
 
 @MordantDsl
-internal class SectionBuilderInstance : SectionBuilder, CellStyleBuilder by CellStyleBuilderMixin() {
+internal class SectionBuilderInstance : SectionBuilder,
+    CellStyleBuilder by CellStyleBuilderMixin() {
     val rows = mutableListOf<RowBuilderInstance>()
     val columns = mutableMapOf<Int, CellStyleBuilder>()
     var rowStyles = listOf<TextStyle>()
@@ -158,7 +156,12 @@ internal class HorizontalLayoutBuilderInstance(
     override var spacing: Int = 1
     override var verticalAlign: VerticalAlign? = null
 
-    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit) {
+    override fun cells(
+        cell1: Any?,
+        cell2: Any?,
+        vararg cells: Any?,
+        init: CellStyleBuilderBase.() -> Unit,
+    ) {
         row.cells(cell1, cell2, *cells, init = init)
     }
 
@@ -176,7 +179,9 @@ internal class HorizontalLayoutBuilderInstance(
         if (spacing > 0) {
             for ((i, cell) in row.cells.withIndex()) {
                 if (i == 0) continue
-                cell.padding = cell.padding?.let { it.copy(left = it.left + spacing) } ?: Padding { left = spacing }
+                cell.padding = cell.padding?.let { it.copy(left = it.left + spacing) } ?: Padding {
+                    left = spacing
+                }
             }
         }
         tableBuilder.verticalAlign = verticalAlign
@@ -195,7 +200,12 @@ internal class VerticalLayoutBuilderInstance(
     override var width: ColumnWidth = ColumnWidth.Auto
     override var spacing: Int = 0
 
-    override fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit) {
+    override fun cells(
+        cell1: Any?,
+        cell2: Any?,
+        vararg cells: Any?,
+        init: CellStyleBuilderBase.() -> Unit,
+    ) {
         section.row(cell1, init = init)
         section.row(cell2, init = init)
         cells.forEach { section.row(it, init = init) }
@@ -210,36 +220,10 @@ internal class VerticalLayoutBuilderInstance(
     }
 
     fun build(): Widget {
-        tableBuilder.padding = Padding(0)
-        tableBuilder.cellBorders = Borders.NONE
-        tableBuilder.tableBorders = Borders.NONE
-        tableBuilder.column(0) { this@column.width = this@VerticalLayoutBuilderInstance.width }
-        if (spacing > 0) {
-            for ((i, row) in section.rows.withIndex()) {
-                if (i == 0) continue
-                row.padding = row.padding?.let { it.copy(top = it.top + spacing) } ?: Padding { top = spacing }
-            }
-        }
-        val shouldTrim = width == ColumnWidth.Auto && (tableBuilder.align ?: TextAlign.NONE) == TextAlign.NONE
-        return VerticalLayout(TableLayout(tableBuilder).buildTable(), shouldTrim)
+        return VerticalLayout.fromTableBuilder(tableBuilder, spacing)
     }
 }
 
-private class VerticalLayout(
-    private val table: Widget,
-    private val trimLines: Boolean,
-) : Widget {
-    override fun measure(t: Terminal, width: Int): WidthRange = table.measure(t, width)
-
-    override fun render(t: Terminal, width: Int): Lines {
-        val lines = table.render(t, width)
-        if (!trimLines) return lines
-        // Copying the lines isn't the most efficient way to do avoid trailing whitespace, but it's the easiest
-        return Lines(lines.lines.map { line ->
-            line.copy(spans = line.spans.dropLastWhile { it.style == DEFAULT_STYLE && it.isWhitespace() })
-        })
-    }
-}
 
 @MordantDsl
 internal class RowBuilderInstance(
@@ -288,7 +272,12 @@ private fun getCellContent(content: Any?): CellContent {
     return CellContent.TextContent(content.toString())
 }
 
-private fun <T : CellStyleBuilder> initColumn(columns: MutableMap<Int, T>, i: Int, def: T, init: T.() -> Unit) {
+private fun <T : CellStyleBuilder> initColumn(
+    columns: MutableMap<Int, T>,
+    i: Int,
+    def: T,
+    init: T.() -> Unit,
+) {
     require(i >= 0) { "column index cannot be negative" }
     var v = columns[i]
     if (v == null) {

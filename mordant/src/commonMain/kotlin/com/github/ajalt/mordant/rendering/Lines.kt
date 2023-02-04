@@ -101,7 +101,6 @@ internal fun Lines.setSize(
             when {
                 width + span.cellWidth <= newWidth -> {
                     width += span.cellWidth
-
                 }
                 width == newWidth -> {
                     lines.add(Line(line.subList(0, j)))

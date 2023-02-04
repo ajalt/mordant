@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.BorderType.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.table.SectionBuilder
+import com.github.ajalt.mordant.table.horizontalLayout
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.table.verticalLayout
 import com.github.ajalt.mordant.widgets.*
@@ -55,16 +56,17 @@ internal class MarkdownRenderer(
     private fun parseBlocks(nodes: List<ASTNode>): Widget {
         return verticalLayout {
             for ((i, node) in nodes.withIndex()) {
-                // skip the extra EOL after a PARAGRAPH, since the layout adds it for us
+                // skip the extra EOL after top level block, since the layout adds it for us
                 if (node.type == MarkdownTokenTypes.EOL
-                    && i != 0
-                    && i != nodes.lastIndex
-                    && nodes[i - 1].type == MarkdownElementTypes.PARAGRAPH) {
+                    && i in 1 until nodes.lastIndex
+                    && nodes[i - 1].type != MarkdownTokenTypes.EOL
+                ) {
                     continue
                 }
                 if (node.type == MarkdownTokenTypes.WHITE_SPACE) {
                     continue
                 }
+                // TODO: the markdown lib parses CHECK_BOX as a block-level element even though it should be rendered inline
                 cell(parseStructure(node))
             }
         }
@@ -74,17 +76,11 @@ internal class MarkdownRenderer(
         return when (node.type) {
             // ElementTypes
             MarkdownElementTypes.UNORDERED_LIST -> {
-                UnorderedList(node.children
-                    .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                    .map { parseBlocks(it.children.drop(1)) }
-                )
+                UnorderedList(parseListItems(node))
             }
 
             MarkdownElementTypes.ORDERED_LIST -> {
-                OrderedList(node.children
-                    .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                    .map { parseBlocks(it.children.drop(1)) }
-                )
+                OrderedList(parseListItems(node))
             }
 
             MarkdownElementTypes.BLOCK_QUOTE -> {
@@ -181,16 +177,6 @@ internal class MarkdownRenderer(
                 theme.style("markdown.h6"),
                 node
             )
-
-            GFMTokenTypes.CHECK_BOX -> {
-                val content =
-                    CHECK_BOX_REGEX.find(node.nodeText())!!.value.removeSurrounding("[", "]")
-                val checkbox = when {
-                    content.isBlank() -> theme.string("markdown.task.unchecked")
-                    else -> theme.string("markdown.task.checked")
-                }
-                Text("$checkbox ", whitespace = Whitespace.PRE)
-            }
 
             GFMElementTypes.TABLE -> table {
                 borderType = when {
@@ -329,6 +315,28 @@ internal class MarkdownRenderer(
             .joinToString("") { parseInlines(it) }
     }
 
+    private fun parseListItems(node: ASTNode): List<Widget> {
+        return node.children
+            .filter { it.type == MarkdownElementTypes.LIST_ITEM }
+            .map {
+                if (it.children.size > 1 && it.children[1].type == GFMTokenTypes.CHECK_BOX) {
+                    horizontalLayout {
+                        val content = CHECK_BOX_REGEX
+                            .find(it.children[1].nodeText())!!
+                            .value.removeSurrounding("[", "]")
+                        val checkboxString = when {
+                            content.isBlank() -> theme.string("markdown.task.unchecked")
+                            else -> theme.string("markdown.task.checked")
+                        }
+                        cell(checkboxString)
+                        cell(parseBlocks(it.children.drop(2)))
+                    }
+                } else {
+                    parseBlocks(it.children.drop(1))
+                }
+            }
+    }
+
     private fun atxHr(bar: String, style: TextStyle, node: ASTNode): Widget {
         return when {
             node.children.size <= 1 -> EOL_TEXT
@@ -401,22 +409,20 @@ internal class MarkdownRenderer(
 
         val parsedText = theme.style("markdown.link.text")(text)
         val parsedDest = theme.style("markdown.link.destination")("($dest)")
-        return return "$parsedText $parsedDest"
+        return "$parsedText $parsedDest"
     }
 
     private fun renderReferenceLink(node: ASTNode): String {
-        TODO()
-//        if (!hyperlinks) return innerInlines(node)
-//
-//        val label = findLinkLabel(node)!!
-//        return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
-//            null -> innerInlines(node)
-//            else -> {
-//                val style = theme.style("markdown.link.text")
-//                    .copy(hyperlink = hyperlink, hyperlinkId = generateHyperlinkId())
-//                findLinkText(node)?.replaceStyle(style) ?: parseText(label, style)
-//            }
-//        }
+        if (!hyperlinks) return innerInlines(node)
+
+        val label = findLinkLabel(node)!!
+        return when (val hyperlink = linkMap?.getLinkInfo("[$label]")?.destination?.toString()) {
+            null -> innerInlines(node)
+            else -> {
+                val style = theme.style("markdown.link.text") + TextStyle(hyperlink = hyperlink)
+                style(findLinkText(node) ?: label)
+            }
+        }
     }
 
     private fun renderImageLink(node: ASTNode): String {

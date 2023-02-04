@@ -12,9 +12,6 @@ interface CellStyleBuilderBase {
     var align: TextAlign?
     var overflowWrap: OverflowWrap?
 
-    @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
-    var borders: Borders?
-
     fun style(
         color: Color? = null,
         bgColor: Color? = null,
@@ -31,6 +28,9 @@ interface CellStyleBuilderBase {
 }
 
 interface CellStyleBuilder : CellStyleBuilderBase {
+    @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
+    var borders: Borders?
+
     /**
      * Borders around each individual cell.
      *
