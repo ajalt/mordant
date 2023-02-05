@@ -240,7 +240,8 @@ internal class MarkdownRenderer(
             Elements.LINK_DESTINATION -> {
                 // the child might be TEXT or GFM_AUTOLINK
                 val drop = if (node.children.firstOrNull()?.type == Tokens.LT) 1 else 0
-                theme.style("markdown.link.destination")(innerInlines(node, drop = drop))
+                val text = TextStyles.reset(innerInlines(node, drop = drop))
+                theme.style("markdown.link.destination")(text)
             }
 
             Elements.INLINE_LINK -> {
@@ -398,7 +399,7 @@ internal class MarkdownRenderer(
     }
 
     private fun renderInlineLink(node: ASTNode): String {
-        val text = findLinkText(node)!!
+        val text = TextStyles.reset(findLinkText(node)!!)
         val dest = findLinkDest(node) ?: ""
         if (hyperlinks && dest.isNotBlank()) {
             val style = (theme.style("markdown.link.text") + TextStyle(hyperlink = dest))
@@ -418,7 +419,8 @@ internal class MarkdownRenderer(
             null -> innerInlines(node)
             else -> {
                 val style = theme.style("markdown.link.text") + TextStyle(hyperlink = hyperlink)
-                style(findLinkText(node) ?: label)
+                val link = findLinkDest(node)?.let { TextStyles.reset(it) }
+                style(link ?: label)
             }
         }
     }
@@ -430,6 +432,7 @@ internal class MarkdownRenderer(
             ?: return ""
         val text = findLinkText(link)
             ?.takeUnless { it.isEmpty() }
+            ?.let { TextStyles.reset(it) }
             ?: return ""
         return "🖼️ ${theme.style("markdown.img.alt-text")(text)}"
     }

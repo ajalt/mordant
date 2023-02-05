@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.rendering.TextAlign.CENTER
 import com.github.ajalt.mordant.rendering.TextColors.blue
 import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.rendering.VerticalAlign.MIDDLE
-import com.github.ajalt.mordant.rendering.Whitespace.PRE
+import com.github.ajalt.mordant.rendering.Whitespace.*
 import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest

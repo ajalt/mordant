@@ -4,6 +4,7 @@ import com.github.ajalt.colormath.model.*
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.widgets.Text
 import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
@@ -32,7 +33,7 @@ class TerminalColorsTest {
     @JsName("one_level_nesting_start_of_string")
     fun `one level nesting start of string`() = doTest(
         (c.blue on c.green)("${c.red("A")}B"),
-        "<31;42>A<34>B<39;49>"
+        "<34;42>AB<39;49>"
     )
 
     @Test

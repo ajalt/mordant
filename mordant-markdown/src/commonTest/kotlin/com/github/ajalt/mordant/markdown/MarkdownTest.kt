@@ -443,7 +443,7 @@ ${linkDest("[1]: example.png")}
 """, """
 ${(linkText + hyperlink("example.com/1"))("code")}
 
-${(linkText + hyperlink("example.com/2"))("🖼️ an image")}
+${(linkText + hyperlink("example.com/2"))("🖼️ ${imgAlt("an image")}")}
 """.normalizeHyperlinks(), hyperlinks = true)
 
     @Test

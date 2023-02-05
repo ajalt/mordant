@@ -24,7 +24,7 @@ internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean
             activeStyle = newStyle
             append(span.text)
         }
-        append(makeTag(activeStyle, DEFAULT_STYLE))
+        append(makeTag(activeStyle, CLEAR_STYLE))
     }
 }
 
@@ -39,15 +39,15 @@ internal fun TextStyle.invokeStyle(text: String): String {
         if (match.range.last == text.lastIndex) return@replace ""
         val new = updateStyle(style, this, match.value)
         if (match.range.first == 0) {
-            openStyle = new
-            style = new
+            openStyle = new + this // this style overrides existing style for the open tag
+            style = new + this
             return@replace ""
         }
         val tag = makeTag(style, new)
         style = new
         tag
     }
-    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
+    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, CLEAR_STYLE)}"
 }
 
 internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
@@ -81,8 +81,13 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
     if (old.color != new.color) codes += new.color.toAnsi(fgColorSelector, fgColorReset, 0)
     if (old.bgColor != new.bgColor) codes += new.bgColor.toAnsi(bgColorSelector, bgColorReset, fgBgOffset)
 
-    fun style(old: Boolean, new: Boolean, open: Int, close: Int) {
-        if (old != new) codes += if (new) open else close
+    fun style(old: Boolean?, new: Boolean?, open: Int, close: Int) {
+        if (old == new || old == null && new == false) return
+        when (new ?: old) {
+            true -> codes += open
+            false -> codes += close
+            null -> {}
+        }
     }
 
     style(old.bold, new.bold, AnsiCodes.boldOpen, AnsiCodes.boldAndDimClose)
@@ -94,7 +99,9 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
 
     val csi = if (codes.isEmpty()) "" else codes.joinToString(";", prefix = CSI, postfix = "m")
     return when {
-        old.hyperlink != new.hyperlink -> csi + makeHyperlinkTag(new.hyperlink, new.hyperlinkId)
+        old.hyperlink != new.hyperlink && new.hyperlink != HYPERLINK_RESET -> {
+            csi + makeHyperlinkTag(new.hyperlink, new.hyperlinkId)
+        }
         else -> csi
     }
 }
@@ -108,7 +115,10 @@ private fun makeHyperlinkTag(hyperlink: String?, hyperlinkId: String?): String {
 private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
     return when (val it = (this as? TextStyle)?.color ?: this) {
         null -> listOf(reset)
-        is Ansi16 -> listOf(it.code + offset)
+        is Ansi16 -> when (it.code) {
+            fgColorReset, bgColorReset -> listOf(reset)
+            else -> listOf(it.code + offset)
+        }
         is Ansi256 -> listOf(select, selector256, it.code)
         // The ITU T.416 spec uses colons for the rgb separator as well as extra parameters for CMYK
         // and such. Most terminals only support the semicolon form, so that's what we use.

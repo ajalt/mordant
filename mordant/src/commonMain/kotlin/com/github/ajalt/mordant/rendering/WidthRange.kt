@@ -2,6 +2,10 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.mordant.terminal.Terminal
 
+/**
+ * @property min The minimum width that a widget needs to render without truncation
+ * @property max The width that a widget would use if given all available space
+ */
 data class WidthRange(val min: Int, val max: Int) {
     init {
         require(min <= max) { "Range min cannot be larger than max" }

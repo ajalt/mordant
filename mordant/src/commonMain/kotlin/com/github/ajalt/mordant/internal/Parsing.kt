@@ -128,7 +128,7 @@ private fun updateStyleWithOsc(ansi: String, existingStyle: TextStyle, defaultSt
 private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultStyle: TextStyle): TextStyle {
     if (!ansi.endsWith("m")) return existingStyle // SGR sequences end in "m", others don't affect style
 
-    // SGR sequences only contains numbers; anything else is malformed and we skip it.
+    // SGR sequences only contains numbers. Anything else is malformed, so we skip it.
     val codes = ansi.subSequence(2, ansi.length - 1)
         .split(";").mapNotNull { if (it.isEmpty()) 0 else it.toIntOrNull() }
 
@@ -151,23 +151,23 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
         when (val code = codes[i]) {
             // Resets
             AnsiCodes.reset -> {
-                color = existingStyle.color
-                bgColor = existingStyle.bgColor
-                bold = existingStyle.bold
-                italic = existingStyle.italic
-                underline = existingStyle.underline
-                dim = existingStyle.dim
-                inverse = existingStyle.inverse
-                strikethrough = existingStyle.strikethrough
+                color = defaultStyle.color
+                bgColor = defaultStyle.bgColor
+                bold = defaultStyle.bold ?: false
+                italic = defaultStyle.italic ?: false
+                underline = defaultStyle.underline ?: false
+                dim = defaultStyle.dim ?: false
+                inverse = defaultStyle.inverse ?: false
+                strikethrough = defaultStyle.strikethrough ?: false
             }
             AnsiCodes.boldAndDimClose -> {
-                bold = defaultStyle.bold
-                dim = defaultStyle.dim
+                bold = defaultStyle.bold ?: false
+                dim = defaultStyle.dim ?: false
             }
-            AnsiCodes.italicClose -> italic = defaultStyle.italic
-            AnsiCodes.underlineClose -> underline = defaultStyle.underline
-            AnsiCodes.inverseClose -> inverse = defaultStyle.inverse
-            AnsiCodes.strikethroughClose -> strikethrough = defaultStyle.strikethrough
+            AnsiCodes.italicClose -> italic = defaultStyle.italic ?: false
+            AnsiCodes.underlineClose -> underline = defaultStyle.underline ?: false
+            AnsiCodes.inverseClose -> inverse = defaultStyle.inverse ?: false
+            AnsiCodes.strikethroughClose -> strikethrough = defaultStyle.strikethrough ?: false
             AnsiCodes.fgColorReset -> color = defaultStyle.color
             AnsiCodes.bgColorReset -> bgColor = defaultStyle.bgColor
             // Colors
