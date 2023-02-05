@@ -11,8 +11,8 @@
 - Fix prompts on JS targets that were broken by KT-55817 
 
 ### Changed
-- verticalLayout{} now defaults `TextAlign.NONE`, meaning it won't add any trailing whitespace to lines. You can return to the old behavior with `align = TextAlign.LEFT`.
-- All boolean fields on `TextStyle` are now nullable. A null field indicates no change to the previs value when adding or nesting style.
+- **Source-incompatible change:** All boolean fields on `TextStyle` are now nullable. A null field indicates no change to the previs value when adding or nesting style.
+- `verticalLayout{}` now defaults `TextAlign.NONE`, meaning it won't add any trailing whitespace to lines. You can return to the old behavior with `align = TextAlign.LEFT`.
 - When nesting styles, the outer style will now override inner styles at the start of a string. (e.g. `red(blue("x")) == red("x")`) 
 
 ## 2.0.0-beta12

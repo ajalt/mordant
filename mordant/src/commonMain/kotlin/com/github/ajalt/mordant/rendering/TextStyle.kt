@@ -46,6 +46,7 @@ interface TextStyle {
 
     operator fun invoke(text: String): String = invokeStyle(text)
 
+
     /**
      * Return a new style that combines this style with [other].
      *
@@ -58,11 +59,6 @@ interface TextStyle {
      * val style2 = TextStyle(green, italic=false, dim=true)
      * (style1 + style2) == TextStyle(green, blue, bold=true, italic=false, dim=true)
      * ```
-     */
-    operator fun plus(other: TextStyles): TextStyle = this + other.style
-
-    /**
-     * Combine
      */
     operator fun plus(other: TextStyle): TextStyle {
         return when {
@@ -82,6 +78,7 @@ interface TextStyle {
             )
         }
     }
+    operator fun plus(other: TextStyles): TextStyle = this + other.style
 }
 
 @Suppress("FunctionName")

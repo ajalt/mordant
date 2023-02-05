@@ -37,6 +37,7 @@ kotlin {
             dependsOn(gen)
             dependencies {
                 api(libs.colormath)
+                implementation(libs.markdown)
                 implementation(libs.jna.core)
             }
         }
