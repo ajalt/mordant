@@ -19,7 +19,7 @@ dependencyResolutionManagement {
             library("jna-core", "net.java.dev.jna:jna:5.13.0")
 
             // used in tests
-            library("kotest", "io.kotest:kotest-assertions-core:5.5.5")
+            library("kotest", "io.kotest:kotest-assertions-core:5.5.4")
             library("systemrules", "com.github.stefanbirkner:system-rules:1.19.0")
         }
     }
