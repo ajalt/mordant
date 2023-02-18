@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.markdown
 
+import com.github.ajalt.mordant.internal.generateHyperlinkId
+import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.BorderType.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
@@ -323,9 +325,8 @@ internal class MarkdownRenderer(
         return HorizontalRule(
             content,
             ruleCharacter = bar,
-            ruleStyle = TextStyle(style.color, style.bgColor)
-        )
-            .withPadding { vertical = theme.dimension("markdown.header.padding") }
+            ruleStyle =  TextStyle(style.color, style.bgColor)
+        ).withPadding { vertical = theme.dimension("markdown.header.padding") }
     }
 
     private fun dropWs(nodes: List<ASTNode>): Pair<Int, Int> {
@@ -379,7 +380,7 @@ internal class MarkdownRenderer(
             null -> innerInlines(node)
             else -> {
                 val style = theme.style("markdown.link.text") + TextStyle(hyperlink = hyperlink)
-                val link = findLinkDest(node)?.let { TextStyles.reset(it) }
+                val link = findLinkText(node)?.let { TextStyles.reset(it) }
                 style(link ?: label)
             }
         }

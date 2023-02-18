@@ -46,4 +46,7 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
 
     internal fun withStyle(style: TextStyle) = Span(text, this.style + style)
     internal fun replaceStyle(style: TextStyle) = Span(text, style)
+    override fun toString(): String {
+        return "<Span '${text}', ${style}>"
+    }
 }

@@ -12,7 +12,9 @@ import com.github.ajalt.mordant.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.internal.AnsiCodes.selectorRgb
 import com.github.ajalt.mordant.rendering.*
 
-internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean): String = buildString {
+internal fun renderLinesAnsi(
+    lines: Lines, level: AnsiLevel, hyperlinks: Boolean,
+): String = buildString {
     for ((i, line) in lines.lines.withIndex()) {
         if (i > 0) append("\n")
 
@@ -24,7 +26,7 @@ internal fun renderLinesAnsi(lines: Lines, level: AnsiLevel, hyperlinks: Boolean
             activeStyle = newStyle
             append(span.text)
         }
-        append(makeTag(activeStyle, CLEAR_STYLE))
+        append(makeTag(activeStyle, DEFAULT_STYLE))
     }
 }
 
@@ -47,7 +49,7 @@ internal fun TextStyle.invokeStyle(text: String): String {
         style = new
         tag
     }
-    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, CLEAR_STYLE)}"
+    return "${makeTag(DEFAULT_STYLE, openStyle)}$inner${makeTag(style, DEFAULT_STYLE)}"
 }
 
 internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean): TextStyle {
@@ -59,12 +61,14 @@ internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean)
             hyperlink = style.hyperlink.takeIf { hyperlinks },
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
+
         AnsiLevel.ANSI256 -> style.copy(
             fg = style.color?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
             bg = style.bgColor?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
             hyperlink = style.hyperlink.takeIf { hyperlinks },
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
+
         AnsiLevel.TRUECOLOR -> if (hyperlinks || style.hyperlink == null) style else style.copy(
             fg = style.color,
             bg = style.bgColor,
@@ -82,12 +86,8 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
     if (old.bgColor != new.bgColor) codes += new.bgColor.toAnsi(bgColorSelector, bgColorReset, fgBgOffset)
 
     fun style(old: Boolean?, new: Boolean?, open: Int, close: Int) {
-        if (old == new || old == null && new == false) return
-        when (new ?: old) {
-            true -> codes += open
-            false -> codes += close
-            null -> {}
-        }
+        if (old != true && new == true) codes += open
+        else if (old == true && new != true) codes += close
     }
 
     style(old.bold, new.bold, AnsiCodes.boldOpen, AnsiCodes.boldAndDimClose)

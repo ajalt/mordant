@@ -8,8 +8,7 @@ import com.github.ajalt.mordant.widgets.Padding
 
 // All top-level vals are defined in this file to avoid initialization order issues on native.
 
-internal val DEFAULT_STYLE = TextStyle()
-internal val CLEAR_STYLE = TextStyle(
+internal val DEFAULT_STYLE = TextStyle(
     color = null,
     bgColor = null,
     bold = false,
@@ -20,6 +19,7 @@ internal val CLEAR_STYLE = TextStyle(
     strikethrough = false,
     hyperlink = null,
 )
+
 internal val EMPTY_LINES = Lines(emptyList())
 internal val EMPTY_LINE: Line = Line(emptyList(), DEFAULT_STYLE)
 internal val SINGLE_SPACE = Span.space(1)

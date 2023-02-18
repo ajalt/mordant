@@ -17,6 +17,7 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 // Header rules are styled by removing the bold from the theme style
 private val TextStyle.colorOnly get() = TextStyle(color, bgColor)
