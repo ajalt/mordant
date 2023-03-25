@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.internal
 
 import com.sun.jna.*
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 @Suppress("ClassName", "PropertyName", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 interface MacosLibC : Library {
@@ -47,11 +49,51 @@ internal class MacosMppImpls : JnaMppImpls {
     override fun stderrInteractive(): Boolean = libC.isatty(STDERR_FILENO) == 1
 
     override fun getTerminalSize(): Pair<Int, Int>? {
-        val size = MacosLibC.winsize()
-        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
-            null
-        } else {
-            size.ws_col.toInt() to size.ws_row.toInt()
-        }
+        // TODO: this seems to fail on macosArm64, use stty on mac for now
+//        val size = MacosLibC.winsize()
+//        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
+//            null
+//        } else {
+//            size.ws_col.toInt() to size.ws_row.toInt()
+//        }
+        return getSttySize(100)
     }
+
+
+
+}
+
+private fun getSttySize(timeoutMs: Long): Pair<Int, Int>? {
+    val process = when {
+        // Try running stty both directly and via env, since neither one works on all systems
+        else -> runCommand("stty", "size") ?: runCommand("/usr/bin/env", "stty", "size")
+    } ?: return null
+    try {
+        if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
+            return null
+        }
+    } catch (e: InterruptedException) {
+        return null
+    }
+
+    val output = process.inputStream.bufferedReader().readText().trim()
+    return when {
+        else -> parseSttySize(output)
+    }
+}
+
+private fun runCommand(vararg args: String): Process? {
+    return try {
+        ProcessBuilder(*args)
+            .redirectInput(ProcessBuilder.Redirect.INHERIT)
+            .start()
+    } catch (e: IOException) {
+        null
+    }
+}
+
+private fun parseSttySize(output: String): Pair<Int, Int>? {
+    val dimens = output.split(" ").mapNotNull { it.toIntOrNull() }
+    if (dimens.size != 2) return null
+    return dimens[1] to dimens[0]
 }

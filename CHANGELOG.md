@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Fixed
+- Switch back to calling `stty` for `detectTerminalSize` on macOS. [(#86)](https://github.com/ajalt/mordant/issues/86)
 - `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
 - Fix exception in ProgressBar when its width is 1 character [(#75)](https://github.com/ajalt/mordant/issues/75)
 
