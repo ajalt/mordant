@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
+- Fix exception in ProgressBar when its width is 1 character [(#75)](https://github.com/ajalt/mordant/issues/75)
 
 ## 2.0.0-beta11
 ### Added
@@ -12,7 +13,7 @@
 - Update Kotlin to 1.8.0
 
 ### Removed
-- Removed JS/Legacy publication. The JS target only publishes artifact build with the IR compiler.
+- Removed JS/Legacy publication. The JS target only publishes artifacts built with the IR compiler.
 
 ## 2.0.0-beta10
 ### Changed

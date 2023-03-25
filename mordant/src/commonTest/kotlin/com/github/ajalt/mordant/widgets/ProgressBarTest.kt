@@ -86,11 +86,19 @@ class ProgressBarTest : RenderingTest() {
         "${CSI}38;2;97;175;239m━━━━━━━━━━${CSI}39m"
     )
 
-    private fun doPulseTest(pulsePosition: Float, expected: String) {
+    @Test
+    @JsName("narrow_width")
+    fun `narrow width`() = doPulseTest(
+        pulsePosition = 1f,
+        "${CSI}38;2;97;175;239m━${CSI}39m",
+        width =  1
+    )
+
+    private fun doPulseTest(pulsePosition: Float, expected: String, width: Int = 10) {
         checkRender(
             ProgressBar(indeterminate = true, pulsePosition = pulsePosition),
             expected,
-            width = 10
+            width = width
         )
     }
 
