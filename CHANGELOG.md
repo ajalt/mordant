@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta12
 ### Fixed
 - Switch back to calling `stty` for `detectTerminalSize` on macOS. [(#86)](https://github.com/ajalt/mordant/issues/86)
 - `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
