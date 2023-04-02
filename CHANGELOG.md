@@ -7,6 +7,7 @@
 
 ### Fixed
 - Fix `TerminalInfo.interactive` not including `outputInteractive`
+- Fix prompts on JS targets that were broken by KT-55817 
 
 ## 2.0.0-beta12
 ### Fixed
