@@ -19,6 +19,8 @@ internal class StdoutTerminalInterface private constructor(
     ) : this(TerminalDetection.detectTerminal(false, ansiLevel, width, height, hyperlinks, interactive),
         TerminalDetection.detectTerminal(true, ansiLevel, width, height, hyperlinks, interactive), false)
 
+    constructor(): this(null, null, null, null, null)
+
     override fun completePrintRequest(request: PrintRequest) {
         if (useStdErr) {
             printStderr(request.text, request.trailingLinebreak)

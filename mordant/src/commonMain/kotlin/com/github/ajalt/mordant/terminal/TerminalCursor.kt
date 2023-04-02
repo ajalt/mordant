@@ -4,60 +4,116 @@ import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.widgets.RawWidget
 
 interface TerminalCursor {
+    /**
+     * Show the cursor
+     */
     fun show()
+
+    /**
+     * Hide the cursor
+     *
+     * @param showOnExit By default, the cursor will be shown again when the program terminates. If
+     *   false, the cursor will remain hidden
+     */
     fun hide(showOnExit: Boolean = true)
+
+    /**
+     * Print the movement commands called in [movements].
+     *
+     * If the terminal is not interactive, this call does nothing.
+     */
     fun move(movements: CursorMovements.() -> Unit)
+
+    /**
+     * Return a string contianing the ANSI codes for the movements commands called in [movements].
+     *
+     * If the terminal is not interactive, this will always return an empty string.
+     */
     fun getMoves(movements: CursorMovements.() -> Unit): String
 }
 
 interface CursorMovements {
     /**
-     * Print an ANSI code to move the cursor up [count] cells.
+     * Move the cursor up [count] cells.
      *
-     * If ANSI codes are not supported, or [count] is 0, nothing is printed.
+     * If [count] is 0, this call does nothing.
      * If [count] is negative, the cursor will be moved down instead.
      */
     fun up(count: Int)
 
     /**
-     * Print an ANSI code to move the cursor down [count] cells.
+     * Move the cursor down [count] cells.
      *
-     * If ANSI codes are not supported, or [count] is 0, nothing is printed.
+     * If [count] is 0, this call does nothing.
      * If [count] is negative, the cursor will be moved up instead.
      */
     fun down(count: Int)
 
     /**
-     * Print an ANSI code to move the cursor right [count] cells.
+     * Move the cursor right [count] cells.
      *
-     * If ANSI codes are not supported, or [count] is 0, nothing is printed.
+     * If [count] is 0, this call does nothing.
      * If [count] is negative, the cursor will be moved left instead.
      */
     fun right(count: Int)
 
     /**
-     * Print an ANSI code to move the cursor left [count] cells.
+     * Move the cursor left [count] cells.
      *
-     * If ANSI codes are not supported, or [count] is 0, nothing is printed.
+     * If [count] is 0, this call does nothing.
      * If [count] is negative, the cursor will be moved right instead.
      */
     fun left(count: Int)
 
+    /** Move the cursor to the start of the current line */
     fun startOfLine()
 
-    // TODO: docs
     /**
-     * [x] and [y] are 0-indexed
+     * Set the cursor to an absolute position.
+     *
+     * [x] and [y] are 0-indexed, with (0, 0) being the top-left corner.
      */
     fun setPosition(x: Int, y: Int)
 
+    /**
+     * Clear the entire terminal screen.
+     */
     fun clearScreen()
+
+    /**
+     * Clear the screen before the cursor, leaving anything after the cursor unchanged.
+     */
     fun clearScreenBeforeCursor()
+
+    /**
+     * Clear the screen after the cursor, leaving anything before the cursor unchanged.
+     */
     fun clearScreenAfterCursor()
+
+
+    /**
+     * Clear the current line.
+     */
     fun clearLine()
+
+    /**
+     * Clear the line before the cursor, leaving anything after the cursor unchanged.
+     */
     fun clearLineBeforeCursor()
+
+    /**
+     * Clear the line after the cursor, leaving anything after the cursor unchanged.
+     */
     fun clearLineAfterCursor()
+
+    /**
+     * Save the current cursor position. Restore it with [restorePosition]
+     */
     fun savePosition()
+
+    /**
+     * Move the cursor to the position saved with a prior [savePosition] call.
+     */
     fun restorePosition()
 }
 
