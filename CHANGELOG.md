@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Add `Animation.stop()` to stop an animation without clearing it. [(#95)](https://github.com/ajalt/mordant/issues/95)
+- Animations now support resuming after a call to `stop` or `clear`. [(#94)](https://github.com/ajalt/mordant/issues/94)
+
 ### Fixed
 - Fix `TerminalInfo.interactive` not including `outputInteractive`
 

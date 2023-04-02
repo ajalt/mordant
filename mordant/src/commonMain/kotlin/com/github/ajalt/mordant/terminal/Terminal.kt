@@ -51,7 +51,11 @@ class Terminal private constructor(
         hyperlinks: Boolean? = null,
         tabWidth: Int = 8,
         interactive: Boolean? = null,
-    ) : this(theme, tabWidth, StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive))
+    ) : this(
+        theme,
+        tabWidth,
+        StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive)
+    )
 
     /**
      * @param theme The theme to use for widgets and styles like [success]
@@ -59,10 +63,10 @@ class Terminal private constructor(
      * @param terminalInterface The [TerminalInterface] to use to read and write
      */
     constructor(
-         theme: Theme = Theme.Default,
-         tabWidth: Int = 8,
-         terminalInterface: TerminalInterface = StdoutTerminalInterface(null, null, null, null, null),
-    ): this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
+        theme: Theme = Theme.Default,
+        tabWidth: Int = 8,
+        terminalInterface: TerminalInterface = StdoutTerminalInterface(),
+    ) : this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
 
     /**
      * The terminal capabilities that were detected or set in the constructor.
@@ -83,7 +87,8 @@ class Terminal private constructor(
      *
      * If the terminal is not interactive, all of the cursor functions are no-ops.
      */
-    val cursor: TerminalCursor = if (info.interactive) makePrintingTerminalCursor(this) else DisabledTerminalCursor
+    val cursor: TerminalCursor =
+        if (info.interactive) makePrintingTerminalCursor(this) else DisabledTerminalCursor
 
     /**
      * Print a line styled with the theme's [success][Theme.success] style.
