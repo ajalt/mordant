@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Fix `TerminalInfo.interactive` not including `outputInteractive`
+
 ## 2.0.0-beta12
 ### Fixed
 - Switch back to calling `stty` for `detectTerminalSize` on macOS. [(#86)](https://github.com/ajalt/mordant/issues/86)

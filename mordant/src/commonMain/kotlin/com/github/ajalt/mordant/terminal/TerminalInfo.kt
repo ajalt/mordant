@@ -13,7 +13,9 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
  * @property height The terminal height, in cells
  * @property ansiLevel The level of ANSI codes to use when printing to the terminal
  * @property ansiHyperLinks If true, ANSI hyperlink codes can be used
- * @property outputInteractive If false the output stream is not an interactive terminal, such as when it's redirected to a file
+ * @property outputInteractive If false the output stream is not an interactive terminal, such as
+ *   when it's redirected to a file. Note that the output stream is stdout by default, or stderr if
+ *   [Terminal.forStdErr] is used.
  * @property inputInteractive If false the output stream is not an interactive terminal, such as when it's redirected from a file
  * @property crClearsLine If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
  *   `\r` will only move the cursor
@@ -34,7 +36,7 @@ class TerminalInfo(
 
 
     /** Return true if both input and output are interactive */
-    val interactive: Boolean get() = inputInteractive && inputInteractive
+    val interactive: Boolean get() = inputInteractive && outputInteractive
 
     /**
      * Query the terminal for its current size, updating [width] and [height] if successful.
