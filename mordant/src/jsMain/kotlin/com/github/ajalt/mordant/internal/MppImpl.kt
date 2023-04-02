@@ -73,7 +73,7 @@ private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
                 val buf = Buffer.alloc(1)
                 do {
                     fs.readSync(fd = 0, bufer = buf, offset = 0, len = 1, position = null)
-                    char = buf.toString()
+                    char = "$buf" // don't call toString here due to KT-55817
                     append(char)
                 } while (char != "\n")
             }
