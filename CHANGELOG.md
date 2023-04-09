@@ -14,6 +14,7 @@
 - **Source-incompatible change:** All boolean fields on `TextStyle` are now nullable. A null field indicates no change to the previous value when adding or nesting styles.
 - `verticalLayout{}` now defaults `TextAlign.NONE`, meaning it won't add any trailing whitespace to lines. You can return to the old behavior with `align = TextAlign.LEFT`.
 - When nesting styles, the outer style will now override inner styles at the start of a string. (e.g. `red(blue("x")) == red("x")`) 
+- Definition List terms and entries can now be empty
 
 ## 2.0.0-beta12
 ### Fixed

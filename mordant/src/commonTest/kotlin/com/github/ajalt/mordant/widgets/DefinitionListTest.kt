@@ -18,10 +18,21 @@ class DefinitionListTest : RenderingTest() {
         """
     ░term 1:      desc 1
     ░term 2 2:    desc 2 2
+    ░to 1
+    ░             do 1
+    ░to 2
+    ░             do 2
     """
     ) {
         entry("term 1:", "desc 1")
-        entry("term 2 2:", "desc 2 2")
+        entry {
+            term("term 2 2:")
+            description("desc 2 2")
+        }
+        entry("to 1", "")
+        entry("", "do 1")
+        entry { term("to 2") }
+        entry { description("do 2") }
         inline = true
         descriptionSpacing = 4
     }
@@ -176,7 +187,8 @@ class DefinitionListTest : RenderingTest() {
     }
 
     @Test
-    fun listInLayout() {
+    @JsName("list_in_layout")
+    fun `list in layout`() {
         val widget = verticalLayout {
             cell(definitionList {
                 inline = true

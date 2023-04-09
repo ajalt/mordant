@@ -130,12 +130,19 @@ class DefinitionListBuilder {
 
 @MordantDsl
 class DefinitionListEntryBuilder {
-    private var term: Widget? = null
-    private var desc: Widget? = null
+    private var term: Widget = EmptyWidget
+    private var desc: Widget = EmptyWidget
+
+    /** Set the term for this entry */
     fun term(term: Widget) {
         this.term = term
     }
 
+    /**
+     * Set the term for this entry to a [Text] widget.
+     *
+     * All function parameters are forwarded to the [Text] constructor.
+     */
     fun term(
         term: String,
         whitespace: Whitespace = Whitespace.PRE,
@@ -146,10 +153,16 @@ class DefinitionListEntryBuilder {
         term(Text(term, whitespace, align, overflowWrap, width))
     }
 
+    /** Set the description for this entry */
     fun description(description: Widget) {
         this.desc = description
     }
 
+    /**
+     * Set the description for this entry to a [Text] widget.
+     *
+     * All function parameters are forwarded to the [Text] constructor.
+     */
     fun description(
         description: String,
         whitespace: Whitespace = Whitespace.PRE,
@@ -160,12 +173,14 @@ class DefinitionListEntryBuilder {
         description(Text(description, whitespace, align, overflowWrap, width))
     }
 
-    internal fun build(): Pair<Widget, Widget> = Pair(
-        requireNotNull(term) { "Must provide a term" },
-        requireNotNull(desc) { "Must provide a description" },
-    )
+    internal fun build(): Pair<Widget, Widget> = term to desc
 }
 
+/**
+ * Build a [DefinitionList] widget.
+ *
+ * Call [entry][DefinitionListBuilder.entry] to add entries
+ */
 fun definitionList(init: DefinitionListBuilder.() -> Unit): Widget {
     return DefinitionListBuilder().apply(init).build()
 }
