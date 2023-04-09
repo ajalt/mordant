@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta13
 ### Added
 - Add `Animation.stop()` to stop an animation without clearing it. [(#95)](https://github.com/ajalt/mordant/issues/95)
 - Animations now support resuming after a call to `stop` or `clear`. [(#94)](https://github.com/ajalt/mordant/issues/94)
