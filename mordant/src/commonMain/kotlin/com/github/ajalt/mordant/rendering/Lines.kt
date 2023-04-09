@@ -23,7 +23,10 @@ class Lines(
 
     fun isEmpty(): Boolean = lines.isEmpty()
 
-    internal fun withStyle(style: TextStyle?): Lines {
+    /**
+     * Create a copy of these lines with [style] combined with any existing style
+     */
+    fun withStyle(style: TextStyle?): Lines {
         return when (style) {
             null, DEFAULT_STYLE -> this
             else -> Lines(
@@ -32,7 +35,10 @@ class Lines(
         }
     }
 
-    internal fun replaceStyle(style: TextStyle?): Lines {
+    /**
+     * Create a copy of these lines with any existing styles replaced with [style]
+     */
+    fun replaceStyle(style: TextStyle?): Lines {
         return when (style) {
             null, DEFAULT_STYLE -> this
             else -> Lines(lines.map { l -> Line(l.map { it.replaceStyle(style) }, style) })
@@ -95,7 +101,6 @@ internal fun Lines.setSize(
             when {
                 width + span.cellWidth <= newWidth -> {
                     width += span.cellWidth
-
                 }
                 width == newWidth -> {
                     lines.add(Line(line.subList(0, j)))

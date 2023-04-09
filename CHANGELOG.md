@@ -4,16 +4,21 @@
 ### Added
 - Add `Animation.stop()` to stop an animation without clearing it. [(#95)](https://github.com/ajalt/mordant/issues/95)
 - Animations now support resuming after a call to `stop` or `clear`. [(#94)](https://github.com/ajalt/mordant/issues/94)
+- `TextStyles.reset`, `TextStyles.resetForeground`, and `TextStyles.resetBackground` to clear existing styles.
 
 ### Fixed
 - Fix `TerminalInfo.interactive` not including `outputInteractive`
 - Fix prompts on JS targets that were broken by KT-55817 
 
+### Changed
+- **Source-incompatible change:** All boolean fields on `TextStyle` are now nullable. A null field indicates no change to the previous value when adding or nesting styles.
+- `verticalLayout{}` now defaults `TextAlign.NONE`, meaning it won't add any trailing whitespace to lines. You can return to the old behavior with `align = TextAlign.LEFT`.
+- When nesting styles, the outer style will now override inner styles at the start of a string. (e.g. `red(blue("x")) == red("x")`) 
+
 ## 2.0.0-beta12
 ### Fixed
 - Switch back to calling `stty` for `detectTerminalSize` on macOS. [(#86)](https://github.com/ajalt/mordant/issues/86)
 - `OverflowWrap` is now properly ignored when using a non-wrapping `Whitespace` value. 
-- Fix exception in ProgressBar when its width is 1 character [(#75)](https://github.com/ajalt/mordant/issues/75)
 
 ## 2.0.0-beta11
 ### Added

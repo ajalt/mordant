@@ -81,7 +81,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         val borders = getStyle(Borders.ALL) { it.cellBorders }
         val padding = getStyle(Padding { horizontal = 1 }) { it.padding }
         val whitespace = getStyle(Whitespace.PRE) { it.whitespace }
-        val textAlign = getStyle(TextAlign.LEFT) { it.align }
+        val textAlign = getStyle(TextAlign.NONE) { it.align }
         val verticalAlign = getStyle(VerticalAlign.TOP) { it.verticalAlign }
         val overflowWrap = getStyle(OverflowWrap.ELLIPSES) { it.overflowWrap }
         val stripedStyle = when {

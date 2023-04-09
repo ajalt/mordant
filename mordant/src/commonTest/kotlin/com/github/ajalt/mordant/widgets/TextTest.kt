@@ -94,6 +94,24 @@ class TextTest : RenderingTest() {
     """, width = 79) { it.normalizeHyperlinks() }
 
     @Test
+    @JsName("replacing_whole_string_color")
+    fun `replacing whole string color`() = checkRender(
+        Text((green on gray)((red on blue)("text"))),
+        (green on gray)("text")
+    )
+
+    @Test
+    fun resets() = forAll(
+        row(TextStyles.resetForeground, blue.bg),
+        row(TextStyles.resetBackground, red),
+        row(TextStyles.reset, DEFAULT_STYLE),
+    ) { style, expected ->
+        checkRender(Text(style((red on blue)("text"))), expected("text"))
+    }
+
+//    fun `inner resets`() = TODO()
+
+    @Test
     @JsName("hyperlink_one_line")
     fun `hyperlink one line`() = doHyperlinkTest("This is a link",
         "${OSC}8;id=1;https://example.com${ST}This is a link${OSC}8;;$ST"

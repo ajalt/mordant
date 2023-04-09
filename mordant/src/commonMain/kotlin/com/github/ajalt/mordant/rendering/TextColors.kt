@@ -2,7 +2,9 @@ package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.model.*
+import com.github.ajalt.mordant.internal.AnsiCodes
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.HYPERLINK_RESET
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.math.roundToInt
@@ -34,7 +36,51 @@ enum class TextStyles(val style: TextStyle) {
     italic(TextStyle(italic = true)),
     underline(TextStyle(underline = true)),
     inverse(TextStyle(inverse = true)),
-    strikethrough(TextStyle(strikethrough = true));
+    strikethrough(TextStyle(strikethrough = true)),
+
+    /**
+     * Reset the foreground color to the terminal default.
+     *
+     * ```
+     * val style = (red on blue)
+     * val backgroundOnly = style + resetForeground
+     * ```
+     */
+    resetForeground(TextStyle(Ansi16(AnsiCodes.fgColorReset))),
+
+    /**
+     * Reset the background color to the terminal default.
+     *
+     * ```
+     * val style = (red on blue)
+     * val foregroundOnly = style + resetBackground
+     * ```
+     */
+    resetBackground(TextStyle(bgColor = Ansi16(AnsiCodes.bgColorReset))),
+
+    /**
+     * Reset all styles to the terminal default.
+     *
+     * ```
+     * val style = (red on blue) + bold
+     * assert reset(style("text")) == "text"
+     * ```
+     */
+    reset(
+        TextStyle(
+            color = Ansi16(AnsiCodes.fgColorReset),
+            bgColor = Ansi16(AnsiCodes.bgColorReset),
+            bold = false,
+            italic = false,
+            underline = false,
+            dim = false,
+            inverse = false,
+            strikethrough = false,
+            hyperlink = HYPERLINK_RESET,
+        )
+    ),
+
+    ;
 
     operator fun invoke(text: String) = style.invoke(text)
     operator fun plus(other: TextStyle) = style + other
@@ -155,7 +201,7 @@ enum class TextColors(
          */
         fun gray(fraction: Number, level: AnsiLevel = TRUECOLOR): TextStyle {
             require(fraction.toFloat() in 0f..1f) { "fraction must be in the range [0, 1]" }
-            return  rgb(fraction, fraction, fraction, level)
+            return rgb(fraction, fraction, fraction, level)
         }
 
         /**
@@ -165,7 +211,8 @@ enum class TextColors(
          *
          * [x], [y], and [z] are generally in the interval `[0, 1]`
          */
-        fun xyz(x: Number, y: Number, z: Number, level: AnsiLevel = TRUECOLOR): TextStyle = color(XYZ(x, y, z), level)
+        fun xyz(x: Number, y: Number, z: Number, level: AnsiLevel = TRUECOLOR): TextStyle =
+            color(XYZ(x, y, z), level)
 
 
         /**
@@ -176,7 +223,8 @@ enum class TextColors(
          * [l] is in the interval `[0, 100]`. [a] and [b] have unlimited range,
          * but are generally in `[-100, 100]`
          */
-        fun lab(l: Number, a: Number, b: Number, level: AnsiLevel = TRUECOLOR): TextStyle = color(LAB(l, a, b), level)
+        fun lab(l: Number, a: Number, b: Number, level: AnsiLevel = TRUECOLOR): TextStyle =
+            color(LAB(l, a, b), level)
 
 
         /**

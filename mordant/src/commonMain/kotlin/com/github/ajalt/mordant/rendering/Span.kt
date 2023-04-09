@@ -12,7 +12,12 @@ import kotlin.LazyThreadSafetyMode.PUBLICATION
  * whitespace or contain no whitespace at all.
  */
 class Span private constructor(val text: String, val style: TextStyle = DEFAULT_STYLE) {
-    internal companion object {
+    companion object {
+        /**
+         * Create a Span from a string and optional style.
+         *
+         * The [text] cannot contain whitespace.
+         */
         fun word(text: String, style: TextStyle = DEFAULT_STYLE): Span {
             require(text.isNotEmpty()) { "Span text cannot be empty" }
             require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
@@ -23,11 +28,14 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
             return Span(text, style)
         }
 
+        /**
+         * Create a Span containing [width] number of space characters
+         */
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE): Span {
             return Span(" ".repeat(width), style)
         }
 
-        fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
+        internal fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 
     internal val cellWidth: Int by lazy(PUBLICATION) { stringCellWidth(text) }
@@ -38,4 +46,7 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
 
     internal fun withStyle(style: TextStyle) = Span(text, this.style + style)
     internal fun replaceStyle(style: TextStyle) = Span(text, style)
+    override fun toString(): String {
+        return "<Span '${text}', ${style}>"
+    }
 }

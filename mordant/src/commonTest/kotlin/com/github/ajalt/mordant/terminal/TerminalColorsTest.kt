@@ -4,11 +4,13 @@ import com.github.ajalt.colormath.model.*
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.widgets.Text
 import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class TerminalColorsTest {
@@ -32,7 +34,7 @@ class TerminalColorsTest {
     @JsName("one_level_nesting_start_of_string")
     fun `one level nesting start of string`() = doTest(
         (c.blue on c.green)("${c.red("A")}B"),
-        "<31;42>A<34>B<39;49>"
+        "<34;42>AB<39;49>"
     )
 
     @Test
@@ -94,20 +96,21 @@ class TerminalColorsTest {
     }
 
     // Disabled due to codegen bug on JS/IR
-//    @Test
-//    @JsName("all_24bit_colors")
-//    fun `all 24bit colors`() = forAll(
-//        row(c.rgb("#ff00ff"), RGB("#ff00ff")),
-//        row(c.rgb(.11, .22, .33), RGB(.11, .22, .33)),
-//        row(c.hsl(.11, .22, .33), HSL(.11, .22, .33)),
-//        row(c.hsv(11, .22, .33), HSV(11, .22, .33)),
-//        row(c.cmyk(11, 22, 33, 44), CMYK(11, 22, 33, 44)),
-//        row(c.gray(0.5), RGB(.5, .5, .5)),
-//        row(c.xyz(.11, .22, .33), XYZ(.11, .22, .33)),
-//        row(c.lab(11, 22, 33), LAB(11, 22, 33)),
-//    ) { color, expected ->
-//        color.color shouldBe expected
-//    }
+    @Ignore
+    @Test
+    @JsName("all_24bit_colors")
+    fun `all 24bit colors`() = forAll(
+        row(c.rgb("#ff00ff"), RGB("#ff00ff")),
+        row(c.rgb(.11, .22, .33), RGB(.11, .22, .33)),
+        row(c.hsl(.11, .22, .33), HSL(.11, .22, .33)),
+        row(c.hsv(11, .22, .33), HSV(11, .22, .33)),
+        row(c.cmyk(11, 22, 33, 44), CMYK(11, 22, 33, 44)),
+        row(c.gray(0.5), RGB(.5, .5, .5)),
+        row(c.xyz(.11, .22, .33), XYZ(.11, .22, .33)),
+        row(c.lab(11, 22, 33), LAB(11, 22, 33)),
+    ) { color, expected ->
+        color.color shouldBe expected
+    }
 
     @Test
     @JsName("all_styles")
@@ -167,6 +170,9 @@ class TerminalColorsTest {
         try {
             actual.replace(CSI, "<").replace("m", ">") shouldBe expected
         } catch (e: Throwable) {
+            println("Expected:")
+            println(expected.replace("<", CSI).replace(">", "m"))
+            println("Actual:")
             println(actual)
             throw e
         }

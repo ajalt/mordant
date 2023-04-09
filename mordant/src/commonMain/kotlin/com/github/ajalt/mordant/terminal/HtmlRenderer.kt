@@ -37,26 +37,26 @@ fun TerminalRecorder.outputAsHtml(): String = buildString {
 
 private fun TextStyle.asCssRules(): List<String> {
     val rules = mutableListOf<String>()
-    val (fg, bg) = if (inverse) bgColor to color else color to bgColor
+    val (fg, bg) = if (inverse == true) bgColor to color else color to bgColor
     fg?.let {
         rules.add("color: ${it.toSRGB().toHex()}")
     }
     bg?.let {
         rules.add("background-color: ${it.toSRGB().toHex()}")
     }
-    if (bold) {
+    if (bold == true) {
         rules.add("font-weight: bold")
     }
-    if (italic) {
+    if (italic == true) {
         rules.add("font-style: italic")
     }
-    if (underline) {
+    if (underline == true) {
         rules.add("text-decoration: underline")
     }
-    if (dim) {
+    if (dim == true) {
         rules.add("opacity: 0.5")
     }
-    if (strikethrough) {
+    if (strikethrough == true) {
         rules.add("text-decoration: line-through")
     }
     return rules
