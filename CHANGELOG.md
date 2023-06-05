@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- Fix typo in enum name: renamed `Borders.TOM_BOTTOM` to `Borders.TOP_BOTTOM`. [(#100)](https://github.com/ajalt/mordant/issues/100)
+
 ## 2.0.0-beta13
 ### Added
 - Add `Animation.stop()` to stop an animation without clearing it. [(#95)](https://github.com/ajalt/mordant/issues/95)
