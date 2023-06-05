@@ -30,7 +30,7 @@ fun main() {
             row("", "Projected Cost", "Actual Cost", "Difference")
         }
         body {
-            cellBorders = TOM_BOTTOM
+            cellBorders = TOP_BOTTOM
             column(0) {
                 style = TextStyle(bold = true)
                 cellBorders = ALL

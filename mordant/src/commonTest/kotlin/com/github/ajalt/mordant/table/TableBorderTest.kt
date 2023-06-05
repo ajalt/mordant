@@ -45,7 +45,7 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun TOM_BOTTOM() = doTest(TOM_BOTTOM,
+    fun TOP_BOTTOM() = doTest(TOP_BOTTOM,
         """
         ░───
         ░ × 
