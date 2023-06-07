@@ -166,7 +166,7 @@ terminal that supports it, like recent versions of iTerm or Windows Terminal.
 
 ```kotlin
 val t = Terminal()
-t.printMarkdown(File("README.md").readText())
+t.print(Markdown(Path("README.md").readText()))
 ```
 
 ![](docs/img/markdown.png)
