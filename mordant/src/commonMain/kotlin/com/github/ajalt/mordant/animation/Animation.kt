@@ -41,7 +41,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
                     appendLine(req.text)
                 }
                 append(t)
-            }, trailingLinebreak = !terminal.info.crClearsLine)
+            }, trailingLinebreak = false)
         } ?: req
     }
 
@@ -68,6 +68,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
      */
     fun stop() {
         if (interceptorInstalled) terminal.removeInterceptor(interceptor)
+        if (!firstDraw) terminal.println()
         interceptorInstalled = false
         firstDraw = true
         text = null
@@ -99,7 +100,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
         val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
-            up(height)
+            up(height - 1)
             if (clearScreen) clearScreenAfterCursor()
         }
     }
