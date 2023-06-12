@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
-     * (default: 30fps)
+     * (default: 10fps)
      */
     var animationFrameRate: Int = 30
 
@@ -169,6 +169,7 @@ class ProgressAnimation internal constructor(
         if (!tickerStarted) return
         tickerStarted = false
         ticker.stop()
+        animation.stop()
     }
 
     @Synchronized
