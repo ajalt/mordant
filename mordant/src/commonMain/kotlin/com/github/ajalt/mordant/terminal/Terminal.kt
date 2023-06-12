@@ -63,10 +63,17 @@ class Terminal private constructor(
      * @param terminalInterface The [TerminalInterface] to use to read and write
      */
     constructor(
-        theme: Theme = Theme.Default,
-        tabWidth: Int = 8,
-        terminalInterface: TerminalInterface = StdoutTerminalInterface(),
+        theme: Theme,
+        tabWidth: Int,
+        terminalInterface: TerminalInterface,
     ) : this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
+
+    /**
+     * @param terminalInterface The [TerminalInterface] to use to read and write
+     */
+    constructor(
+        terminalInterface: TerminalInterface,
+    ) : this(Theme.Default, 8, terminalInterface, mutableListOf(), Any())
 
     /**
      * The terminal capabilities that were detected or set in the constructor.
