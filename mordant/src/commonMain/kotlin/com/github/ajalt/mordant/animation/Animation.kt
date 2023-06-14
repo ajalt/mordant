@@ -54,7 +54,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
      */
     fun clear() {
         stop()
-        getCursorMoves(clearScreen = true)?.let { terminal.print(RawWidget(it)) }
+        getCursorMoves(clearScreen = true)?.let { terminal.rawPrint(it) }
         size = null
     }
 

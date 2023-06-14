@@ -63,6 +63,7 @@ internal class MacosMppImpls : JnaMppImpls {
 
 }
 
+@Suppress("SameParameterValue")
 private fun getSttySize(timeoutMs: Long): Pair<Int, Int>? {
     val process = when {
         // Try running stty both directly and via env, since neither one works on all systems
