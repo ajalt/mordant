@@ -28,7 +28,8 @@ class PromptTest {
     @JsName("StringPrompt_with_default")
     fun `StringPrompt with default`() {
         vt.inputLines = mutableListOf("")
-        StringPrompt("pr", t, default = "def").ask() shouldBe "def"
+        // showDefault should be inferred, but is disabled due to KT-59326
+        StringPrompt("pr", t, default = "def", showDefault = true).ask() shouldBe "def"
         val style = t.theme.style("prompt.default")
         vt.output() shouldBe "pr ${style("(def)")}: "
     }

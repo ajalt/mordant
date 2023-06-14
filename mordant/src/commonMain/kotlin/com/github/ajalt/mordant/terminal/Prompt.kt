@@ -157,7 +157,7 @@ class StringPrompt(
     prompt: String,
     terminal: Terminal,
     default: String? = null,
-    showDefault: Boolean = !default.isNullOrBlank(),
+    showDefault: Boolean = false, // !default.isNullOrBlank(), disabled due to KT-59326
     showChoices: Boolean = true,
     hideInput: Boolean = false,
     choices: List<String> = emptyList(),
