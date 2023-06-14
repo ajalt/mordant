@@ -345,6 +345,15 @@ class Terminal private constructor(
         invalidChoiceMessage
     ) { ConversionResult.Valid(it) }
 
+    /**
+     * Print a [message] to the terminal without parsing or rendering it.
+     *
+     * This is useful if you want to print ANSI escape codes manually.
+     */
+    fun rawPrint(message: String) {
+        sendPrintRequest(PrintRequest(message, false))
+    }
+
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
         synchronizeJvm(lock) {
             interceptors += interceptor
@@ -359,10 +368,6 @@ class Terminal private constructor(
 
     private fun rawPrintln(message: String) {
         sendPrintRequest(PrintRequest(message, true))
-    }
-
-    private fun rawPrint(message: String) {
-        sendPrintRequest(PrintRequest(message, false))
     }
 
     private fun sendPrintRequest(request: PrintRequest) {

@@ -54,5 +54,6 @@ class TerminalInfo(
         "The timeoutMs parameter is no longer used; this function does not open a subprocess",
         ReplaceWith("updateTerminalSize()")
     )
+    @Suppress("UNUSED_PARAMETER")
     fun updateTerminalSize(timeoutMs: Long): Boolean = updateTerminalSize()
 }

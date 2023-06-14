@@ -211,15 +211,15 @@ internal object DisabledTerminalCursor : TerminalCursor {
 
 internal abstract class PrintTerminalCursor(protected val terminal: Terminal) : TerminalCursor {
     override fun show() {
-        terminal.print(RawWidget("$CSI?25h"))
+        terminal.rawPrint("$CSI?25h")
     }
 
     override fun hide(showOnExit: Boolean) {
-        terminal.print(RawWidget("$CSI?25l"))
+        terminal.rawPrint("$CSI?25l")
     }
 
     override fun move(movements: CursorMovements.() -> Unit) {
-        terminal.print(RawWidget(getMoves(movements)))
+        terminal.rawPrint(getMoves(movements))
     }
 
     override fun getMoves(movements: CursorMovements.() -> Unit): String {
