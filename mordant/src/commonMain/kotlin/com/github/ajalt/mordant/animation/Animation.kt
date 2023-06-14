@@ -3,7 +3,6 @@ package com.github.ajalt.mordant.animation
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.*
 import com.github.ajalt.mordant.widgets.EmptyWidget
-import com.github.ajalt.mordant.widgets.RawWidget
 import com.github.ajalt.mordant.widgets.Text
 
 /**
@@ -21,7 +20,14 @@ import com.github.ajalt.mordant.widgets.Text
  * (on JVM), or by creating a subclass.
  */
 @OptIn(ExperimentalTerminalApi::class)
-abstract class Animation<T>(private val terminal: Terminal) {
+abstract class Animation<T>(
+    /**
+     * By default, the animation will include a trailing linebreak. If you set this to false, you
+     * won't be able to use multiple animations simultaneously.
+     */
+    private val trailingLinebreak: Boolean = true,
+    private val terminal: Terminal,
+) {
     private var size: Pair<Int, Int>? = null
     private var text: String? = null
     private var needsClear = false
@@ -41,7 +47,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
                     appendLine(req.text)
                 }
                 append(t)
-            }, trailingLinebreak = false)
+            }, trailingLinebreak = trailingLinebreak && !terminal.info.crClearsLine)
         } ?: req
     }
 
@@ -68,7 +74,6 @@ abstract class Animation<T>(private val terminal: Terminal) {
      */
     fun stop() {
         if (interceptorInstalled) terminal.removeInterceptor(interceptor)
-        if (!firstDraw) terminal.println()
         interceptorInstalled = false
         firstDraw = true
         text = null
@@ -100,7 +105,7 @@ abstract class Animation<T>(private val terminal: Terminal) {
         val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
-            up(height - 1)
+            up(if (trailingLinebreak) height else height - 1)
             if (clearScreen) clearScreenAfterCursor()
         }
     }
@@ -109,16 +114,25 @@ abstract class Animation<T>(private val terminal: Terminal) {
 /**
  * Create an [Animation] that uses the [draw] function to render objects of type [T].
  *
+ * @param trailingLinebreak By default, the animation will include a trailing linebreak. If you set
+ *   this to false, you won't be able to use multiple animations simultaneously.
  * @see Animation
  */
-inline fun <T> Terminal.animation(crossinline draw: (T) -> Widget): Animation<T> {
-    return object : Animation<T>(this) {
+inline fun <T> Terminal.animation(
+    trailingLinebreak: Boolean = true,
+    crossinline draw: (T) -> Widget,
+): Animation<T> {
+    return object : Animation<T>(trailingLinebreak, this) {
         override fun renderData(data: T): Widget = draw(data)
     }
 }
 
 /**
- * Create an [Animation] that wraps the result of the [draw] function into a [Text] widget and renders it.
+ * Create an [Animation] that wraps the result of the [draw] function into a [Text] widget and
+ * renders it.
+ *
+ * @param trailingLinebreak By default, the animation will include a trailing linebreak. If you set
+ *   this to false, you won't be able to use multiple animations simultaneously.
  */
 inline fun <T> Terminal.textAnimation(
     whitespace: Whitespace = Whitespace.PRE,
@@ -126,9 +140,10 @@ inline fun <T> Terminal.textAnimation(
     overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
     width: Int? = null,
     tabWidth: Int? = null,
+    trailingLinebreak: Boolean = true,
     crossinline draw: (T) -> String,
 ): Animation<T> {
-    return object : Animation<T>(this) {
+    return object : Animation<T>(trailingLinebreak, this) {
         override fun renderData(data: T): Widget {
             return Text(draw(data), whitespace, align, overflowWrap, width, tabWidth)
         }

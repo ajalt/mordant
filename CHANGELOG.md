@@ -3,6 +3,7 @@
 ## Unreleased
 ### Added
 - `Terminal.rawPrint` which allows you to print ANSI codes manually. [(#91)](https://github.com/ajalt/mordant/issues/91)
+- Option to disable trailing line breaks on animations.
 
 ### Changed
 - Fix typo in enum name: renamed `Borders.TOM_BOTTOM` to `Borders.TOP_BOTTOM`. [(#100)](https://github.com/ajalt/mordant/issues/100)

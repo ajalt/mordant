@@ -69,6 +69,15 @@ class Terminal private constructor(
     ) : this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
 
     /**
+     * @param theme The theme to use for widgets and styles like [success]
+     * @param terminalInterface The [TerminalInterface] to use to read and write
+     */
+    constructor(
+        theme: Theme,
+        terminalInterface: TerminalInterface,
+    ) : this(theme, 8, terminalInterface, mutableListOf(), Any())
+
+    /**
      * @param terminalInterface The [TerminalInterface] to use to read and write
      */
     constructor(
