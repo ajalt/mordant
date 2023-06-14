@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
-     * (default: 10fps)
+     * (default: 30fps)
      */
     var animationFrameRate: Int = 30
 
@@ -89,7 +89,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
  * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
  */
 class ProgressAnimation internal constructor(
-    t: Terminal,
+    private val t: Terminal,
     private val layout: ProgressLayout,
     historyLength: Float,
     private val ticker: Ticker,
@@ -148,6 +148,7 @@ class ProgressAnimation internal constructor(
     @Synchronized
     fun start() {
         if (tickerStarted) return
+        t.cursor.hide(showOnExit = true)
         tickerStarted = true
         history.start()
         ticker.start {
@@ -167,6 +168,7 @@ class ProgressAnimation internal constructor(
     @Synchronized
     fun stop() {
         if (!tickerStarted) return
+        t.cursor.show()
         tickerStarted = false
         ticker.stop()
         animation.stop()

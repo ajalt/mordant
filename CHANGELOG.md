@@ -7,6 +7,7 @@
 
 ### Changed
 - Fix typo in enum name: renamed `Borders.TOM_BOTTOM` to `Borders.TOP_BOTTOM`. [(#100)](https://github.com/ajalt/mordant/issues/100)
+- The terminal cursor will now be hidden when `progressAnimation` is running.
 
 ## 2.0.0-beta13
 ### Added
