@@ -43,14 +43,32 @@ class TerminalTest {
 
     @Test
     fun print() {
-        t.print("print")
-        vt.output() shouldBe "print"
+        t.print("1")
+        t.print("2", stderr=true)
+        t.print("3")
+        vt.stdout() shouldBe "13"
+        vt.stderr() shouldBe "2"
+        vt.output() shouldBe "123"
     }
 
     @Test
     fun println() {
-        t.println("println")
-        vt.output() shouldBe "println\n"
+        t.println("1")
+        t.println("2", stderr=true)
+        t.println("3")
+        vt.stdout() shouldBe "1\n3\n"
+        vt.stderr() shouldBe "2\n"
+        vt.output() shouldBe "1\n2\n3\n"
+    }
+
+    @Test
+    fun rawPrint() {
+        t.rawPrint(t.cursor.getMoves { left(1) })
+        t.rawPrint(t.cursor.getMoves { up(1) }, stderr=true)
+        t.rawPrint(t.cursor.getMoves { right(1) })
+        vt.stdout() shouldBe t.cursor.getMoves { left(1); right(1) }
+        vt.stderr() shouldBe t.cursor.getMoves { up(1) }
+        vt.output() shouldBe t.cursor.getMoves { left(1); up(1); right(1) }
     }
 
     @Test

@@ -42,18 +42,22 @@ abstract class Animation<T>(
     private var firstDraw = true
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        text?.let { t ->
-            PrintRequest(text = buildString {
-                if (!firstDraw) {
-                    getCursorMoves(needsClear || req.text.isNotEmpty())?.let { append(it) }
-                }
-                firstDraw = false
-                if (req.text.isNotEmpty()) {
-                    appendLine(req.text)
-                }
-                append(t)
-            }, trailingLinebreak = trailingLinebreak && !terminal.info.crClearsLine)
-        } ?: req
+        val t = text ?: return@TerminalInterceptor req
+        val newText = buildString {
+            if (!firstDraw) {
+                getCursorMoves(needsClear || req.text.isNotEmpty())?.let { append(it) }
+            }
+            firstDraw = false
+            if (req.text.isNotEmpty()) {
+                appendLine(req.text)
+            }
+            append(t)
+        }
+        PrintRequest(
+            text = newText,
+            trailingLinebreak = trailingLinebreak && !terminal.info.crClearsLine,
+            stderr = req.stderr
+        )
     }
 
     protected abstract fun renderData(data: T): Widget

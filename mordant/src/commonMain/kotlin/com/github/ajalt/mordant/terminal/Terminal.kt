@@ -36,7 +36,7 @@ class Terminal private constructor(
      * @param height The height of th terminal to use when rendering widgets, or `null` to detect the current width.
      *   On JVM, you'll need to call [info.updateTerminalSize][TerminalInfo.updateTerminalSize] to
      *   detect the size correctly.
-     * @param hyperlinks whether or not to render hyperlinks using ANSI codes, or `null` to detect the capability
+     * @param hyperlinks whether to render hyperlinks using ANSI codes, or `null` to detect the capability
      * @param tabWidth The number of spaces to use for `\t` characters
      * @param interactive Set to true to always use color codes, even if stdout is redirected to a
      *   file, or `null` to detect the capability. This can be useful if you expect to call your
@@ -100,7 +100,7 @@ class Terminal private constructor(
     /**
      * Functions for controlling the terminal's cursor.
      *
-     * If the terminal is not interactive, all of the cursor functions are no-ops.
+     * If the terminal is not interactive, all the cursor functions are no-ops.
      */
     val cursor: TerminalCursor =
         if (info.interactive) makePrintingTerminalCursor(this) else DisabledTerminalCursor
@@ -183,6 +183,7 @@ class Terminal private constructor(
      * @param overflowWrap How to wrap words longer than a single line. By default, long words are not wrapped.
      * @param width The width to wrap to if [whitespace] or [overflowWrap] are set. By default, this
      *   will use [info.width][TerminalInfo.width]
+     * @param stderr Whether to print to stderr instead of stdout.
      */
     fun print(
         message: Any?,
@@ -190,8 +191,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        rawPrint(render(message, whitespace, align, overflowWrap, width))
+        rawPrint(render(message, whitespace, align, overflowWrap, width), stderr)
     }
 
     /**
@@ -207,6 +209,7 @@ class Terminal private constructor(
      * @param overflowWrap How to wrap words longer than a single line. By default, long words are not wrapped.
      * @param width The width to wrap to if [whitespace] or [overflowWrap] are set. By default, this
      *   will use [info.width][TerminalInfo.width]
+     * @param stderr Whether to print to stderr instead of stdout.
      */
     fun println(
         message: Any?,
@@ -214,22 +217,23 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        rawPrintln(render(message, whitespace, align, overflowWrap, width))
+        rawPrintln(render(message, whitespace, align, overflowWrap, width), stderr)
     }
 
     /**
      * Print a [widget] to the terminal.
      */
-    fun print(widget: Widget) {
-        rawPrint(render(widget))
+    fun print(widget: Widget, stderr: Boolean = false) {
+        rawPrint(render(widget), stderr)
     }
 
     /**
      * Print a [widget] to the terminal, followed by a line break.
      */
-    fun println(widget: Widget) {
-        rawPrintln(render(widget))
+    fun println(widget: Widget, stderr: Boolean = false) {
+        rawPrintln(render(widget), stderr)
     }
 
 
@@ -237,7 +241,7 @@ class Terminal private constructor(
      * Print a line break to the terminal.
      */
     fun println() {
-        sendPrintRequest(PrintRequest("", true))
+        sendPrintRequest(PrintRequest("", trailingLinebreak = true, stderr = false))
     }
 
     /**
@@ -271,13 +275,6 @@ class Terminal private constructor(
     /** Render a [widget] as a string */
     fun render(widget: Widget): String {
         return renderLinesAnsi(widget.render(this), info.ansiLevel, info.ansiHyperLinks)
-    }
-
-    /**
-     * Create a copy of this terminal that prints to stderr if possible.
-     */
-    fun forStdErr(): Terminal {
-        return Terminal(theme, tabWidth, terminalInterface.forStdErr(), interceptors, lock)
     }
 
     /**
@@ -358,8 +355,8 @@ class Terminal private constructor(
      *
      * This is useful if you want to print ANSI escape codes manually.
      */
-    fun rawPrint(message: String) {
-        sendPrintRequest(PrintRequest(message, false))
+    fun rawPrint(message: String, stderr: Boolean = false) {
+        sendPrintRequest(PrintRequest(message, false, stderr))
     }
 
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
@@ -374,8 +371,8 @@ class Terminal private constructor(
         }
     }
 
-    private fun rawPrintln(message: String) {
-        sendPrintRequest(PrintRequest(message, true))
+    private fun rawPrintln(message: String, stderr: Boolean) {
+        sendPrintRequest(PrintRequest(message, true, stderr))
     }
 
     private fun sendPrintRequest(request: PrintRequest) {

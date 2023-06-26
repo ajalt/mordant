@@ -4,10 +4,15 @@
 ### Added
 - `Terminal.rawPrint` which allows you to print ANSI codes manually. [(#91)](https://github.com/ajalt/mordant/issues/91)
 - Option to disable trailing line breaks on animations.
+- `Terminal.print`, `println`, and `rawPrint` now accept a `stderr` parameter that will print to stderr (if available). 
 
 ### Changed
 - Fix typo in enum name: renamed `Borders.TOM_BOTTOM` to `Borders.TOP_BOTTOM`. [(#100)](https://github.com/ajalt/mordant/issues/100)
 - The terminal cursor will now be hidden when `progressAnimation` is running.
+
+### Removed
+- Removed `TerminalRecorder.currentContent`. Use `stdout()`, `stderr()` or `output()` instead.
+- Removed `Terminal.forStdErr()` and `TerminalInterface.forStdErr()`. Use `Terminal.println(stderr=true)` instead.
 
 ## 2.0.0-beta13
 ### Added

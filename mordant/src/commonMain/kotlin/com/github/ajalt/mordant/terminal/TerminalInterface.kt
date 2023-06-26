@@ -2,7 +2,14 @@ package com.github.ajalt.mordant.terminal
 
 
 interface TerminalInterface {
+    /**
+     * Information about the current terminal.
+     */
     val info: TerminalInfo
+
+    /**
+     * Display a PrintRequest on this terminal.
+     */
     fun completePrintRequest(request: PrintRequest)
 
     /**
@@ -13,17 +20,17 @@ interface TerminalInterface {
      *   targets are supported by default except Browser JS.
      */
     fun readLineOrNull(hideInput: Boolean): String?
-
-    /**
-     * Return an interface that should print to stderr if possible.
-     *
-     * If the interface doesn't support stdErr (for example, if it writes to an html field in the browser rather than a
-     * desktop terminal), the same instance may be returned.
-     */
-    fun forStdErr(): TerminalInterface
 }
 
 data class PrintRequest(
+    /** The Text to print */
     val text: String,
+    /** If True, a trailing linebreak should be written after the text. */
     val trailingLinebreak: Boolean,
+    /**
+     * If True, the text should be written to stderr instead of stdout.
+     *
+     * If this terminal doesn't have separate output streams, this can be ignored.
+     */
+    val stderr: Boolean,
 )

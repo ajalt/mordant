@@ -6,31 +6,45 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 /**
  * Information about the current terminal
  *
- * [width] and [height] don't automatically change if the terminal is resized. Call [updateTerminalSize] to get the
- * latest values.
- *
- * @property width The terminal width, in cells
- * @property height The terminal height, in cells
- * @property ansiLevel The level of ANSI codes to use when printing to the terminal
- * @property ansiHyperLinks If true, ANSI hyperlink codes can be used
- * @property outputInteractive If false the output stream is not an interactive terminal, such as
- *   when it's redirected to a file. Note that the output stream is stdout by default, or stderr if
- *   [Terminal.forStdErr] is used.
- * @property inputInteractive If false the output stream is not an interactive terminal, such as when it's redirected from a file
- * @property crClearsLine If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
- *   `\r` will only move the cursor
+ * [width] and [height] don't automatically change if the terminal is resized. Call
+ * [updateTerminalSize] to get the latest values.
  */
 class TerminalInfo(
+    /** The terminal width, in cells */
     width: Int,
+    /** The terminal height, in cells */
     height: Int,
+    /** The level of ANSI codes to use when printing to the terminal */
     var ansiLevel: AnsiLevel,
+    /** If true, ANSI hyperlink codes can be used */
     var ansiHyperLinks: Boolean,
+    /**
+     * If false the output stream is not an interactive terminal, such as when it's redirected to a
+     * file.
+     */
     val outputInteractive: Boolean,
+    /**
+     * If false the error stream is not an interactive terminal, such as when it's redirected to a
+     * file.
+     *
+     * If this terminal doesn't have a separate error stream, this will be false.
+     */
+    val stderrInteractive: Boolean,
+    /**
+     * If false the intput stream is not an interactive terminal, such as when it's redirected from
+     * a file
+     */
     val inputInteractive: Boolean,
+    /**
+     * If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
+     * `\r` will only move the cursor
+     */
     val crClearsLine: Boolean,
 ) {
+    /** The terminal width, in cells */
     var width: Int = width
         private set
+    /** The terminal height, in cells */
     var height: Int = height
         private set
 

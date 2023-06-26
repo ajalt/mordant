@@ -8,21 +8,18 @@ import org.junit.contrib.java.lang.system.SystemOutRule
 import kotlin.test.Test
 
 class StderrTerminalTest : RenderingTest() {
-    @Rule
-    @JvmField
-    val stdout = SystemOutRule().enableLog().muteForSuccessfulTests()
+    @get:Rule
+    val stdout: SystemOutRule = SystemOutRule().enableLog().muteForSuccessfulTests()
 
-    @Rule
-    @JvmField
-    val stderr = SystemErrRule().enableLog().muteForSuccessfulTests()
+    @get:Rule
+    val stderr: SystemErrRule = SystemErrRule().enableLog().muteForSuccessfulTests()
 
     @Test
     fun stderrTerminal() {
-        val outterm = Terminal()
-        val errterm = Terminal().forStdErr()
+        val terminal = Terminal()
 
-        errterm.print("foo")
-        outterm.print("bar")
+        terminal.print("foo", stderr = true)
+        terminal.print("bar")
 
         stderr.logWithNormalizedLineSeparator shouldBe "foo"
         stdout.logWithNormalizedLineSeparator shouldBe "bar"

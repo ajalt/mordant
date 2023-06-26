@@ -6,16 +6,17 @@ import com.github.ajalt.mordant.rendering.AnsiLevel.*
 
 internal object TerminalDetection {
     fun detectTerminal(
-        stderr: Boolean,
         ansiLevel: AnsiLevel?,
         width: Int?,
         height: Int?,
         hyperlinks: Boolean?,
         interactive: Boolean?,
     ): TerminalInfo {
-        val ij = isIntellijRunActionConsole() // intellij console is interactive, even though isatty returns false
-        val inputInteractive = interactive ?: if (stderr) false else (ij || stdinInteractive())
-        val outputInteractive = interactive ?: (ij || (if (stderr) stderrInteractive() else stdoutInteractive()))
+        // intellij console is interactive, even though isatty returns false
+        val ij = isIntellijRunActionConsole()
+        val inputInteractive = interactive ?: (ij || stdinInteractive())
+        val outputInteractive = interactive ?: (ij || stdoutInteractive())
+        val stderrInteractive = interactive ?: (ij || stderrInteractive())
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()
@@ -25,6 +26,7 @@ internal object TerminalDetection {
             ansiLevel = level,
             ansiHyperLinks = ansiHyperLinks,
             outputInteractive = outputInteractive,
+            stderrInteractive = stderrInteractive,
             inputInteractive = inputInteractive,
             crClearsLine = ij
         )
@@ -34,8 +36,10 @@ internal object TerminalDetection {
     fun detectSize(): Pair<Int, Int>? = getTerminalSize()
 
     private fun detectInitialSize(): Pair<Int, Int> {
-        val detected = getTerminalSize()
-        return detected ?: ((getEnv("COLUMNS")?.toIntOrNull() ?: 79) to (getEnv("LINES")?.toIntOrNull() ?: 24))
+        return getTerminalSize() ?: Pair(
+            (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
+            (getEnv("LINES")?.toIntOrNull() ?: 24)
+        )
     }
 
     // https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda

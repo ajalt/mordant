@@ -2,16 +2,8 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
-/**
- * @property inputLines Lines of input to return from [readLineOrNull].
- */
 class TerminalRecorder private constructor(
     override val info: TerminalInfo,
-    var inputLines: MutableList<String>,
-    private val stdout: StringBuilder,
-    private val stderr: StringBuilder,
-    private val output: StringBuilder,
-    private val useStdErr: Boolean,
 ) : TerminalInterface {
     constructor(
         ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
@@ -19,6 +11,7 @@ class TerminalRecorder private constructor(
         height: Int = 24,
         hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
         outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
+        stderrInteractive: Boolean = outputInteractive,
         inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
         crClearsLine: Boolean = false,
     ) : this(
@@ -29,14 +22,18 @@ class TerminalRecorder private constructor(
             hyperlinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
+            stderrInteractive = stderrInteractive,
             crClearsLine = crClearsLine,
         ),
-        inputLines = mutableListOf(),
-        stdout = StringBuilder(),
-        stderr = StringBuilder(),
-        output = StringBuilder(),
-        useStdErr = false
     )
+
+    /**
+     * Lines of input to return from [readLineOrNull].
+     */
+    var inputLines: MutableList<String> = mutableListOf()
+    private val stdout: StringBuilder = StringBuilder()
+    private val stderr: StringBuilder = StringBuilder()
+    private val output: StringBuilder = StringBuilder()
 
     fun clearOutput() {
         stdout.clear()
@@ -53,11 +50,8 @@ class TerminalRecorder private constructor(
     /** The combined content of [stdout] and [stderr] */
     fun output(): String = output.toString()
 
-    /** Return [stdout] by default, or [stderr] instead if this interface was returned from [forStdErr] */
-    fun currentContent(): String = if (useStdErr) stderr() else stdout()
-
     override fun completePrintRequest(request: PrintRequest) {
-        val sb = if (useStdErr) stderr else stdout
+        val sb = if (request.stderr) stderr else stdout
         sb.append(request.text)
         output.append(request.text)
         if (request.trailingLinebreak) {
@@ -65,10 +59,6 @@ class TerminalRecorder private constructor(
             output.append("\n")
         }
     }
-
-    override fun forStdErr(): TerminalRecorder = TerminalRecorder(
-        info, inputLines, stdout, stderr, output, true
-    )
 
     override fun readLineOrNull(hideInput: Boolean): String? = inputLines.removeFirstOrNull()
 }
