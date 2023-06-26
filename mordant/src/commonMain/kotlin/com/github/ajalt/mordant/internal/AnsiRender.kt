@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.model.Ansi16
 import com.github.ajalt.colormath.model.Ansi256
-import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.bgColorSelector
 import com.github.ajalt.mordant.internal.AnsiCodes.fgBgOffset
@@ -10,7 +10,10 @@ import com.github.ajalt.mordant.internal.AnsiCodes.fgColorReset
 import com.github.ajalt.mordant.internal.AnsiCodes.fgColorSelector
 import com.github.ajalt.mordant.internal.AnsiCodes.selector256
 import com.github.ajalt.mordant.internal.AnsiCodes.selectorRgb
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.Lines
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.copy
 
 internal fun renderLinesAnsi(
     lines: Lines, level: AnsiLevel, hyperlinks: Boolean,

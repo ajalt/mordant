@@ -1,7 +1,5 @@
 package com.github.ajalt.mordant.markdown
 
-import com.github.ajalt.mordant.internal.generateHyperlinkId
-import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.BorderType.Companion.ASCII_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR

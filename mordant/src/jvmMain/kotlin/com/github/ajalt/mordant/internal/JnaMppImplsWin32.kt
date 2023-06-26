@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-import com.sun.jna.*
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.PointerType
+import com.sun.jna.Structure
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.win32.W32APIOptions
 

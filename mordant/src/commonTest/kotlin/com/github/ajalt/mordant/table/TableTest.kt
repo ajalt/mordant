@@ -10,7 +10,6 @@ import com.github.ajalt.mordant.table.Borders.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
-import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.js.JsName
 import kotlin.test.Test

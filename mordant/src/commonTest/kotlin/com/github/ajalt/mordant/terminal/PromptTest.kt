@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
 
-@OptIn(ExperimentalTerminalApi::class)
 class PromptTest {
     private val vt = TerminalRecorder(width = 8)
     private val t = Terminal(terminalInterface = vt)

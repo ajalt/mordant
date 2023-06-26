@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.Padded
@@ -87,7 +86,6 @@ fun Table.contentToCsv(
     }
 }
 
-@OptIn(ExperimentalTerminalApi::class)
 private fun Table.getContentRows(): List<List<String>> {
     val rows = when (this) {
         is TableImpl -> rows

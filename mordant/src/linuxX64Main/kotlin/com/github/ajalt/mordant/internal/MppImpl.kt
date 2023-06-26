@@ -2,7 +2,10 @@ package com.github.ajalt.mordant.internal
 
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
-import platform.posix.*
+import platform.posix.STDIN_FILENO
+import platform.posix.TIOCGWINSZ
+import platform.posix.ioctl
+import platform.posix.winsize
 
 internal actual fun getTerminalSize(): Pair<Int, Int>? {
     return memScoped {

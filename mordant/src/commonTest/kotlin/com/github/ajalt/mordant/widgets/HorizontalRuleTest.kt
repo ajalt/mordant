@@ -6,8 +6,6 @@ import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.test.RenderingTest
-import com.github.ajalt.mordant.widgets.HorizontalRule
-import com.github.ajalt.mordant.widgets.Text
 import kotlin.js.JsName
 import kotlin.test.Test
 

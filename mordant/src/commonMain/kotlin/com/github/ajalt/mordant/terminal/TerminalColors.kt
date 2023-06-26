@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.downsample
 import com.github.ajalt.mordant.rendering.TextColors

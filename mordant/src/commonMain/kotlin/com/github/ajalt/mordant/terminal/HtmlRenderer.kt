@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.TextStyle
 
-@ExperimentalTerminalApi
 fun TerminalRecorder.outputAsHtml(): String = buildString {
     val lines = parseText(output(), DEFAULT_STYLE)
 

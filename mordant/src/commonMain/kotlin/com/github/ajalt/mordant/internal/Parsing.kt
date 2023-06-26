@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.model.Ansi16
 import com.github.ajalt.colormath.model.Ansi256
-import com.github.ajalt.colormath.Color
 import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.mordant.rendering.*
 

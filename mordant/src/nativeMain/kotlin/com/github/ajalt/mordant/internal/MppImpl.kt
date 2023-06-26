@@ -113,7 +113,6 @@ private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(ter
 }
 
 
-@OptIn(ExperimentalTerminalApi::class)
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,

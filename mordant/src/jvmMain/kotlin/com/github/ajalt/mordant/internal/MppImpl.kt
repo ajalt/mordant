@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
-import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -82,7 +81,6 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
     }
 }
 
-@OptIn(ExperimentalTerminalApi::class)
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,

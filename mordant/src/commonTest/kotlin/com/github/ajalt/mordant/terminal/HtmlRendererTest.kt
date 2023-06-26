@@ -1,10 +1,10 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.blue
+import com.github.ajalt.mordant.rendering.TextColors.red
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
-@OptIn(ExperimentalTerminalApi::class)
 class HtmlRendererTest {
     private val vt = TerminalRecorder()
     private val t = Terminal(terminalInterface = vt)

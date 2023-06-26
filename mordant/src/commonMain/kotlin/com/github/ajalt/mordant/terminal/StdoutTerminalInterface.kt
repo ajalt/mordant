@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.internal.printStderr
 import com.github.ajalt.mordant.internal.readLineOrNullMpp
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
-@ExperimentalTerminalApi
 internal class StdoutTerminalInterface private constructor(
     override val info: TerminalInfo,
     private val errInfo: TerminalInfo,

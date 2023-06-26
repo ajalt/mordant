@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-import com.sun.jna.*
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.Platform
+import com.sun.jna.Structure
 
 @Suppress("ClassName", "PropertyName", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
 interface PosixLibC : Library {

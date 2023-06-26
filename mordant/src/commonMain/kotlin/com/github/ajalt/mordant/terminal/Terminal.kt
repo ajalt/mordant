@@ -20,7 +20,6 @@ import com.github.ajalt.mordant.widgets.Text
  * override this detection by passing your desired value for `ansiLevel`, `hyperlinks`, and
  * `interactive`.
  */
-@OptIn(ExperimentalTerminalApi::class)
 class Terminal private constructor(
     val theme: Theme,
     val tabWidth: Int,

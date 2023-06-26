@@ -4,7 +4,6 @@ import com.github.ajalt.colormath.model.*
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.widgets.Text
 import io.kotest.assertions.assertSoftly
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row

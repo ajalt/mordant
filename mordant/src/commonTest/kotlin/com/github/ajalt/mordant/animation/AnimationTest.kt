@@ -1,13 +1,11 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.terminal.ExperimentalTerminalApi
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
 
-@OptIn(ExperimentalTerminalApi::class)
 class AnimationTest {
     private val rec = TerminalRecorder(width = 24)
     private val t = Terminal(terminalInterface = rec)

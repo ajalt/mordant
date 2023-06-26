@@ -4,10 +4,6 @@ import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.rendering.Whitespace.PRE
 import com.github.ajalt.mordant.table.verticalLayout
 import com.github.ajalt.mordant.test.RenderingTest
-import com.github.ajalt.mordant.widgets.DefinitionListBuilder
-import com.github.ajalt.mordant.widgets.Panel
-import com.github.ajalt.mordant.widgets.Text
-import com.github.ajalt.mordant.widgets.definitionList
 import kotlin.js.JsName
 import kotlin.test.Test
 

@@ -29,7 +29,6 @@ internal expect fun printStderr(message: String, newline: Boolean)
 
 internal expect fun readLineOrNullMpp(hideInput: Boolean): String?
 
-@OptIn(ExperimentalTerminalApi::class)
 internal expect fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,

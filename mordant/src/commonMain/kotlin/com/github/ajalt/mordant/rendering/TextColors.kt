@@ -7,7 +7,6 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.HYPERLINK_RESET
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlin.math.roundToInt
 
 enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
 

@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.gen.*
+import com.github.ajalt.mordant.internal.gen.CELL_WIDTH_TABLE
+import com.github.ajalt.mordant.internal.gen.EMOJI_SEQUENCES
+import com.github.ajalt.mordant.internal.gen.IntTrie
+import com.github.ajalt.mordant.internal.gen.couldStartEmojiSeq
 
 
 /*

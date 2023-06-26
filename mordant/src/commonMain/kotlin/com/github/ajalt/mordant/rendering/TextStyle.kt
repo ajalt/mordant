@@ -1,11 +1,7 @@
 package com.github.ajalt.mordant.rendering
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.colormath.model.Ansi16
-import com.github.ajalt.mordant.internal.*
-import com.github.ajalt.mordant.internal.AnsiCodes
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
-import com.github.ajalt.mordant.internal.HYPERLINK_RESET
 import com.github.ajalt.mordant.internal.generateHyperlinkId
 import com.github.ajalt.mordant.internal.invokeStyle
 

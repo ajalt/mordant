@@ -5,7 +5,6 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 /**
  * @property inputLines Lines of input to return from [readLineOrNull].
  */
-@ExperimentalTerminalApi
 class TerminalRecorder private constructor(
     override val info: TerminalInfo,
     var inputLines: MutableList<String>,
@@ -72,47 +71,4 @@ class TerminalRecorder private constructor(
     )
 
     override fun readLineOrNull(hideInput: Boolean): String? = inputLines.removeFirstOrNull()
-}
-
-@ExperimentalTerminalApi
-@Deprecated(
-    "VirtualTerminalInterface replaced with TerminalRecorder",
-    replaceWith = ReplaceWith("TerminalRecorder")
-)
-class VirtualTerminalInterface(
-    ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-    width: Int = 79,
-    height: Int = 24,
-    hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
-    outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-    inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-    crClearsLine: Boolean = false,
-) : TerminalInterface {
-    override val info = TerminalInfo(
-        width,
-        height,
-        ansiLevel,
-        hyperlinks,
-        outputInteractive = outputInteractive,
-        inputInteractive = inputInteractive,
-        crClearsLine = crClearsLine,
-    )
-
-    private val sb = StringBuilder()
-
-    fun clearBuffer() {
-        sb.clear()
-    }
-
-    fun buffer(): String = sb.toString()
-
-    override fun completePrintRequest(request: PrintRequest) {
-        sb.append(request.text)
-        if (request.trailingLinebreak) {
-            sb.append("\n")
-        }
-    }
-
-    override fun forStdErr(): TerminalInterface = this
-    override fun readLineOrNull(hideInput: Boolean): String? = null
 }

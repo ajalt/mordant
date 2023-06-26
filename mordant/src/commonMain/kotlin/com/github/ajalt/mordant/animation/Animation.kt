@@ -1,7 +1,13 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.*
+import com.github.ajalt.mordant.rendering.OverflowWrap
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.terminal.PrintRequest
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.TerminalInfo
+import com.github.ajalt.mordant.terminal.TerminalInterceptor
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Text
 
@@ -19,7 +25,6 @@ import com.github.ajalt.mordant.widgets.Text
  * You can create instances of Animations with [animation], [textAnimation], and `progressAnimation`
  * (on JVM), or by creating a subclass.
  */
-@OptIn(ExperimentalTerminalApi::class)
 abstract class Animation<T>(
     /**
      * By default, the animation will include a trailing linebreak. If you set this to false, you

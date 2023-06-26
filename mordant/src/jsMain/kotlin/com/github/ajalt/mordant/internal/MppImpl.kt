@@ -129,7 +129,6 @@ private class JsTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termina
 }
 
 
-@OptIn(ExperimentalTerminalApi::class)
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,
