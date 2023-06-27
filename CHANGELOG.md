@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0-beta14
 ### Added
 - `Terminal.rawPrint` which allows you to print ANSI codes manually. [(#91)](https://github.com/ajalt/mordant/issues/91)
 - Option to disable trailing line breaks on animations.
