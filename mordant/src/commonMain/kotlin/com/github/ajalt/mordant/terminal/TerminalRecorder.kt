@@ -11,7 +11,6 @@ class TerminalRecorder private constructor(
         height: Int = 24,
         hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
         outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-        stderrInteractive: Boolean = outputInteractive,
         inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
         crClearsLine: Boolean = false,
     ) : this(
@@ -22,7 +21,6 @@ class TerminalRecorder private constructor(
             hyperlinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
-            stderrInteractive = stderrInteractive,
             crClearsLine = crClearsLine,
         ),
     )

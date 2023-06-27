@@ -16,7 +16,6 @@ internal object TerminalDetection {
         val ij = isIntellijRunActionConsole()
         val inputInteractive = interactive ?: (ij || stdinInteractive())
         val outputInteractive = interactive ?: (ij || stdoutInteractive())
-        val stderrInteractive = interactive ?: (ij || stderrInteractive())
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()
@@ -26,7 +25,6 @@ internal object TerminalDetection {
             ansiLevel = level,
             ansiHyperLinks = ansiHyperLinks,
             outputInteractive = outputInteractive,
-            stderrInteractive = stderrInteractive,
             inputInteractive = inputInteractive,
             crClearsLine = ij
         )

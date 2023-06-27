@@ -114,8 +114,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        println(theme.success(message.toString()), whitespace, align, overflowWrap, width)
+        println(theme.success(message.toString()), whitespace, align, overflowWrap, width, stderr)
     }
 
     /**
@@ -127,8 +128,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        println(theme.danger(message.toString()), whitespace, align, overflowWrap, width)
+        println(theme.danger(message.toString()), whitespace, align, overflowWrap, width, stderr)
     }
 
     /**
@@ -140,8 +142,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        println(theme.warning(message.toString()), whitespace, align, overflowWrap, width)
+        println(theme.warning(message.toString()), whitespace, align, overflowWrap, width, stderr)
     }
 
     /**
@@ -153,8 +156,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        println(theme.info(message.toString()), whitespace, align, overflowWrap, width)
+        println(theme.info(message.toString()), whitespace, align, overflowWrap, width, stderr)
     }
 
     /**
@@ -166,8 +170,9 @@ class Terminal private constructor(
         align: TextAlign = TextAlign.NONE,
         overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
         width: Int? = null,
+        stderr: Boolean = false,
     ) {
-        println(theme.muted(message.toString()), whitespace, align, overflowWrap, width)
+        println(theme.muted(message.toString()), whitespace, align, overflowWrap, width, stderr)
     }
 
     /**
@@ -240,8 +245,8 @@ class Terminal private constructor(
     /**
      * Print a line break to the terminal.
      */
-    fun println() {
-        sendPrintRequest(PrintRequest("", trailingLinebreak = true, stderr = false))
+    fun println(stderr: Boolean = false) {
+        sendPrintRequest(PrintRequest("", trailingLinebreak = true, stderr = stderr))
     }
 
     /**

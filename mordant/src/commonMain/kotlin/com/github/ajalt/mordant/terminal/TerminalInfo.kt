@@ -24,13 +24,6 @@ class TerminalInfo(
      */
     val outputInteractive: Boolean,
     /**
-     * If false the error stream is not an interactive terminal, such as when it's redirected to a
-     * file.
-     *
-     * If this terminal doesn't have a separate error stream, this will be false.
-     */
-    val stderrInteractive: Boolean,
-    /**
      * If false the intput stream is not an interactive terminal, such as when it's redirected from
      * a file
      */
