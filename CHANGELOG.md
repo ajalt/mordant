@@ -1,9 +1,8 @@
 # Changelog
 
-## Unreleased
-
+## 2.0.0
 ### Deprecated
-- Depreacted `TerminalColors` is favor of `TextColors` and `Terminal.theme`
+- Deprecated `TerminalColors` is favor of `TextColors` and `Terminal.theme`
 
 ## 2.0.0-beta14
 ### Added
