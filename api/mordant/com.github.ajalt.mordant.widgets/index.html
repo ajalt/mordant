@@ -6,10 +6,18 @@
     <link href="../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../";</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async="async"></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -21,6 +29,7 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script>
 <script type="text/javascript" src="../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
@@ -31,7 +40,7 @@ if(savedDarkMode === true){
             </a>
     </div>
     <div>
-2.0.0-beta9    </div>
+    </div>
     <div class="pull-right d-flex">
         <div class="filter-section" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtml/gen">common</button>
@@ -45,319 +54,287 @@ if(savedDarkMode === true){
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageIds="mordant::com.github.ajalt.mordant.widgets////PointingToDeclaration//-1759575997">
-  <div class="breadcrumbs"><a href="../../index.html">mordant</a><span class="delimiter">/</span><a href="index.html">com.github.ajalt.mordant.widgets</a></div>
+<div class="main-content" data-page-type="package" id="content" pageIds="mordant::com.github.ajalt.mordant.widgets////PointingToDeclaration//-1759575997">
+  <div class="breadcrumbs"><a href="../../index.html">mordant</a><span class="delimiter">/</span><span class="current">com.github.ajalt.mordant.widgets</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>com.</span><wbr></wbr><span>github.</span><wbr></wbr><span>ajalt.</span><wbr></wbr><span>mordant.</span><wbr></wbr><span>widgets</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Functions">Functions</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
     <div class="tabs-section-body">
-      <h2 class="">Types</h2>
-      <div class="table" data-togglable="Types"><a data-name="-667610606%2FClasslikes%2F-1759575997" anchor-label="Caption" id="-667610606%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-caption/index.html"><span><span>Caption</span></span></a></div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-667610606%2FClasslikes%2F-1759575997" anchor-label="Caption" id="-667610606%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-caption/index.html"><span><span>Caption</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-667610606%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-caption/index.html">Caption</a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>content<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>top<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>bottom<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Add a <a href="-caption/top.html">top</a> and/or <a href="-caption/bottom.html">bottom</a> caption to <a href="-caption/content.html">content</a></p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-caption/index.html">Caption</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>content<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>top<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>bottom<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">Add a <a href="-caption/top.html">top</a> and/or <a href="-caption/bottom.html">bottom</a> caption to <a href="-caption/content.html">content</a></p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="63947374%2FClasslikes%2F-1759575997" anchor-label="DefinitionListBuilder" id="63947374%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-definition-list-builder/index.html"><span>Definition</span><wbr></wbr><span>List</span><wbr></wbr><span><span>Builder</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-definition-list-builder/index.html"><span>Definition</span><wbr></wbr><span>List</span><wbr></wbr><span><span>Builder</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="63947374%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-definition-list-builder/index.html">DefinitionListBuilder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-definition-list-builder/index.html">DefinitionListBuilder</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1968168176%2FClasslikes%2F-1759575997" anchor-label="DefinitionListEntryBuilder" id="-1968168176%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-definition-list-entry-builder/index.html"><span>Definition</span><wbr></wbr><span>List</span><wbr></wbr><span>Entry</span><wbr></wbr><span><span>Builder</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-definition-list-entry-builder/index.html"><span>Definition</span><wbr></wbr><span>List</span><wbr></wbr><span>Entry</span><wbr></wbr><span><span>Builder</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1968168176%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-definition-list-entry-builder/index.html">DefinitionListEntryBuilder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-definition-list-entry-builder/index.html">DefinitionListEntryBuilder</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1174403865%2FClasslikes%2F-1759575997" anchor-label="EmptyWidget" id="-1174403865%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-empty-widget/index.html"><span>Empty</span><wbr></wbr><span><span>Widget</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-empty-widget/index.html"><span>Empty</span><wbr></wbr><span><span>Widget</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1174403865%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">object </span><a href="-empty-widget/index.html">EmptyWidget</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A widget with 0 width, 0 height, and no content.</p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">object </span><a href="-empty-widget/index.html">EmptyWidget</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A widget with 0 width, 0 height, and no content.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-393237494%2FClasslikes%2F-1759575997" anchor-label="HorizontalRule" id="-393237494%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-horizontal-rule/index.html"><span>Horizontal</span><wbr></wbr><span><span>Rule</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-horizontal-rule/index.html"><span>Horizontal</span><wbr></wbr><span><span>Rule</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-393237494%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-horizontal-rule/index.html">HorizontalRule</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A line drawn across the terminal, with an optional <span data-unresolved-link="com.github.ajalt.mordant.widgets/HorizontalRule/title/#/PointingToDeclaration/">title</span>.</p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-horizontal-rule/index.html">HorizontalRule</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A line drawn across the terminal, with an optional <span data-unresolved-link="com.github.ajalt.mordant.widgets/HorizontalRule/title/#/PointingToDeclaration/">title</span>.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1775228563%2FClasslikes%2F-1759575997" anchor-label="OrderedList" id="-1775228563%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-ordered-list/index.html"><span>Ordered</span><wbr></wbr><span><span>List</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ordered-list/index.html"><span>Ordered</span><wbr></wbr><span><span>List</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1775228563%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-ordered-list/index.html">OrderedList</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A numbered list of widgets.</p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-ordered-list/index.html">OrderedList</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A numbered list of widgets.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-548428217%2FClasslikes%2F-1759575997" anchor-label="Padding" id="-548428217%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-padding/index.html"><span><span>Padding</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-padding/index.html"><span><span>Padding</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-548428217%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-padding/index.html">Padding</a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;<span class="token keyword">val </span>left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-padding/index.html">Padding</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1659472524%2FClasslikes%2F-1759575997" anchor-label="Panel" id="-1659472524%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-panel/index.html"><span><span>Panel</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-panel/index.html"><span><span>Panel</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1659472524%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-panel/index.html">Panel</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A box drawn around another widget, with optional top and bottom titles.</p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-panel/index.html">Panel</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A box drawn around another widget, with optional top and bottom titles.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1082667474%2FClasslikes%2F-1759575997" anchor-label="ProgressBar" id="1082667474%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-progress-bar/index.html"><span>Progress</span><wbr></wbr><span><span>Bar</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-progress-bar/index.html"><span>Progress</span><wbr></wbr><span><span>Bar</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1082667474%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-progress-bar/index.html">ProgressBar</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-progress-bar/index.html">ProgressBar</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A horizontal bar that tracks progress.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1278934346%2FClasslikes%2F-1759575997" anchor-label="ProgressBuilder" id="1278934346%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-progress-builder/index.html"><span>Progress</span><wbr></wbr><span><span>Builder</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-progress-builder/index.html"><span>Progress</span><wbr></wbr><span><span>Builder</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1278934346%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-progress-builder/index.html">ProgressBuilder</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-progress-builder/index.html">ProgressBuilder</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1955372685%2FClasslikes%2F-1759575997" anchor-label="ProgressLayout" id="-1955372685%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-progress-layout/index.html"><span>Progress</span><wbr></wbr><span><span>Layout</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-progress-layout/index.html"><span>Progress</span><wbr></wbr><span><span>Layout</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1955372685%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-progress-layout/index.html">ProgressLayout</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-progress-layout/index.html">ProgressLayout</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="378833215%2FClasslikes%2F-1759575997" anchor-label="Spinner" id="378833215%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-spinner/index.html"><span><span>Spinner</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-spinner/index.html"><span><span>Spinner</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="378833215%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-spinner/index.html">Spinner</a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;frames<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;initial<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">A widget that will loop through a fixed list of frames.</p></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-spinner/index.html">Spinner</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frames<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">duration<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span><span class="token punctuation">, </span></span><span class="parameter ">initial<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">A widget that will loop through a fixed list of frames.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1677032445%2FClasslikes%2F-1759575997" anchor-label="Text" id="1677032445%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-text/index.html"><span><span>Text</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-text/index.html"><span><span>Text</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1677032445%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-text/index.html">Text</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-text/index.html">Text</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-518923834%2FClasslikes%2F-1759575997" anchor-label="UnorderedList" id="-518923834%2FClasslikes%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="-unordered-list/index.html"><span>Unordered</span><wbr></wbr><span><span>List</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-unordered-list/index.html"><span>Unordered</span><wbr></wbr><span><span>List</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-518923834%2FClasslikes%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-unordered-list/index.html">UnorderedList</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">class </span><a href="-unordered-list/index.html">UnorderedList</a> : <a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Functions</h2>
-      <div class="table" data-togglable="Functions"><a data-name="-1685396609%2FFunctions%2F-1759575997" anchor-label="definitionList" id="-1685396609%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="definition-list.html"><span>definition</span><wbr></wbr><span><span>List</span></span></a></div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1685396609%2FFunctions%2F-1759575997" anchor-label="definitionList" id="-1685396609%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="definition-list.html"><span>definition</span><wbr></wbr><span><span>List</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1685396609%2FFunctions%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="definition-list.html"><span class="token function">definitionList</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token keyword"></span><a href="-definition-list-builder/index.html">DefinitionListBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="definition-list.html"><span class="token function">definitionList</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token keyword"></span><a href="-definition-list-builder/index.html">DefinitionListBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">Build a <span data-unresolved-link="com.github.ajalt.mordant.widgets/DefinitionList///PointingToDeclaration/">DefinitionList</span> widget.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-2121749797%2FFunctions%2F-1759575997" anchor-label="plus" id="-2121749797%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="plus.html"><span><span>plus</span></span></a></div>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="plus.html"><span><span>plus</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2121749797%2FFunctions%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="-padding/index.html">Padding</a><span class="token punctuation">.</span><a href="plus.html"><span class="token function">plus</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">other<span class="token operator">: </span><a href="-padding/index.html">Padding</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-padding/index.html">Padding</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword">operator </span><span class="token keyword">fun </span><a href="-padding/index.html">Padding</a><span class="token punctuation">.</span><a href="plus.html"><span class="token function">plus</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">other<span class="token operator">: </span><a href="-padding/index.html">Padding</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-padding/index.html">Padding</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1209449341%2FFunctions%2F-1759575997" anchor-label="progressLayout" id="1209449341%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="progress-layout.html"><span>progress</span><wbr></wbr><span><span>Layout</span></span></a></div>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="progress-layout.html"><span>progress</span><wbr></wbr><span><span>Layout</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1209449341%2FFunctions%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="progress-layout.html"><span class="token function">progressLayout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token keyword"></span><a href="-progress-builder/index.html">ProgressBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-progress-layout/index.html">ProgressLayout</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="progress-layout.html"><span class="token function">progressLayout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">init<span class="token operator">: </span><span class="token keyword"></span><a href="-progress-builder/index.html">ProgressBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-progress-layout/index.html">ProgressLayout</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1653354521%2FFunctions%2F-1759575997" anchor-label="withPadding" id="-1653354521%2FFunctions%2F-1759575997" data-filterable-set=":mordant:dokkaHtml/gen"></a>
-        <div class="table-row" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="with-padding.html"><span>with</span><wbr></wbr><span><span>Padding</span></span></a></div>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="with-padding.html"><span>with</span><wbr></wbr><span><span>Padding</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1653354521%2FFunctions%2F-1759575997"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-                  <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark common-like" data-filterable-current=":mordant:dokkaHtml/gen" data-filterable-set=":mordant:dokkaHtml/gen" data-active="" data-toggle=":mordant:dokkaHtml/gen">common</button></div>
-<div class="content sourceset-depenent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padding<span class="token operator">: </span><a href="-padding/index.html">Padding</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Add padding around this widget.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">padding<span class="token operator">: </span><span class="token keyword"></span><a href="-padding/-builder/index.html">Padding.Builder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">all<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters wrapped"><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter indented">&nbsp;&nbsp;&nbsp;&nbsp;padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>                </div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtml/gen"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padding<span class="token operator">: </span><a href="-padding/index.html">Padding</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="brief "><p class="paragraph">Add padding around this widget.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">padding<span class="token operator">: </span><span class="token keyword"></span><a href="-padding/-builder/index.html">Padding.Builder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">all<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token punctuation">.</span><a href="with-padding.html"><span class="token function">withPadding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">padEmptyLines<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></div></div></div>
+                </div>
               </div>
             </div>
           </div>
@@ -367,7 +344,7 @@ if(savedDarkMode === true){
   </div>
 </div>
       <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright &copy; 2022 AJ Alt</span><span
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>Copyright &copy; 2017 AJ Alt</span><span
                 class="pull-right"><span>Generated by </span><a
                 href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
       </div>
