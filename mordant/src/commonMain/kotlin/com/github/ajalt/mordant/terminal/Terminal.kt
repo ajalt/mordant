@@ -95,6 +95,7 @@ class Terminal private constructor(
      * [kotlin.io.print]. If you're using the terminal's [print], you can use [TextColors] and
      * [TextStyles] directly instead.
      */
+    @Deprecated("Use TextColors or .theme instead")
     val colors: TerminalColors = TerminalColors(info, theme)
 
     /**

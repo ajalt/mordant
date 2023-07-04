@@ -10,8 +10,6 @@ Mordant has:
 * Widgets for laying out terminal output, including lists, tables, panels, and more
 * Support for animating any widget, like progress bars and dashboards
 
-##### This README documents Mordant 2.0, which is in beta. [You can read the docs for Mordant 1.0 here.](https://github.com/ajalt/mordant/blob/caec61d9ae667431cfe07e12eb426b005ee2cf06/README.md)
-
 ## Usage
 
 Create a `Terminal` instance, and import any enum entries you want from `TextColors` and
@@ -197,7 +195,7 @@ val t = Terminal()
 val a = t.textAnimation<Int> { frame ->
     (1..50).joinToString("") {
         val hue = (frame + it) * 3 % 360
-        t.colors.hsv(hue, 1, 1)("━")
+        TextColors.hsv(hue, 1, 1)("━")
     }
 }
 
@@ -264,8 +262,6 @@ dependencies {
    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta14")
 }
 ```
-
-###### In version 2.0, the maven coordinates changed. Make sure you're using the new coordinates if you're updating from an older version.
 
 ###### If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`
 

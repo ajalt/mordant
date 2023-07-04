@@ -12,6 +12,7 @@ import kotlin.js.JsName
 import kotlin.test.Ignore
 import kotlin.test.Test
 
+@Suppress("DEPRECATION")
 class TerminalColorsTest {
     private val c = Terminal(AnsiLevel.TRUECOLOR).colors
 
