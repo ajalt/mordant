@@ -3,6 +3,7 @@
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.publish)
+    `java-library`
 }
 
 kotlin {
