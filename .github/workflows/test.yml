@@ -34,8 +34,9 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: :samples:progress:installDist
-      - run: |
-          JAVA_OPTS=-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant ./samples/progress/build/install/progress/bin/progress
+      - run: ./samples/progress/build/install/progress/bin/progress
+        env:
+          JAVA_OPTS: "-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant"
       - name: Upload the config
         uses: actions/upload-artifact@v3
         with:
