@@ -50,13 +50,13 @@ internal class MacosMppImpls : JnaMppImpls {
 
     override fun getTerminalSize(): Pair<Int, Int>? {
         // TODO: this seems to fail on macosArm64, use stty on mac for now
-//        val size = MacosLibC.winsize()
-//        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
-//            null
-//        } else {
-//            size.ws_col.toInt() to size.ws_row.toInt()
-//        }
-        return getSttySize(100)
+        val size = MacosLibC.winsize()
+        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
+            null
+        } else {
+            size.ws_col.toInt() to size.ws_row.toInt()
+        }
+//        return getSttySize(100)
     }
 
 

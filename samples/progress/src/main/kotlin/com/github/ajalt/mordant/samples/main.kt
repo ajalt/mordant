@@ -1,12 +1,13 @@
 package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.mordant.animation.progressAnimation
+import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextColors.brightBlue
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Spinner
 
 fun main() {
-    val terminal = Terminal()
+    val terminal = Terminal(ansiLevel = AnsiLevel.TRUECOLOR, interactive = true)
 
     val progress = terminal.progressAnimation {
         spinner(Spinner.Dots(brightBlue))
@@ -21,13 +22,13 @@ fun main() {
     progress.start()
 
     // Sleep for a few seconds to show the indeterminate state
-    Thread.sleep(5000)
+//    Thread.sleep(5000)
 
     // Update the progress as the download progresses
     progress.updateTotal(3_000_000_000)
-    repeat(200) {
+    repeat(2) {
         progress.advance(15_000_000)
-        Thread.sleep(100)
+//        Thread.sleep(100)
     }
 
     progress.stop()

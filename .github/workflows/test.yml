@@ -27,22 +27,20 @@ jobs:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-konan-
-      - uses: actions/setup-java@v3
+      - uses: graalvm/setup-graalvm@v1
         with:
-          distribution: 'zulu'
-          java-version: 17
+          java-version: '17'
+          distribution: 'graalvm'
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: :mordant:jvmTest :mordant:jsTest ${{matrix.NATIVE_TEST_TASK}} --stacktrace
-      - name: Bundle the build report
-        if: failure()
-        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
-      - name: Upload the build report
-        if: failure()
-        uses: actions/upload-artifact@master
+          arguments: :samples:progress:installDist
+      - run: |
+          JAVA_OPTS='-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant' ./samples/progress/build/install/progress/bin/progress
+      - name: Upload the config
+        uses: actions/upload-artifact@v3
         with:
-          name: error-report
-          path: build-reports.zip
+          name: META-INF-${{ runner.os }}
+          path: mordant/src/jvmMain/resources/META-INF/native-image/
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx5g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
