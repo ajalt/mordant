@@ -35,7 +35,7 @@ jobs:
         with:
           arguments: :samples:progress:installDist
       - run: |
-          JAVA_OPTS='-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant' ./samples/progress/build/install/progress/bin/progress
+          JAVA_OPTS=-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant ./samples/progress/build/install/progress/bin/progress
       - name: Upload the config
         uses: actions/upload-artifact@v3
         with:
