@@ -33,15 +33,15 @@ jobs:
           distribution: 'graalvm'
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: :samples:progress:installDist
-      - run: ./samples/progress/build/install/progress/bin/progress
-        env:
-          JAVA_OPTS: "-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant"
-      - name: Upload the config
-        uses: actions/upload-artifact@v3
-        with:
-          name: META-INF-${{ runner.os }}
-          path: mordant/src/jvmMain/resources/META-INF/native-image/
+          arguments: :samples:progress:nativeRun
+#      - run: ./samples/progress/build/install/progress/bin/progress
+#        env:
+#          JAVA_OPTS: "-agentlib:native-image-agent=config-merge-dir=mordant/src/jvmMain/resources/META-INF/native-image/com/github/ajalt/mordant"
+#      - name: Upload the config
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: META-INF-${{ runner.os }}
+#          path: mordant/src/jvmMain/resources/META-INF/native-image/
 
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx5g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
