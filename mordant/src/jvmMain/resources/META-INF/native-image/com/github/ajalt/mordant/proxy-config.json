@@ -1,7 +1,8 @@
 [
   {
-    "interfaces": [
-      "com.github.ajalt.mordant.internal.PosixLibC"
-    ]
+    "interfaces":["com.github.ajalt.mordant.internal.PosixLibC"]
+  },
+  {
+    "interfaces":["com.github.ajalt.mordant.internal.WinKernel32Lib"]
   }
 ]

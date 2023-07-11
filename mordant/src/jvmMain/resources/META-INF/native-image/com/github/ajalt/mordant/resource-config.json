@@ -1,9 +1,9 @@
 {
-  "resources": {
-    "includes": [
-      {
-        "pattern": "\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"
-      }
-    ]
-  }
+  "resources":{
+  "includes":[{
+    "pattern":"\\Qcom/sun/jna/linux-x86-64/libjnidispatch.so\\E"
+  }, {
+    "pattern":"\\Qcom/sun/jna/win32-x86-64/jnidispatch.dll\\E"
+  }]},
+  "bundles":[]
 }
