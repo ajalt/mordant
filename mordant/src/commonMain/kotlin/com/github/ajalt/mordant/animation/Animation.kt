@@ -80,6 +80,12 @@ abstract class Animation<T>(
      * this animation.
      *
      * Future calls to [update] will cause the animation to start again.
+     *
+     * ### Note
+     *
+     * If running on JVM when [TerminalInfo.crClearsLine] is true (such as on the IntelliJ built-in
+     * console), this will not print a trailing newline, leaving the cursor on the same line as the
+     * animation.
      */
     fun stop() {
         if (interceptorInstalled) terminal.removeInterceptor(interceptor)
@@ -114,8 +120,10 @@ abstract class Animation<T>(
         val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
-            up(if (trailingLinebreak) height else height - 1)
-            if (clearScreen) clearScreenAfterCursor()
+            up(if (trailingLinebreak && !terminal.info.crClearsLine) height else height - 1)
+            if (clearScreen && (height > 1 || !terminal.info.crClearsLine)) {
+                clearScreenAfterCursor()
+            }
         }
     }
 }

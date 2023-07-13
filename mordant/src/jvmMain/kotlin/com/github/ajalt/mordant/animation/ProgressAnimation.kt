@@ -168,10 +168,13 @@ class ProgressAnimation internal constructor(
     @Synchronized
     fun stop() {
         if (!tickerStarted) return
-        t.cursor.show()
         tickerStarted = false
-        ticker.stop()
-        animation.stop()
+        try {
+            ticker.stop()
+            animation.stop()
+        } finally {
+            t.cursor.show()
+        }
     }
 
     @Synchronized

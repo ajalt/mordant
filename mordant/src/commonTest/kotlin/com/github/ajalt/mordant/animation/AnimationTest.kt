@@ -39,6 +39,21 @@ class AnimationTest {
     }
 
     @Test
+    fun crClearsLine() {
+        val rec = TerminalRecorder(width = 24, crClearsLine = true)
+        val t = Terminal(terminalInterface = rec)
+        val a = t.textAnimation<Int> { "$it" }
+        a.update(1)
+        rec.output() shouldBe "1"
+        a.update(2)
+        rec.output() shouldBe "1\r2"
+        a.stop()
+        rec.output() shouldBe "1\r2"
+        a.clear()
+        rec.output() shouldBe "1\r2\r"
+    }
+
+    @Test
     @JsName("print_during_animation")
     fun `print during animation`() {
         val a = t.textAnimation<Int> { "<$it>\n===" }
