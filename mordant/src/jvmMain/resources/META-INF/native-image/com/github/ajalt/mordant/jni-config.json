@@ -445,6 +445,18 @@
         ]
       },
       {
+        "name": "lastIndexOf",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "substring",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
         "name": "toCharArray",
         "parameterTypes": []
       }
@@ -458,6 +470,13 @@
         "parameterTypes": [
           "java.lang.String"
         ]
+      },
+      {
+        "name": "setProperty",
+        "parameterTypes": [
+          "java.lang.String",
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -467,6 +486,17 @@
       {
         "name": "toString",
         "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "java.lang.UnsatisfiedLinkError",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
       }
     ]
   },
@@ -588,6 +618,35 @@
       {
         "name": "arrayOffset",
         "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "sun.management.VMManagementImpl",
+    "fields": [
+      {
+        "name": "compTimeMonitoringSupport"
+      },
+      {
+        "name": "currentThreadCpuTimeSupport"
+      },
+      {
+        "name": "objectMonitorUsageSupport"
+      },
+      {
+        "name": "otherThreadCpuTimeSupport"
+      },
+      {
+        "name": "remoteDiagnosticCommandsSupport"
+      },
+      {
+        "name": "synchronizerUsageSupport"
+      },
+      {
+        "name": "threadAllocatedMemorySupport"
+      },
+      {
+        "name": "threadContentionMonitoringSupport"
       }
     ]
   }
