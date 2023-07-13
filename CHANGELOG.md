@@ -4,6 +4,9 @@
 ### Deprecated
 - Deprecated `TerminalColors` is favor of `TextColors` and `Terminal.theme`
 
+### Fixed
+- Fix animations printing an extra frame after `stop` is called when running in the IntelliJ console. [(#105)](https://github.com/ajalt/mordant/issues/105)
+
 ## 2.0.0-beta14
 ### Added
 - `Terminal.rawPrint` which allows you to print ANSI codes manually. [(#91)](https://github.com/ajalt/mordant/issues/91)
