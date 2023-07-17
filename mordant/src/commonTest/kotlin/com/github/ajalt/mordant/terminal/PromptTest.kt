@@ -70,4 +70,29 @@ class PromptTest {
         val style = t.theme.style("prompt.default")
         vt.output() shouldBe "pr ${style("[y/N]")}: "
     }
+
+    @Test
+    @JsName("ConfirmationPrompt_match")
+    fun `ConfirmationPrompt match`() {
+        vt.inputLines = mutableListOf("a", "a")
+        ConfirmationPrompt(
+            StringPrompt("pr1", t),
+            StringPrompt("pr2", t),
+            t,
+        ).ask() shouldBe "a"
+        vt.output() shouldBe "pr1: pr2: "
+    }
+
+    @Test
+    @JsName("ConfirmationPrompt_mismatch")
+    fun `ConfirmationPrompt mismatch`() {
+        vt.inputLines = mutableListOf("a", "b", "c", "c")
+        ConfirmationPrompt(
+            StringPrompt("pr1", t),
+            StringPrompt("pr2", t),
+            t,
+        ).ask() shouldBe "c"
+        val d = t.theme.style("danger")
+        vt.output() shouldBe "pr1: pr2: ${d("Values do not match, try again")}\npr1: pr2: "
+    }
 }

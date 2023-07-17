@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Added
+- Added `ConfirmationPrompt` that asks the user to enter the same value twice, which is commonly used for password inputs.
+
 ## 2.0.1
 ### Added
 - Include metadata in JVM jars to support GraalVM native-image.

@@ -235,3 +235,31 @@ class YesNoPrompt(
         return if (uppercaseDefault && value == default) s.uppercase() else s
     }
 }
+
+/**
+ * A prompt that requires the user to enter the same value twice.
+ */
+class ConfirmationPrompt<T: Any>(
+    private val firstPrompt: Prompt<T>,
+    private val secondPrompt: Prompt<T>,
+    private val terminal: Terminal,
+    private val valueMismatchMessage: String = "Values do not match, try again"
+){
+    /**
+     * Run the prompt, asking the user for input.
+     *
+     * @return The [converted][Prompt.convert] user input, or `null` if EOF was reached before this
+     *   function was called.
+     */
+    fun ask(): T? {
+        while (true) {
+            val value = firstPrompt.ask() ?: return null
+            val secondValue = secondPrompt.ask() ?: return null
+            if (value == secondValue) {
+                return value
+            } else {
+                terminal.danger(valueMismatchMessage)
+            }
+        }
+    }
+}
