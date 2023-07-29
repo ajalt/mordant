@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 2.1.0
 ### Added
 - Added `ConfirmationPrompt` that asks the user to enter the same value twice, which is commonly used for password inputs.
 
