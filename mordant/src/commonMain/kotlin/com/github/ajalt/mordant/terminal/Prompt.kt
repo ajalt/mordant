@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.terminal.ConfirmationPrompt.Companion.create
+import com.github.ajalt.mordant.terminal.ConfirmationPrompt.Companion.createString
 import com.github.ajalt.mordant.widgets.Text
 
 sealed class ConversionResult<out T> {
@@ -11,41 +13,48 @@ sealed class ConversionResult<out T> {
 /**
  * The base class for prompts.
  *
- * [ask] will print the [prompt][makePrompt] and ask for a line of user input and return the result of passing that line
- * to [convert]. If [convert] instead raises [PromptInputInvalid], its message will be printed and the user will be
- * asked for input again.
+ * [ask] will print the [prompt][makePrompt] and ask for a line of user input and return the result
+ * of passing that line to [convert]. If [convert] instead returns [ConversionResult.Invalid], its
+ * message will be printed and the user will be asked for input again.
  *
  *
- * ### Themes used
+ * ### Theme styles used
  *  - `prompt.prompt`: applied to the [prompt] string
  *  - `prompt.choices`: applied to the rendered [choices] values when shown in the prompt
  *  - `prompt.default`: applied to the rendered [default] value when shown in the prompt
  *  - `prompt.choices.invalid`: applied to the [invalidChoiceMessage] when shown
  *  - `danger`: applied to the [error message][ConversionResult.Invalid.message] returned by [convert]
- *
- * @property prompt The message asking for input to show the user
- * @property terminal The terminal to use
- * @property default The value to return if the user enters an empty line, or `null` to require a value
- * @property showDefault If true and a [default] is specified, [makePrompt] will add the
- *   [rendered][renderValue] default to the prompt
- * @property showChoices If true and [choices] are specified, [makePrompt] will add the
- *   [rendered][renderValue] choices to the prompt
- * @property hideInput If true, the user's input will be treated like a password and hidden from
- *   the screen. This value will be ignored on platforms where it is not supported.
- * @property choices The set of values that the user must choose from.
- * @property promptSuffix A string to append after [prompt] when showing the user the prompt
- * @property invalidChoiceMessage The message to show the user if [choices] is specified,
- *   and they enter a value that isn't one of the choices.
  */
 abstract class Prompt<T>(
+    /** The message asking for input to show the user */
     protected val prompt: String,
-    protected val terminal: Terminal,
+    /** The terminal to use */
+    val terminal: Terminal,
+    /** The value to return if the user enters an empty line, or `null` to require a value */
     protected val default: T? = null,
+    /**
+     * If true and a [default] is specified, [makePrompt] will add the [rendered][renderValue]
+     * default to the prompt
+     */
     protected val showDefault: Boolean = true,
+    /**
+     * If true and [choices] are specified, [makePrompt] will add the [rendered][renderValue]
+     * choices to the prompt
+     */
     protected val showChoices: Boolean = true,
+    /**
+     * If true, the user's input will be treated like a password and hidden from the screen. This
+     * value will be ignored on platforms where it is not supported.
+     */
     protected val hideInput: Boolean = false,
+    /**  The set of values that the user must choose from. */
     protected val choices: Collection<T> = emptyList(),
+    /** A string to append after [prompt] when showing the user the prompt */
     protected val promptSuffix: String = ": ",
+    /**
+     * The message to show the user if [choices] is specified and they enter a value that isn't one
+     * of the choices.
+     */
     protected val invalidChoiceMessage: String = "Invalid value, choose from ",
 ) {
     /**
@@ -54,7 +63,7 @@ abstract class Prompt<T>(
      * Returns a [Valid][ConversionResult.Valid] result with the converted value or an
      * [Invalid][ConversionResult.Invalid] with an error message.
      */
-    abstract protected fun convert(input: String): ConversionResult<T>
+    protected abstract fun convert(input: String): ConversionResult<T>
 
 
     /**
@@ -62,12 +71,12 @@ abstract class Prompt<T>(
      *
      * This is called when displaying the [default] or [choices].
      */
-    open protected fun renderValue(value: T): String = value.toString()
+    protected open fun renderValue(value: T): String = value.toString()
 
     /**
      * Given a [prompt] string, return the widget to show to the user.
      */
-    open protected fun makePrompt(): Widget {
+    protected open fun makePrompt(): Widget {
         return Text(buildString {
             append(terminal.theme.style("prompt.prompt")(prompt))
             if (showChoices && choices.isNotEmpty()) {
@@ -84,15 +93,16 @@ abstract class Prompt<T>(
     }
 
     /**  Return a string to add to the prompt to show the user the default. */
-    open protected fun makePromptDefault(default: T) = "(${renderValue(default)})"
+    protected open fun makePromptDefault(default: T) = "(${renderValue(default)})"
 
     /**  Return a string to add to the prompt to show the user the choices. */
-    open protected fun makePromptChoices() = choices.joinToString(prefix = "[", postfix = "]") { renderValue(it) }
+    protected open fun makePromptChoices() =
+        choices.joinToString(prefix = "[", postfix = "]") { renderValue(it) }
 
     /**
      * Create the message to show the user when [choices] is defined and the entered value isn't a valid choice
      */
-    open protected fun makeInvalidChoiceMessage(): Widget {
+    protected open fun makeInvalidChoiceMessage(): Widget {
         return Text(terminal.theme.style("prompt.choices.invalid")(buildString {
             append(invalidChoiceMessage)
             append(makePromptChoices())
@@ -102,16 +112,16 @@ abstract class Prompt<T>(
     /**
      * Called before the prompt is printed.
      *
-     * Does nothing by default.
+     * Does nothing by default, but you can print extra messages here for example.
      */
-    protected fun beforePrompt() {}
+    protected open fun beforePrompt() {}
 
     /**
-     * Called when [convert] raises a [PromptInputInvalid] with the exception's [message].
+     * Called when [convert] returns a [ConversionResult.Invalid].
      *
      * By default, this prints the [message] with the `danger` style
      */
-    protected fun handleInvalidInput(message: String) {
+    protected open fun handleInvalidInput(message: String) {
         if (message.isNotBlank()) {
             terminal.danger(message)
         }
@@ -238,13 +248,75 @@ class YesNoPrompt(
 
 /**
  * A prompt that requires the user to enter the same value twice.
+ *
+ * You can create an instance of this class by passing in two [Prompt]s to the constructor, or by
+ * using the [create] or [createString] methods.
  */
-class ConfirmationPrompt<T: Any>(
+class ConfirmationPrompt<T : Any>(
     private val firstPrompt: Prompt<T>,
     private val secondPrompt: Prompt<T>,
-    private val terminal: Terminal,
-    private val valueMismatchMessage: String = "Values do not match, try again"
-){
+    private val valueMismatchMessage: String = "Values do not match, try again",
+) {
+    companion object {
+        /**
+         * Create a ConfirmationPrompt from two strings which are passed to a [builder] to construct
+         * the prompt instances.
+         *
+         * ### Example
+         *
+         * ```kotlin
+         * ConfirmationPrompt.create(
+         *    "Delete files?", "Are you sure?"
+         * ) { YesNoPrompt(it, terminal) }
+         * ```
+         */
+        fun <T : Any> create(
+            firstPrompt: String,
+            secondPrompt: String,
+            valueMismatchMessage: String = "Values do not match, try again",
+            builder: (String) -> Prompt<T>,
+        ): ConfirmationPrompt<T> {
+            return ConfirmationPrompt(
+                builder(firstPrompt),
+                builder(secondPrompt),
+                valueMismatchMessage
+            )
+        }
+
+        /**
+         * Create a ConfirmationPrompt that uses [StringPrompt]s to ask for input.
+         *
+         * All parameters are passed to the [StringPrompt] constructor.
+         */
+        fun createString(
+            firstPrompt: String,
+            secondPrompt: String,
+            terminal: Terminal,
+            default: String? = null,
+            showDefault: Boolean = false, // !default.isNullOrBlank(), disabled due to KT-59326
+            showChoices: Boolean = true,
+            hideInput: Boolean = false,
+            choices: List<String> = emptyList(),
+            promptSuffix: String = ": ",
+            invalidChoiceMessage: String = "Invalid value, choose from ",
+            valueMismatchMessage: String = "Values do not match, try again",
+        ): ConfirmationPrompt<String> {
+            return create(firstPrompt, secondPrompt, valueMismatchMessage) {
+                StringPrompt(
+                    it,
+                    terminal,
+                    default,
+                    showDefault,
+                    showChoices,
+                    hideInput,
+                    choices,
+                    promptSuffix,
+                    invalidChoiceMessage
+                )
+            }
+        }
+    }
+
     /**
      * Run the prompt, asking the user for input.
      *
@@ -258,7 +330,7 @@ class ConfirmationPrompt<T: Any>(
             if (value == secondValue) {
                 return value
             } else {
-                terminal.danger(valueMismatchMessage)
+                firstPrompt.terminal.danger(valueMismatchMessage)
             }
         }
     }

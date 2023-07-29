@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.rendering.AnsiLevel
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -43,10 +44,30 @@ class PromptTest {
     }
 
     @Test
+    @JsName("custom_Prompt")
+    fun `custom Prompt`() {
+        t.info.ansiLevel = AnsiLevel.NONE
+        class IntPrompt : Prompt<Int>("pr", t) {
+            override fun convert(input: String): ConversionResult<Int> {
+                return input.toIntOrNull()
+                    ?.let { ConversionResult.Valid(it) }
+                    ?: ConversionResult.Invalid("nope")
+            }
+
+            override fun beforePrompt() {
+                t.println("before")
+            }
+        }
+        vt.inputLines = mutableListOf("x", "1")
+        IntPrompt().ask() shouldBe 1
+        vt.output() shouldBe "before\npr: nope\nbefore\npr: "
+    }
+
+    @Test
     @JsName("StringPrompt_invalid_choices")
     fun `StringPrompt invalid choice`() {
         vt.inputLines = mutableListOf("bad", "a")
-        StringPrompt("pr", t, choices = listOf("a", "b"), ).ask() shouldBe "a"
+        StringPrompt("pr", t, choices = listOf("a", "b")).ask() shouldBe "a"
         val s = t.theme.style("prompt.choices")
         val e = t.theme.danger
         val p = "pr ${s("[a, b]")}: "
@@ -75,11 +96,7 @@ class PromptTest {
     @JsName("ConfirmationPrompt_match")
     fun `ConfirmationPrompt match`() {
         vt.inputLines = mutableListOf("a", "a")
-        ConfirmationPrompt(
-            StringPrompt("pr1", t),
-            StringPrompt("pr2", t),
-            t,
-        ).ask() shouldBe "a"
+        ConfirmationPrompt.createString("pr1", "pr2", t).ask() shouldBe "a"
         vt.output() shouldBe "pr1: pr2: "
     }
 
@@ -87,11 +104,7 @@ class PromptTest {
     @JsName("ConfirmationPrompt_mismatch")
     fun `ConfirmationPrompt mismatch`() {
         vt.inputLines = mutableListOf("a", "b", "c", "c")
-        ConfirmationPrompt(
-            StringPrompt("pr1", t),
-            StringPrompt("pr2", t),
-            t,
-        ).ask() shouldBe "c"
+        ConfirmationPrompt.createString("pr1", "pr2", t).ask() shouldBe "c"
         val d = t.theme.style("danger")
         vt.output() shouldBe "pr1: pr2: ${d("Values do not match, try again")}\npr1: pr2: "
     }

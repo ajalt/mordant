@@ -250,7 +250,8 @@ You chose: small
 ```
 
 You can customize the prompt behavior further or convert the response to other types 
-creating a subclass of the `Prompt` class.
+creating a subclass of the `Prompt` class. Mordant includes `StringPrompt`, `YesNoPrompt`, and
+`ConfirmationPrompt` classes for common use cases.
 
 
 ## Installation
