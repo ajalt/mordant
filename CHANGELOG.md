@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Fixed
+- Fixed exception thrown in environments that are missing required shared native libraries.
 
 ## 2.1.0
 ### Added

@@ -95,7 +95,6 @@ internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
-internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
 internal actual fun printStderr(message: String, newline: Boolean) = impls.printStderr(message, newline)
 
 // hideInput is not currently implemented
