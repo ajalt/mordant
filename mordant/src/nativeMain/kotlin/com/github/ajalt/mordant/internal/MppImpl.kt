@@ -29,8 +29,6 @@ internal actual fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO) != 0
 
 internal actual fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
 
-internal actual fun stderrInteractive(): Boolean = isatty(STDERR_FILENO) != 0
-
 internal actual fun codepointSequence(string: String): Sequence<Int> = sequence {
     var i = 0
     while (i < string.length) {

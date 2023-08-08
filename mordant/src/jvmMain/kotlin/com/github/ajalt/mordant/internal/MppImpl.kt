@@ -92,15 +92,18 @@ internal actual fun sendInterceptedPrintRequest(
 internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = synchronized(lock, block)
 
 private val impls: JnaMppImpls = System.getProperty("os.name").let { os ->
-    when {
-        os.startsWith("Windows") -> Win32MppImpls()
-        os == "Linux" -> LinuxMppImpls()
-        os == "Mac OS X" -> MacosMppImpls()
-        else -> FallbackJnaMppImpls()
+    try {
+        when {
+            os.startsWith("Windows") -> Win32MppImpls()
+            os == "Linux" -> LinuxMppImpls()
+            os == "Mac OS X" -> MacosMppImpls()
+            else -> FallbackJnaMppImpls()
+        }
+    } catch (e: UnsatisfiedLinkError) {
+        FallbackJnaMppImpls()
     }
 }
 
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
-internal actual fun stderrInteractive(): Boolean = impls.stderrInteractive()
 internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
