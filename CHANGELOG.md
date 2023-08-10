@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - Fixed exception thrown in environments that are missing required shared native libraries.
+- Fixed animations clearing too much space when the animation changes size while running. [(#110)](https://github.com/ajalt/mordant/issues/110)
 
 ## 2.1.0
 ### Added
