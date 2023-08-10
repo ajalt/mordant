@@ -110,10 +110,11 @@ abstract class Animation<T>(
         val width = rendered.width
         // To avoid flickering don't clear the screen if the render will completely cover the last frame
         needsClear = size?.let { (h, w) -> height < h || width < w } ?: false
-        size = height to width
         text = terminal.render(rendered)
         // Print an empty renderable to trigger our interceptor, which will add the rendered text
         terminal.print(EmptyWidget)
+        // Update the size now that the old frame has been cleared
+        size = height to width
     }
 
     private fun getCursorMoves(clearScreen: Boolean): String? {

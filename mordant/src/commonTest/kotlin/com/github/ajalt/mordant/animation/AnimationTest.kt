@@ -39,6 +39,20 @@ class AnimationTest {
     }
 
     @Test
+    @JsName("animation_size_change")
+    fun `animation size change`() {
+        val a = t.textAnimation<String> { it }
+        a.update("1")
+        rec.output() shouldBe "1\n"
+
+        // update
+        rec.clearOutput()
+        a.update("2\n3")
+        val moves = t.cursor.getMoves { startOfLine(); up(1) }
+        rec.output() shouldBe "${moves}2\n3\n"
+    }
+
+    @Test
     fun crClearsLine() {
         val rec = TerminalRecorder(width = 24, crClearsLine = true)
         val t = Terminal(terminalInterface = rec)
