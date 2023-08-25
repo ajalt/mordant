@@ -44,7 +44,7 @@ internal object TerminalDetection {
     private fun ansiHyperLinks(): Boolean {
         return forcedColor() != NONE && (isWindowsTerminal() || when (getTermProgram()) {
             "hyper", "wezterm" -> true
-            "iterm.app" -> isRecentITerm()
+            "iterm.app" -> iTermVersionSupportsTruecolor()
             else -> when (getTerm()) {
                 "xterm-kitty", "alacritty" -> true
                 else -> false
@@ -81,7 +81,7 @@ internal object TerminalDetection {
         when (getTermProgram()) {
             "hyper" -> return TRUECOLOR
             "apple_terminal" -> return ANSI256
-            "iterm.app" -> return if (isRecentITerm()) TRUECOLOR else ANSI256
+            "iterm.app" -> return if (iTermVersionSupportsTruecolor()) TRUECOLOR else ANSI256
             "wezterm" -> return TRUECOLOR
         }
 
@@ -94,14 +94,30 @@ internal object TerminalDetection {
             "24bit", "24bits", "direct", "truecolor" -> return TRUECOLOR
         }
 
+
         // If there's no explicit level (like "xterm") or the level is ansi16 (like "rxvt-16color"),
-        // just look at the terminal value
+        // guess the level based on the terminal.
+
+        if (term == "xterm") {
+            // Xterm sets an envvar with a version string that's "normally an identifier for the X
+            // Window libraries used to build xterm, followed by xterm's patch number in
+            // parentheses" https://linux.die.net/man/1/xterm
+            //
+            // 331 added truecolor support, 122 added 256 color support
+            // https://invisible-island.net/xterm/xterm.log.html
+            val xtermVersion = getEnv("XTERM_VERSION") ?: return ANSI16
+            val m = Regex("""\((\d+)\)""").find(xtermVersion) ?: return ANSI16
+            val v = m.groupValues[1].toInt()
+            if (v >= 331) return TRUECOLOR
+            if (v >= 122) return ANSI256
+            return ANSI16
+        }
+
         return when (term) {
-            // New versions of windows 10 cmd.exe supports truecolor, and most other terminal emulators
+            // New versions of Windows 10 cmd.exe supports truecolor, and most other terminal emulators
             // like ConEmu and mintty support truecolor, although they might downsample it.
             "cygwin" -> TRUECOLOR
-            "xterm", "vt100", "vt220", "screen", "tmux", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
-            "dumb" -> NONE
+            "vt100", "vt220", "screen", "tmux", "color", "linux", "ansi", "rxvt", "konsole" -> ANSI16
             else -> NONE
         }
     }
@@ -111,20 +127,18 @@ internal object TerminalDetection {
     // https://github.com/termstandard/colors/
     private fun getColorTerm() = getEnv("COLORTERM")?.lowercase()
 
-    private fun forcedColor(): AnsiLevel? {
-        return when {
-            getTerm() == "dumb" -> NONE
-            // https://no-color.org/
-            getEnv("NO_COLOR") != null -> NONE
-            // A lot of npm packages support the FORCE_COLOR envvar, although they all look for
-            // different values. We try to support them all.
-            else -> when (getEnv("FORCE_COLOR")?.lowercase()) {
-                "0", "false", "none" -> NONE
-                "1", "", "true", "16color" -> ANSI16
-                "2", "256color" -> ANSI256
-                "3", "truecolor" -> TRUECOLOR
-                else -> null
-            }
+    private fun forcedColor(): AnsiLevel? = when {
+        getTerm() == "dumb" -> NONE
+        // https://no-color.org/
+        getEnv("NO_COLOR") != null -> NONE
+        // A lot of npm packages support the FORCE_COLOR envvar, although they all look for
+        // different values. We try to support them all.
+        else -> when (getEnv("FORCE_COLOR")?.lowercase()) {
+            "0", "false", "none" -> NONE
+            "1", "", "true", "16color" -> ANSI16
+            "2", "256color" -> ANSI256
+            "3", "truecolor" -> TRUECOLOR
+            else -> null
         }
     }
 
@@ -142,7 +156,7 @@ internal object TerminalDetection {
     // https://github.com/JetBrains/intellij-community/blob/master/plugins/terminal/src/org/jetbrains/plugins/terminal/LocalTerminalDirectRunner.java#L141
     private fun isJediTerm() = getEnv("TERMINAL_EMULATOR") == "JetBrains-JediTerm"
 
-    private fun isRecentITerm(): Boolean {
+    private fun iTermVersionSupportsTruecolor(): Boolean {
         val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.firstOrNull()?.toIntOrNull()
         return ver != null && ver >= 3
     }
