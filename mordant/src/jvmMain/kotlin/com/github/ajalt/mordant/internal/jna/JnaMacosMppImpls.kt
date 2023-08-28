@@ -1,11 +1,14 @@
-package com.github.ajalt.mordant.internal
+package com.github.ajalt.mordant.internal.jna
 
+import com.github.ajalt.mordant.internal.MppImpls
+import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+@Delete
 @Suppress("ClassName", "PropertyName", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
-interface MacosLibC : Library {
+private interface MacosLibC : Library {
 
     @Suppress("unused")
     class winsize : Structure() {
@@ -30,7 +33,8 @@ interface MacosLibC : Library {
     fun ioctl(fd: Int, cmd: NativeLong?, data: winsize?): Int
 }
 
-internal class MacosMppImpls : JnaMppImpls {
+@Delete
+internal class JnaMacosMppImpls : MppImpls {
     @Suppress("SpellCheckingInspection")
     private companion object {
         const val STDIN_FILENO = 0

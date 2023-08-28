@@ -1,12 +1,15 @@
-package com.github.ajalt.mordant.internal
+package com.github.ajalt.mordant.internal.jna
 
+import com.github.ajalt.mordant.internal.MppImpls
+import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.Platform
 import com.sun.jna.Structure
 
+@Delete
 @Suppress("ClassName", "PropertyName", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
-interface PosixLibC : Library {
+private interface PosixLibC : Library {
 
     @Suppress("unused")
     class winsize : Structure() {
@@ -31,7 +34,8 @@ interface PosixLibC : Library {
     fun ioctl(fd: Int, cmd: Int, data: winsize?): Int
 }
 
-internal class LinuxMppImpls : JnaMppImpls {
+@Delete
+internal class JnaLinuxMppImpls : MppImpls {
     @Suppress("SpellCheckingInspection")
     private companion object {
         const val STDIN_FILENO = 0

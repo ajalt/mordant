@@ -34,13 +34,15 @@ fun getPublishVersion(): String {
 subprojects {
     project.setProperty("VERSION_NAME", getPublishVersion())
 
-    tasks.withType<KotlinJvmCompile>().configureEach {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_1_8)
+    if (name != "graalvm") {
+        tasks.withType<KotlinJvmCompile>().configureEach {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_1_8)
+            }
         }
-    }
-    tasks.withType<JavaCompile>().configureEach {
-        options.release.set(8)
+        tasks.withType<JavaCompile>().configureEach {
+            options.release.set(8)
+        }
     }
 
     pluginManager.withPlugin("com.vanniktech.maven.publish") {

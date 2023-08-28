@@ -34,6 +34,12 @@ kotlin {
             }
         }
 
+        val jvmMain by getting {
+            dependencies {
+                compileOnly(libs.graalvm.svm)
+            }
+        }
+
         val jvmTest by getting {
             dependencies {
                 api(libs.systemrules)
