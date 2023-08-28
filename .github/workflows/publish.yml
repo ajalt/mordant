@@ -11,6 +11,7 @@ on:
 
 jobs:
   test:
+    if: github.repository == 'ajalt/mordant'
     strategy:
       matrix:
         os: [macos-latest,  windows-latest, ubuntu-latest]
@@ -49,6 +50,7 @@ jobs:
   publish-all-targets:
     needs: test
     runs-on: macos-latest
+    if: github.repository == 'ajalt/mordant'
     steps:
       - uses: actions/checkout@v3
       - name: Fetch git tags
