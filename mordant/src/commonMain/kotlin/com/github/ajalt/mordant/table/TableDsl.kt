@@ -65,7 +65,7 @@ interface CellStyleBuilder : CellStyleBuilderBase {
 
 sealed class ColumnWidth {
     /** The column will fit to the size of its content */
-    object Auto : ColumnWidth()
+    data object Auto : ColumnWidth()
 
     /**
      * The column will have a fixed [width].

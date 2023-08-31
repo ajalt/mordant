@@ -5,6 +5,7 @@ import platform.windows.*
 
 
 // https://docs.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo
+@OptIn(ExperimentalForeignApi::class)
 internal actual fun getTerminalSize(): Pair<Int, Int>? = memScoped {
     val csbi = alloc<CONSOLE_SCREEN_BUFFER_INFO>()
     val stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE)
@@ -20,6 +21,7 @@ internal actual fun getTerminalSize(): Pair<Int, Int>? = memScoped {
 
 // https://docs.microsoft.com/en-us/windows/console/setconsolemode
 // https://docs.microsoft.com/en-us/windows/console/getconsolemode
+@OptIn(ExperimentalForeignApi::class)
 internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
     if (stdinHandle == INVALID_HANDLE_VALUE) {

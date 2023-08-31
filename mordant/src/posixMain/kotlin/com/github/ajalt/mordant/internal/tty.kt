@@ -1,12 +1,10 @@
 package com.github.ajalt.mordant.internal
 
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.convert
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
+import kotlinx.cinterop.*
 import platform.posix.*
 
 // https://www.gnu.org/software/libc/manual/html_node/getpass.html
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     val termios = alloc<termios>()
     if (tcgetattr(STDOUT_FILENO, termios.ptr) != 0) {

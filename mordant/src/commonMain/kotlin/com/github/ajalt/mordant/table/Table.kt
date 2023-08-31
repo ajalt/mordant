@@ -10,7 +10,7 @@ internal sealed class Cell {
      * Empty cell placeholder used to avoid null checks during layout. Never part of the table
      * builder rows.
      */
-    object Empty : Cell() {
+    data object Empty : Cell() {
         override val rowSpan: Int get() = 1
         override val columnSpan: Int get() = 1
         override val borderLeft: Boolean get() = false

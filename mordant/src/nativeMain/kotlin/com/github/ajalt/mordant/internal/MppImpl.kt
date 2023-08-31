@@ -3,11 +3,13 @@ package com.github.ajalt.mordant.internal
 import com.github.ajalt.mordant.terminal.*
 import kotlinx.cinterop.*
 import platform.posix.*
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicInt
+import kotlin.concurrent.AtomicReference
+import kotlin.experimental.ExperimentalNativeApi
 
 
 internal actual class AtomicInt actual constructor(initial: Int) {
-    private val backing = kotlin.native.concurrent.AtomicInt(initial)
+    private val backing = AtomicInt(initial)
     actual fun getAndIncrement(): Int {
         return backing.addAndGet(1) - 1
     }
@@ -23,12 +25,14 @@ internal actual class AtomicInt actual constructor(initial: Int) {
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
+@OptIn(ExperimentalForeignApi::class)
 internal actual fun getEnv(key: String): String? = getenv(key)?.toKStringFromUtf8()
 
 internal actual fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO) != 0
 
 internal actual fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
 
+@OptIn(ExperimentalNativeApi::class)
 internal actual fun codepointSequence(string: String): Sequence<Int> = sequence {
     var i = 0
     while (i < string.length) {
@@ -42,6 +46,7 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 internal actual fun printStderr(message: String, newline: Boolean) {
     val s = if (newline) message + "\n"  else message
     fprintf(stderr, s)
@@ -64,8 +69,9 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 
 // These are for the NativeTerminalCursor, but are top-level since atexit and signal require static
 // functions.
-private val registeredAtExit = kotlin.native.concurrent.AtomicInt(0)
+private val registeredAtExit = AtomicInt(0)
 private const val CURSOR_SHOW_STR = "\u001B[?25h"
+@OptIn(ExperimentalForeignApi::class)
 private val CURSOR_SHOW_BUF = CURSOR_SHOW_STR.cstr // .ctr allocates, so we need to do it statically
 
 private fun cursorAtExitCallback() {
@@ -76,9 +82,10 @@ private fun cursorAtExitCallback() {
 }
 
 // In case the user already has a sigint handler installed, we need to keep track of it
+@OptIn(ExperimentalForeignApi::class)
 private val existingSigintHandler = AtomicReference<CPointer<CFunction<(Int) -> Unit>>?>(null)
 
-@OptIn(UnsafeNumber::class) // for `write`
+@OptIn(UnsafeNumber::class, ExperimentalForeignApi::class) // for `write`
 private fun cursorSigintHandler(signum: Int) {
     signal(SIGINT, SIG_IGN) // disable sigint handling to avoid recursive calls
     // signal handlers can't safely access most state or functions due to their async nature, so we
@@ -87,16 +94,18 @@ private fun cursorSigintHandler(signum: Int) {
         STDOUT_FILENO,
         CURSOR_SHOW_BUF,
         // `CURSOR_SHOW_STR.length == 6`. We use a literal since that parameter is a UInt on mingw and a ULong on posix
-        6
+        6u
     )
     signal(SIGINT, existingSigintHandler.value ?: SIG_DFL) // reset signal handling to previous value
     existingSigintHandler.value = null
     raise(signum) // re-raise the signal
 }
 
+@OptIn(ExperimentalForeignApi::class)
 private val cursorSigintHandlerPtr = staticCFunction(::cursorSigintHandler)
 
 private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
+    @OptIn(ExperimentalForeignApi::class)
     override fun hide(showOnExit: Boolean) {
         if (showOnExit && registeredAtExit.compareAndSet(0, 1)) {
             atexit(staticCFunction(::cursorAtExitCallback))

@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.internal.gen
 
 internal class CellWidthTableEntry(val low: Int, val high: Int, val width: Byte)
 
-internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf<CellWidthTableEntry>(
+internal val CELL_WIDTH_TABLE: Array<CellWidthTableEntry> = arrayOf(
     CellWidthTableEntry(0x0, 0x1f, 0), // <control-0000>..<control-001F>
     CellWidthTableEntry(0x7f, 0x9f, 0), // <control-007F>..<control-009F>
     CellWidthTableEntry(0x300, 0x36f, 0), // COMBINING GRAVE ACCENT..COMBINING LATIN SMALL LETTER X

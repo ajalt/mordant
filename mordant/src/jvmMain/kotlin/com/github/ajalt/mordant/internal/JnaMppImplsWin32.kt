@@ -70,7 +70,7 @@ private interface WinKernel32Lib : Library {
 }
 
 internal class Win32MppImpls : JnaMppImpls {
-    private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
+    private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS)
     private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)
     private val stderrHandle = kernel.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE)
