@@ -10,14 +10,34 @@ import com.github.ajalt.mordant.table.horizontalLayout
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
 
+    /**
+     * Add fixed text cell to this layout.
+     */
     fun text(text: String) {
         cells += TextProgressCell(Text(text))
     }
 
+    /**
+     * Add a percentage cell to this layout.
+     */
     fun percentage() {
         cells += PercentageProgressCell()
     }
 
+    /**
+     * Add a progress bar cell to this layout.
+     *
+     * @param width The width in characters for this widget
+     * @param pendingChar (theme string: "progressbar.pending") The character to use to draw the pending portion of the bar in the active state.
+     * @param separatorChar (theme string: "progressbar.separator") The character to draw in between the competed and pending bar in the active state.
+     * @param completeChar (theme string: "progressbar.complete") The character to use to draw the completed portion of the bar in the active state.
+     * @param pendingStyle(theme style: "progressbar.pending") The style to use for the [pendingChar]s
+     * @param separatorStyle (theme style: "progressbar.separator") The style to use for the [separatorChar]
+     * @param completeStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when completed < total
+     * @param finishedStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when total <= completed
+     * @param indeterminateStyle e (theme style: "progressbar.separator") The style to use when the state us indeterminate
+     * @param showPulse (theme flag: "progressbar.pulse") If false, never draw the pulse animation in the indeterminate state.
+     */
     fun progressBar(
         width: Int? = null,
         pendingChar: String? = null,
@@ -28,6 +48,7 @@ open class ProgressBuilder internal constructor() {
         completeStyle: TextStyle? = null,
         finishedStyle: TextStyle? = null,
         indeterminateStyle: TextStyle? = null,
+        showPulse: Boolean? = null,
     ) {
         cells += BarProgressCell(
             width,
@@ -38,18 +59,28 @@ open class ProgressBuilder internal constructor() {
             separatorStyle,
             completeStyle,
             finishedStyle,
-            indeterminateStyle
+            indeterminateStyle,
+            showPulse,
         )
     }
 
+    /**
+     * Add a cell that displays the current completed count to this layout.
+     */
     fun completed(suffix: String = "", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
         cells += CompletedProgressCell(suffix, includeTotal, style)
     }
 
+    /**
+     * Add a cell that displays the current speed to this layout.
+     */
     fun speed(suffix: String = "it/s", style: TextStyle = DEFAULT_STYLE) {
         cells += SpeedProgressCell(suffix, style)
     }
 
+    /**
+     * Add a cell that displays the time remaining to this layout.
+     */
     fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE) {
         cells += EtaProgressCell(prefix, style)
     }
@@ -71,6 +102,9 @@ open class ProgressBuilder internal constructor() {
     internal val cells = mutableListOf<ProgressCell>()
 }
 
+/**
+ * A builder for creating an animated progress bar widget.
+ */
 class ProgressLayout internal constructor(
     internal val cells: List<ProgressCell>,
     private val paddingSize: Int,
@@ -108,6 +142,9 @@ class ProgressLayout internal constructor(
     }
 }
 
+/**
+ * Build a [ProgressLayout]
+ */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
     return ProgressBuilder().apply(init).build()
 }

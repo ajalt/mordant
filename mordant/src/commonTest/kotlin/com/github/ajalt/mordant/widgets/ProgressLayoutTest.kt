@@ -1,11 +1,14 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.js.JsName
 import kotlin.test.Test
 
 class ProgressLayoutTest : RenderingTest() {
+    private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
+
     @Test
     fun indeterminate() = doTest(
         0,
@@ -51,6 +54,27 @@ class ProgressLayoutTest : RenderingTest() {
         }.build(0, 0, 0.0, 0.0),
         "1    0%  2   ---.-it/s  3",
     )
+
+    @Test
+    fun pulse() = checkRender(
+        progressLayout {
+            progressBar()
+        }.build(0, null, 1.0, 0.0),
+        indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
+        width = 3,
+    )
+
+    @Test
+    @JsName("no_pulse")
+    fun `no pulse`() {
+        checkRender(
+            progressLayout {
+                progressBar(showPulse = false)
+            }.build(0, null, 1.0, 0.0),
+            indetermStyle("━━━"),
+            width = 3,
+        )
+    }
 
     private fun doTest(
         completed: Long,
