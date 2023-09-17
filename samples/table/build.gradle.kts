@@ -6,7 +6,7 @@ plugins {
 }
 
 kotlin {
-    jvm { withJava() }
+    jvm()
     macosX64()
     linuxX64()
     mingwX64()
