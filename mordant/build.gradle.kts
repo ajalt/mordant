@@ -12,10 +12,21 @@ kotlin {
         browser()
     }
 
-    macosX64()
-    macosArm64()
     linuxX64()
     mingwX64()
+    val darwinTargets = listOf(
+        macosArm64(),
+        macosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+        iosX64(),
+        watchosArm64(),
+        watchosSimulatorArm64(),
+        watchosX64(),
+        tvosArm64(),
+        tvosSimulatorArm64(),
+        tvosX64()
+    )
 
     sourceSets {
         val gen by creating { }
@@ -44,9 +55,10 @@ kotlin {
         val mingwX64Main by getting { dependsOn(nativeMain) }
         val posixMain by creating { dependsOn(nativeMain) }
         val linuxX64Main by getting { dependsOn(posixMain) }
-        val macosMain by creating { dependsOn(posixMain) }
-        listOf("macosX64", "macosArm64").forEach { target ->
-            getByName(target + "Main").dependsOn(macosMain)
+        val darwinMain by creating { dependsOn(posixMain) }
+        darwinTargets.forEach {
+            getByName("${it.targetName}Main").dependsOn(darwinMain)
+            getByName("${it.targetName}Test").dependsOn(commonTest)
         }
     }
 }
