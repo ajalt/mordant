@@ -1,15 +1,15 @@
 [versions]
-kotlin = "1.8.22"
+kotlin = "1.9.10"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
-markdown = "org.jetbrains:markdown:0.4.1"
+markdown = "org.jetbrains:markdown:0.5.0"
 jna-core = "net.java.dev.jna:jna:5.13.0"
 
 # used in tests
-kotest =  "io.kotest:kotest-assertions-core:5.6.2"
+kotest =  "io.kotest:kotest-assertions-core:5.7.2"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 
 [plugins]
-dokka = "org.jetbrains.dokka:1.8.10"
-publish = "com.vanniktech.maven.publish:0.25.2"
+dokka = "org.jetbrains.dokka:1.9.0"
+publish = "com.vanniktech.maven.publish:0.25.3"

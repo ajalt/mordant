@@ -1,13 +1,17 @@
+@file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
+
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
 import kotlinx.cinterop.*
 import platform.posix.*
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicInt
+import kotlin.concurrent.AtomicReference
+import kotlin.experimental.ExperimentalNativeApi
 
 
 internal actual class AtomicInt actual constructor(initial: Int) {
-    private val backing = kotlin.native.concurrent.AtomicInt(initial)
+    private val backing = AtomicInt(initial)
     actual fun getAndIncrement(): Int {
         return backing.addAndGet(1) - 1
     }
@@ -64,7 +68,7 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 
 // These are for the NativeTerminalCursor, but are top-level since atexit and signal require static
 // functions.
-private val registeredAtExit = kotlin.native.concurrent.AtomicInt(0)
+private val registeredAtExit = AtomicInt(0)
 private const val CURSOR_SHOW_STR = "\u001B[?25h"
 private val CURSOR_SHOW_BUF = CURSOR_SHOW_STR.cstr // .ctr allocates, so we need to do it statically
 
@@ -87,7 +91,7 @@ private fun cursorSigintHandler(signum: Int) {
         STDOUT_FILENO,
         CURSOR_SHOW_BUF,
         // `CURSOR_SHOW_STR.length == 6`. We use a literal since that parameter is a UInt on mingw and a ULong on posix
-        6
+        6u
     )
     signal(SIGINT, existingSigintHandler.value ?: SIG_DFL) // reset signal handling to previous value
     existingSigintHandler.value = null

@@ -4,6 +4,9 @@
 ### Added
 - Added `showPulse` parameter to `ProgressLayout.progressBar`, allowing you to disable the pulse animation for a bar.
 
+### Changed
+- Update Kotlin to 1.9
+
 ### Fixed
 - Fixed exception thrown in environments that are missing required shared native libraries.
 - Fixed animations clearing too much space when the animation changes size while running. [(#110)](https://github.com/ajalt/mordant/issues/110)
