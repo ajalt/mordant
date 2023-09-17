@@ -9,11 +9,11 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
  * [width] and [height] don't automatically change if the terminal is resized. Call
  * [updateTerminalSize] to get the latest values.
  */
-class TerminalInfo(
+data class TerminalInfo(
     /** The terminal width, in cells */
-    width: Int,
+    var width: Int,
     /** The terminal height, in cells */
-    height: Int,
+    var height: Int,
     /** The level of ANSI codes to use when printing to the terminal */
     var ansiLevel: AnsiLevel,
     /** If true, ANSI hyperlink codes can be used */
@@ -34,14 +34,6 @@ class TerminalInfo(
      */
     val crClearsLine: Boolean,
 ) {
-    /** The terminal width, in cells */
-    var width: Int = width
-        private set
-    /** The terminal height, in cells */
-    var height: Int = height
-        private set
-
-
     /** Return true if both input and output are interactive */
     val interactive: Boolean get() = inputInteractive && outputInteractive
 
