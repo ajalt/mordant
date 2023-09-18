@@ -45,6 +45,7 @@ internal object TerminalDetection {
         return forcedColor() != NONE && (isWindowsTerminal() || when (getTermProgram()) {
             "hyper", "wezterm" -> true
             "iterm.app" -> iTermVersionSupportsTruecolor()
+            "mintty" -> minttyVersionSupportsHyperlinks()
             else -> when (getTerm()) {
                 "xterm-kitty", "alacritty" -> true
                 else -> false
@@ -82,6 +83,7 @@ internal object TerminalDetection {
             "hyper" -> return TRUECOLOR
             "apple_terminal" -> return ANSI256
             "iterm.app" -> return if (iTermVersionSupportsTruecolor()) TRUECOLOR else ANSI256
+            "mintty" -> return TRUECOLOR
             "wezterm" -> return TRUECOLOR
         }
 
@@ -159,6 +161,14 @@ internal object TerminalDetection {
     private fun iTermVersionSupportsTruecolor(): Boolean {
         val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.firstOrNull()?.toIntOrNull()
         return ver != null && ver >= 3
+    }
+
+    private fun minttyVersionSupportsHyperlinks(): Boolean {
+        val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.mapNotNull { it.toIntOrNull() }
+        if (ver?.size != 3) return false
+
+        // https://github.com/mintty/mintty/issues/823#issuecomment-473096464
+        return (ver[0] > 2) || (ver[0] == 2 && ver[1] > 9) || (ver[0] == 2 && ver[1] == 9 && ver[2] > 6)
     }
 
     private fun isCI(): Boolean {
