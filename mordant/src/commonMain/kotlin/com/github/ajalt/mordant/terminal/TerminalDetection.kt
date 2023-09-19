@@ -42,17 +42,18 @@ internal object TerminalDetection {
 
     // https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
     private fun ansiHyperLinks(): Boolean {
-        return forcedColor() != NONE && (isWindowsTerminal() || when (getTermProgram()) {
-            "hyper", "wezterm" -> true
-            "iterm.app" -> iTermVersionSupportsTruecolor()
-            "mintty" -> minttyVersionSupportsHyperlinks()
-            else -> when (getTerm()) {
-                "xterm-kitty", "alacritty" -> true
-                else -> false
-            }
-        })
+        if (forcedColor() == NONE || isCI()) return false
+        if (isWindowsTerminal()) return true
+        when (getTermProgram()) {
+            "hyper", "wezterm" -> return true
+            "iterm.app" -> return iTermVersionSupportsTruecolor()
+            "mintty" -> return minttyVersionSupportsHyperlinks()
+        }
+        when (getTerm()) {
+            "xterm-kitty", "alacritty" -> return true
+        }
+        return false
     }
-
 
     private fun ansiLevel(interactive: Boolean): AnsiLevel {
         forcedColor()?.let { return it }
@@ -83,8 +84,8 @@ internal object TerminalDetection {
             "hyper" -> return TRUECOLOR
             "apple_terminal" -> return ANSI256
             "iterm.app" -> return if (iTermVersionSupportsTruecolor()) TRUECOLOR else ANSI256
-            "mintty" -> return TRUECOLOR
             "wezterm" -> return TRUECOLOR
+            "mintty" -> return TRUECOLOR
         }
 
         val (term, level) = getTerm()?.split("-")
@@ -168,7 +169,9 @@ internal object TerminalDetection {
         if (ver?.size != 3) return false
 
         // https://github.com/mintty/mintty/issues/823#issuecomment-473096464
-        return (ver[0] > 2) || (ver[0] == 2 && ver[1] > 9) || (ver[0] == 2 && ver[1] == 9 && ver[2] > 6)
+        return (ver[0] > 2) ||
+                (ver[0] == 2 && ver[1] > 9) ||
+                (ver[0] == 2 && ver[1] == 9 && ver[2] > 6)
     }
 
     private fun isCI(): Boolean {
