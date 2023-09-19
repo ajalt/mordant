@@ -1,17 +1,30 @@
 package com.github.ajalt.mordant.samples
 
-import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.Panel
+import com.github.ajalt.mordant.widgets.Text
+import com.github.ajalt.mordant.widgets.withPadding
 
 fun main() {
     val terminal = Terminal()
-    terminal.println(Theme.Default.info(terminal.info.toString()))
+    val theme = terminal.theme
     terminal.println(
-        "Theme colors: " +
-                "${Theme.Default.success("success")}, " +
-                "${Theme.Default.danger("danger")}, " +
-                "${Theme.Default.warning("warning")}, " +
-                "${Theme.Default.info("info")}, " +
-                "${Theme.Default.muted("muted")}"
+        Panel(
+            Text(terminal.info.toString(), whitespace = NORMAL).withPadding(1),
+            Text(theme.info("Detected Terminal Info"))
+        )
+    )
+    terminal.println(
+        Panel(
+            Text(
+                "${theme.success("success")}, " +
+                        "${theme.danger("danger")}, " +
+                        "${theme.warning("warning")}, " +
+                        "${theme.info("info")}, " +
+                        theme.muted("muted")
+            ).withPadding(1),
+            Text(theme.info("Theme colors"))
+        )
     )
 }
