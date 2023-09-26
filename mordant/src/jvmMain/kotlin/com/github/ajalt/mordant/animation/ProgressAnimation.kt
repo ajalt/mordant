@@ -105,6 +105,9 @@ class ProgressAnimation internal constructor(
 
     // Locking: all state is protected by this object's monitor. Tick is run on the timer thread.
 
+    /**
+     * Set the current progress to the [completed] value.
+     */
     @Synchronized
     fun update(completed: Long) {
         history.update(completed)
@@ -113,22 +116,36 @@ class ProgressAnimation internal constructor(
         }
     }
 
+    /**
+     * Set the current progress to the [completed] value.
+     */
     @Synchronized
     fun update(completed: Int) {
         update(completed.toLong())
     }
 
+    /**
+     * Update the progress bar without changing the current progress amount.
+     *
+     * This will redraw the animation and update fields like the estimated time remaining.
+     */
     @Synchronized
     fun update() {
         update(history.completed)
     }
 
+    /**
+     * Set the current progress to the [completed] value, and set the total to the [total] value.
+     */
     @Synchronized
     fun update(completed: Long, total: Long?) {
         updateTotalWithoutAnimation(total)
         update(completed)
     }
 
+    /**
+     * Set the [total] amount of work to be done, or `null` to make the progress bar indeterminate.
+     */
     @Synchronized
     fun updateTotal(total: Long?) {
         updateTotalWithoutAnimation(total)
@@ -140,11 +157,17 @@ class ProgressAnimation internal constructor(
         this.total = total?.takeIf { it > 0 }
     }
 
+    /**
+     * Advance the current completed progress by [amount] without changing the total.
+     */
     @Synchronized
     fun advance(amount: Long = 1) {
         update(history.completed + amount)
     }
 
+    /**
+     * Start the progress bar animation.
+     */
     @Synchronized
     fun start() {
         if (tickerStarted) return
@@ -165,6 +188,12 @@ class ProgressAnimation internal constructor(
         animation.update(Unit)
     }
 
+    /**
+     * Stop the progress bar animation.
+     *
+     * The progress bar will remain on the screen until you call [clear].
+     * You can call [start] again to resume the animation.
+     */
     @Synchronized
     fun stop() {
         if (!tickerStarted) return
@@ -177,6 +206,9 @@ class ProgressAnimation internal constructor(
         }
     }
 
+    /**
+     * Set the progress to 0 and restart the animation.
+     */
     @Synchronized
     fun restart() {
         val tickerStarted = tickerStarted
@@ -186,6 +218,11 @@ class ProgressAnimation internal constructor(
         if (tickerStarted) start()
     }
 
+    /**
+     * Stop the animation and remove it from the screen.
+     *
+     * If you want to leave the animation on the screen, call [stop] instead.
+     */
     @Synchronized
     fun clear() {
         stop()
