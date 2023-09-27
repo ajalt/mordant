@@ -1,5 +1,7 @@
-package com.github.ajalt.mordant.internal
+package com.github.ajalt.mordant.internal.jna
 
+import com.github.ajalt.mordant.internal.MppImpls
+import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.PointerType
@@ -10,6 +12,7 @@ import com.sun.jna.win32.W32APIOptions
 // Interface definitions from
 // https://github.com/java-native-access/jna/blob/master/contrib/platform/src/com/sun/jna/platform/win32/Kernel32.java
 // copied here so that we don't need the entire platform dependency
+@Delete
 @Suppress("FunctionName", "PropertyName", "ClassName", "unused")
 private interface WinKernel32Lib : Library {
     companion object {
@@ -69,7 +72,8 @@ private interface WinKernel32Lib : Library {
     ): Boolean
 }
 
-internal class Win32MppImpls : JnaMppImpls {
+@Delete
+internal class JnaWin32MppImpls : MppImpls {
     private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
     private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)

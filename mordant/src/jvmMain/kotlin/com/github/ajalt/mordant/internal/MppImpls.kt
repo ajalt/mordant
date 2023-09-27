@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.internal
 
 
-internal interface JnaMppImpls {
+internal interface MppImpls {
     fun stdoutInteractive(): Boolean
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
@@ -9,8 +9,8 @@ internal interface JnaMppImpls {
 }
 
 
-/** A non-JNA implementation for unimplemented OSes like FreBSD */
-internal class FallbackJnaMppImpls : JnaMppImpls {
+/** A non-JNA implementation for unimplemented OSes like FreeBSD */
+internal class FallbackMppImpls : MppImpls {
     override fun stdoutInteractive(): Boolean = System.console() != null
     override fun stdinInteractive(): Boolean = System.console() != null
     override fun stderrInteractive(): Boolean = System.console() != null

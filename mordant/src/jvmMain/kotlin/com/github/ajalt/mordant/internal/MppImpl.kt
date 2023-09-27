@@ -1,5 +1,10 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.mordant.internal.jna.JnaLinuxMppImpls
+import com.github.ajalt.mordant.internal.jna.JnaMacosMppImpls
+import com.github.ajalt.mordant.internal.jna.JnaWin32MppImpls
+import com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls
+import com.github.ajalt.mordant.internal.nativeimage.NativeImageWin32MppImpls
 import com.github.ajalt.mordant.terminal.*
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
@@ -91,16 +96,21 @@ internal actual fun sendInterceptedPrintRequest(
 
 internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = synchronized(lock, block)
 
-private val impls: JnaMppImpls = System.getProperty("os.name").let { os ->
+private val impls: MppImpls = System.getProperty("os.name").let { os ->
     try {
+        // Inlined version of ImageInfo.inImageCode()
+        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
+        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
         when {
-            os.startsWith("Windows") -> Win32MppImpls()
-            os == "Linux" -> LinuxMppImpls()
-            os == "Mac OS X" -> MacosMppImpls()
-            else -> FallbackJnaMppImpls()
+            isNativeImage && os.startsWith("Windows") -> NativeImageWin32MppImpls()
+            isNativeImage && (os == "Linux"  || os == "Mac OS X") -> NativeImagePosixMppImpls()
+            os.startsWith("Windows") -> JnaWin32MppImpls()
+            os == "Linux" -> JnaLinuxMppImpls()
+            os == "Mac OS X" -> JnaMacosMppImpls()
+            else -> FallbackMppImpls()
         }
     } catch (e: UnsatisfiedLinkError) {
-        FallbackJnaMppImpls()
+        FallbackMppImpls()
     }
 }
 
