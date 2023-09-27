@@ -3,9 +3,11 @@
 ## Unreleased
 ### Added
 - Added `showPulse` parameter to `ProgressLayout.progressBar`, allowing you to disable the pulse animation for a bar.
+- Added support for detecting terminal capabilities on mintty. Thanks to @sschuberth for the contribution. [(#127)](https://github.com/ajalt/mordant/issues/127)
 
 ### Changed
 - Update Kotlin to 1.9
+- Use the native C API when building a native image on GraalVM, which reduces binary size and removes the need to reflection. Thanks to @hubvd for the contribution [(#119)](https://github.com/ajalt/mordant/issues/119)
 
 ### Fixed
 - Fixed exception thrown in environments that are missing required shared native libraries.
