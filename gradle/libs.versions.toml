@@ -3,8 +3,10 @@ kotlin = "1.9.10"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
-markdown = "org.jetbrains:markdown:0.5.0"
+markdown = "org.jetbrains:markdown:0.5.2"
 jna-core = "net.java.dev.jna:jna:5.13.0"
+
+# compileOnly
 graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 
 # used in tests

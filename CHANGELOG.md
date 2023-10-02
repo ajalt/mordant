@@ -14,6 +14,7 @@
 - Fixed exception thrown in environments that are missing required shared native libraries.
 - Fixed animations clearing too much space when the animation changes size while running. [(#110)](https://github.com/ajalt/mordant/issues/110)
 - Improved terminal capability detection for Xterm terminals. [(#113)](https://github.com/ajalt/mordant/issues/113)
+- Update Markdown parser dependency to fix crashes on native release executables
 
 ## 2.1.0
 ### Added
@@ -29,7 +30,6 @@
 ## 2.0.0
 ### Deprecated
 - Deprecated `TerminalColors` is favor of `TextColors` and `Terminal.theme`
-
 
 ## 2.0.0-beta14
 ### Added
