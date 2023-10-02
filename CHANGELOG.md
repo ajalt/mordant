@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Added
+- Added `ColumnWidth.Custom` that allows more control over column width behavior in tables. [(#109)](https://github.com/ajalt/mordant/issues/109)
 - Added `showPulse` parameter to `ProgressLayout.progressBar`, allowing you to disable the pulse animation for a bar.
 - Added support for detecting terminal capabilities on mintty. Thanks to @sschuberth for the contribution. [(#127)](https://github.com/ajalt/mordant/issues/127)
 

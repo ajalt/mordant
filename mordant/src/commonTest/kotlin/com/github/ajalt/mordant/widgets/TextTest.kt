@@ -112,8 +112,6 @@ class TextTest : RenderingTest() {
         checkRender(Text(style((red on blue)("text"))), expected("text"))
     }
 
-//    fun `inner resets`() = TODO()
-
     @Test
     @JsName("hyperlink_one_line")
     fun `hyperlink one line`() = doHyperlinkTest("This is a link",

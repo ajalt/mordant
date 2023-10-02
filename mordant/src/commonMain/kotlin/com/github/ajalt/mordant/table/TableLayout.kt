@@ -16,18 +16,33 @@ internal typealias MutableRow = MutableList<Cell>
  */
 internal class TableLayout(private val table: TableBuilderInstance) {
     fun buildTable(): TableImpl {
-        val builderWidth = listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
-            it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
-        }
+        val builderWidth =
+            listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
+                it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
+            }
         val header = buildSection(table.headerSection, builderWidth)
         val body = buildSection(table.bodySection, builderWidth)
         val footer = buildSection(table.footerSection, builderWidth)
         val rows = listOf(header, body, footer).flatten().ifEmpty {
             val b = table.tableBorders ?: Borders.ALL
             val cell = Cell.Content(
-                EmptyWidget, 1, 1, b.left, b.top, b.right, b.bottom, null, TextAlign.LEFT, VerticalAlign.TOP
+                content = EmptyWidget,
+                rowSpan = 1,
+                columnSpan = 1,
+                borderLeft = b.left,
+                borderTop = b.top,
+                borderRight = b.right,
+                borderBottom = b.bottom,
+                style = null,
+                textAlign = TextAlign.LEFT,
+                verticalAlign = VerticalAlign.TOP
             )
             listOf(listOf(cell))
+        }
+        val columnCount = rows.maxOf { it.size }
+
+        val columnWidths = List(columnCount) { i ->
+            table.columns[i]?.width.toCustom()
         }
         return TableImpl(
             rows = rows,
@@ -35,13 +50,17 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             borderStyle = table.borderStyle,
             headerRowCount = header.size,
             footerRowCount = footer.size,
-            columnStyles = table.columns.mapValues { it.value.width },
+            columnWidths = columnWidths,
             tableBorders = table.tableBorders
         )
     }
 
-    private fun buildSection(section: SectionBuilderInstance, builderWidth: Int): MutableList<MutableRow> {
-        val rows: MutableList<MutableRow> = MutableList(section.rows.size) { ArrayList(section.rows.size) }
+    private fun buildSection(
+        section: SectionBuilderInstance,
+        builderWidth: Int,
+    ): MutableList<MutableRow> {
+        val rows: MutableList<MutableRow> =
+            MutableList(section.rows.size) { ArrayList(section.rows.size) }
 
         for ((y, row) in section.rows.withIndex()) {
             var x = 0
