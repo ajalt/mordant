@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.2.0
 ### Added
 - Added `ColumnWidth.Custom` that allows more control over column width behavior in tables. [(#109)](https://github.com/ajalt/mordant/issues/109)
 - Added `showPulse` parameter to `ProgressLayout.progressBar`, allowing you to disable the pulse animation for a bar.
