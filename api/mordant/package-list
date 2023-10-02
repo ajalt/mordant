@@ -24,25 +24,6 @@ $dokka.location:com.github.ajalt.mordant.animation/ProgressAnimationBuilder///Po
 $dokka.location:com.github.ajalt.mordant.animation/ProgressAnimationBuilder/animationFrameRate/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.animation/-progress-animation-builder/animation-frame-rate.html
 $dokka.location:com.github.ajalt.mordant.animation/ProgressAnimationBuilder/historyLength/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.animation/-progress-animation-builder/history-length.html
 $dokka.location:com.github.ajalt.mordant.animation/ProgressAnimationBuilder/textFrameRate/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.animation/-progress-animation-builder/text-frame-rate.html
-$dokka.location:com.github.ajalt.mordant.internal////PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/index.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize///PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/index.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize/winsize/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/winsize.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize/ws_col/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/ws_col.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize/ws_row/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/ws_row.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize/ws_xpixel/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/ws_xpixel.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC.winsize/ws_ypixel/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/winsize/ws_ypixel.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC///PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/index.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC/ioctl/#kotlin.Int#com.sun.jna.NativeLong?#com.github.ajalt.mordant.internal.MacosLibC.winsize?/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/ioctl.html
-$dokka.location:com.github.ajalt.mordant.internal/MacosLibC/isatty/#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-macos-lib-c/isatty.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize///PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/index.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize/winsize/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/winsize.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize/ws_col/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/ws_col.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize/ws_row/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/ws_row.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize/ws_xpixel/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/ws_xpixel.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC.winsize/ws_ypixel/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/winsize/ws_ypixel.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC///PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/index.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC/ioctl/#kotlin.Int#kotlin.Int#com.github.ajalt.mordant.internal.PosixLibC.winsize?/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/ioctl.html
-$dokka.location:com.github.ajalt.mordant.internal/PosixLibC/isatty/#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.internal/-posix-lib-c/isatty.html
 $dokka.location:com.github.ajalt.mordant.markdown////PointingToDeclaration/mordant/com.github.ajalt.mordant.markdown/index.html
 $dokka.location:com.github.ajalt.mordant.markdown/Markdown///PointingToDeclaration/mordant/com.github.ajalt.mordant.markdown/-markdown/index.html
 $dokka.location:com.github.ajalt.mordant.markdown/Markdown/Markdown/#kotlin.String#kotlin.Boolean#kotlin.Boolean?/PointingToDeclaration/mordant/com.github.ajalt.mordant.markdown/-markdown/-markdown.html
@@ -57,6 +38,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel.ANSI256///PointingT
 $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel.NONE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-ansi-level/-n-o-n-e/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel.TRUECOLOR///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-ansi-level/-t-r-u-e-c-o-l-o-r/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-ansi-level/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-ansi-level/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-ansi-level/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/AnsiLevel/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-ansi-level/values.html
 $dokka.location:com.github.ajalt.mordant.rendering/BorderType.Companion///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-border-type/-companion/index.html
@@ -114,6 +96,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap.ELLIPSES///Point
 $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap.NORMAL///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/-n-o-r-m-a-l/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap.TRUNCATE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/-t-r-u-n-c-a-t-e/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/OverflowWrap/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/values.html
 $dokka.location:com.github.ajalt.mordant.rendering/Span.Companion///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-span/-companion/index.html
@@ -129,6 +112,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/TextAlign.LEFT///PointingToDe
 $dokka.location:com.github.ajalt.mordant.rendering/TextAlign.NONE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-align/-n-o-n-e/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextAlign.RIGHT///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-align/-r-i-g-h-t/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextAlign///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-align/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/TextAlign/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-align/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextAlign/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-align/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextAlign/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-align/values.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors.Companion///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/-companion/index.html
@@ -158,6 +142,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/TextColors.red///PointingToDe
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors.white///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-colors/white/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors.yellow///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-colors/yellow/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/TextColors/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors/toString/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/to-string.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextColors/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-colors/values.html
@@ -189,6 +174,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/TextStyles.resetForeground///
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles.strikethrough///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-styles/strikethrough/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles.underline///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-text-styles/underline/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-styles/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/TextStyles/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-styles/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles/invoke/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-styles/invoke.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles/plus/#com.github.ajalt.mordant.rendering.TextStyle/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-styles/plus.html
 $dokka.location:com.github.ajalt.mordant.rendering/TextStyles/plus/#com.github.ajalt.mordant.rendering.TextStyles/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-text-styles/plus.html
@@ -227,6 +213,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign.BOTTOM///Pointi
 $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign.MIDDLE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-vertical-align/-m-i-d-d-l-e/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign.TOP///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-vertical-align/-t-o-p/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-vertical-align/index.html
+$dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-vertical-align/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-vertical-align/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/VerticalAlign/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-vertical-align/values.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace.NORMAL///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.rendering/-whitespace/-n-o-r-m-a-l/index.html
@@ -237,6 +224,7 @@ $dokka.location:com.github.ajalt.mordant.rendering/Whitespace.PRE_WRAP///Pointin
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace///PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace/collapseNewlines/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/collapse-newlines.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace/collapseSpaces/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/collapse-spaces.html
+$dokka.location:com.github.ajalt.mordant.rendering/Whitespace/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/entries.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace/trimEol/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/trim-eol.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/value-of.html
 $dokka.location:com.github.ajalt.mordant.rendering/Whitespace/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.rendering/-whitespace/values.html
@@ -275,6 +263,7 @@ $dokka.location:com.github.ajalt.mordant.table/Borders.TOP_RIGHT///PointingToDec
 $dokka.location:com.github.ajalt.mordant.table/Borders.TOP_RIGHT_BOTTOM///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.table/-borders/-t-o-p_-r-i-g-h-t_-b-o-t-t-o-m/index.html
 $dokka.location:com.github.ajalt.mordant.table/Borders///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/index.html
 $dokka.location:com.github.ajalt.mordant.table/Borders/bottom/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/bottom.html
+$dokka.location:com.github.ajalt.mordant.table/Borders/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/entries.html
 $dokka.location:com.github.ajalt.mordant.table/Borders/left/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/left.html
 $dokka.location:com.github.ajalt.mordant.table/Borders/right/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/right.html
 $dokka.location:com.github.ajalt.mordant.table/Borders/top/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-borders/top.html
@@ -298,6 +287,11 @@ $dokka.location:com.github.ajalt.mordant.table/CellStyleBuilderBase/whitespace/#
 $dokka.location:com.github.ajalt.mordant.table/ColumnBuilder///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-builder/index.html
 $dokka.location:com.github.ajalt.mordant.table/ColumnBuilder/width/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-builder/width.html
 $dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Auto///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-auto/index.html
+$dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Custom///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-custom/index.html
+$dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Custom/Custom/#kotlin.Int?#kotlin.Float?#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-custom/-custom.html
+$dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Custom/expandWeight/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-custom/expand-weight.html
+$dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Custom/priority/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-custom/priority.html
+$dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Custom/width/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-custom/width.html
 $dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Expand///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-expand/index.html
 $dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Expand/Expand/#kotlin.Float/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-expand/-expand.html
 $dokka.location:com.github.ajalt.mordant.table/ColumnWidth.Expand/Expand/#kotlin.Number/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-column-width/-expand/-expand.html
@@ -311,6 +305,7 @@ $dokka.location:com.github.ajalt.mordant.table/CsvQuoting.MINIMAL///PointingToDe
 $dokka.location:com.github.ajalt.mordant.table/CsvQuoting.NONE///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.table/-csv-quoting/-n-o-n-e/index.html
 $dokka.location:com.github.ajalt.mordant.table/CsvQuoting.NONNUMERIC///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}mordant/com.github.ajalt.mordant.table/-csv-quoting/-n-o-n-n-u-m-e-r-i-c/index.html
 $dokka.location:com.github.ajalt.mordant.table/CsvQuoting///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-csv-quoting/index.html
+$dokka.location:com.github.ajalt.mordant.table/CsvQuoting/entries/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-csv-quoting/entries.html
 $dokka.location:com.github.ajalt.mordant.table/CsvQuoting/valueOf/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-csv-quoting/value-of.html
 $dokka.location:com.github.ajalt.mordant.table/CsvQuoting/values/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-csv-quoting/values.html
 $dokka.location:com.github.ajalt.mordant.table/GridBuilder///PointingToDeclaration/mordant/com.github.ajalt.mordant.table/-grid-builder/index.html
@@ -563,7 +558,7 @@ $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder///PointingToDec
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/completed/#kotlin.String#kotlin.Boolean#com.github.ajalt.mordant.rendering.TextStyle/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/completed.html
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/padding/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/padding.html
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/percentage/#/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/percentage.html
-$dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/progressBar/#kotlin.Int?#kotlin.String?#kotlin.String?#kotlin.String?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/progress-bar.html
+$dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/progressBar/#kotlin.Int?#kotlin.String?#kotlin.String?#kotlin.String?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#com.github.ajalt.mordant.rendering.TextStyle?#kotlin.Boolean?/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/progress-bar.html
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/speed/#kotlin.String#com.github.ajalt.mordant.rendering.TextStyle/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/speed.html
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/spinner/#com.github.ajalt.mordant.widgets.Spinner#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/spinner.html
 $dokka.location:com.github.ajalt.mordant.widgets/ProgressBuilder/text/#kotlin.String/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-progress-builder/text.html
@@ -590,7 +585,6 @@ $dokka.location:com.github.ajalt.mordant.widgets/UnorderedList/UnorderedList/#ko
 $dokka.location:com.github.ajalt.mordant.widgets/UnorderedList/measure/#com.github.ajalt.mordant.terminal.Terminal#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-unordered-list/measure.html
 $dokka.location:com.github.ajalt.mordant.widgets/UnorderedList/render/#com.github.ajalt.mordant.terminal.Terminal#kotlin.Int/PointingToDeclaration/mordant/com.github.ajalt.mordant.widgets/-unordered-list/render.html
 com.github.ajalt.mordant.animation
-com.github.ajalt.mordant.internal
 com.github.ajalt.mordant.markdown
 com.github.ajalt.mordant.rendering
 com.github.ajalt.mordant.table
