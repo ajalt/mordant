@@ -10,7 +10,7 @@ internal sealed class Cell {
      * Empty cell placeholder used to avoid null checks during layout. Never part of the table
      * builder rows.
      */
-    object Empty : Cell() {
+    data object Empty : Cell() {
         override val rowSpan: Int get() = 1
         override val columnSpan: Int get() = 1
         override val borderLeft: Boolean get() = false
@@ -73,15 +73,15 @@ internal class TableImpl(
     val borderStyle: TextStyle,
     val headerRowCount: Int,
     val footerRowCount: Int,
-    val columnStyles: Map<Int, ColumnWidth>,
+    val columnWidths: List<ColumnWidth.Custom>,
     val tableBorders: Borders?,
 ) : Table() {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
     }
 
-    private val expand = columnStyles.values.any { it is ColumnWidth.Expand }
-    private val columnCount = rows.maxOf { it.size }
+    private val expand = columnWidths.any { it.expandWeight != null }
+    private val columnCount = columnWidths.size
 
     /** Whether any cell in row `i` has a border above it */
     private val rowBorders = List(rows.size + 1) { y ->
@@ -134,19 +134,22 @@ internal class TableImpl(
     }
 
     private fun measureColumn(x: Int, t: Terminal, width: Int): WidthRange {
-        val columnWidth = columnStyles[x]
-        if (columnWidth is ColumnWidth.Fixed) {
-            return WidthRange(columnWidth.width, columnWidth.width)
+        columnWidths[x].width?.let {
+            return WidthRange(it, it)
         }
-
-        return rows.maxWidthRange { row ->
+        val range = rows.maxWidthRange { row ->
             when (val cell = row.getOrNull(x)) {
                 null -> null
                 is Cell.Empty -> WidthRange(0, 0)
                 is Cell.Content -> cell.content.measure(t, width) / cell.columnSpan
+                // This will measure cells in spans multiple times, we could cache if performance is an issue
                 is Cell.SpanRef -> cell.cell.content.measure(t, width) / cell.columnSpan
             }
         }
+        if (columnWidths[x].expandWeight != null) {
+            return WidthRange(range.min, width.coerceAtLeast(range.max))
+        }
+        return range
     }
 
     private fun calculateColumnWidths(t: Terminal, terminalWidth: Int): List<Int> {
@@ -156,48 +159,47 @@ internal class TableImpl(
         val measurements = List(columnCount) { measureColumn(it, t, availableWidth) }
         val widths = measurements.mapTo(mutableListOf()) { it.max }
 
-        val fixedIdxs = columnStyles.mapNotNull { if (it.value is ColumnWidth.Fixed) it.key else null }
-        val expandIdxs = columnStyles.mapNotNull { if (it.value is ColumnWidth.Expand) it.key else null }
-        val autoIdxs = (0 until columnCount).mapNotNull { i ->
-            if (columnStyles[i]?.let { it !is ColumnWidth.Auto } == true) null else i
+        // Map of priority to indexes with that priority
+        val shrinkPriorities: Map<Int, List<Int>> = columnWidths.withIndex()
+            .groupBy { it.value.priority }
+            .mapValues { entry -> entry.value.map { it.index } }
+
+        // Map of priority to measured width of columns with that priority
+        val priorityMeasurements = shrinkPriorities.mapValues { entry ->
+            WidthRange(
+                min = entry.value.sumOf { measurements[it].min },
+                max = entry.value.sumOf { measurements[it].max },
+            )
         }
 
-        val maxAutoWidth = autoIdxs.sumOf { measurements[it].max }
-        val minAutoWidth = autoIdxs.sumOf { measurements[it].min }
-        val maxFixedWidth = fixedIdxs.sumOf { measurements[it].max }
-        val minExpandWidth = expandIdxs.sumOf { measurements[it].min }
+        // Allocate width by priority
+        var remainingWidth = availableWidth
+        val allocatedWidths = mutableMapOf<Int, Int>() // map of priority to allocated width
+        priorityMeasurements.entries.sortedByDescending { it.key }.forEach { (p, m) ->
+            // The minimum width of all columns with a lower priority
+            val lowerMin = priorityMeasurements.entries
+                .filter { it.key < p }
+                .sumOf { it.value.min }
+            // Give a priority as much as we can, up to its max, but not any that would cause lower
+            // priorities to not fit their min
+            val allocated = (remainingWidth - lowerMin)
+                .coerceIn(m.min, m.max)
+                .coerceAtMost(remainingWidth)
+            remainingWidth -= allocated
+            allocatedWidths[p] = allocated
+        }
 
-        // Only shrink fixed columns if they can't fit
-        val allocatedFixedWidth = minOf(maxFixedWidth, availableWidth)
-        // Only shrink auto columns if shrinking is required to allow the flex columns to fit their
-        // min. Never shrink auto columns below their min unless they wouldn't fit.
-        val allocatedAutoWidth = (availableWidth - allocatedFixedWidth - minExpandWidth)
-            .coerceIn(minAutoWidth, maxAutoWidth)
-            .coerceAtMost(availableWidth - allocatedFixedWidth)
-        // Expanding columns get whatever is left
-        val allocatedExpandWidth = availableWidth - allocatedFixedWidth - allocatedAutoWidth
-
-        fun setWeights(idxs: List<Int>, weights: List<Float>, allocatedWidth: Int, maxWidth: Int = -1) {
-            if (weights.isEmpty() || allocatedWidth == maxWidth) return
-            val distributedWidths = distributeWidths(weights, allocatedWidth)
-            for ((i, w) in idxs.zip(distributedWidths)) {
-                widths[i] = w
+        for ((p, w) in allocatedWidths.entries.sortedByDescending { it.key }) {
+            val indexes = shrinkPriorities[p]!!
+            val weights = indexes.map { i ->
+                // If the column has an expand weight, use that. Otherwise, distribute in
+                // proportion to how much each column wants.
+                columnWidths[i].expandWeight ?: (measurements[i].max).toFloat()
             }
-        }
-
-        setWeights(fixedIdxs, fixedIdxs.map { 1f }, allocatedFixedWidth, maxFixedWidth)
-        setWeights(expandIdxs, expandIdxs.map { (columnStyles[it] as ColumnWidth.Expand).weight }, allocatedExpandWidth)
-
-        // If the allocated auto width is greater than the min, we want to give every column its min and
-        // distribute the remaining
-        if (allocatedAutoWidth > minAutoWidth) {
-            val flexWidths = autoIdxs.map { (measurements[it].max - measurements[it].min).toFloat() }
-            setWeights(autoIdxs, flexWidths, allocatedAutoWidth - minAutoWidth, maxAutoWidth)
-            autoIdxs.forEach { widths[it] += measurements[it].min }
-        } else {
-            // Setting a column's weight to its max width allows us to shrink the columns while
-            // maintaining their relative widths
-            setWeights(autoIdxs, autoIdxs.map { widths[it].toFloat() }, allocatedAutoWidth, maxAutoWidth)
+            val distributedWidths = distributeWidths(weights, w)
+            for ((i, ww) in indexes.zip(distributedWidths)) {
+                widths[i] = ww
+            }
         }
 
         return widths
@@ -218,7 +220,6 @@ internal class TableImpl(
 
         return widths
     }
-
 
     private fun getCell(x: Int, y: Int): Cell? {
         return rows.getOrNull(y)?.getOrNull(x)
@@ -294,7 +295,13 @@ private class TableRenderer(
             if (columnBorders[x]) {
                 getTopLeftCorner(x, rowCount)?.let { line.add(it) }
             }
-            drawTopBorderForCell(tableLines.lastIndex, x, rowCount, columnWidths[x], borderTop = false)
+            drawTopBorderForCell(
+                tableLines.lastIndex,
+                x,
+                rowCount,
+                columnWidths[x],
+                borderTop = false
+            )
         }
 
         // Bottom-right corner
@@ -311,7 +318,13 @@ private class TableRenderer(
     }
 
     /** Return 1 if any cell in row [y] has a top border, or 0 if they don't */
-    private fun drawTopBorderForCell(tableLineY: Int, x: Int, y: Int, colWidth: Int, borderTop: Boolean?): Int {
+    private fun drawTopBorderForCell(
+        tableLineY: Int,
+        x: Int,
+        y: Int,
+        colWidth: Int,
+        borderTop: Boolean?,
+    ): Int {
         if (!rowBorders[y]) return 0
 
         if (colWidth == 0 || borderTop == null) {
@@ -320,7 +333,10 @@ private class TableRenderer(
         }
 
         val char = if (
-            borderTop || y == 0 && tableBorders.t || y == rowCount && tableBorders.b || cellAt(x, y - 1).b
+            borderTop || y == 0 && tableBorders.t || y == rowCount && tableBorders.b || cellAt(
+                x,
+                y - 1
+            ).b
         ) {
             sectionOfRow(y).ew
         } else " "
@@ -345,7 +361,10 @@ private class TableRenderer(
 
             if (borderLeft != null) {
                 val border = if (
-                    x == 0 && tableBorders.l || x == columnCount && tableBorders.r || borderLeft || cellAt(x - 1, y).r
+                    x == 0 && tableBorders.l || x == columnCount && tableBorders.r || borderLeft || cellAt(
+                        x - 1,
+                        y
+                    ).r
                 ) {
                     Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
                 } else SINGLE_SPACE

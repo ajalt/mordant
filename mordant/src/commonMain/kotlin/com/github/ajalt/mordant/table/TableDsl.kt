@@ -23,7 +23,17 @@ interface CellStyleBuilderBase {
         strikethrough: Boolean = false,
         hyperlink: String? = null,
     ) {
-        style = TextStyle(color, bgColor, bold, italic, underline, dim, inverse, strikethrough, hyperlink)
+        style = TextStyle(
+            color,
+            bgColor,
+            bold,
+            italic,
+            underline,
+            dim,
+            inverse,
+            strikethrough,
+            hyperlink
+        )
     }
 }
 
@@ -64,8 +74,45 @@ interface CellStyleBuilder : CellStyleBuilderBase {
 }
 
 sealed class ColumnWidth {
+    // TODO: this is a separate class for backwards compatibility; make other ColumnWidth subclasses
+    //  instances of this in 3.0
+    /**
+     * A column width with custom behavior.
+     */
+    data class Custom(
+        /** The fixed width of the column, or `null` if the width should be computed automatically */
+        val width: Int?,
+        /**
+         * The weight of the column when expanding, or `null` if the column should not expand.
+         *
+         * If there are multiple expanding columns with the same [priority], the available width
+         * will be divided among them proportional to their weights.
+         */
+        val expandWeight: Float?,
+        /**
+         * The priority of the column when allocating available width.
+         *
+         * Available width is allocated to columns in decreasing order of priority.
+         *
+         * - [Fixed] columns have a priority of 3.
+         * - [Auto] columns have a priority of 2.
+         * - [Expand] columns have a priority of 1.
+         */
+        val priority: Int,
+    ) : ColumnWidth() {
+        init {
+            require(width == null || width > 0) { "width must be greater than zero" }
+            require(expandWeight == null || expandWeight > 0f) {
+                "expandWeight must be greater than zero"
+            }
+            require(width == null || expandWeight == null) {
+                "Cannot set both width and expandWeight"
+            }
+        }
+    }
+
     /** The column will fit to the size of its content */
-    object Auto : ColumnWidth()
+    data object Auto : ColumnWidth()
 
     /**
      * The column will have a fixed [width].
@@ -194,7 +241,12 @@ interface RowBuilder : CellStyleBuilder {
 @MordantDsl
 interface LinearLayoutBuilder : CellStyleBuilderBase {
     /** Add multiple cells to this builder */
-    fun cells(cell1: Any?, cell2: Any?, vararg cells: Any?, init: CellStyleBuilderBase.() -> Unit = {})
+    fun cells(
+        cell1: Any?,
+        cell2: Any?,
+        vararg cells: Any?,
+        init: CellStyleBuilderBase.() -> Unit = {},
+    )
 
     /** Add all [cells] from an iterable to this builder */
     fun cellsFrom(cells: Iterable<Any?>, init: CellStyleBuilderBase.() -> Unit = {})
@@ -306,7 +358,10 @@ fun verticalLayout(init: VerticalLayoutBuilder.() -> Unit): Widget {
     return VerticalLayoutBuilderInstance().apply(init).build()
 }
 
-@Deprecated("row is renamed to horizontalLayout", replaceWith = ReplaceWith("horizontalLayout(init)"))
+@Deprecated(
+    "row is renamed to horizontalLayout",
+    replaceWith = ReplaceWith("horizontalLayout(init)")
+)
 fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget {
     return horizontalLayout {
         spacing = padding
@@ -314,8 +369,20 @@ fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget {
     }
 }
 
-@Deprecated("column is renamed to verticalLayout", replaceWith = ReplaceWith("verticalLayout(init)"))
+@Deprecated(
+    "column is renamed to verticalLayout",
+    replaceWith = ReplaceWith("verticalLayout(init)")
+)
 fun column(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget = verticalLayout {
     init()
     this.spacing = padding
+}
+
+internal fun ColumnWidth?.toCustom(): ColumnWidth.Custom {
+    return when (this) {
+        is ColumnWidth.Expand -> ColumnWidth.Custom(null, weight, 1)
+        null, is ColumnWidth.Auto -> ColumnWidth.Custom(null, null, 2)
+        is ColumnWidth.Fixed -> ColumnWidth.Custom(width, null, 3)
+        is ColumnWidth.Custom -> this
+    }
 }

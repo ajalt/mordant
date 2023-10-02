@@ -66,10 +66,12 @@ internal class VerticalLayout private constructor(
         for ((i, cell) in cells.withIndex()) {
             if (i > 0) repeat(spacing) { lines += spacingLine }
             var rendered = cell.content.render(t, renderWidth).withStyle(cell.style)
-            rendered = when (val w = columnWidth) {
-                ColumnWidth.Auto -> rendered
-                is ColumnWidth.Expand -> rendered.setSize(width, textAlign = cell.textAlign)
-                is ColumnWidth.Fixed -> rendered.setSize(w.width, textAlign = cell.textAlign)
+
+            val w = columnWidth.toCustom()
+            rendered = when {
+                w.expandWeight != null -> rendered.setSize(width, textAlign = cell.textAlign)
+                w.width != null -> rendered.setSize(w.width, textAlign = cell.textAlign)
+                else -> rendered
             }
             // Cells always take up a line, even if empty
             lines += rendered.lines.ifEmpty { listOf(EMPTY_LINE) }
