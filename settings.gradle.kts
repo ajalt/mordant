@@ -3,7 +3,8 @@ include("samples:detection")
 include("samples:markdown")
 include("samples:progress")
 include("samples:table")
-include("graalvm")
+include("test:graalvm")
+include("test:proguard")
 
 
 @Suppress("UnstableApiUsage")

@@ -3,10 +3,6 @@ plugins {
     alias(libs.plugins.graalvm.nativeimage)
 }
 
-repositories {
-    mavenCentral()
-}
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))

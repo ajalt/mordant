@@ -12,6 +12,7 @@ graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 # used in tests
 kotest =  "io.kotest:kotest-assertions-core:5.7.2"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
+r8 = "com.android.tools:r8:8.1.56"
 
 [plugins]
 dokka = "org.jetbrains.dokka:1.9.0"
