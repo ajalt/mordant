@@ -38,7 +38,12 @@ jobs:
           java-version: 17
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: :mordant:jvmTest :mordant:jsTest :graalvm:nativeTest ${{matrix.NATIVE_TEST_TASK}} --stacktrace
+          arguments: |
+            :mordant:jvmTest
+            :mordant:jsTest
+            :test:graalvm:nativeTest
+            ${{matrix.NATIVE_TEST_TASK}}
+            --stacktrace
       - name: Bundle the build report
         if: failure()
         run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
