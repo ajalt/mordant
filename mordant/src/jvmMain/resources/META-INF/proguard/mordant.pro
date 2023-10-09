@@ -2,6 +2,6 @@
 
 -keep class com.sun.jna.** { *; }
 -keep class * implements com.sun.jna.** { *; }
--keepattributes *Annotation*
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,RuntimeVisibleTypeAnnotations,AnnotationDefault
 -dontwarn org.graalvm.**
 -dontwarn com.oracle.svm.core.annotate.Delete
