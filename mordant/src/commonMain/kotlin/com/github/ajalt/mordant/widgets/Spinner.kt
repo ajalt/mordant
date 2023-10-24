@@ -16,12 +16,12 @@ import com.github.ajalt.mordant.terminal.Terminal
  *
  * To reduce the speed of the animation, increase the [duration].
  *
- * @property frames the frames of the animation.
  * @property duration the number of [ticks][tick] that each frame of the spinner should show for. This defaults to 1,
  *   which will cause a new frame to display every time [advanceTick] is called.
  * @param initial the starting tick value.
  */
 class Spinner(
+    // TODO: make private
     internal val frames: List<Widget>,
     private val duration: Int = 1,
     initial: Int = 0,
@@ -74,7 +74,8 @@ class Spinner(
         return _tick.getAndIncrement() + 1
     }
 
-    private val currentFrame get() = frames[(tick / duration) % frames.size]
+    /** The current frame */
+    val currentFrame: Widget get() = frames[(tick / duration) % frames.size]
 
     override fun measure(t: Terminal, width: Int): WidthRange = currentFrame.measure(t, width)
     override fun render(t: Terminal, width: Int): Lines = currentFrame.render(t, width)
