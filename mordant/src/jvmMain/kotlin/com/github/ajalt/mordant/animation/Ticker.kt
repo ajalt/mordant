@@ -17,7 +17,7 @@ private class JvmTicker(private val ticksPerSecond: Int) : Ticker {
     override fun start(onTick: () -> Unit) {
         if (timer != null) return
         val period = 1000L / ticksPerSecond
-        timer = timer(startAt = Date(0), period = period) { onTick() }
+        timer = timer(startAt = Date(0), period = period, daemon = true) { onTick() }
     }
 
     override fun stop() {
