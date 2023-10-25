@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 class ProgressAnimationTest : RenderingTest() {
-    var now = 0.0
+    private var now = 0.0
 
     @Test
     fun throttling() {

@@ -14,14 +14,14 @@ open class ProgressBuilder internal constructor() {
      * Add fixed text cell to this layout.
      */
     fun text(text: String) {
-        cells += TextProgressCell(Text(text))
+        builder.text(text)
     }
 
     /**
      * Add a percentage cell to this layout.
      */
     fun percentage() {
-        cells += PercentageProgressCell()
+        builder.percentage()
     }
 
     /**
@@ -50,7 +50,7 @@ open class ProgressBuilder internal constructor() {
         indeterminateStyle: TextStyle? = null,
         showPulse: Boolean? = null,
     ) {
-        cells += BarProgressCell(
+        builder.progressBar(
             width,
             pendingChar,
             separatorChar,
@@ -67,22 +67,26 @@ open class ProgressBuilder internal constructor() {
     /**
      * Add a cell that displays the current completed count to this layout.
      */
-    fun completed(suffix: String = "", includeTotal: Boolean = true, style: TextStyle = DEFAULT_STYLE) {
-        cells += CompletedProgressCell(suffix, includeTotal, style)
+    fun completed(
+        suffix: String = "",
+        includeTotal: Boolean = true,
+        style: TextStyle = DEFAULT_STYLE,
+    ) {
+        builder.completed(suffix, includeTotal, style)
     }
 
     /**
      * Add a cell that displays the current speed to this layout.
      */
     fun speed(suffix: String = "it/s", style: TextStyle = DEFAULT_STYLE) {
-        cells += SpeedProgressCell(suffix, style)
+        builder.speed(suffix, style)
     }
 
     /**
      * Add a cell that displays the time remaining to this layout.
      */
     fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE) {
-        cells += EtaProgressCell(prefix, style)
+        builder.timeRemaining(prefix, style)
     }
 
     /**
@@ -92,53 +96,38 @@ open class ProgressBuilder internal constructor() {
      * @param frameRate The number of times per second to advance the spinner's displayed frame
      */
     fun spinner(spinner: Spinner, frameRate: Int = 8) {
-        cells += SpinnerProgressCell(spinner.frames, frameRate)
+        builder.spinner(spinner, frameRate)
     }
 
     internal fun build(): ProgressLayout {
-        return ProgressLayout(cells, padding)
+        builder.spacing = padding
+        return ProgressLayout(builder.build())
     }
 
-    internal val cells = mutableListOf<ProgressCell>()
+    // XXX: this is internal for backcompat, could be private
+    internal val builder = NewProgressBuilder<Unit>()
 }
 
 /**
  * A builder for creating an animated progress bar widget.
  */
 class ProgressLayout internal constructor(
-    internal val cells: List<ProgressCell>,
-    private val paddingSize: Int,
+    private val builder:ProgressFactory<Unit>,
 ) {
+    private val task = builder.addTask(Unit)
     fun build(
         completed: Long,
         total: Long? = null,
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
     ): Widget {
-        val cps = completedPerSecond ?: when {
-            completed <= 0 || elapsedSeconds <= 0 -> 0.0
-            else -> completed.toDouble() / elapsedSeconds
-        }
-        val state = ProgressState(
-            completed = completed,
-            total = total,
-            completedPerSecond = cps,
-            elapsedSeconds = elapsedSeconds,
-        )
-        return horizontalLayout {
-            spacing = paddingSize
-            align = TextAlign.RIGHT
-            cellsFrom(cells.map { it.run { state.run { makeWidget() } } })
-            cells.forEachIndexed { i, it ->
-                column(i) {
-                    width = when (val w = it.columnWidth) {
-                        // The fixed width cells don't include padding, so add it here
-                        is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + paddingSize)
-                        else -> w
-                    }
-                }
-            }
-        }
+        task.completed = completed
+        task.total = total
+        return builder.build(elapsedSeconds, completedPerSecond)
+    }
+
+    fun reset() {
+        builder.reset()
     }
 }
 
