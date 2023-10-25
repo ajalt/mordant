@@ -12,6 +12,9 @@ import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.table
 import kotlin.math.roundToInt
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit.SECONDS
 
 
 data class ProgressTask<T>(
@@ -24,13 +27,13 @@ data class ProgressTask<T>(
 }
 
 class ProgressCellBuilder<T>(
-    val elapsedSeconds: Double,
+    val elapsed: Duration,
     val task: ProgressTask<T>,
     completedPerSecond: Double? = null,
 ) {
     val completedPerSecond: Double = completedPerSecond ?: when {
-        task.completed <= 0 || elapsedSeconds <= 0 -> 0.0
-        else -> task.completed / elapsedSeconds
+        task.completed <= 0 || elapsed <= Duration.ZERO -> 0.0
+        else -> task.completed / elapsed.toDouble(SECONDS)
     }
 }
 
@@ -40,13 +43,12 @@ internal data class NewProgressCell<T>(
     private val builder: ProgressCellBuilder<T>.() -> Widget,
 ) {
     private var lastFrame: Widget? = null
-    private var lastFrameTime: Double = Double.MIN_VALUE
+    private var lastFrameTime: Duration = Duration.ZERO
 
-    // TODO: use duration instead of elapsedSeconds
-    fun buildFrame(task: ProgressTask<T>, elapsed: Double, completedPerSecond: Double?): Widget {
+    fun buildFrame(task: ProgressTask<T>, elapsed: Duration, completedPerSecond: Double?): Widget {
         val timeSinceLastFrame = elapsed - lastFrameTime
         val lastFrame = this.lastFrame
-        val timePerFrame = 1.0 / fps
+        val timePerFrame = (1.0 / fps).seconds
         if (lastFrame != null && (fps <= 0 || timeSinceLastFrame < timePerFrame)) {
             return lastFrame
         }
@@ -58,7 +60,7 @@ internal data class NewProgressCell<T>(
 
     fun reset() {
         lastFrame = null
-        lastFrameTime = Double.MIN_VALUE
+        lastFrameTime = Duration.ZERO
     }
 }
 
@@ -177,7 +179,7 @@ fun NewProgressBuilder<*>.timeRemaining(
 }
 
 fun NewProgressBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
-    spinner.tick = (elapsedSeconds / fps).toInt()
+    spinner.tick = (elapsed.toDouble(SECONDS) / fps).toInt()
     if (task.isFinished) BlankWidgetWrapper(spinner)
     else spinner
 }
@@ -199,7 +201,7 @@ fun NewProgressBuilder<*>.progressBar(
     fps = fps
 ) {
     val period = 2 // this could be configurable
-    val pulsePosition = ((elapsedSeconds % period) / period)
+    val pulsePosition = ((elapsed.toDouble(SECONDS) % period) / period)
 
     ProgressBar(
         task.total ?: 100,
@@ -236,7 +238,7 @@ class ProgressFactory<T> internal constructor(
         cells.forEach { it.reset() }
     }
 
-    fun build(elapsedSeconds: Double, completedPerSecond: Double? = null): Widget {
+    fun build(elapsed: Duration, completedPerSecond: Double? = null): Widget {
         return table {
 //          TODO  verticalAlign = verticalAlign
             cellBorders = Borders.NONE
@@ -256,7 +258,7 @@ class ProgressFactory<T> internal constructor(
             body {
                 for (task in tasks) {
                     rowFrom(cells.map {
-                        it.buildFrame(task, elapsedSeconds, completedPerSecond)
+                        it.buildFrame(task, elapsed, completedPerSecond)
                     })
                 }
             }

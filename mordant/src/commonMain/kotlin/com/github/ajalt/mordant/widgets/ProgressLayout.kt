@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.horizontalLayout
+import kotlin.time.Duration.Companion.seconds
 
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
@@ -123,7 +124,7 @@ class ProgressLayout internal constructor(
     ): Widget {
         task.completed = completed
         task.total = total
-        return builder.build(elapsedSeconds, completedPerSecond)
+        return builder.build(elapsedSeconds.seconds, completedPerSecond)
     }
 
     fun reset() {

@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.seconds
 
 class MultiProgressLayoutTest : RenderingTest() {
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
@@ -109,7 +110,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         task.completed = completed
         task.total = total
         checkRender(
-            factory.build(elapsedSeconds, completedPerSecond),
+            factory.build(elapsedSeconds.seconds, completedPerSecond),
             expected,
             width = 64,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
