@@ -14,12 +14,6 @@ import com.github.ajalt.mordant.table.table
 import kotlin.math.roundToInt
 
 
-// TODO maybe...
-//  sealed class ProgressCompletion {
-//      object Indeterminate : ProgressCompletion()
-//      data class Started(val completed: Long, val total: Long) : ProgressCompletion()
-//  }
-
 data class ProgressTask<T>(
     var context: T,
     var completed: Long,
@@ -40,31 +34,38 @@ class ProgressCellBuilder<T>(
     }
 }
 
-// TODO: make private once builder.cells isn't public
 internal data class NewProgressCell<T>(
     val columnWidth: ColumnWidth,
-    private val fps: Int,
+    internal var fps: Int, // XXX: mutable for backcompat; this should be a private val
     private val builder: ProgressCellBuilder<T>.() -> Widget,
 ) {
     private var lastFrame: Widget? = null
-    private val lastFrameTime: Double = Double.MIN_VALUE
+    private var lastFrameTime: Double = Double.MIN_VALUE
 
+    // TODO: use duration instead of elapsedSeconds
     fun buildFrame(task: ProgressTask<T>, elapsed: Double, completedPerSecond: Double?): Widget {
-        if (lastFrame != null && (fps <= 0 || (elapsed - lastFrameTime) < 1.0 / fps)) {
-            return lastFrame!!
+        val timeSinceLastFrame = elapsed - lastFrameTime
+        val lastFrame = this.lastFrame
+        val timePerFrame = 1.0 / fps
+        if (lastFrame != null && (fps <= 0 || timeSinceLastFrame < timePerFrame)) {
+            return lastFrame
         }
+        lastFrameTime = elapsed
         return builder(ProgressCellBuilder(elapsed, task, completedPerSecond)).also {
-            lastFrame = it
+            this.lastFrame = it
         }
     }
 
+    fun reset() {
+        lastFrame = null
+        lastFrameTime = Double.MIN_VALUE
+    }
 }
 
+// TODO: make NewProgressBuilder an interface?
 class NewProgressBuilder<T> {
+    /** Amount of horizontal space between cells */
     var spacing: Int = 2
-
-    // TODO: could make a fun LinearLayout.addToLayout instead
-    internal val cells: MutableList<NewProgressCell<T>> = mutableListOf()
 
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
@@ -72,6 +73,23 @@ class NewProgressBuilder<T> {
         builder: ProgressCellBuilder<T>.() -> Widget,
     ) {
         cells += NewProgressCell(width, fps, builder)
+    }
+
+    // XXX: these are a hack for backcompat only
+    internal var animationFrameRate: Int? = null
+    internal var textFrameRate: Int? = null
+
+    private val cells: MutableList<NewProgressCell<T>> = mutableListOf()
+
+    internal fun build(): ProgressFactory<T> {
+        // XXX: This is a hack for backcompat; if a global rate was set, apply it to all cells
+        val animRate = animationFrameRate
+        val textRate = textFrameRate
+        for (cell in cells) {
+            if (animRate != null && cell.fps == 30) cell.fps = animRate
+            if (textRate != null && cell.fps == 5) cell.fps = textRate
+        }
+        return ProgressFactory(spacing, cells)
     }
 }
 
@@ -201,9 +219,11 @@ fun NewProgressBuilder<*>.progressBar(
     )
 }
 
-class ProgressFactory<T>(private val builder: NewProgressBuilder<T>) {
-    // TODO var alignColumns: Boolean = true
-    /** Amount of horizontal space between cells */
+class ProgressFactory<T> internal constructor(
+    private val spacing: Int,
+    private val cells: List<NewProgressCell<T>>,
+) {
+    // TODO var alignColumns: Boolean = true (linear layouts vs table)
 
     private val tasks = mutableListOf<ProgressTask<T>>()
 
@@ -211,29 +231,31 @@ class ProgressFactory<T>(private val builder: NewProgressBuilder<T>) {
         return ProgressTask(context, 0, null).also { tasks.add(it) }
     }
 
+    fun reset() {
+        tasks.forEach { it.completed = 0 }
+        cells.forEach { it.reset() }
+    }
+
     fun build(elapsedSeconds: Double, completedPerSecond: Double? = null): Widget {
         return table {
 //          TODO  verticalAlign = verticalAlign
             cellBorders = Borders.NONE
-            // TODO: fix spacing (see HorizontalLayoutBuilderInstance.build)
-            padding = Padding { horizontal = builder.spacing }
-            builder.cells.forEachIndexed { i, it ->
+            padding = Padding { left = spacing }
+            column(0) { padding = Padding(0) }
+            cells.forEachIndexed { i, it ->
                 align = TextAlign.RIGHT
 
                 column(i) {
-                    if (i > 0) {
-                        padding = Padding { left = builder.spacing }
-                    }
                     width = when (val w = it.columnWidth) {
                         // The fixed width cells don't include padding, so add it here
-                        is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + builder.spacing)
+                        is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + spacing)
                         else -> w
                     }
                 }
             }
             body {
                 for (task in tasks) {
-                    rowFrom(builder.cells.map {
+                    rowFrom(cells.map {
                         it.buildFrame(task, elapsedSeconds, completedPerSecond)
                     })
                 }
@@ -244,5 +266,5 @@ class ProgressFactory<T>(private val builder: NewProgressBuilder<T>) {
 
 // TODO: make a templated version or smth
 fun multiProgressLayout(init: NewProgressBuilder<Unit>.() -> Unit): ProgressFactory<Unit> {
-    return ProgressFactory(NewProgressBuilder<Unit>().apply(init))
+    return NewProgressBuilder<Unit>().apply(init).build()
 }

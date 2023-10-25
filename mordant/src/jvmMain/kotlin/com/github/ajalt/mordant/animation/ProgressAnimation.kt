@@ -1,14 +1,9 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.nanosToSeconds
-import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
-import com.github.ajalt.mordant.widgets.ProgressCell
-import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.widgets.ProgressLayout
-import com.github.ajalt.mordant.widgets.ProgressState
 import java.util.concurrent.TimeUnit
 
 
@@ -35,6 +30,19 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
     internal var timeSource: () -> Long = { System.nanoTime() }
 }
 
+private data class ProgressState(
+    val completed: Long,
+    val total: Long?,
+    val completedPerSecond: Double, // 0 if [completed] == 0
+    val elapsedSeconds: Double,
+) {
+    init {
+        require(completed >= 0) { "completed cannot be negative" }
+        require(total == null || total >= 0) { "total cannot be negative" }
+        require(elapsedSeconds >= 0) { "elapsedSeconds cannot be negative" }
+        require(completedPerSecond >= 0) { "completedPerSecond cannot be negative" }
+    }
+}
 
 private class ProgressHistoryEntry(val timeNs: Long, val completed: Long)
 private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
@@ -213,7 +221,7 @@ class ProgressAnimation internal constructor(
     fun restart() {
         val tickerStarted = tickerStarted
         stop()
-        layout.cells.forEach { (it as? CachedProgressCell)?.clear() }
+        layout.reset()
         update(0)
         if (tickerStarted) start()
     }
@@ -231,36 +239,6 @@ class ProgressAnimation internal constructor(
     }
 }
 
-private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?) : ProgressCell {
-    override val columnWidth: ColumnWidth get() = cell.columnWidth
-    override val animationRate: AnimationRate get() = cell.animationRate
-    private val frameDuration = frameRate?.let { 1.0 / it }
-
-    private var widget: Widget? = null
-    private var lastFrameTime = 0.0
-
-    fun clear() {
-        widget = null
-        lastFrameTime = 0.0
-    }
-
-    private fun shouldSkipUpdate(elapsed: Double): Boolean {
-        if (frameDuration == null) return false
-        if ((elapsed - lastFrameTime) < frameDuration) return true
-        lastFrameTime = elapsed
-        return false
-    }
-
-    override fun ProgressState.makeWidget(): Widget {
-        var r = widget
-        val shouldSkipUpdate = shouldSkipUpdate(elapsedSeconds)
-        if (r != null && shouldSkipUpdate) return r
-        r = cell.run { makeWidget() }
-        widget = r
-        return r
-    }
-}
-
 /**
  * Create an animated progress bar.
  *
@@ -268,15 +246,9 @@ private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?
  */
 fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
-
-    val layout = ProgressLayout(builder.cells.map {
-        val fr = when (it.animationRate) {
-            AnimationRate.STATIC -> null
-            AnimationRate.ANIMATION -> builder.animationFrameRate
-            AnimationRate.TEXT -> builder.textFrameRate
-        }
-        CachedProgressCell(it, fr)
-    }, builder.padding)
+    builder.builder.animationFrameRate = builder.animationFrameRate
+    builder.builder.textFrameRate = builder.textFrameRate
+    val layout = builder.build()
 
     return ProgressAnimation(
         t = this,
