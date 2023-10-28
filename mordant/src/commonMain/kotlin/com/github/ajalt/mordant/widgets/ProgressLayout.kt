@@ -1,11 +1,8 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
-import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.table.horizontalLayout
 import kotlin.time.Duration.Companion.seconds
 
 open class ProgressBuilder internal constructor() {
@@ -101,34 +98,33 @@ open class ProgressBuilder internal constructor() {
     }
 
     internal fun build(): ProgressLayout {
-        builder.spacing = padding
-        return ProgressLayout(builder.build())
+        return ProgressLayout(builder.build(padding))
     }
 
-    // XXX: this is internal for backcompat, could be private
-    internal val builder = NewProgressBuilder<Unit>()
+    // XXX: this is internal for backcompat, could be `private val`
+    internal var builder = ProgressBarWidgetBuilder<Unit>()
 }
 
 /**
  * A builder for creating an animated progress bar widget.
  */
 class ProgressLayout internal constructor(
-    private val builder:ProgressFactory<Unit>,
+    private val factory: ProgressBarWidgetFactory<Unit>,
 ) {
-    private val task = builder.addTask(Unit)
     fun build(
         completed: Long,
         total: Long? = null,
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
     ): Widget {
-        task.completed = completed
-        task.total = total
-        return builder.build(elapsedSeconds.seconds, completedPerSecond)
-    }
-
-    fun reset() {
-        builder.reset()
+        return factory.build(
+            ProgressState(
+                total,
+                completed,
+                elapsedSeconds.seconds,
+                completedPerSecond ?: calcHz(completed, elapsedSeconds.seconds)
+            )
+        )
     }
 }
 

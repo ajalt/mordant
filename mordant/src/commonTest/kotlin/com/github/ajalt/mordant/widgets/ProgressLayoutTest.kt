@@ -37,6 +37,13 @@ class ProgressLayoutTest : RenderingTest() {
     )
 
     @Test
+    @JsName("automatic_eta")
+    fun `automatic eta`() = doTest(
+        1, 2, 3.0,
+        expected = "text.txt| 50%|############>............|     1.0/2.0B|   0.3it/s"
+    )
+
+    @Test
     @JsName("long_eta")
     fun `long eta`() = doTest(
         150_000_000, 300_000_000, 1.5, 2.0,

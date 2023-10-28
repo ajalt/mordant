@@ -221,7 +221,7 @@ class ProgressAnimation internal constructor(
     fun restart() {
         val tickerStarted = tickerStarted
         stop()
-        layout.reset()
+//    TODO    layout.reset()
         update(0)
         if (tickerStarted) start()
     }
@@ -246,8 +246,8 @@ class ProgressAnimation internal constructor(
  */
 fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
-    builder.builder.animationFrameRate = builder.animationFrameRate
-    builder.builder.textFrameRate = builder.textFrameRate
+//  TODO  builder.builder.animationFrameRate = builder.animationFrameRate
+//    builder.builder.textFrameRate = builder.textFrameRate
     val layout = builder.build()
 
     return ProgressAnimation(
