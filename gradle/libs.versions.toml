@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.10"
+kotlin = "1.9.20"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
@@ -15,6 +15,6 @@ systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 r8 = "com.android.tools:r8:8.1.56"
 
 [plugins]
-dokka = "org.jetbrains.dokka:1.9.0"
+dokka = "org.jetbrains.dokka:1.9.10"
 publish = "com.vanniktech.maven.publish:0.25.3"
 graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.27"
