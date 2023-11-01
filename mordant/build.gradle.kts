@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_VARIABLE", "KotlinRedundantDiagnosticSuppress") // https://youtrack.jetbrains.com/issue/KT-38871
-
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.publish)
@@ -16,6 +14,8 @@ kotlin {
     macosArm64()
     linuxX64()
     mingwX64()
+
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val gen by creating { }
@@ -46,13 +46,8 @@ kotlin {
             }
         }
 
-        val nativeMain by creating { dependsOn(commonMain) }
-        val mingwX64Main by getting { dependsOn(nativeMain) }
-        val posixMain by creating { dependsOn(nativeMain) }
-        val linuxX64Main by getting { dependsOn(posixMain) }
-        val macosMain by creating { dependsOn(posixMain) }
-        listOf("macosX64", "macosArm64").forEach { target ->
-            getByName(target + "Main").dependsOn(macosMain)
-        }
+        val posixMain by creating { dependsOn(nativeMain.get()) }
+        linuxMain.get().dependsOn(posixMain)
+        macosMain.get().dependsOn(posixMain)
     }
 }
