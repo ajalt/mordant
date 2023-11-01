@@ -36,11 +36,11 @@ fun ProgressBarBuilder<*>.completed(
 ) {
     val complete = completed.toDouble()
     val total = total
-    val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total?.toDouble() ?: 0.0)
+    val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total.toDouble())
 
     val t = nums[0] + when {
-        includeTotal && total != null -> "/${nums[1]}$unit"
-        includeTotal && total == null -> "/---.-"
+        includeTotal && total > 0 -> "/${nums[1]}$unit"
+        includeTotal && total <= 0 -> "/---.-"
         else -> ""
     } + suffix
     Text(style(t), whitespace = Whitespace.PRE)
@@ -67,12 +67,13 @@ fun ProgressBarBuilder<*>.percentage(fps: Int = 5) = cell(
 ) {
     val total = total
     val percent = when {
-        total == null || total <= 0 -> 0
+        total <= 0 -> 0
         else -> (100.0 * completed / total).toInt()
     }
     Text("$percent%")
 }
 
+//TODO: timeElapsed
 fun ProgressBarBuilder<*>.timeRemaining(
     prefix: String = "eta ",
     style: TextStyle = DEFAULT_STYLE,
@@ -84,7 +85,7 @@ fun ProgressBarBuilder<*>.timeRemaining(
     fun widget(s: String) = Text(style(s), whitespace = Whitespace.PRE)
 
     val total = total
-    val eta = if (total == null) 0.0 else (total - completed) / completedPerSecond
+    val eta = if (total <= 0) 0.0 else (total - completed) / completedPerSecond
     val maxEta = 35_999 // 9:59:59
     if (isIndeterminate || eta < 0 || completedPerSecond == 0.0 || eta > maxEta) {
         return@cell widget("$prefix-:--:--")
@@ -123,7 +124,7 @@ fun ProgressBarBuilder<*>.progressBar(
     val pulsePosition = ((elapsed.toDouble(DurationUnit.SECONDS) % period) / period)
 
     ProgressBar(
-        total ?: 100,
+        total,
         completed,
         isIndeterminate,
         width,

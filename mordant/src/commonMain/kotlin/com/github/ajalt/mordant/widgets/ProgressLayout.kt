@@ -5,7 +5,9 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import kotlin.time.Duration.Companion.seconds
 
-open class ProgressBuilder internal constructor() {
+open class ProgressBuilder internal constructor(
+    private val builder : ProgressBarFactoryBuilder<Unit>
+) {
     var padding: Int = 2
 
     /**
@@ -98,11 +100,8 @@ open class ProgressBuilder internal constructor() {
     }
 
     internal fun build(): ProgressLayout {
-        return ProgressLayout(builder.build(padding))
+        return ProgressLayout(builder.build(padding, true))
     }
-
-    // XXX: this is internal for backcompat, could be `private val`
-    internal var builder = ProgressBarWidgetBuilder<Unit>()
 }
 
 /**
@@ -119,7 +118,7 @@ class ProgressLayout internal constructor(
     ): Widget {
         return factory.build(
             ProgressState(
-                total,
+                total ?: 0,
                 completed,
                 elapsedSeconds.seconds,
                 completedPerSecond ?: calcHz(completed, elapsedSeconds.seconds)
@@ -132,5 +131,5 @@ class ProgressLayout internal constructor(
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    return ProgressBuilder().apply(init).build()
+    return ProgressBuilder(ProgressBarWidgetBuilder()).apply(init).build()
 }
