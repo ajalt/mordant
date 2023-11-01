@@ -18,9 +18,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets {
-        val gen by creating { }
         val commonMain by getting {
-            dependsOn(gen)
             dependencies {
                 api(libs.colormath)
                 implementation(libs.markdown)
