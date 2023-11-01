@@ -26,6 +26,7 @@ abstract class RenderingTest(
             val trimmed = if (trimMargin) expected.trimMargin("░") else expected
             actual shouldBe trimmed.replace("░", "")
         } catch (e: Throwable) {
+            println()
             println(actual)
             throw e
         }

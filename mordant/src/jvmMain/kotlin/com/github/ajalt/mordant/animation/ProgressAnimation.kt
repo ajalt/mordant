@@ -1,13 +1,20 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.nanosToSeconds
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.ProgressBuilder
-import com.github.ajalt.mordant.widgets.ProgressLayout
+import com.github.ajalt.mordant.widgets.*
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 
-class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
+class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
+    ProgressBarAnimationBuilder()
+) {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
      * (default: 30fps)
@@ -28,20 +35,6 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
 
     // for testing
     internal var timeSource: () -> Long = { System.nanoTime() }
-}
-
-private data class ProgressState(
-    val completed: Long,
-    val total: Long?,
-    val completedPerSecond: Double, // 0 if [completed] == 0
-    val elapsedSeconds: Double,
-) {
-    init {
-        require(completed >= 0) { "completed cannot be negative" }
-        require(total == null || total >= 0) { "total cannot be negative" }
-        require(elapsedSeconds >= 0) { "elapsedSeconds cannot be negative" }
-        require(completedPerSecond >= 0) { "completedPerSecond cannot be negative" }
-    }
 }
 
 private class ProgressHistoryEntry(val timeNs: Long, val completed: Long)
@@ -72,15 +65,16 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
     }
 
     fun makeState(total: Long?) = ProgressState(
+        total = total ?: 0,
         completed = completed,
-        total = total,
+        elapsed = elapsedSeconds.seconds,
         completedPerSecond = completedPerSecond,
-        elapsedSeconds = elapsedSeconds,
     )
 
     val started: Boolean get() = startTime >= 0
     val completed: Long get() = samples.lastOrNull()?.completed ?: 0
 
+    // TODO: use a Duration
     private val elapsedSeconds: Double
         get() = if (startTime >= 0) nanosToSeconds(timeSource() - startTime) else 0.0
 
@@ -108,7 +102,12 @@ class ProgressAnimation internal constructor(
     private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
         val state = history.makeState(total)
-        layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
+        layout.build(
+            state.completed,
+            state.total,
+            state.elapsed.toDouble(DurationUnit.SECONDS),
+            state.completedPerSecond
+        )
     }
 
     // Locking: all state is protected by this object's monitor. Tick is run on the timer thread.
@@ -236,6 +235,47 @@ class ProgressAnimation internal constructor(
         stop()
         history.clear()
         animation.clear()
+    }
+}
+
+// TODO: implement reset
+private class ProgressBarAnimationBuilder<T> : ProgressBarFactoryBuilder<T> {
+    private class Cell<T>(
+        val columnWidth: ColumnWidth,
+        val align: TextAlign?,
+        val fps: Int,
+        val builder: ProgressState<T>.() -> Widget,
+        var lastFrame: Widget? = null,
+        var lastFrameTime: Duration = Duration.ZERO,
+    )
+
+    private val cells: MutableList<Cell<T>> = mutableListOf()
+
+    override fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T> {
+        return ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells.map { cell ->
+            ProgressBarWidgetBuilder.Cell(cell.columnWidth, cell.align) {
+                val timeSinceLastFrame = elapsed - cell.lastFrameTime
+                val timePerFrame = (1.0 / cell.fps).seconds
+                val lastFrame = cell.lastFrame
+                if (lastFrame != null && (cell.fps <= 0 || timeSinceLastFrame < timePerFrame)) {
+                    lastFrame
+                } else {
+                    cell.lastFrameTime = elapsed
+                    cell.builder(this).also {
+                        cell.lastFrame = it
+                    }
+                }
+            }
+        })
+    }
+
+    override fun cell(
+        width: ColumnWidth,
+        fps: Int,
+        align: TextAlign?,
+        builder: ProgressState<T>.() -> Widget,
+    ) {
+        cells += Cell(width, align, fps, builder)
     }
 }
 

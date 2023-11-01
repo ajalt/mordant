@@ -156,4 +156,26 @@ class LinearLayoutTest : RenderingTest() {
         ░222 2░
         """
     )
+
+    @Test
+    @JsName("nesting_horizontalLayouts_in_verticalLayouts_with_fixed_column_width")
+    fun `nesting horizontalLayouts in verticalLayouts with fixed column width`() = checkRender(
+        verticalLayout {
+            cell(horizontalLayout {
+                spacing = 2
+                align = TextAlign.RIGHT
+                column(0) { width = ColumnWidth.Fixed(4) }
+                cells("1", "1")
+            })
+            cell(horizontalLayout {
+                spacing = 2
+                align = TextAlign.RIGHT
+                column(0) { width = ColumnWidth.Fixed(4) }
+                cells("222", "2")
+            })
+        }, """
+        ░   1  1░
+        ░ 222  2░
+        """
+    )
 }
