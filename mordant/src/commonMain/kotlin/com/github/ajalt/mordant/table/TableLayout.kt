@@ -87,7 +87,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         val row = section.rows[startingY]
 
         // The W3 standard says that spans are truncated rather than increasing the size of the table
-        val maxRowSize = (startingY until startingY + cell.rowSpan)
+        val maxRowSize = (startingY..<startingY + cell.rowSpan)
             .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
         val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)

@@ -88,7 +88,7 @@ internal class TableImpl(
         when {
             y == 0 && tableBorders != null -> tableBorders.top
             y == rows.size && tableBorders != null -> tableBorders.bottom
-            else -> (0 until columnCount).any { x ->
+            else -> (0..<columnCount).any { x ->
                 getCell(x, y).t || getCell(x, y - 1).b
             }
         }
@@ -243,7 +243,7 @@ private class TableRenderer(
     private val renderedRows = rows.map { r ->
         r.mapIndexed { x, it ->
             if (it is Cell.Content) {
-                val w = (x until x + it.columnSpan).sumOf { columnWidths[it] }
+                val w = (x..<x + it.columnSpan).sumOf { columnWidths[it] }
                 if (w == 0) EMPTY_LINES else it.content.render(t, w).withStyle(it.style)
             } else {
                 EMPTY_LINES
@@ -368,7 +368,7 @@ private class TableRenderer(
                 ) {
                     Span.word(sectionOfRow(y, allowBottom = false).ns, borderStyle)
                 } else SINGLE_SPACE
-                for (i in 0 until rowHeight) {
+                for (i in 0..<rowHeight) {
                     tableLines[tableLineY + i + topBorderHeight].add(border)
                 }
             }
@@ -388,11 +388,11 @@ private class TableRenderer(
             }
 
             is Cell.Content -> {
-                val cellWidth = ((x until x + cell.columnSpan).sumOf { columnWidths[it] } +
-                        ((x + 1) until (x + cell.columnSpan)).count { columnBorders[it + 1] }
+                val cellWidth = ((x..<x + cell.columnSpan).sumOf { columnWidths[it] } +
+                        ((x + 1)..<(x + cell.columnSpan)).count { columnBorders[it + 1] }
                         ).coerceAtLeast(0)
-                val cellHeight = (y until y + cell.rowSpan).sumOf { rowHeights[it] } +
-                        ((y + 1) until (y + cell.rowSpan)).count { rowBorders[it + 1] }
+                val cellHeight = (y..<y + cell.rowSpan).sumOf { rowHeights[it] } +
+                        ((y + 1)..<(y + cell.rowSpan)).count { rowBorders[it + 1] }
                 cell.content.render(t, cellWidth)
                     .withStyle(cell.style)
                     .setSize(cellWidth, cellHeight, cell.verticalAlign, cell.textAlign)

@@ -2827,7 +2827,7 @@ private fun buildSeqTrie(): IntTrie {
     val root = IntTrie()
     for (seq in sequences) {
         var node = root
-        for (i in 0 until seq.lastIndex) {
+        for (i in 0..<seq.lastIndex) {
             node = node.children.getOrPut(seq[i]) { IntTrie() }
         }
         node.values += seq.last()

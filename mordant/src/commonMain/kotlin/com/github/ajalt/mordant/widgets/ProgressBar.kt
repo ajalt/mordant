@@ -154,7 +154,7 @@ class ProgressBar private constructor(
             return makeLine(listOfNotNull(segmentText(completeChar[t], w, finishedStyle[t])))
         }
 
-        val sep = if (completedLength in 1 until w) segmentText(
+        val sep = if (completedLength in 1..<w) segmentText(
             separatorChar[t], 1, separatorStyle[t]
         ) else null
         val sepLength = sep?.cellWidth ?: 0
