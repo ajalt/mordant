@@ -58,7 +58,7 @@ internal class MarkdownRenderer(
             for ((i, node) in nodes.withIndex()) {
                 // skip the extra EOL after top level block, since the layout adds it for us
                 if (node.type == MarkdownTokenTypes.EOL
-                    && i in 1 until nodes.lastIndex
+                    && i in 1..<nodes.lastIndex
                     && nodes[i - 1].type !in listOf(MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE)
                 ) {
                     continue
