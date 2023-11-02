@@ -5,6 +5,8 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class ProgressLayoutTest : RenderingTest() {
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
@@ -73,13 +75,27 @@ class ProgressLayoutTest : RenderingTest() {
 
     @Test
     @JsName("no_pulse")
-    fun `no pulse`() {
+    fun `no pulse`() = checkRender(
+        progressLayout {
+            progressBar(showPulse = false)
+        }.build(0, null, 1.0, 0.0),
+        indetermStyle("━━━"),
+        width = 3,
+    )
+
+    @Test
+    @JsName("timeRemaining_compact")
+    fun `timeRemaining compact`() {
+        val l = progressBarLayout {
+            timeRemaining(compact = true)
+        }
         checkRender(
-            progressLayout {
-                progressBar(showPulse = false)
-            }.build(0, null, 1.0, 0.0),
-            indetermStyle("━━━"),
-            width = 3,
+            l.build(100, 90, 1.minutes, .01),
+            "  eta 16:40", // 10remaining/.01hz == 1000s
+        )
+        checkRender(
+            l.build(100, 90, 1.minutes, .001),
+            "eta 2:46:40", // 10remaining/.001hz == 10000s
         )
     }
 

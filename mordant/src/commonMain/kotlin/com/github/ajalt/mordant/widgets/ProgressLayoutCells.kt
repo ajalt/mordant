@@ -116,11 +116,13 @@ fun ProgressBarBuilder<*>.percentage(fps: Int = 5) = cell(
  * Add a cell that displays the time remaining to this layout.
  *
  * @param prefix A string to prepend to the displayed time, such as "eta " or "time left: ". "eta " by default.
+ * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. 5 by default.
  */
 fun ProgressBarBuilder<*>.timeRemaining(
     prefix: String = "eta ",
+    compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = 5,
 ) = cell(
@@ -128,7 +130,6 @@ fun ProgressBarBuilder<*>.timeRemaining(
     fps = fps
 ) {
     fun widget(s: String) = Text(style(s), whitespace = Whitespace.PRE)
-
     val total = total
     val eta = if (total <= 0) 0.0 else (total - completed) / completedPerSecond
     val maxEta = 35_999 // 9:59:59
@@ -140,7 +141,9 @@ fun ProgressBarBuilder<*>.timeRemaining(
     val m = (eta / 60 % 60).toInt()
     val s = (eta % 60).roundToInt()
 
-    widget("$prefix$h:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
+    val hrs = if (compact && h <= 0) "" else "$h:"
+
+    widget("$prefix$hrs${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
 }
 
 /**
