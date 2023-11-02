@@ -86,7 +86,7 @@ open class ProgressBuilder internal constructor(
      * Add a cell that displays the time remaining to this layout.
      */
     fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE) {
-        builder.timeRemaining(prefix, style)
+        builder.timeRemaining(prefix, false, style)
     }
 
     /**

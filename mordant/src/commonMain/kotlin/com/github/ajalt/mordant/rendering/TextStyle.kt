@@ -48,6 +48,9 @@ interface TextStyle {
      */
     infix fun on(bg: TextStyle): TextStyle
 
+    /**
+     * Apply this style to [text].
+     */
     operator fun invoke(text: String): String = invokeStyle(text)
 
 

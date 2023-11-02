@@ -124,9 +124,10 @@ internal class ProgressBarWidgetFactoryImpl<T>(
             cells.forEachIndexed { i, cell ->
                 column(i) {
                     align = cell.align ?: TextAlign.RIGHT
-                    width = when (val w = cell.columnWidth) {
+                    val w = cell.columnWidth
+                    width = when {
                         // The fixed width cells don't include padding, so add it here
-                        is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + spacing)
+                        i > 0 && w is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + spacing)
                         else -> w
                     }
                 }
