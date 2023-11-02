@@ -15,7 +15,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 /**
  * A box drawn around another widget, with optional top and bottom titles.
  *
- * ## Example
+ * ### Example
  *
  * ```
  * terminal.print(Panel(

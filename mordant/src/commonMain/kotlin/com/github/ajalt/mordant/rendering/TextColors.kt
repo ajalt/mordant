@@ -17,7 +17,7 @@ enum class AnsiLevel { NONE, ANSI16, ANSI256, TRUECOLOR }
  * These styles are *not* automatically downsampled. You should print the styled strings with
  * [Terminal.println] to do so.
  *
- * ## Example
+ * ### Example
  *
  * ```
  * import com.github.ajalt.mordant.rendering.TextStyles.*
@@ -104,7 +104,7 @@ enum class TextStyles(val style: TextStyle) {
  * These styles are *not* automatically downsampled. You should print the styled strings with
  * [Terminal.println] to do so.
  *
- * ## Example
+ * ### Example
  *
  * ```
  * import com.github.ajalt.mordant.rendering.TextColors.*
