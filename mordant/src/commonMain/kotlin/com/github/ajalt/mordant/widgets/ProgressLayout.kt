@@ -11,7 +11,7 @@ open class ProgressBuilder internal constructor(
     var padding: Int = 2
 
     /**
-     * Add fixed text cell to this layout.
+     * Add a fixed text cell to this layout.
      */
     fun text(text: String) {
         builder.text(text)
