@@ -77,7 +77,6 @@ interface TextStyle {
     operator fun plus(other: TextStyles): TextStyle = this + other.style
 }
 
-@Suppress("FunctionName")
 fun TextStyle(
     color: Color? = null,
     bgColor: Color? = null,
