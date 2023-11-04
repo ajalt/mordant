@@ -1,14 +1,9 @@
-<h1 align="center">Mordant</h1>
-<h4 align="center">Colorful styling for command-line applications</h4>
+<h1 align="center">
+    <img src="docs/img/tour.png">
+</h1>
 
-> /mɔː(ɹ)dənt/ A substance used to set (i.e. bind) colored dyes on fabrics <sup>[1](https://wikipedia.org/wiki/Mordant)</sup>
-
-Mordant has:
-
-* Easy colorful ANSI output with automatic detection of terminal capabilities
-* Markdown rendering directly to the terminal
-* Widgets for laying out terminal output, including lists, tables, panels, and more
-* Support for animating any widget, like progress bars and dashboards
+Mordant is a multiplatform library for rendering styled text in the terminal. You can use it to
+add color and style to text, create tables, draw animations, and more.
 
 ## Usage
 
