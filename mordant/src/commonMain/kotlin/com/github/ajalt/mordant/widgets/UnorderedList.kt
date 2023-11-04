@@ -19,10 +19,6 @@ class UnorderedList private constructor(
         ThemeStyle.of("list.bullet", bulletStyle)
     )
 
-    init {
-        require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
-    }
-
     private fun bullet(t: Theme): Line {
         val text = bulletText[t]
         require("\n" !in text) { "bullet text cannot contain newlines" }
@@ -59,3 +55,23 @@ class UnorderedList private constructor(
         return Lines(lines)
     }
 }
+
+fun UnorderedList(
+    vararg listEntries: String,
+    bulletText: String? = null,
+    bulletStyle: TextStyle? = null,
+): UnorderedList = UnorderedList(
+    listEntries.map { Text(it) },
+    bulletText,
+    bulletStyle,
+)
+
+fun UnorderedList(
+    vararg listEntries: Widget,
+    bulletText: String? = null,
+    bulletStyle: TextStyle? = null,
+): UnorderedList = UnorderedList(
+    listEntries.toList(),
+    bulletText,
+    bulletStyle,
+)

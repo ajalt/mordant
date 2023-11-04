@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+### Added
+- Vararg constructors for `UnorderedList` and `OrderedList`
+- `UnorderedList` and `OrderedList` now support being empty 
+
 ## 2.2.0
 ### Added
 - Added `ColumnWidth.Custom` that allows more control over column width behavior in tables. [(#109)](https://github.com/ajalt/mordant/issues/109)

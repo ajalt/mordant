@@ -28,10 +28,6 @@ class OrderedList private constructor(
         ThemeString.of("list.number.separator", numberSeparator)
     )
 
-    init {
-        require(listEntries.isNotEmpty()) { "Cannot render an empty list" }
-    }
-
     private fun sep(t: Theme): Line {
         val text = numberSeparator[t]
         require("\n" !in text) { "number separator cannot contain newlines" }
@@ -80,4 +76,20 @@ class OrderedList private constructor(
         }
         return Lines(lines)
     }
+}
+
+fun OrderedList(
+    vararg listEntries: String,
+    numberStyle: TextStyle? = null,
+    numberSeparator: String? = null,
+): OrderedList {
+    return OrderedList(listEntries.map { Text(it) }, numberStyle, numberSeparator)
+}
+
+fun OrderedList(
+    vararg listEntries: Widget,
+    numberStyle: TextStyle? = null,
+    numberSeparator: String? = null,
+): OrderedList {
+    return OrderedList(listEntries.toList(), numberStyle, numberSeparator)
 }
