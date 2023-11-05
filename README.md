@@ -11,70 +11,26 @@ Create a `Terminal` instance, and import any enum entries you want from `TextCol
 `TextStyles`. The `println` function on your `Terminal` will detect your current terminal
 capabilities and automatically downsample ANSI codes if necessary.
 
+Use 
+[`color.bg`](https://ajalt.github.io/mordant/api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html)
+to create a background color, or 
+[`color1 on color2`](https://ajalt.github.io/mordant/api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html)
+to combine a foreground and background.
+
 ```kotlin
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyles.*
 
 val t = Terminal()
-t.println(red("This text will be red on terminals that support color"))
+t.println(brightRed("You can use any of the standard ANSI colors"))
+
+val style = (bold + black + strikethrough)
+t.println(cyan("You ${(green on white)("can ${style("nest")} styles")} arbitrarily"))
+
+t.println(rgb("#b4eeb4")("You can also use true color and other color spaces like HSL"))
 ```
 
-![](docs/img/example_basic.png)
-
-#### Multiple styles
-
-```kotlin
-import com.github.ajalt.mordant.rendering.TextColors.*
-val t = Terminal()
-t.println("${red("red")} ${white("white")} and ${blue("blue")}")
-```
-
-![](docs/img/example_multi.png)
-
-#### Foreground and background colors
-
-```kotlin
-t.println((yellow on brightGreen)("this is easy to read, right?"))
-```
-
-![](docs/img/example_fg_bg.png)
-
-#### Background color alone
-
-```kotlin
-t.println("The foreground ${brightBlue.bg("color will stay the")} same")
-```
-
-![](docs/img/example_bg.png)
-
-#### Combine styles and colors
-
-```kotlin
-val style = (bold + white + underline)
-t.println(style("You can save styles"))
-t.println(style("to reuse"))
-```
-
-![](docs/img/example_styles.png)
-
-#### Nest styles and colors
-
-```kotlin
-t.println(white("You ${(blue on yellow)("can ${(black + strikethrough)("nest")} styles")} arbitrarily"))
-```
-
-![](docs/img/example_nesting.png)
-
-#### True color and other color spaces
-
-```kotlin
-import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
-
-t.println(rgb("#b4eeb4")("This will get downsampled on terminals that don't support truecolor"))
-```
-
-![](docs/img/example_rgb.png)
-<p></p>
+![](docs/img/example_text_styles.png)
 
 ### Terminal color support detection
 

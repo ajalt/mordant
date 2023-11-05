@@ -4,6 +4,10 @@
 ### Added
 - Vararg constructors for `UnorderedList` and `OrderedList`
 - `UnorderedList` and `OrderedList` now support being empty 
+- Added optional terminal frame to of `TerminalRecorder.outputAsHtml`
+
+### Changed
+- When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 
 
 ## 2.2.0
 ### Added
