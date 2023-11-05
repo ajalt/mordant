@@ -2,6 +2,17 @@ package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
+/**
+ * A [TerminalInterface] that records all output and allows you to provide input.
+ *
+ * ### Exmaple
+ *
+ * ```
+ * val recorder = TerminalRecorder()
+ * val t = Terminal(terminalInterface = recorder)
+ * t.println("Hello, world!")
+ * assertEquals(recorder.output(), "Hello, world!\n")
+ */
 class TerminalRecorder private constructor(
     override val info: TerminalInfo,
 ) : TerminalInterface {

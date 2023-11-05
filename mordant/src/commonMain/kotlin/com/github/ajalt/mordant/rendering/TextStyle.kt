@@ -22,6 +22,14 @@ interface TextStyle {
     val hyperlink: String?
     val hyperlinkId: String?
 
+    /**
+     * Create a with this [color] as the [background][bgColor].
+     *
+     * ### Example
+     * ```
+     * red.bg == TextStyle(bgColor=red)
+     * ```
+     */
     val bg: TextStyle
 
     /**
@@ -134,7 +142,7 @@ internal fun foldStyles(vararg styles: TextStyle?): TextStyle? {
         if (s == null) continue
         style = when (style) {
             null -> s
-            else -> style + s
+            else -> s + style
         }
     }
     return style

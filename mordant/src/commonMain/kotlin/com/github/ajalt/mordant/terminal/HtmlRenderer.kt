@@ -1,16 +1,48 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.colormath.Color
+import com.github.ajalt.colormath.formatCssString
+import com.github.ajalt.colormath.model.SRGB
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.parseText
 import com.github.ajalt.mordant.rendering.TextStyle
 
-fun TerminalRecorder.outputAsHtml(): String = buildString {
+/**
+ * Render the contents of this [TerminalRecorder] as an HTML document.
+ *
+ * @param includeFrame If true, the output will be wrapped in a terminal frame with a drop shadow.
+ * @param includeBodyTag If true, the output will be wrapped in `<html>` and `<body>` tags.
+ * @param backgroundColor The background color of the output. If `null`, the background color will be unset.
+ */
+fun TerminalRecorder.outputAsHtml(
+    includeFrame: Boolean = true,
+    includeBodyTag: Boolean = true,
+    backgroundColor: Color? = SRGB("#0c0c0c"),
+): String = buildString {
     val lines = parseText(output(), DEFAULT_STYLE)
 
-    appendLine("<html><body>")
+    if(includeBodyTag) appendLine("<html><body>")
+    append("""<pre style="""")
     // font-family from https://systemfontstack.com/
-    append("""<pre style="font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace">""")
-    appendLine("<code>")
+    append("font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;")
+    if (backgroundColor != null) {
+        append("background-color: ${backgroundColor.formatCssString()};")
+    }
+    if (includeFrame) {
+        append("border-radius: 8px;")
+        append("width: fit-content;")
+        append("padding: 0.5em 1em 0;")
+        append("filter: drop-shadow(0.5em 0.5em 0.5em black);")
+    }
+    append(""""><code>""")
+
+    if (includeFrame) {
+        for (color in listOf(SRGB("#ff5f56"), SRGB("#ffbd2e"), SRGB("#27c93f"))) {
+            append("""<span style="color: ${color.toHex()};">⏺ </span>""")
+        }
+    }
+    appendLine()
+
 
     for (line in lines.lines) {
         for (span in line) {
@@ -30,8 +62,8 @@ fun TerminalRecorder.outputAsHtml(): String = buildString {
         appendLine()
     }
 
-    appendLine("</code></pre>")
-    append("</body></html>")
+    append("</code></pre>")
+    if(includeBodyTag) append("\n</body></html>")
 }
 
 private fun TextStyle.asCssRules(): List<String> {
