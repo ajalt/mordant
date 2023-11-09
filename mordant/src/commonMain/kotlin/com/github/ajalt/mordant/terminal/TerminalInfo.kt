@@ -40,7 +40,8 @@ data class TerminalInfo(
     /**
      * Query the terminal for its current size, updating [width] and [height] if successful.
      *
-     * @return `true` if the size was updated, of `false` if it was not
+     * @return `true` if the terminal size was queried successfully (even if the size hasn't
+     *  changed), or false if the size could not be determined.
      */
     fun updateTerminalSize(): Boolean {
         val (w, h) = TerminalDetection.detectSize() ?: return false
