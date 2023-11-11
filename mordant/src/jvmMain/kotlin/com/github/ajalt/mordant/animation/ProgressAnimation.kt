@@ -261,6 +261,11 @@ private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?
     }
 }
 
+/**
+ * Create an animated progress bar.
+ *
+ * See [ProgressLayout] for the types of cells that can be added.
+ */
 fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
 
