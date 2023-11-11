@@ -5,65 +5,75 @@ import com.github.ajalt.colormath.formatCssString
 import com.github.ajalt.colormath.model.SRGB
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.parseText
+import com.github.ajalt.mordant.rendering.Span
 import com.github.ajalt.mordant.rendering.TextStyle
 
 /**
  * Render the contents of this [TerminalRecorder] as an HTML document.
  *
- * @param includeFrame If true, the output will be wrapped in a terminal frame with a drop shadow.
- * @param includeBodyTag If true, the output will be wrapped in `<html>` and `<body>` tags.
- * @param backgroundColor The background color of the output. If `null`, the background color will be unset.
+ * @param includeBodyTag If true, the output will be wrapped in `<html><body>` tags.
+ * @param includeCodeTag If true, the output will be wrapped in `<pre><code>` tags. If false, only `<pre>` will be used.
+ * @param backgroundColor If given, the output will be wrapped in a terminal frame with this background color.
  */
 fun TerminalRecorder.outputAsHtml(
-    includeFrame: Boolean = true,
     includeBodyTag: Boolean = true,
+    includeCodeTag: Boolean = true,
     backgroundColor: Color? = SRGB("#0c0c0c"),
 ): String = buildString {
     val lines = parseText(output(), DEFAULT_STYLE)
-
-    if(includeBodyTag) appendLine("<html><body>")
-    append("""<pre style="""")
-    // font-family from https://systemfontstack.com/
-    append("font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;")
+    if (includeBodyTag) appendLine("<html><body>")
     if (backgroundColor != null) {
-        append("background-color: ${backgroundColor.formatCssString()};")
-    }
-    if (includeFrame) {
+        append("""<div style="""")
         append("border-radius: 8px;")
         append("width: fit-content;")
-        append("padding: 0.5em 1em 0;")
+        append("padding: 0.5em 1em;")
         append("filter: drop-shadow(0.5em 0.5em 0.5em black);")
-    }
-    append(""""><code>""")
-
-    if (includeFrame) {
+        append("background-color: ${backgroundColor.formatCssString()};")
+        append("""">""")
         for (color in listOf(SRGB("#ff5f56"), SRGB("#ffbd2e"), SRGB("#27c93f"))) {
-            append("""<span style="color: ${color.toHex()};">⏺ </span>""")
-        }
-    }
-    appendLine()
-
-
-    for (line in lines.lines) {
-        for (span in line) {
-            val href = span.style.hyperlink
-            if (href != null) {
-                append("""<a href="""").append(href).append('"')
-            } else {
-                append("<span")
-            }
-            val rules = span.style.asCssRules()
-            if (rules.isNotEmpty()) {
-                rules.joinTo(this, "; ", prefix = " style=\"", postfix = "\"")
-            }
-            append(">")
-            append(span.text.escapeHtml()).append("</span>")
+            append("""<span style="color: ${color.toHex()};">⏺&nbsp;</span>""")
         }
         appendLine()
     }
+    append("""<pre style="font-family: monospace">""")
+    if (includeCodeTag) append("<code>")
+    appendLine()
 
-    append("</code></pre>")
-    if(includeBodyTag) append("\n</body></html>")
+    for (line in lines.lines) {
+        val collected = mutableListOf<Span>()
+        for (span in line) {
+            if (collected.lastOrNull()?.let { it.style != span.style } == true) {
+                addSpansAsHtml(collected)
+                collected.clear()
+            }
+            collected.add(span)
+        }
+        addSpansAsHtml(collected)
+        appendLine()
+    }
+
+    if (includeCodeTag) append("</code>")
+    append("</pre>")
+    if (backgroundColor != null) append("\n</div>")
+    if (includeBodyTag) append("\n</body></html>")
+}
+
+private fun StringBuilder.addSpansAsHtml(spans: List<Span>) {
+    if (spans.isEmpty()) return
+    val style = spans.last().style
+    val href = style.hyperlink
+    if (href != null) {
+        append("""<a href="""").append(href).append('"')
+    } else {
+        append("<span")
+    }
+    val rules = style.asCssRules()
+    if (rules.isNotEmpty()) {
+        rules.joinTo(this, "; ", prefix = " style=\"", postfix = "\"")
+    }
+    append(">")
+    spans.joinTo(this, "") { it.text.escapeHtml() }
+    append("</span>")
 }
 
 private fun TextStyle.asCssRules(): List<String> {
