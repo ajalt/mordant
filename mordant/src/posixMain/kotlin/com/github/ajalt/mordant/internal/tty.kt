@@ -6,6 +6,7 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 // https://www.gnu.org/software/libc/manual/html_node/getpass.html
+@OptIn(UnsafeNumber::class) // https://youtrack.jetbrains.com/issue/KT-60572
 internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     val termios = alloc<termios>()
     if (tcgetattr(STDOUT_FILENO, termios.ptr) != 0) {
