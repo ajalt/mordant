@@ -1,6 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.AtomicInt
+import com.github.ajalt.mordant.internal.MppAtomicInt
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.TextStyle
@@ -54,7 +54,7 @@ class Spinner(
     constructor(frames: String, style: TextStyle = DEFAULT_STYLE, duration: Int = 1, initial: Int = 0) :
             this(frames.map { Text(style(it.toString())) }, duration, initial)
 
-    private val _tick = AtomicInt(initial)
+    private val _tick = MppAtomicInt(initial)
 
     /**
      * The current frame number.

@@ -9,20 +9,22 @@ import com.github.ajalt.mordant.terminal.*
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
 
-internal actual class AtomicInt actual constructor(initial: Int) {
+private class JvmAtomicInt(initial: Int): MppAtomicInt {
     private val backing = AtomicInteger(initial)
-    actual fun getAndIncrement(): Int {
+    override fun getAndIncrement(): Int {
         return backing.getAndIncrement()
     }
 
-    actual fun get(): Int {
+    override fun get(): Int {
         return backing.get()
     }
 
-    actual fun set(value: Int) {
+    override fun set(value: Int) {
         backing.set(value)
     }
 }
+
+internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JvmAtomicInt(initial)
 
 internal actual fun getEnv(key: String): String? = System.getenv(key)
 

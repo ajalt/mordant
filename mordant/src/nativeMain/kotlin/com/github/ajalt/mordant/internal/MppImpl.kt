@@ -10,20 +10,22 @@ import kotlin.concurrent.AtomicReference
 import kotlin.experimental.ExperimentalNativeApi
 
 
-internal actual class AtomicInt actual constructor(initial: Int) {
+private class NativeAtomicInt(initial: Int) : MppAtomicInt {
     private val backing = AtomicInt(initial)
-    actual fun getAndIncrement(): Int {
+    override fun getAndIncrement(): Int {
         return backing.addAndGet(1) - 1
     }
 
-    actual fun get(): Int {
+    override fun get(): Int {
         return backing.value
     }
 
-    actual fun set(value: Int) {
+    override fun set(value: Int) {
         backing.value = value
     }
 }
+
+internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = NativeAtomicInt(initial)
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
@@ -47,7 +49,7 @@ internal actual fun codepointSequence(string: String): Sequence<Int> = sequence 
 }
 
 internal actual fun printStderr(message: String, newline: Boolean) {
-    val s = if (newline) message + "\n"  else message
+    val s = if (newline) message + "\n" else message
     fprintf(stderr, s)
     fflush(stderr)
 }
@@ -63,7 +65,8 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
     }
 }
 
-internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = NativeTerminalCursor(terminal)
+internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor =
+    NativeTerminalCursor(terminal)
 
 
 // These are for the NativeTerminalCursor, but are top-level since atexit and signal require static
@@ -93,7 +96,10 @@ private fun cursorSigintHandler(signum: Int) {
         // `CURSOR_SHOW_STR.length == 6`. We use a literal since that parameter is a UInt on mingw and a ULong on posix
         6u
     )
-    signal(SIGINT, existingSigintHandler.value ?: SIG_DFL) // reset signal handling to previous value
+    signal(
+        SIGINT,
+        existingSigintHandler.value ?: SIG_DFL
+    ) // reset signal handling to previous value
     existingSigintHandler.value = null
     raise(signum) // re-raise the signal
 }

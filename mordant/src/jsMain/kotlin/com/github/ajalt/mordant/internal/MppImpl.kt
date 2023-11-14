@@ -7,20 +7,22 @@ private external val console: dynamic
 private external val Symbol: dynamic
 private external val Buffer: dynamic
 
-internal actual class AtomicInt actual constructor(initial: Int) {
+private class JsAtomicInt(initial: Int) : MppAtomicInt{
     private var backing = initial
-    actual fun getAndIncrement(): Int {
+    override fun getAndIncrement(): Int {
         return backing++
     }
 
-    actual fun get(): Int {
+    override fun get(): Int {
         return backing
     }
 
-    actual fun set(value: Int) {
+    override fun set(value: Int) {
         backing = value
     }
 }
+
+internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JsAtomicInt(initial)
 
 
 private interface JsMppImpls {

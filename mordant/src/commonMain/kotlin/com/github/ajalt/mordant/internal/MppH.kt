@@ -2,11 +2,13 @@ package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
 
-internal expect class AtomicInt(initial: Int) {
+internal interface MppAtomicInt {
     fun getAndIncrement(): Int
     fun get(): Int
     fun set(value: Int)
 }
+
+internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
 
 internal expect fun getEnv(key: String): String?
 
