@@ -7,8 +7,9 @@
 - Added optional terminal frame to `TerminalRecorder.outputAsHtml`
 - New implementation of progress bars with a number of improvements:
   - Any widget can be added to a progress layout, not just the built-in cell types
+  - TODO New cell: timeElapsed
   - Added `compact` style to `timeRemaining` cells.
-  
+
 ### Changed
 - When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 
 

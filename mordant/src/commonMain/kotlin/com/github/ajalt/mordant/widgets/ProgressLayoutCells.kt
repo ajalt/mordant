@@ -8,7 +8,8 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
-import kotlin.math.roundToInt
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
 /**
@@ -89,8 +90,8 @@ fun ProgressBarBuilder<*>.speed(
     fps = fps
 ) {
     val t = when {
-        isIndeterminate || completedPerSecond <= 0 -> "---.-"
-        else -> completedPerSecond.formatWithSiSuffix(1)
+        isIndeterminate || speed <= 0 -> "---.-"
+        else -> speed.formatWithSiSuffix(1)
     }
     Text(style(t + suffix), whitespace = Whitespace.PRE)
 }
@@ -129,21 +130,23 @@ fun ProgressBarBuilder<*>.timeRemaining(
     ColumnWidth.Fixed(7 + prefix.length), // " 0:00:02"
     fps = fps
 ) {
-    fun widget(s: String) = Text(style(s), whitespace = Whitespace.PRE)
     val total = total
-    val eta = if (total <= 0) 0.0 else (total - completed) / completedPerSecond
-    val maxEta = 35_999 // 9:59:59
-    if (isIndeterminate || eta < 0 || completedPerSecond == 0.0 || eta > maxEta) {
-        return@cell widget("$prefix-:--:--")
+    val eta = when {
+        total <= 0 || speed <= 0 -> 0.0
+        else -> (total - completed) / speed
     }
+    val maxEta = 35_999 // 9:59:59
+    val duration = if (!isIndeterminate && eta >= 0 && eta <= maxEta) eta.seconds else null
+    Text(style(prefix + renderDuration(duration, compact)), whitespace = Whitespace.PRE)
+}
 
-    val h = (eta / (60 * 60)).toInt()
-    val m = (eta / 60 % 60).toInt()
-    val s = (eta % 60).roundToInt()
 
-    val hrs = if (compact && h <= 0) "" else "$h:"
-
-    widget("$prefix$hrs${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}")
+fun ProgressBarBuilder<*>.timeElapsed(
+    compact: Boolean = false,
+    style: TextStyle = DEFAULT_STYLE,
+    fps: Int = 5,
+) = cell(ColumnWidth.Auto, fps = fps) {
+    Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
 }
 
 /**
@@ -213,4 +216,12 @@ fun ProgressBarBuilder<*>.progressBar(
         finishedStyle,
         indeterminateStyle
     )
+}
+
+private fun renderDuration(duration: Duration?, comapct: Boolean): String {
+    if (duration == null || duration < Duration.ZERO) return "-:--:--"
+    return duration.toComponents { h, m, s, _ ->
+        val hrs = if (comapct && h <= 0) "" else "$h:"
+        "$hrs${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}"
+    }
 }
