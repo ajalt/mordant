@@ -68,7 +68,7 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         total = total ?: 0,
         completed = completed,
         elapsed = elapsedSeconds.seconds,
-        completedPerSecond = completedPerSecond,
+        speed = completedPerSecond,
     )
 
     val started: Boolean get() = startTime >= 0
@@ -106,7 +106,7 @@ class ProgressAnimation internal constructor(
             state.completed,
             state.total,
             state.elapsed.toDouble(DurationUnit.SECONDS),
-            state.completedPerSecond
+            state.speed
         )
     }
 

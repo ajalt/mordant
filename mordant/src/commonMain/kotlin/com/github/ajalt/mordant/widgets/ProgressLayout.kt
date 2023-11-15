@@ -121,7 +121,7 @@ class ProgressLayout internal constructor(
                 total ?: 0,
                 completed,
                 elapsedSeconds.seconds,
-                completedPerSecond ?: calcHz(completed, elapsedSeconds.seconds)
+                completedPerSecond
             )
         )
     }

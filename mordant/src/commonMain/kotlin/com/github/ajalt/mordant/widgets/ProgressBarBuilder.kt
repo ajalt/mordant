@@ -13,8 +13,16 @@ data class ProgressState<T>(
     val total: Long,
     val completed: Long,
     val elapsed: Duration,
-    val completedPerSecond: Double = calcHz(completed, elapsed),
+    val speed: Double,
 ) {
+    constructor(
+        context: T,
+        total: Long,
+        completed: Long,
+        elapsed: Duration,
+        speed: Double? = null,
+    ): this(context, total, completed, elapsed, speed ?: calcHz(completed, elapsed))
+
     val isIndeterminate: Boolean get() = total <= 0
     val isFinished: Boolean get() = !isIndeterminate && completed >= total
 }
@@ -27,9 +35,9 @@ fun ProgressState(
     total: Long,
     completed: Long,
     elapsed: Duration = Duration.ZERO,
-    completedPerSecond: Double = calcHz(completed, elapsed),
+    speed: Double? = null,
 ): ProgressState<Unit> {
-    return ProgressState(Unit, total, completed, elapsed, completedPerSecond)
+    return ProgressState(Unit, total, completed, elapsed, speed)
 }
 
 
@@ -55,9 +63,9 @@ fun <T> ProgressBarWidgetFactory<T>.build(
     total: Long,
     completed: Long,
     elapsed: Duration,
-    completedPerSecond: Double = calcHz(completed, elapsed),
+    speed: Double? = null,
 ): Widget {
-    return build(ProgressState(context, total, completed, elapsed, completedPerSecond))
+    return build(ProgressState(context, total, completed, elapsed, speed))
 }
 
 // TODO test these
@@ -65,9 +73,9 @@ fun ProgressBarWidgetFactory<Unit>.build(
     total: Long,
     completed: Long,
     elapsed: Duration,
-    completedPerSecond: Double = calcHz(completed, elapsed),
+    speed: Double? = null,
 ): Widget {
-    return build(ProgressState(total, completed, elapsed, completedPerSecond))
+    return build(ProgressState(total, completed, elapsed, speed))
 }
 
 fun <T> progressBarContextLayout(
@@ -148,7 +156,7 @@ internal class ProgressBarWidgetFactoryImpl<T>(
                     state.total,
                     state.completed,
                     state.elapsed,
-                    state.completedPerSecond
+                    state.speed
                 )
             )
         }
@@ -184,8 +192,7 @@ internal open class ProgressBarWidgetBuilder<T> : ProgressBarFactoryBuilder<T> {
     }
 }
 
-// XXX: this is internal for backcompat, could be `private`
-internal fun calcHz(completed: Long, elapsed: Duration) = when {
+private fun calcHz(completed: Long, elapsed: Duration) = when {
     completed <= 0 || elapsed <= Duration.ZERO -> 0.0
     else -> completed / elapsed.toDouble(SECONDS)
 }
