@@ -17,7 +17,7 @@ jobs:
           - os: windows-latest
             NATIVE_TEST_TASK: :mordant:mingwX64Test
           - os: ubuntu-latest
-            NATIVE_TEST_TASK: :mordant:linuxX64Test
+            NATIVE_TEST_TASK: :mordant:linuxX64Test apiCheck
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3

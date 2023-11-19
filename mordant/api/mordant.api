@@ -1,0 +1,1172 @@
+public abstract class com/github/ajalt/mordant/animation/Animation {
+	public fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;)V
+	public synthetic fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clear ()V
+	protected abstract fun renderData (Ljava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public final fun stop ()V
+	public final fun update (Ljava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/animation/AnimationKt {
+	public static final fun animation (Lcom/github/ajalt/mordant/terminal/Terminal;ZLkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/animation/Animation;
+	public static synthetic fun animation$default (Lcom/github/ajalt/mordant/terminal/Terminal;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/Animation;
+	public static final fun textAnimation (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Ljava/lang/Integer;ZLkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/animation/Animation;
+	public static synthetic fun textAnimation$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Ljava/lang/Integer;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/Animation;
+}
+
+public final class com/github/ajalt/mordant/animation/ProgressAnimation {
+	public final fun advance (J)V
+	public static synthetic fun advance$default (Lcom/github/ajalt/mordant/animation/ProgressAnimation;JILjava/lang/Object;)V
+	public final fun clear ()V
+	public final fun restart ()V
+	public final fun start ()V
+	public final fun stop ()V
+	public final fun update ()V
+	public final fun update (I)V
+	public final fun update (J)V
+	public final fun update (JLjava/lang/Long;)V
+	public final fun updateTotal (Ljava/lang/Long;)V
+}
+
+public final class com/github/ajalt/mordant/animation/ProgressAnimationBuilder : com/github/ajalt/mordant/widgets/ProgressBuilder {
+	public final fun getAnimationFrameRate ()I
+	public final fun getHistoryLength ()F
+	public final fun getTextFrameRate ()I
+	public final fun setAnimationFrameRate (I)V
+	public final fun setHistoryLength (F)V
+	public final fun setTextFrameRate (I)V
+}
+
+public final class com/github/ajalt/mordant/animation/ProgressAnimationKt {
+	public static final fun progressAnimation (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/animation/ProgressAnimation;
+}
+
+public final class com/github/ajalt/mordant/markdown/Markdown : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Ljava/lang/String;ZLjava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/rendering/AnsiLevel : java/lang/Enum {
+	public static final field ANSI16 Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public static final field ANSI256 Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public static final field NONE Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public static final field TRUECOLOR Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+}
+
+public final class com/github/ajalt/mordant/rendering/BorderType {
+	public static final field Companion Lcom/github/ajalt/mordant/rendering/BorderType$Companion;
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/BorderTypeSection;Lcom/github/ajalt/mordant/rendering/BorderTypeSection;Lcom/github/ajalt/mordant/rendering/BorderTypeSection;Lcom/github/ajalt/mordant/rendering/BorderTypeSection;Lcom/github/ajalt/mordant/rendering/BorderTypeSection;)V
+	public final fun getBody ()Lcom/github/ajalt/mordant/rendering/BorderTypeSection;
+	public final fun getBodyBottom ()Lcom/github/ajalt/mordant/rendering/BorderTypeSection;
+	public final fun getFoot ()Lcom/github/ajalt/mordant/rendering/BorderTypeSection;
+	public final fun getHead ()Lcom/github/ajalt/mordant/rendering/BorderTypeSection;
+	public final fun getHeadBottom ()Lcom/github/ajalt/mordant/rendering/BorderTypeSection;
+}
+
+public final class com/github/ajalt/mordant/rendering/BorderType$Companion {
+	public final fun build (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/BorderType;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/rendering/BorderType$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getASCII ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getASCII_DOUBLE_SECTION_SEPARATOR ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getBLANK ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getDOUBLE ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getHEAVY ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getHEAVY_HEAD_FOOT ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getROUNDED ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getSQUARE ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public final fun getSQUARE_DOUBLE_SECTION_SEPARATOR ()Lcom/github/ajalt/mordant/rendering/BorderType;
+}
+
+public final class com/github/ajalt/mordant/rendering/BorderTypeSection {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getCorner (ZZZZLcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Span;
+	public static synthetic fun getCorner$default (Lcom/github/ajalt/mordant/rendering/BorderTypeSection;ZZZZLcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Span;
+	public final fun getE ()Ljava/lang/String;
+	public final fun getEs ()Ljava/lang/String;
+	public final fun getEsw ()Ljava/lang/String;
+	public final fun getEw ()Ljava/lang/String;
+	public final fun getN ()Ljava/lang/String;
+	public final fun getNe ()Ljava/lang/String;
+	public final fun getNes ()Ljava/lang/String;
+	public final fun getNesw ()Ljava/lang/String;
+	public final fun getNew ()Ljava/lang/String;
+	public final fun getNs ()Ljava/lang/String;
+	public final fun getNsw ()Ljava/lang/String;
+	public final fun getNw ()Ljava/lang/String;
+	public final fun getS ()Ljava/lang/String;
+	public final fun getSw ()Ljava/lang/String;
+	public final fun getW ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/rendering/Line : java/util/List, kotlin/jvm/internal/markers/KMappedMarker {
+	public fun <init> (Ljava/util/List;)V
+	public fun <init> (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public fun add (ILcom/github/ajalt/mordant/rendering/Span;)V
+	public synthetic fun add (ILjava/lang/Object;)V
+	public fun add (Lcom/github/ajalt/mordant/rendering/Span;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (ILjava/util/Collection;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun clear ()V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun contains (Lcom/github/ajalt/mordant/rendering/Span;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public final fun copy (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Line;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/rendering/Line;Ljava/util/List;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Line;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun get (I)Lcom/github/ajalt/mordant/rendering/Span;
+	public synthetic fun get (I)Ljava/lang/Object;
+	public final fun getEndStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun getSize ()I
+	public final fun getSpans ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun indexOf (Lcom/github/ajalt/mordant/rendering/Span;)I
+	public final fun indexOf (Ljava/lang/Object;)I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public fun lastIndexOf (Lcom/github/ajalt/mordant/rendering/Span;)I
+	public final fun lastIndexOf (Ljava/lang/Object;)I
+	public fun listIterator ()Ljava/util/ListIterator;
+	public fun listIterator (I)Ljava/util/ListIterator;
+	public fun remove (I)Lcom/github/ajalt/mordant/rendering/Span;
+	public synthetic fun remove (I)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun replaceAll (Ljava/util/function/UnaryOperator;)V
+	public fun retainAll (Ljava/util/Collection;)Z
+	public fun set (ILcom/github/ajalt/mordant/rendering/Span;)Lcom/github/ajalt/mordant/rendering/Span;
+	public synthetic fun set (ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun size ()I
+	public fun sort (Ljava/util/Comparator;)V
+	public fun subList (II)Ljava/util/List;
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/rendering/Lines {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getHeight ()I
+	public final fun getLines ()Ljava/util/List;
+	public final fun getWidth ()I
+	public final fun isEmpty ()Z
+	public final fun replaceStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Lines;
+	public final fun withStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/rendering/OverflowWrap : java/lang/Enum {
+	public static final field BREAK_WORD Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public static final field ELLIPSES Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public static final field NORMAL Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public static final field TRUNCATE Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+}
+
+public final class com/github/ajalt/mordant/rendering/Span {
+	public static final field Companion Lcom/github/ajalt/mordant/rendering/Span$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getText ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/rendering/Span$Companion {
+	public final fun space (ILcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Span;
+	public static synthetic fun space$default (Lcom/github/ajalt/mordant/rendering/Span$Companion;ILcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Span;
+	public final fun word (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/Span;
+	public static synthetic fun word$default (Lcom/github/ajalt/mordant/rendering/Span$Companion;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Span;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextAlign : java/lang/Enum {
+	public static final field CENTER Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static final field JUSTIFY Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static final field LEFT Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static final field NONE Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static final field RIGHT Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/TextAlign;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextColors : java/lang/Enum, com/github/ajalt/colormath/Color, com/github/ajalt/mordant/rendering/TextStyle {
+	public static final field Companion Lcom/github/ajalt/mordant/rendering/TextColors$Companion;
+	public static final field black Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field blue Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightBlue Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightCyan Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightGreen Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightMagenta Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightRed Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightWhite Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field brightYellow Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field cyan Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field gray Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field green Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field magenta Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field red Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field white Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static final field yellow Lcom/github/ajalt/mordant/rendering/TextColors;
+	public fun getAlpha ()F
+	public fun getBg ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun getBgColor ()Lcom/github/ajalt/colormath/Color;
+	public fun getBold ()Ljava/lang/Boolean;
+	public fun getColor ()Lcom/github/ajalt/colormath/Color;
+	public fun getDim ()Ljava/lang/Boolean;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getHyperlink ()Ljava/lang/String;
+	public fun getHyperlinkId ()Ljava/lang/String;
+	public fun getInverse ()Ljava/lang/Boolean;
+	public fun getItalic ()Ljava/lang/Boolean;
+	public fun getSpace ()Lcom/github/ajalt/colormath/ColorSpace;
+	public fun getStrikethrough ()Ljava/lang/Boolean;
+	public fun getUnderline ()Ljava/lang/Boolean;
+	public fun invoke (Ljava/lang/String;)Ljava/lang/String;
+	public fun on (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun plus (Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun toAnsi16 ()Lcom/github/ajalt/colormath/model/Ansi16;
+	public fun toAnsi256 ()Lcom/github/ajalt/colormath/model/Ansi256;
+	public fun toArray ()[F
+	public fun toCMYK ()Lcom/github/ajalt/colormath/model/CMYK;
+	public fun toHPLuv ()Lcom/github/ajalt/colormath/model/HPLuv;
+	public fun toHSL ()Lcom/github/ajalt/colormath/model/HSL;
+	public fun toHSLuv ()Lcom/github/ajalt/colormath/model/HSLuv;
+	public fun toHSV ()Lcom/github/ajalt/colormath/model/HSV;
+	public fun toHWB ()Lcom/github/ajalt/colormath/model/HWB;
+	public fun toICtCp ()Lcom/github/ajalt/colormath/model/ICtCp;
+	public fun toJzAzBz ()Lcom/github/ajalt/colormath/model/JzAzBz;
+	public fun toJzCzHz ()Lcom/github/ajalt/colormath/model/JzCzHz;
+	public fun toLAB ()Lcom/github/ajalt/colormath/model/LAB;
+	public fun toLCHab ()Lcom/github/ajalt/colormath/model/LCHab;
+	public fun toLCHuv ()Lcom/github/ajalt/colormath/model/LCHuv;
+	public fun toLUV ()Lcom/github/ajalt/colormath/model/LUV;
+	public fun toOklab ()Lcom/github/ajalt/colormath/model/Oklab;
+	public fun toOklch ()Lcom/github/ajalt/colormath/model/Oklch;
+	public fun toSRGB ()Lcom/github/ajalt/colormath/model/RGB;
+	public fun toString ()Ljava/lang/String;
+	public fun toXYZ ()Lcom/github/ajalt/colormath/model/XYZ;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextColors;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/TextColors;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextColors$Companion {
+	public final fun cmyk (IIIILcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun cmyk$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;IIIILcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun color (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun color$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun gray (Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun gray$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun hsl (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun hsl$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun hsv (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun hsv$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun lab (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun lab$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun rgb (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun rgb (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun rgb$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun rgb$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun xyz (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun xyz$default (Lcom/github/ajalt/mordant/rendering/TextColors$Companion;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public abstract interface class com/github/ajalt/mordant/rendering/TextStyle {
+	public abstract fun getBg ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public abstract fun getBgColor ()Lcom/github/ajalt/colormath/Color;
+	public abstract fun getBold ()Ljava/lang/Boolean;
+	public abstract fun getColor ()Lcom/github/ajalt/colormath/Color;
+	public abstract fun getDim ()Ljava/lang/Boolean;
+	public abstract fun getHyperlink ()Ljava/lang/String;
+	public abstract fun getHyperlinkId ()Ljava/lang/String;
+	public abstract fun getInverse ()Ljava/lang/Boolean;
+	public abstract fun getItalic ()Ljava/lang/Boolean;
+	public abstract fun getStrikethrough ()Ljava/lang/Boolean;
+	public abstract fun getUnderline ()Ljava/lang/Boolean;
+	public abstract fun invoke (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun on (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public abstract fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public abstract fun plus (Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextStyle$DefaultImpls {
+	public static fun invoke (Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;)Ljava/lang/String;
+	public static fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextStyleKt {
+	public static final fun TextStyle (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun TextStyle$default (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextStyles : java/lang/Enum {
+	public static final field Companion Lcom/github/ajalt/mordant/rendering/TextStyles$Companion;
+	public static final field bold Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field dim Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field inverse Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field italic Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field reset Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field resetBackground Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field resetForeground Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field strikethrough Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static final field underline Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun invoke (Ljava/lang/String;)Ljava/lang/String;
+	public final fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun plus (Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextStyles;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/TextStyles;
+}
+
+public final class com/github/ajalt/mordant/rendering/TextStyles$Companion {
+	public final fun hyperlink (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public abstract class com/github/ajalt/mordant/rendering/Theme {
+	public static final field Companion Lcom/github/ajalt/mordant/rendering/Theme$Companion;
+	public synthetic fun <init> (Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun dimension (Ljava/lang/String;I)I
+	public static synthetic fun dimension$default (Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/String;IILjava/lang/Object;)I
+	public final fun dimensionOrNull (Ljava/lang/String;)Ljava/lang/Integer;
+	public final fun flag (Ljava/lang/String;Z)Z
+	public static synthetic fun flag$default (Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/String;ZILjava/lang/Object;)Z
+	public final fun flagOrNull (Ljava/lang/String;)Ljava/lang/Boolean;
+	public final fun getDanger ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getDimensions ()Ljava/util/Map;
+	public final fun getFlags ()Ljava/util/Map;
+	public final fun getInfo ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getMuted ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getStrings ()Ljava/util/Map;
+	public final fun getStyles ()Ljava/util/Map;
+	public final fun getSuccess ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getWarning ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun string (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun string$default (Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun stringOrNull (Ljava/lang/String;)Ljava/lang/String;
+	public final fun style (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public static synthetic fun style$default (Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun styleOrNull (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public final class com/github/ajalt/mordant/rendering/Theme$Companion {
+	public final fun getDefault ()Lcom/github/ajalt/mordant/rendering/Theme;
+	public final fun getPlain ()Lcom/github/ajalt/mordant/rendering/Theme;
+	public final fun getPlainAscii ()Lcom/github/ajalt/mordant/rendering/Theme;
+}
+
+public final class com/github/ajalt/mordant/rendering/ThemeBuilder {
+	public final fun getDimensions ()Ljava/util/Map;
+	public final fun getFlags ()Ljava/util/Map;
+	public final fun getStrings ()Ljava/util/Map;
+	public final fun getStyles ()Ljava/util/Map;
+}
+
+public final class com/github/ajalt/mordant/rendering/ThemeKt {
+	public static final fun Theme (Lcom/github/ajalt/mordant/rendering/Theme;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Theme;
+	public static synthetic fun Theme$default (Lcom/github/ajalt/mordant/rendering/Theme;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Theme;
+	public static final fun plus (Lcom/github/ajalt/mordant/rendering/Theme;Lcom/github/ajalt/mordant/rendering/Theme;)Lcom/github/ajalt/mordant/rendering/Theme;
+}
+
+public final class com/github/ajalt/mordant/rendering/VerticalAlign : java/lang/Enum {
+	public static final field BOTTOM Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public static final field MIDDLE Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public static final field TOP Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+}
+
+public final class com/github/ajalt/mordant/rendering/Whitespace : java/lang/Enum {
+	public static final field NORMAL Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public static final field NOWRAP Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public static final field PRE Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public static final field PRE_LINE Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public static final field PRE_WRAP Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public final fun getCollapseNewlines ()Z
+	public final fun getCollapseSpaces ()Z
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getTrimEol ()Z
+	public final fun getWrap ()Z
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public static fun values ()[Lcom/github/ajalt/mordant/rendering/Whitespace;
+}
+
+public abstract interface class com/github/ajalt/mordant/rendering/Widget {
+	public abstract fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public abstract fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/rendering/Widget$DefaultImpls {
+	public static synthetic fun measure$default (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/terminal/Terminal;IILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public static synthetic fun render$default (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/terminal/Terminal;IILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/rendering/WidthRange {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/rendering/WidthRange;IIILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public final fun div (I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMax ()I
+	public final fun getMin ()I
+	public fun hashCode ()I
+	public final fun plus (I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public final fun plus (Lcom/github/ajalt/mordant/rendering/WidthRange;)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/table/Borders : java/lang/Enum {
+	public static final field ALL Lcom/github/ajalt/mordant/table/Borders;
+	public static final field BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field BOTTOM_RIGHT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_RIGHT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_RIGHT_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_TOP Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_TOP_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field LEFT_TOP_RIGHT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field NONE Lcom/github/ajalt/mordant/table/Borders;
+	public static final field RIGHT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field TOM_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field TOP Lcom/github/ajalt/mordant/table/Borders;
+	public static final field TOP_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public static final field TOP_RIGHT Lcom/github/ajalt/mordant/table/Borders;
+	public static final field TOP_RIGHT_BOTTOM Lcom/github/ajalt/mordant/table/Borders;
+	public final fun getBottom ()Z
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getLeft ()Z
+	public final fun getRight ()Z
+	public final fun getTop ()Z
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/table/Borders;
+	public static fun values ()[Lcom/github/ajalt/mordant/table/Borders;
+}
+
+public abstract interface class com/github/ajalt/mordant/table/CellBuilder : com/github/ajalt/mordant/table/CellStyleBuilder {
+	public abstract fun getColumnSpan ()I
+	public abstract fun getRowSpan ()I
+	public abstract fun setColumnSpan (I)V
+	public abstract fun setRowSpan (I)V
+}
+
+public final class com/github/ajalt/mordant/table/CellBuilder$DefaultImpls {
+	public static fun padding (Lcom/github/ajalt/mordant/table/CellBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/CellBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/CellBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/CellStyleBuilder : com/github/ajalt/mordant/table/CellStyleBuilderBase {
+	public abstract fun getBorders ()Lcom/github/ajalt/mordant/table/Borders;
+	public abstract fun getCellBorders ()Lcom/github/ajalt/mordant/table/Borders;
+	public abstract fun getPadding ()Lcom/github/ajalt/mordant/widgets/Padding;
+	public abstract fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public abstract fun padding (I)V
+	public abstract fun padding (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun setBorders (Lcom/github/ajalt/mordant/table/Borders;)V
+	public abstract fun setCellBorders (Lcom/github/ajalt/mordant/table/Borders;)V
+	public abstract fun setPadding (Lcom/github/ajalt/mordant/widgets/Padding;)V
+	public abstract fun setVerticalAlign (Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
+}
+
+public final class com/github/ajalt/mordant/table/CellStyleBuilder$DefaultImpls {
+	public static fun padding (Lcom/github/ajalt/mordant/table/CellStyleBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/CellStyleBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/CellStyleBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/CellStyleBuilderBase {
+	public abstract fun getAlign ()Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public abstract fun getOverflowWrap ()Lcom/github/ajalt/mordant/rendering/OverflowWrap;
+	public abstract fun getStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public abstract fun getWhitespace ()Lcom/github/ajalt/mordant/rendering/Whitespace;
+	public abstract fun setAlign (Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public abstract fun setOverflowWrap (Lcom/github/ajalt/mordant/rendering/OverflowWrap;)V
+	public abstract fun setStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public abstract fun setWhitespace (Lcom/github/ajalt/mordant/rendering/Whitespace;)V
+	public abstract fun style (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public final class com/github/ajalt/mordant/table/CellStyleBuilderBase$DefaultImpls {
+	public static fun style (Lcom/github/ajalt/mordant/table/CellStyleBuilderBase;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+	public static synthetic fun style$default (Lcom/github/ajalt/mordant/table/CellStyleBuilderBase;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;ILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/ColumnBuilder : com/github/ajalt/mordant/table/CellStyleBuilder {
+	public abstract fun getWidth ()Lcom/github/ajalt/mordant/table/ColumnWidth;
+	public abstract fun setWidth (Lcom/github/ajalt/mordant/table/ColumnWidth;)V
+}
+
+public final class com/github/ajalt/mordant/table/ColumnBuilder$DefaultImpls {
+	public static fun padding (Lcom/github/ajalt/mordant/table/ColumnBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/ColumnBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/ColumnBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract class com/github/ajalt/mordant/table/ColumnWidth {
+}
+
+public final class com/github/ajalt/mordant/table/ColumnWidth$Auto : com/github/ajalt/mordant/table/ColumnWidth {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/table/ColumnWidth$Auto;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/table/ColumnWidth$Custom : com/github/ajalt/mordant/table/ColumnWidth {
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/Float;I)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Float;
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Float;I)Lcom/github/ajalt/mordant/table/ColumnWidth$Custom;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/table/ColumnWidth$Custom;Ljava/lang/Integer;Ljava/lang/Float;IILjava/lang/Object;)Lcom/github/ajalt/mordant/table/ColumnWidth$Custom;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpandWeight ()Ljava/lang/Float;
+	public final fun getPriority ()I
+	public final fun getWidth ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/table/ColumnWidth$Expand : com/github/ajalt/mordant/table/ColumnWidth {
+	public fun <init> ()V
+	public fun <init> (F)V
+	public synthetic fun <init> (FILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/Number;)V
+	public final fun getWeight ()F
+}
+
+public final class com/github/ajalt/mordant/table/ColumnWidth$Fixed : com/github/ajalt/mordant/table/ColumnWidth {
+	public fun <init> (I)V
+	public final fun getWidth ()I
+}
+
+public final class com/github/ajalt/mordant/table/CsvQuoting : java/lang/Enum {
+	public static final field ALL Lcom/github/ajalt/mordant/table/CsvQuoting;
+	public static final field MINIMAL Lcom/github/ajalt/mordant/table/CsvQuoting;
+	public static final field NONE Lcom/github/ajalt/mordant/table/CsvQuoting;
+	public static final field NONNUMERIC Lcom/github/ajalt/mordant/table/CsvQuoting;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/table/CsvQuoting;
+	public static fun values ()[Lcom/github/ajalt/mordant/table/CsvQuoting;
+}
+
+public abstract interface class com/github/ajalt/mordant/table/GridBuilder : com/github/ajalt/mordant/table/CellStyleBuilder, com/github/ajalt/mordant/table/RowHolderBuilder {
+	public abstract fun column (ILkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/github/ajalt/mordant/table/GridBuilder$DefaultImpls {
+	public static fun padding (Lcom/github/ajalt/mordant/table/GridBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/GridBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/GridBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/HorizontalLayoutBuilder : com/github/ajalt/mordant/table/LinearLayoutBuilder {
+	public abstract fun column (ILkotlin/jvm/functions/Function1;)V
+	public abstract fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public abstract fun setVerticalAlign (Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
+}
+
+public final class com/github/ajalt/mordant/table/HorizontalLayoutBuilder$DefaultImpls {
+	public static fun style (Lcom/github/ajalt/mordant/table/HorizontalLayoutBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/LinearLayoutBuilder : com/github/ajalt/mordant/table/CellStyleBuilderBase {
+	public abstract fun cell (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun cells (Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun cellsFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun getSpacing ()I
+	public abstract fun setSpacing (I)V
+}
+
+public final class com/github/ajalt/mordant/table/LinearLayoutBuilder$DefaultImpls {
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun cells$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun cellsFrom$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface annotation class com/github/ajalt/mordant/table/MordantDsl : java/lang/annotation/Annotation {
+}
+
+public abstract interface class com/github/ajalt/mordant/table/RowBuilder : com/github/ajalt/mordant/table/CellStyleBuilder {
+	public abstract fun cell (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun cells (Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun cellsFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/github/ajalt/mordant/table/RowBuilder$DefaultImpls {
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun cells$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun cellsFrom$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/RowBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/RowBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/RowBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/RowHolderBuilder {
+	public abstract fun row (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun row ([Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun rowFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun rowStyles (Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;[Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+}
+
+public final class com/github/ajalt/mordant/table/RowHolderBuilder$DefaultImpls {
+	public static synthetic fun row$default (Lcom/github/ajalt/mordant/table/RowHolderBuilder;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun rowFrom$default (Lcom/github/ajalt/mordant/table/RowHolderBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/table/SectionBuilder : com/github/ajalt/mordant/table/CellStyleBuilder, com/github/ajalt/mordant/table/RowHolderBuilder {
+	public abstract fun column (ILkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/github/ajalt/mordant/table/SectionBuilder$DefaultImpls {
+	public static fun padding (Lcom/github/ajalt/mordant/table/SectionBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/SectionBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/SectionBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public abstract class com/github/ajalt/mordant/table/Table : com/github/ajalt/mordant/rendering/Widget {
+}
+
+public abstract interface class com/github/ajalt/mordant/table/TableBuilder : com/github/ajalt/mordant/table/CellStyleBuilder {
+	public abstract fun body (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun captionBottom (Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public abstract fun captionBottom (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public abstract fun captionTop (Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public abstract fun captionTop (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public abstract fun column (ILkotlin/jvm/functions/Function1;)V
+	public abstract fun footer (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun getBorderStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public abstract fun getBorderType ()Lcom/github/ajalt/mordant/rendering/BorderType;
+	public abstract fun getOuterBorder ()Z
+	public abstract fun getTableBorders ()Lcom/github/ajalt/mordant/table/Borders;
+	public abstract fun header (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun setBorderStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public abstract fun setBorderType (Lcom/github/ajalt/mordant/rendering/BorderType;)V
+	public abstract fun setOuterBorder (Z)V
+	public abstract fun setTableBorders (Lcom/github/ajalt/mordant/table/Borders;)V
+}
+
+public final class com/github/ajalt/mordant/table/TableBuilder$DefaultImpls {
+	public static synthetic fun captionBottom$default (Lcom/github/ajalt/mordant/table/TableBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;ILjava/lang/Object;)V
+	public static synthetic fun captionTop$default (Lcom/github/ajalt/mordant/table/TableBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;ILjava/lang/Object;)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/TableBuilder;I)V
+	public static fun padding (Lcom/github/ajalt/mordant/table/TableBuilder;Lkotlin/jvm/functions/Function1;)V
+	public static fun style (Lcom/github/ajalt/mordant/table/TableBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public final class com/github/ajalt/mordant/table/TableCsvKt {
+	public static final fun contentToCsv (Lcom/github/ajalt/mordant/table/Table;CCLjava/lang/Character;ZLjava/lang/String;Lcom/github/ajalt/mordant/table/CsvQuoting;)Ljava/lang/String;
+	public static synthetic fun contentToCsv$default (Lcom/github/ajalt/mordant/table/Table;CCLjava/lang/Character;ZLjava/lang/String;Lcom/github/ajalt/mordant/table/CsvQuoting;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/table/TableDslKt {
+	public static final fun column (ILkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun column$default (ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun grid (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun horizontalLayout (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun row (ILkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun row$default (ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun table (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/table/Table;
+	public static final fun verticalLayout (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+}
+
+public abstract interface class com/github/ajalt/mordant/table/VerticalLayoutBuilder : com/github/ajalt/mordant/table/LinearLayoutBuilder {
+	public abstract fun getWidth ()Lcom/github/ajalt/mordant/table/ColumnWidth;
+	public abstract fun setWidth (Lcom/github/ajalt/mordant/table/ColumnWidth;)V
+}
+
+public final class com/github/ajalt/mordant/table/VerticalLayoutBuilder$DefaultImpls {
+	public static fun style (Lcom/github/ajalt/mordant/table/VerticalLayoutBuilder;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+}
+
+public final class com/github/ajalt/mordant/terminal/ConfirmationPrompt {
+	public static final field Companion Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt$Companion;
+	public fun <init> (Lcom/github/ajalt/mordant/terminal/Prompt;Lcom/github/ajalt/mordant/terminal/Prompt;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Prompt;Lcom/github/ajalt/mordant/terminal/Prompt;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun ask ()Ljava/lang/Object;
+}
+
+public final class com/github/ajalt/mordant/terminal/ConfirmationPrompt$Companion {
+	public final fun create (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt;
+	public static synthetic fun create$default (Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt;
+	public final fun createString (Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt;
+	public static synthetic fun createString$default (Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt$Companion;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/ConfirmationPrompt;
+}
+
+public abstract class com/github/ajalt/mordant/terminal/ConversionResult {
+}
+
+public final class com/github/ajalt/mordant/terminal/ConversionResult$Invalid : com/github/ajalt/mordant/terminal/ConversionResult {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/github/ajalt/mordant/terminal/ConversionResult$Invalid;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/ConversionResult$Invalid;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/ConversionResult$Invalid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/ConversionResult$Valid : com/github/ajalt/mordant/terminal/ConversionResult {
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Lcom/github/ajalt/mordant/terminal/ConversionResult$Valid;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/ConversionResult$Valid;Ljava/lang/Object;ILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/ConversionResult$Valid;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/ajalt/mordant/terminal/CursorMovements {
+	public abstract fun clearLine ()V
+	public abstract fun clearLineAfterCursor ()V
+	public abstract fun clearLineBeforeCursor ()V
+	public abstract fun clearScreen ()V
+	public abstract fun clearScreenAfterCursor ()V
+	public abstract fun clearScreenBeforeCursor ()V
+	public abstract fun down (I)V
+	public abstract fun left (I)V
+	public abstract fun restorePosition ()V
+	public abstract fun right (I)V
+	public abstract fun savePosition ()V
+	public abstract fun setPosition (II)V
+	public abstract fun startOfLine ()V
+	public abstract fun up (I)V
+}
+
+public abstract interface annotation class com/github/ajalt/mordant/terminal/ExperimentalTerminalApi : java/lang/annotation/Annotation {
+}
+
+public final class com/github/ajalt/mordant/terminal/HtmlRendererKt {
+	public static final fun outputAsHtml (Lcom/github/ajalt/mordant/terminal/TerminalRecorder;ZZLcom/github/ajalt/colormath/Color;)Ljava/lang/String;
+	public static synthetic fun outputAsHtml$default (Lcom/github/ajalt/mordant/terminal/TerminalRecorder;ZZLcom/github/ajalt/colormath/Color;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/PrintRequest {
+	public fun <init> (Ljava/lang/String;ZZ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;ZZ)Lcom/github/ajalt/mordant/terminal/PrintRequest;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/PrintRequest;Ljava/lang/String;ZZILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/PrintRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStderr ()Z
+	public final fun getText ()Ljava/lang/String;
+	public final fun getTrailingLinebreak ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/github/ajalt/mordant/terminal/Prompt {
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun ask ()Ljava/lang/Object;
+	protected fun beforePrompt ()V
+	protected abstract fun convert (Ljava/lang/String;)Lcom/github/ajalt/mordant/terminal/ConversionResult;
+	protected final fun getChoices ()Ljava/util/Collection;
+	protected final fun getDefault ()Ljava/lang/Object;
+	protected final fun getHideInput ()Z
+	protected final fun getInvalidChoiceMessage ()Ljava/lang/String;
+	protected final fun getPrompt ()Ljava/lang/String;
+	protected final fun getPromptSuffix ()Ljava/lang/String;
+	protected final fun getShowChoices ()Z
+	protected final fun getShowDefault ()Z
+	public final fun getTerminal ()Lcom/github/ajalt/mordant/terminal/Terminal;
+	protected fun handleInvalidInput (Ljava/lang/String;)V
+	protected fun makeInvalidChoiceMessage ()Lcom/github/ajalt/mordant/rendering/Widget;
+	protected fun makePrompt ()Lcom/github/ajalt/mordant/rendering/Widget;
+	protected fun makePromptChoices ()Ljava/lang/String;
+	protected fun makePromptDefault (Ljava/lang/Object;)Ljava/lang/String;
+	protected fun renderValue (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/StringPrompt : com/github/ajalt/mordant/terminal/Prompt {
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/github/ajalt/mordant/terminal/Terminal {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Theme;ILcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Theme;Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public fun <init> (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public final fun danger (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun danger$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun getColors ()Lcom/github/ajalt/mordant/terminal/TerminalColors;
+	public final fun getCursor ()Lcom/github/ajalt/mordant/terminal/TerminalCursor;
+	public final fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public final fun getTabWidth ()I
+	public final fun getTheme ()Lcom/github/ajalt/mordant/rendering/Theme;
+	public final fun info (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun info$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun muted (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun muted$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun print (Lcom/github/ajalt/mordant/rendering/Widget;Z)V
+	public final fun print (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun print$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)V
+	public static synthetic fun print$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun println (Lcom/github/ajalt/mordant/rendering/Widget;Z)V
+	public final fun println (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public final fun println (Z)V
+	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)V
+	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;ZILjava/lang/Object;)V
+	public final fun prompt (Ljava/lang/String;Ljava/lang/Object;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public final fun prompt (Ljava/lang/String;Ljava/lang/String;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun prompt$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;Ljava/lang/Object;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun prompt$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;Ljava/lang/String;ZZZLjava/util/Collection;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun rawPrint (Ljava/lang/String;Z)V
+	public static synthetic fun rawPrint$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZILjava/lang/Object;)V
+	public final fun readLineOrNull (Z)Ljava/lang/String;
+	public final fun render (Lcom/github/ajalt/mordant/rendering/Widget;)Ljava/lang/String;
+	public final fun render (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;)Ljava/lang/String;
+	public static synthetic fun render$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun success (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun success$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun warning (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
+	public static synthetic fun warning$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/terminal/TerminalColors {
+	public final fun cmyk (IIII)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun color (Lcom/github/ajalt/colormath/Color;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBlack ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBlue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBold ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightBlue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightCyan ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightGreen ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightMagenta ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightRed ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightWhite ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getBrightYellow ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getCyan ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getDanger ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getDim ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getGray ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getGreen ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getInfo ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getInverse ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getItalic ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getMagenta ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getMuted ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getPlain ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getRed ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getStrikethrough ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getSuccess ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getUnderline ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getWarning ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getWhite ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun getYellow ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun gray (Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun hsl (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun hsv (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun lab (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun rgb (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun rgb (Ljava/lang/String;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public final fun xyz (Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public abstract interface class com/github/ajalt/mordant/terminal/TerminalCursor {
+	public abstract fun getMoves (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+	public abstract fun hide (Z)V
+	public abstract fun move (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun show ()V
+}
+
+public final class com/github/ajalt/mordant/terminal/TerminalCursor$DefaultImpls {
+	public static synthetic fun hide$default (Lcom/github/ajalt/mordant/terminal/TerminalCursor;ZILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/terminal/TerminalInfo {
+	public fun <init> (IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun copy (IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/TerminalInfo;IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnsiHyperLinks ()Z
+	public final fun getAnsiLevel ()Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public final fun getCrClearsLine ()Z
+	public final fun getHeight ()I
+	public final fun getInputInteractive ()Z
+	public final fun getInteractive ()Z
+	public final fun getOutputInteractive ()Z
+	public final fun getWidth ()I
+	public fun hashCode ()I
+	public final fun setAnsiHyperLinks (Z)V
+	public final fun setAnsiLevel (Lcom/github/ajalt/mordant/rendering/AnsiLevel;)V
+	public final fun setHeight (I)V
+	public final fun setWidth (I)V
+	public fun toString ()Ljava/lang/String;
+	public final fun updateTerminalSize ()Z
+	public final fun updateTerminalSize (J)Z
+}
+
+public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterface {
+	public abstract fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
+	public abstract fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public abstract fun readLineOrNull (Z)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/TerminalRecorder : com/github/ajalt/mordant/terminal/TerminalInterface {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;IIZZZZ)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;IIZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clearOutput ()V
+	public fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
+	public fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public final fun getInputLines ()Ljava/util/List;
+	public final fun output ()Ljava/lang/String;
+	public fun readLineOrNull (Z)Ljava/lang/String;
+	public final fun setInputLines (Ljava/util/List;)V
+	public final fun stderr ()Ljava/lang/String;
+	public final fun stdout ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/YesNoPrompt : com/github/ajalt/mordant/terminal/Prompt {
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun renderValue (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/Caption : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getBottom ()Lcom/github/ajalt/mordant/rendering/Widget;
+	public final fun getContent ()Lcom/github/ajalt/mordant/rendering/Widget;
+	public final fun getTop ()Lcom/github/ajalt/mordant/rendering/Widget;
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/DefinitionListBuilder {
+	public fun <init> ()V
+	public final fun entry (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public final fun entry (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;)V
+	public final fun entry (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public final fun entry (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun entry (Lkotlin/jvm/functions/Function1;)V
+	public final fun getDescriptionSpacing ()I
+	public final fun getEntrySpacing ()I
+	public final fun getInline ()Z
+	public final fun setDescriptionSpacing (I)V
+	public final fun setEntrySpacing (I)V
+	public final fun setInline (Z)V
+}
+
+public final class com/github/ajalt/mordant/widgets/DefinitionListEntryBuilder {
+	public fun <init> ()V
+	public final fun description (Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public final fun description (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;)V
+	public static synthetic fun description$default (Lcom/github/ajalt/mordant/widgets/DefinitionListEntryBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ILjava/lang/Object;)V
+	public final fun term (Lcom/github/ajalt/mordant/rendering/Widget;)V
+	public final fun term (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;)V
+	public static synthetic fun term$default (Lcom/github/ajalt/mordant/widgets/DefinitionListEntryBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/widgets/DefinitionListKt {
+	public static final fun definitionList (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+}
+
+public final class com/github/ajalt/mordant/widgets/EmptyWidget : com/github/ajalt/mordant/rendering/Widget {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/widgets/EmptyWidget;
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/HorizontalRule : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextAlign;Ljava/lang/Integer;Z)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextAlign;Ljava/lang/Integer;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextAlign;Ljava/lang/Integer;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextAlign;Ljava/lang/Integer;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/OrderedList : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/OrderedListKt {
+	public static final fun OrderedList ([Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;)Lcom/github/ajalt/mordant/widgets/OrderedList;
+	public static final fun OrderedList ([Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;)Lcom/github/ajalt/mordant/widgets/OrderedList;
+	public static synthetic fun OrderedList$default ([Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/OrderedList;
+	public static synthetic fun OrderedList$default ([Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/OrderedList;
+}
+
+public final class com/github/ajalt/mordant/widgets/Padding {
+	public static final field Companion Lcom/github/ajalt/mordant/widgets/Padding$Companion;
+	public fun <init> (I)V
+	public fun <init> (IIII)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (IIII)Lcom/github/ajalt/mordant/widgets/Padding;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/Padding;IIIIILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/Padding;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBottom ()I
+	public final fun getLeft ()I
+	public final fun getRight ()I
+	public final fun getTop ()I
+	public fun hashCode ()I
+	public final fun isEmpty ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/Padding$Builder {
+	public fun <init> (IIII)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (IIII)Lcom/github/ajalt/mordant/widgets/Padding$Builder;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/Padding$Builder;IIIIILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/Padding$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAll ()I
+	public final fun getBottom ()I
+	public final fun getHorizontal ()I
+	public final fun getLeft ()I
+	public final fun getRight ()I
+	public final fun getTop ()I
+	public final fun getVertical ()I
+	public fun hashCode ()I
+	public final fun setAll (I)V
+	public final fun setBottom (I)V
+	public final fun setHorizontal (I)V
+	public final fun setLeft (I)V
+	public final fun setRight (I)V
+	public final fun setTop (I)V
+	public final fun setVertical (I)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/Padding$Companion {
+	public final fun invoke (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/Padding;
+}
+
+public final class com/github/ajalt/mordant/widgets/PaddingKt {
+	public static final fun plus (Lcom/github/ajalt/mordant/widgets/Padding;Lcom/github/ajalt/mordant/widgets/Padding;)Lcom/github/ajalt/mordant/widgets/Padding;
+	public static final fun withPadding (Lcom/github/ajalt/mordant/rendering/Widget;IIIIZ)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun withPadding (Lcom/github/ajalt/mordant/rendering/Widget;IZ)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun withPadding (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/widgets/Padding;Z)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun withPadding (Lcom/github/ajalt/mordant/rendering/Widget;ZLkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun withPadding$default (Lcom/github/ajalt/mordant/rendering/Widget;IIIIZILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun withPadding$default (Lcom/github/ajalt/mordant/rendering/Widget;IZILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun withPadding$default (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/widgets/Padding;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun withPadding$default (Lcom/github/ajalt/mordant/rendering/Widget;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+}
+
+public final class com/github/ajalt/mordant/widgets/Panel : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;ZLcom/github/ajalt/mordant/widgets/Padding;Lcom/github/ajalt/mordant/rendering/BorderType;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/Widget;ZLcom/github/ajalt/mordant/widgets/Padding;Lcom/github/ajalt/mordant/rendering/BorderType;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/ajalt/mordant/widgets/Padding;Lcom/github/ajalt/mordant/rendering/BorderType;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/github/ajalt/mordant/widgets/Padding;Lcom/github/ajalt/mordant/rendering/BorderType;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/ProgressBar : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (FZLjava/lang/Integer;FLjava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public synthetic fun <init> (FZLjava/lang/Integer;FLjava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (JJZLjava/lang/Integer;FLjava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public synthetic fun <init> (JJZLjava/lang/Integer;FLjava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public class com/github/ajalt/mordant/widgets/ProgressBuilder {
+	public final fun completed (Ljava/lang/String;ZLcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public static synthetic fun completed$default (Lcom/github/ajalt/mordant/widgets/ProgressBuilder;Ljava/lang/String;ZLcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)V
+	public final fun getPadding ()I
+	public final fun percentage ()V
+	public final fun progressBar (Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Boolean;)V
+	public static synthetic fun progressBar$default (Lcom/github/ajalt/mordant/widgets/ProgressBuilder;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Ljava/lang/Boolean;ILjava/lang/Object;)V
+	public final fun setPadding (I)V
+	public final fun speed (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public static synthetic fun speed$default (Lcom/github/ajalt/mordant/widgets/ProgressBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)V
+	public final fun spinner (Lcom/github/ajalt/mordant/widgets/Spinner;I)V
+	public static synthetic fun spinner$default (Lcom/github/ajalt/mordant/widgets/ProgressBuilder;Lcom/github/ajalt/mordant/widgets/Spinner;IILjava/lang/Object;)V
+	public final fun text (Ljava/lang/String;)V
+	public final fun timeRemaining (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public static synthetic fun timeRemaining$default (Lcom/github/ajalt/mordant/widgets/ProgressBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/widgets/ProgressLayout {
+	public final fun build (JLjava/lang/Long;DLjava/lang/Double;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/ProgressLayout;JLjava/lang/Long;DLjava/lang/Double;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+}
+
+public final class com/github/ajalt/mordant/widgets/ProgressLayoutKt {
+	public static final fun progressLayout (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/ProgressLayout;
+}
+
+public final class com/github/ajalt/mordant/widgets/Spinner : com/github/ajalt/mordant/rendering/Widget {
+	public static final field Companion Lcom/github/ajalt/mordant/widgets/Spinner$Companion;
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;II)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;II)V
+	public synthetic fun <init> (Ljava/util/List;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun advanceTick ()I
+	public final fun getTick ()I
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+	public final fun setTick (I)V
+}
+
+public final class com/github/ajalt/mordant/widgets/Spinner$Companion {
+	public final fun Dots (Lcom/github/ajalt/mordant/rendering/TextStyle;II)Lcom/github/ajalt/mordant/widgets/Spinner;
+	public static synthetic fun Dots$default (Lcom/github/ajalt/mordant/widgets/Spinner$Companion;Lcom/github/ajalt/mordant/rendering/TextStyle;IIILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/Spinner;
+	public final fun Lines (Lcom/github/ajalt/mordant/rendering/TextStyle;II)Lcom/github/ajalt/mordant/widgets/Spinner;
+	public static synthetic fun Lines$default (Lcom/github/ajalt/mordant/widgets/Spinner$Companion;Lcom/github/ajalt/mordant/rendering/TextStyle;IIILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/Spinner;
+}
+
+public final class com/github/ajalt/mordant/widgets/Text : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/UnorderedList : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Ljava/util/List;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/UnorderedListKt {
+	public static final fun UnorderedList ([Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
+	public static final fun UnorderedList ([Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
+	public static synthetic fun UnorderedList$default ([Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
+	public static synthetic fun UnorderedList$default ([Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
+}
+
