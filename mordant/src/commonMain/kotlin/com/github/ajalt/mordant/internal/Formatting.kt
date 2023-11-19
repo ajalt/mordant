@@ -4,6 +4,11 @@ private const val SI_PREFIXES = "KMGTEPZY"
 
 /**
  * Return a list of all numbers in [nums] formatted as a string, and the unit they were reduced with.
+ *
+ * All numbers will be formatted to the same unit.
+ *
+ * @param decimals The number of decimal places to include in the formatted numbers
+ * @param nums The numbers to format
  */
 internal fun formatMultipleWithSiSuffixes(decimals: Int, vararg nums: Double): Pair<List<String>, String> {
     var n = nums.maxOrNull()!!

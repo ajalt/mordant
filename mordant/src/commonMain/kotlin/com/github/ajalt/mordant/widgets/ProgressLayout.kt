@@ -4,9 +4,10 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TestTimeSource
 
 open class ProgressBuilder internal constructor(
-    private val builder : ProgressBarFactoryBuilder<Unit>
+    private val builder: ProgressBarFactoryBuilder<Unit>,
 ) {
     var padding: Int = 2
 
@@ -116,12 +117,18 @@ class ProgressLayout internal constructor(
         elapsedSeconds: Double = 0.0,
         completedPerSecond: Double? = null,
     ): Widget {
+        val t = TestTimeSource()
+        val displayedTime = t.markNow()
+        t += elapsedSeconds.seconds
+        val speed = (completedPerSecond ?: calcHz(completed, elapsedSeconds.seconds))
+            .takeIf { it > 0 }
         return factory.build(
             ProgressState(
-                total ?: 0,
+                total,
                 completed,
-                elapsedSeconds.seconds,
-                completedPerSecond
+                displayedTime,
+                displayedTime,
+                speed = speed
             )
         )
     }

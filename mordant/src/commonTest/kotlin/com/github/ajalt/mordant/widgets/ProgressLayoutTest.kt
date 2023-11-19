@@ -7,8 +7,11 @@ import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TestTimeSource
 
 class ProgressLayoutTest : RenderingTest() {
+    private val t = TestTimeSource()
+    private val now = t.markNow()
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
 
     @Test
@@ -27,28 +30,21 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("large_values")
     fun `large values`() = doTest(
-        "text.txt| 50%|####>....|150.0/300.0MB|100.0Mit/s|eta -:--:--|4:10:33",
+        "text.txt| 50%|####>....|150.0/300.0MB|100.0Mit/s|eta 0:00:01|4:10:33",
         150_000_000, 300_000_000, 15033.0, 100_000_000.0
     )
 
     @Test
     @JsName("short_eta")
     fun `short eta`() = doTest(
-        "text.txt| 50%|####>....|     1.0/2.0B|   4.0it/s|eta -:--:--|0:00:00",
+        "text.txt| 50%|####>....|     1.0/2.0B|   4.0it/s|eta 0:00:00|0:00:03",
         1, 2, 3.0, 4.0
-    )
-
-    @Test
-    @JsName("automatic_eta")
-    fun `automatic eta`() = doTest(
-        "text.txt| 50%|####>....|     1.0/2.0B|   0.3it/s|eta -:--:--|0:00:00",
-        1, 2, 3.0
     )
 
     @Test
     @JsName("long_eta")
     fun `long eta`() = doTest(
-        "text.txt| 50%|####>....|150.0/300.0MB|   2.0it/s|eta -:--:--|0:00:00",
+        "text.txt| 50%|####>....|150.0/300.0MB|   2.0it/s|eta -:--:--|0:00:01",
         150_000_000, 300_000_000, 1.5, 2.0
     )
 
@@ -56,33 +52,39 @@ class ProgressLayoutTest : RenderingTest() {
     @JsName("default_pacing")
     fun `default spacing`() = checkRender(
         progressBarLayout {
-            text("1")
+            text("|")
             percentage()
-            text("2")
+            text("|")
             speed()
-            text("3")
-        }.build(0, 0, 0.seconds, 0.0),
-        "1    0%  2   ---.-it/s  3",
+            text("|")
+        }.build(null, 0, now),
+        "|    0%  |   ---.-it/s  |",
     )
 
     @Test
-    fun pulse() = checkRender(
-        progressBarLayout {
-            progressBar()
-        }.build(0, 0, 1.seconds, 0.0),
-        indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
-        width = 3,
-    )
+    fun pulse() {
+        t += 1.seconds
+        checkRender(
+            progressBarLayout {
+                progressBar()
+            }.build(null, 0, now, now),
+            indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
+            width = 3,
+        )
+    }
 
     @Test
     @JsName("no_pulse")
-    fun `no pulse`() = checkRender(
-        progressBarLayout {
-            progressBar(showPulse = false)
-        }.build(0, 0, 1.seconds, 0.0),
-        indetermStyle("━━━"),
-        width = 3,
-    )
+    fun `no pulse`() {
+        t += 1.seconds
+        checkRender(
+            progressBarLayout {
+                progressBar(showPulse = false)
+            }.build(null, 0, now, now),
+            indetermStyle("━━━"),
+            width = 3,
+        )
+    }
 
     @Test
     @JsName("timeRemaining_compact")
@@ -90,12 +92,13 @@ class ProgressLayoutTest : RenderingTest() {
         val l = progressBarLayout {
             timeRemaining(compact = true)
         }
+        t += 1.minutes
         checkRender(
-            l.build(100, 90, 1.minutes, .01),
+            l.build(100, 90, now, speed = .01),
             "  eta 16:40", // 10remaining/.01hz == 1000s
         )
         checkRender(
-            l.build(100, 90, 1.minutes, .001),
+            l.build(100, 90, now, speed = .001),
             "eta 2:46:40", // 10remaining/.001hz == 10000s
         )
     }
@@ -103,27 +106,30 @@ class ProgressLayoutTest : RenderingTest() {
     private fun doTest(
         expected: String,
         completed: Long,
-        total: Long = 0,
+        total: Long? = null,
         elapsedSeconds: Double = 0.0,
-        completedPerSecond: Double? = null,
-    ) = checkRender(
-        progressBarLayout(spacing = 0) {
-            text("text.txt")
-            text("|")
-            percentage()
-            text("|")
-            progressBar()
-            text("|")
-            completed(suffix = "B")
-            text("|")
-            speed()
-            text("|")
-            timeRemaining()
-            text("|")
-            timeElapsed()
-        }.build(total, completed, elapsedSeconds.seconds, completedPerSecond ?: 0.0),
-        expected,
-        width = 68,
-        theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
-    )
+        speed: Double? = null,
+    ) {
+        t += elapsedSeconds.seconds
+        checkRender(
+            progressBarLayout(spacing = 0) {
+                text("text.txt")
+                text("|")
+                percentage()
+                text("|")
+                progressBar()
+                text("|")
+                completed(suffix = "B")
+                text("|")
+                speed()
+                text("|")
+                timeRemaining()
+                text("|")
+                timeElapsed()
+            }.build(total, completed, now, now, speed=speed),
+            expected,
+            width = 68,
+            theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
+        )
+    }
 }
