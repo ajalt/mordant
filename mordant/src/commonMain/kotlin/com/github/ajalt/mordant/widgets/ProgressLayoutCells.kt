@@ -63,17 +63,18 @@ fun ProgressBarBuilder<*>.completed(
     fps = fps,
 ) {
     val complete = completed.toDouble()
-    val total = total
-    val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total.toDouble())
+    val total = total?.toDouble()
+    val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total ?: 0.0)
 
-    val t = nums[0] + when {
-        includeTotal && total > 0 -> "/${nums[1]}$unit"
-        includeTotal && total <= 0 -> "/---.-"
+    val formattedTotal = when {
+        includeTotal && total != null && total >= 0 -> "/${nums[1]}$unit"
+        includeTotal && (total == null || total < 0) -> "/---.-"
         else -> ""
-    } + suffix
-    Text(style(t), whitespace = Whitespace.PRE)
+    }
+    Text(style(nums[0] + formattedTotal + suffix), whitespace = Whitespace.PRE)
 }
 
+//TODO: change suffix to "/s"?
 /**
  * Add a cell that displays the current speed to this layout.
  *
@@ -90,7 +91,7 @@ fun ProgressBarBuilder<*>.speed(
     fps = fps
 ) {
     val t = when {
-        isIndeterminate || speed <= 0 -> "---.-"
+        speed == null || speed < 0 -> "---.-"
         else -> speed.formatWithSiSuffix(1)
     }
     Text(style(t + suffix), whitespace = Whitespace.PRE)
@@ -107,12 +108,13 @@ fun ProgressBarBuilder<*>.percentage(fps: Int = 5) = cell(
 ) {
     val total = total
     val percent = when {
-        total <= 0 -> 0
+        total == null || total <= 0 -> 0
         else -> (100.0 * completed / total).toInt()
     }
     Text("$percent%")
 }
 
+// TODO: add an option to show elapsed time once the task is finished
 /**
  * Add a cell that displays the time remaining to this layout.
  *
@@ -130,22 +132,32 @@ fun ProgressBarBuilder<*>.timeRemaining(
     ColumnWidth.Fixed(7 + prefix.length), // " 0:00:02"
     fps = fps
 ) {
-    val total = total
     val eta = when {
-        total <= 0 || speed <= 0 -> 0.0
+        isFinished || isPaused || speed == null || total == null -> null
         else -> (total - completed) / speed
     }
     val maxEta = 35_999 // 9:59:59
-    val duration = if (!isIndeterminate && eta >= 0 && eta <= maxEta) eta.seconds else null
+    val duration = if (eta != null && eta <= maxEta) eta.seconds else null
     Text(style(prefix + renderDuration(duration, compact)), whitespace = Whitespace.PRE)
 }
 
 
+/**
+ * Add a cell that displays the elapsed time to this layout.
+ *
+ * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
+ * @param style The style to use for the displayed time.
+ * @param fps The number of times per second to update the displayed time. 5 by default.
+ */
 fun ProgressBarBuilder<*>.timeElapsed(
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = 5,
 ) = cell(ColumnWidth.Auto, fps = fps) {
+    val elapsed = when {
+        finishedTime != null && startedTime != null -> finishedTime - startedTime // TODO: test this
+        else -> displayedTime.elapsedNow()
+    }
     Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
 }
 
@@ -161,15 +173,15 @@ fun ProgressBarBuilder<*>.timeElapsed(
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
 fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
-    spinner.tick = (elapsed.toDouble(DurationUnit.SECONDS) / fps).toInt()
-    if (isFinished) BlankWidgetWrapper(spinner)
+    spinner.tick = (displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS) / fps).toInt()
+    if (isPaused) BlankWidgetWrapper(spinner)
     else spinner
 }
 
 /**
  * Add a progress bar cell to this layout.
  *
- * @param width The width in characters for this widget
+ * @param width The width in characters for this widget, or `null` to expand to fill the remaining space.
  * @param pendingChar (theme string: "progressbar.pending") The character to use to draw the pending portion of the bar in the active state.
  * @param separatorChar (theme string: "progressbar.separator") The character to draw in between the competed and pending bar in the active state.
  * @param completeChar (theme string: "progressbar.complete") The character to use to draw the completed portion of the bar in the active state.
@@ -179,7 +191,7 @@ fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = f
  * @param finishedStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when total <= completed
  * @param indeterminateStyle e (theme style: "progressbar.separator") The style to use when the state us indeterminate
  * @param showPulse (theme flag: "progressbar.pulse") If false, never draw the pulse animation in the indeterminate state.
- * @param fps The number of times per second to update the displayed progress. 30 by default.
+ * @param fps The number of times per second to update the displayed bar. 30 by default.
  */
 fun ProgressBarBuilder<*>.progressBar(
     width: Int? = null,
@@ -198,15 +210,16 @@ fun ProgressBarBuilder<*>.progressBar(
     fps = fps
 ) {
     val period = 2 // this could be configurable
-    val pulsePosition = ((elapsed.toDouble(DurationUnit.SECONDS) % period) / period)
+    val elapsedSeconds = displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS)
+    val pulsePosition = ((elapsedSeconds % period) / period)
 
     ProgressBar(
-        total,
+        total ?: 0,
         completed,
         isIndeterminate,
         width,
         pulsePosition.toFloat(),
-        showPulse,
+        if (isStarted) showPulse else false,
         pendingChar,
         separatorChar,
         completeChar,

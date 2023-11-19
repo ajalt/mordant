@@ -3,41 +3,56 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
+import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.DurationUnit.SECONDS
 
 
 // TODO: docs
+// TODO: make total and completed `Double`?
 data class ProgressState<T>(
+    /** The context object passed to the progress task. */
     val context: T,
-    val total: Long,
+    /** The total number of steps needed to complete the progress task, or `null` if it is indeterminate. */
+    val total: Long?,
+    /** The number of steps currently completed in the progress task. */
     val completed: Long,
-    val elapsed: Duration,
-    val speed: Double,
+    /** The time that the progress was first displayed. Useful for animations. */
+    val displayedTime: ComparableTimeMark,
+    /** The time that the progress task was started, or `null` if it hasn't been started. */
+    val startedTime: ComparableTimeMark? = null,
+    /** The time that the progress task was paused, or `null` if it isn't paused. */
+    val pausedTime: ComparableTimeMark? = null,
+    /** The time that the progress task was finished, or `null` if it isn't finished. */
+    val finishedTime: ComparableTimeMark? = null,
+    /**
+     * The estimated speed of the progress task, in steps per second, or `null` if it hasn't started.
+     *
+     * If the task is finished or paused, this is the speed at the time it finished.
+     */
+    val speed: Double? = null,
 ) {
-    constructor(
-        context: T,
-        total: Long,
-        completed: Long,
-        elapsed: Duration,
-        speed: Double? = null,
-    ): this(context, total, completed, elapsed, speed ?: calcHz(completed, elapsed))
-
-    val isIndeterminate: Boolean get() = total <= 0
-    val isFinished: Boolean get() = !isIndeterminate && completed >= total
+    val isIndeterminate: Boolean get() = total == null
+    val isPaused: Boolean get() = pausedTime != null
+    val isStarted: Boolean get() = startedTime != null
+    val isFinished: Boolean get() = finishedTime != null
 }
-
 
 /**
  * Create a [ProgressState] with no context.
  */
 fun ProgressState(
-    total: Long,
+    total: Long?,
     completed: Long,
-    elapsed: Duration = Duration.ZERO,
+    displayedTime: ComparableTimeMark,
+    startedTime: ComparableTimeMark? = null,
+    pausedTime: ComparableTimeMark? = null,
+    finishedTime: ComparableTimeMark? = null,
     speed: Double? = null,
 ): ProgressState<Unit> {
-    return ProgressState(Unit, total, completed, elapsed, speed)
+    return ProgressState(
+        Unit, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+    )
 }
 
 
@@ -60,22 +75,36 @@ interface ProgressBarWidgetFactory<T> {
 
 fun <T> ProgressBarWidgetFactory<T>.build(
     context: T,
-    total: Long,
+    total: Long?,
     completed: Long,
-    elapsed: Duration,
+    displayedTime: ComparableTimeMark,
+    startedTime: ComparableTimeMark? = null,
+    pausedTime: ComparableTimeMark? = null,
+    finishedTime: ComparableTimeMark? = null,
     speed: Double? = null,
 ): Widget {
-    return build(ProgressState(context, total, completed, elapsed, speed))
+    return build(
+        ProgressState(
+            context, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+        )
+    )
 }
 
 // TODO test these
 fun ProgressBarWidgetFactory<Unit>.build(
-    total: Long,
+    total: Long?,
     completed: Long,
-    elapsed: Duration,
+    displayedTime: ComparableTimeMark,
+    startedTime: ComparableTimeMark? = null,
+    pausedTime: ComparableTimeMark? = null,
+    finishedTime: ComparableTimeMark? = null,
     speed: Double? = null,
 ): Widget {
-    return build(ProgressState(total, completed, elapsed, speed))
+    return build(
+        ProgressState(
+            Unit, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+        )
+    )
 }
 
 fun <T> progressBarContextLayout(
@@ -149,17 +178,7 @@ internal class ProgressBarWidgetFactoryImpl<T>(
     }
 
     private fun makeWidgets(state: ProgressState<T>): List<Widget> {
-        return cells.map { cell ->
-            cell.builder(
-                ProgressState(
-                    state.context,
-                    state.total,
-                    state.completed,
-                    state.elapsed,
-                    state.speed
-                )
-            )
-        }
+        return cells.map { it.builder(state) }
     }
 }
 
@@ -192,7 +211,8 @@ internal open class ProgressBarWidgetBuilder<T> : ProgressBarFactoryBuilder<T> {
     }
 }
 
-private fun calcHz(completed: Long, elapsed: Duration) = when {
+// XXX: this is internal for backcompat, could be `private`
+internal fun calcHz(completed: Long, elapsed: Duration): Double = when {
     completed <= 0 || elapsed <= Duration.ZERO -> 0.0
     else -> completed / elapsed.toDouble(SECONDS)
 }

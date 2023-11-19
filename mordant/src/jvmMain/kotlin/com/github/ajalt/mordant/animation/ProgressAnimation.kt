@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
+import kotlin.time.TestTimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
@@ -64,12 +65,19 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         samples.addLast(ProgressHistoryEntry(now, completed))
     }
 
-    fun makeState(total: Long?) = ProgressState(
-        total = total ?: 0,
-        completed = completed,
-        elapsed = elapsedSeconds.seconds,
-        speed = completedPerSecond,
-    )
+    fun makeState(total: Long?): ProgressState<Unit> {
+        // XXX: this is a temporary hack
+        val t = TestTimeSource()
+        t += -elapsedSeconds.seconds
+        val now = t.markNow()
+        return ProgressState(
+            total = total ?: 0,
+            completed = completed,
+            displayedTime = now,
+            startedTime = if (started) now else null,
+            speed = completedPerSecond,
+        )
+    }
 
     val started: Boolean get() = startTime >= 0
     val completed: Long get() = samples.lastOrNull()?.completed ?: 0
@@ -105,7 +113,7 @@ class ProgressAnimation internal constructor(
         layout.build(
             state.completed,
             state.total,
-            state.elapsed.toDouble(DurationUnit.SECONDS),
+            state.displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS),
             state.speed
         )
     }
@@ -220,7 +228,7 @@ class ProgressAnimation internal constructor(
     fun restart() {
         val tickerStarted = tickerStarted
         stop()
-//    TODO    layout.reset()
+        TODO("layout.reset()")
         update(0)
         if (tickerStarted) start()
     }
@@ -254,6 +262,7 @@ private class ProgressBarAnimationBuilder<T> : ProgressBarFactoryBuilder<T> {
     override fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T> {
         return ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells.map { cell ->
             ProgressBarWidgetBuilder.Cell(cell.columnWidth, cell.align) {
+                val elapsed = displayedTime.elapsedNow()
                 val timeSinceLastFrame = elapsed - cell.lastFrameTime
                 val timePerFrame = (1.0 / cell.fps).seconds
                 val lastFrame = cell.lastFrame
