@@ -103,6 +103,8 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
+    // TODO test layout with no cells, no states, etc
+
     private fun doTest(
         expected: String,
         completed: Long,

@@ -156,7 +156,7 @@ fun ProgressBarBuilder<*>.timeElapsed(
 ) = cell(ColumnWidth.Auto, fps = fps) {
     val elapsed = when {
         finishedTime != null && startedTime != null -> finishedTime - startedTime // TODO: test this
-        else -> displayedTime.elapsedNow()
+        else -> animationTime.elapsedNow()
     }
     Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
 }
@@ -173,7 +173,7 @@ fun ProgressBarBuilder<*>.timeElapsed(
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
 fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
-    spinner.tick = (displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS) / fps).toInt()
+    spinner.tick = (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) / fps).toInt()
     if (isPaused) BlankWidgetWrapper(spinner)
     else spinner
 }
@@ -210,7 +210,7 @@ fun ProgressBarBuilder<*>.progressBar(
     fps = fps
 ) {
     val period = 2 // this could be configurable
-    val elapsedSeconds = displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS)
+    val elapsedSeconds = animationTime.elapsedNow().toDouble(DurationUnit.SECONDS)
     val pulsePosition = ((elapsedSeconds % period) / period)
 
     ProgressBar(

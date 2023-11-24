@@ -101,6 +101,7 @@ open class ProgressBuilder internal constructor(
     }
 
     internal fun build(): ProgressLayout {
+        // TODO buildCached for the animation case
         return ProgressLayout(builder.build(padding, true))
     }
 }
@@ -134,9 +135,10 @@ class ProgressLayout internal constructor(
     }
 }
 
+// TODO: make a ProgressBuilder() function so that the DSL is optional
 /**
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    return ProgressBuilder(ProgressBarWidgetBuilder()).apply(init).build()
+    return ProgressBuilder(ProgressBarFactoryBuilderImpl()).apply(init).build()
 }
