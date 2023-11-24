@@ -1,20 +1,16 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.nanosToSeconds
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.*
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
-    ProgressBarAnimationBuilder()
+    ProgressBarFactoryBuilderImpl()
 ) {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
@@ -113,7 +109,7 @@ class ProgressAnimation internal constructor(
         layout.build(
             state.completed,
             state.total,
-            state.displayedTime.elapsedNow().toDouble(DurationUnit.SECONDS),
+            state.animationTime.elapsedNow().toDouble(DurationUnit.SECONDS),
             state.speed
         )
     }
@@ -246,47 +242,6 @@ class ProgressAnimation internal constructor(
     }
 }
 
-// TODO: implement reset
-private class ProgressBarAnimationBuilder<T> : ProgressBarFactoryBuilder<T> {
-    private class Cell<T>(
-        val columnWidth: ColumnWidth,
-        val align: TextAlign?,
-        val fps: Int,
-        val builder: ProgressState<T>.() -> Widget,
-        var lastFrame: Widget? = null,
-        var lastFrameTime: Duration = Duration.ZERO,
-    )
-
-    private val cells: MutableList<Cell<T>> = mutableListOf()
-
-    override fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T> {
-        return ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells.map { cell ->
-            ProgressBarWidgetBuilder.Cell(cell.columnWidth, cell.align) {
-                val elapsed = displayedTime.elapsedNow()
-                val timeSinceLastFrame = elapsed - cell.lastFrameTime
-                val timePerFrame = (1.0 / cell.fps).seconds
-                val lastFrame = cell.lastFrame
-                if (lastFrame != null && (cell.fps <= 0 || timeSinceLastFrame < timePerFrame)) {
-                    lastFrame
-                } else {
-                    cell.lastFrameTime = elapsed
-                    cell.builder(this).also {
-                        cell.lastFrame = it
-                    }
-                }
-            }
-        })
-    }
-
-    override fun cell(
-        width: ColumnWidth,
-        fps: Int,
-        align: TextAlign?,
-        builder: ProgressState<T>.() -> Widget,
-    ) {
-        cells += Cell(width, align, fps, builder)
-    }
-}
 
 /**
  * Create an animated progress bar.
