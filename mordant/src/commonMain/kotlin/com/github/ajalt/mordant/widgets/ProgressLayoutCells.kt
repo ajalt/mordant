@@ -19,7 +19,7 @@ import kotlin.time.DurationUnit
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  */
 fun ProgressBarBuilder<*>.text(content: String, align: TextAlign? = null) {
-    cell(align = align) { Text(content) }
+    cell(align = align, fps = 0) { Text(content) }
 }
 
 /**
@@ -40,8 +40,10 @@ fun <T> ProgressBarBuilder<T>.text(
     align: TextAlign? = null,
     content: ProgressState<T>.() -> String,
 ) {
-    cell(align = align) { Text(content()) }
+    cell(align = align, fps = 0) { Text(content()) }
 }
+
+// TODO add a fixed width text cell that scrolls its contents if they're too large
 
 /**
  * Add a cell that displays the current completed count to this layout.
@@ -173,7 +175,7 @@ fun ProgressBarBuilder<*>.timeElapsed(
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
 fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
-    spinner.tick = (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) / fps).toInt()
+    spinner.tick = (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) * fps).toInt()
     if (isPaused) BlankWidgetWrapper(spinner)
     else spinner
 }

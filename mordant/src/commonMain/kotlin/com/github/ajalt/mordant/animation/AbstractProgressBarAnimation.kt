@@ -10,10 +10,11 @@ import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
 abstract class AbstractProgressBarAnimation<T>(
-    private val t: Terminal,
-    private val factory: CachedProgressBarWidgetFactory<T>,
-    private val timeSource: TimeSource.WithComparableMarks,
-    private val speedEstimateDuration: Duration,
+    // TODO: param docs
+    protected val terminal: Terminal,
+    protected val factory: CachedProgressBarWidgetFactory<T>,
+    protected val timeSource: TimeSource.WithComparableMarks,
+    protected val speedEstimateDuration: Duration,
 ) : ProgressBarAnimation<T> {
     // TODO: maybe pass this in instead of being abstract so task doesn't need a reference to animation
     abstract fun <T> withLock(block: () -> T): T
@@ -21,7 +22,7 @@ abstract class AbstractProgressBarAnimation<T>(
     private val tasks = mutableListOf<ProgressTask<T>>()
     private var started = false
     private val animationTime = timeSource.markNow()
-    private val animation = t.animation<List<ProgressState<T>>> { factory.build(it) }
+    private val animation = terminal.animation<List<ProgressState<T>>> { factory.build(it) }
 
     override fun addTask(
         context: T,
@@ -51,7 +52,7 @@ abstract class AbstractProgressBarAnimation<T>(
 
     override fun refresh() = withLock {
         if (!started) {
-            t.cursor.hide(showOnExit = true)
+            terminal.cursor.hide(showOnExit = true)
             started = true
         }
         animation.update(tasks.map { it.makeState() })

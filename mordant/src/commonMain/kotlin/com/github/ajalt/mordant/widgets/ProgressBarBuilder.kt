@@ -64,13 +64,17 @@ fun ProgressState(
     )
 }
 
-
+// TODO: docs on all of these
 interface ProgressBarBuilder<T> {
     /**
      * Add a cell to this layout.
+     *
+     * @param width The width of the cell.
+     * @param fps The number of times per second to refresh the cell. If 0, the cell will not be refreshed.
+     * @param align The text alignment for the cell when multiple tasks are present and cells are aligned.
+     * @param builder A lambda returning the widget to display in this cell.
      */
     fun cell(
-        // TODO document params
         width: ColumnWidth = ColumnWidth.Auto,
         fps: Int = 5,
         align: TextAlign? = null,
@@ -80,10 +84,32 @@ interface ProgressBarBuilder<T> {
 
 interface ProgressBarWidgetFactory<T> {
     fun build(states: List<ProgressState<T>>): Widget
+
+    /**
+     * The number of times per second to refresh the progress bar.
+     *
+     * This is based on the `fps` parameter of the cells in the layout.
+     */
+    val refreshRate: Int
 }
 
 fun <T> ProgressBarWidgetFactory<T>.build(vararg states: ProgressState<T>): Widget {
     return build(states.asList())
+}
+
+fun <T> ProgressBarWidgetFactory<T>.cache(
+    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+): CachedProgressBarWidgetFactory<T> {
+    return when (this) {
+        is CachedProgressBarWidgetFactory<T> -> this
+        is ProgressBarWidgetFactoryImpl<T> -> {
+            CachedProgressBarWidgetFactoryImpl(spacing, alignColumns, cells, timeSource)
+        }
+
+        else -> {
+            error("Caching custom implementations is not supported")
+        }
+    }
 }
 
 interface CachedProgressBarWidgetFactory<T> : ProgressBarWidgetFactory<T> {
@@ -143,16 +169,19 @@ fun progressBarLayout(
 
 // <editor-fold desc="Implementations">
 internal class ProgressBarWidgetFactoryImpl<T>(
-    private val spacing: Int,
-    private val alignColumns: Boolean = true,
-    private val cells: List<ProgressBarFactoryBuilderImpl.Cell<T>>,
+    val spacing: Int,
+    val alignColumns: Boolean,
+    val cells: List<ProgressBarFactoryBuilderImpl.Cell<T>>,
 ) : ProgressBarWidgetFactory<T> {
 
-    override fun build(vararg states: ProgressState<T>): Widget {
+    override fun build(states: List<ProgressState<T>>): Widget {
         return if (alignColumns) makeTable(states) else makeLinearLayout(states)
     }
 
-    private fun makeLinearLayout(states: Array<out ProgressState<T>>): Widget {
+    override val refreshRate: Int
+        get() = cells.maxOf { it.fps }
+
+    private fun makeLinearLayout(states: List<ProgressState<T>>): Widget {
         return verticalLayout {
             for (state in states) {
                 cell(horizontalLayout {
@@ -169,7 +198,7 @@ internal class ProgressBarWidgetFactoryImpl<T>(
         }
     }
 
-    private fun makeTable(states: Array<out ProgressState<T>>): Table {
+    private fun makeTable(states: List<ProgressState<T>>): Table {
         return table {
             //TODO  verticalAlign = verticalAlign
             cellBorders = Borders.NONE
@@ -228,16 +257,18 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
         val (lastFrameTime, widget) = cachedWidgets[taskId] ?: return null
         if (lastFrameTime < invalidatedAt) return null
         val timeSinceLastFrame = lastFrameTime.elapsedNow()
+        // if fps is 0 this will be Infinity, so it will be cached forever
         val timePerFrame = (1.0 / cell.fps).seconds
         if (timeSinceLastFrame < timePerFrame) return widget
         return null
     }
 
-    override fun build(vararg states: ProgressState<T>): Widget = factory.build(*states)
-
     override fun invalidateCache() {
         invalidatedAt = timeSource.markNow()
     }
+
+    override fun build(states: List<ProgressState<T>>) = factory.build(states)
+    override val refreshRate: Int get() = factory.refreshRate
 }
 
 // XXX: this interface is just for backcompat with ProgressBuilder
@@ -267,6 +298,7 @@ internal class ProgressBarFactoryBuilderImpl<T> : ProgressBarFactoryBuilder<T> {
         align: TextAlign?,
         builder: ProgressState<T>.() -> Widget,
     ) {
+        require(fps >= 0) { "fps cannot be negative" }
         cells += Cell(width, fps, align, builder)
     }
 
