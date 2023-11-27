@@ -1,9 +1,7 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.widgets.ProgressBarBuilder
 import com.github.ajalt.mordant.widgets.ProgressState
 import com.github.ajalt.mordant.widgets.TaskId
-import kotlin.time.TimeSource
 
 interface ProgressTaskUpdateScope<T> {
     var context: T
@@ -45,7 +43,7 @@ fun <T> ProgressTask<T>.advance(amount: Long = 1) = update { completed += amount
 interface ProgressBarAnimation<T> {
     fun addTask(
         context: T,
-        total: Long? = 0,
+        total: Long? = null,
         completed: Long = 0,
         start: Boolean = true,
         visible: Boolean = true,
@@ -70,21 +68,11 @@ interface ProgressBarAnimation<T> {
 }
 
 fun ProgressBarAnimation<Unit>.addTask(
-    total: Long? = 0,
+    total: Long? = null,
     completed: Long = 0,
     start: Boolean = true,
     visible: Boolean = true,
 ): ProgressTask<Unit> {
     return addTask(Unit, total, completed, start, visible)
 }
-
-//fun <T> progressBarContextAnimation(
-//    spacing: Int = 2,
-//    transient: Boolean = false,
-//    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
-//    init: ProgressBarBuilder<T>.() -> Unit,
-//): ProgressBarAnimation<T> {
-//    TODO()
-////    return ProgressBarWidgetBuilder<T>().apply(init).build(spacing)
-//}
 
