@@ -1,22 +1,9 @@
 plugins {
-    kotlin("multiplatform")
-    alias(libs.plugins.publish)
+    id("mordant-mpp-conventions")
+    id("mordant-publishing-conventions")
 }
 
 kotlin {
-    jvm()
-    js(IR) {
-        nodejs()
-        browser()
-    }
-
-    macosX64()
-    macosArm64()
-    linuxX64()
-    mingwX64()
-
-    applyDefaultHierarchyTemplate()
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -43,9 +30,5 @@ kotlin {
                 api(libs.systemrules)
             }
         }
-
-        val posixMain by creating { dependsOn(nativeMain.get()) }
-        linuxMain.get().dependsOn(posixMain)
-        macosMain.get().dependsOn(posixMain)
     }
 }
