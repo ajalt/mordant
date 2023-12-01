@@ -1,20 +1,21 @@
 @file:Suppress("PropertyName")
 
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.gradle.kotlin.dsl.provideDelegate
 import java.io.ByteArrayOutputStream
 
 plugins {
-    id("com.vanniktech.maven.publish")
+    id("com.vanniktech.maven.publish.base")
     id("org.jetbrains.dokka")
 }
 
-val VERSION_NAME: String by project
-
 fun getPublishVersion(): String {
+    val version = project.property("VERSION_NAME").toString()
     // Call gradle with -PinferVersion to set the dynamic version name.
     // Otherwise, we skip it to save time.
-    if (!project.hasProperty("inferVersion")) return VERSION_NAME
+    if (!project.hasProperty("inferVersion")) return version
 
     val stdout = ByteArrayOutputStream()
     project.exec {
@@ -25,10 +26,19 @@ fun getPublishVersion(): String {
     if (tag.isNotEmpty()) return tag
 
     val buildNumber = System.getenv("GITHUB_RUN_NUMBER") ?: "0"
-    return "$VERSION_NAME.$buildNumber-SNAPSHOT"
+    return "$version.$buildNumber-SNAPSHOT"
 }
 
-project.setProperty("VERSION_NAME", getPublishVersion())
+// Since we want to set the version name dynamically, we have to use the base plugin
+// https://github.com/vanniktech/gradle-maven-publish-plugin/issues/624
+@Suppress("UnstableApiUsage")
+mavenPublishing {
+    project.setProperty("VERSION_NAME", getPublishVersion())
+    pomFromGradleProperties()
+    configure(KotlinMultiplatform(JavadocJar.Dokka("dokkaHtml")))
+    publishToMavenCentral(SonatypeHost.DEFAULT)
+    signAllPublications()
+}
 
 tasks.named<DokkaTask>("dokkaHtml") {
     outputDirectory.set(rootProject.rootDir.resolve("docs/api"))
@@ -44,3 +54,4 @@ tasks.named<DokkaTask>("dokkaHtml") {
         skipDeprecated.set(true)
     }
 }
+
