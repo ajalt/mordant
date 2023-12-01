@@ -10,12 +10,15 @@ jna-core = "net.java.dev.jna:jna:5.13.0"
 graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 
 # used in tests
-kotest =  "io.kotest:kotest-assertions-core:5.7.2"
+kotest = "io.kotest:kotest-assertions-core:5.7.2"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 r8 = "com.android.tools:r8:8.1.56"
 
+# build logic
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version="1.9.10"}
+publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version="0.25.3"}
+
 [plugins]
-dokka = "org.jetbrains.dokka:1.9.10"
-publish = "com.vanniktech.maven.publish:0.25.3"
 graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.27"
-kotlinApiDump = "org.jetbrains.kotlinx.binary-compatibility-validator:0.13.2"
+kotlinBinaryCompatibilityValidator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.13.2"
