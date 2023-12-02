@@ -1,5 +1,6 @@
-package com.github.ajalt.mordant.animation
+package com.github.ajalt.mordant.animation.jvm
 
+import com.github.ajalt.mordant.animation.AbstractProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.CachedProgressBarWidgetFactory
 import com.github.ajalt.mordant.widgets.ProgressBarWidgetFactory

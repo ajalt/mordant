@@ -1,5 +1,6 @@
 [versions]
 kotlin = "1.9.21"
+coroutines = "1.8.0-RC"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
@@ -9,15 +10,19 @@ jna-core = "net.java.dev.jna:jna:5.13.0"
 # compileOnly
 graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 
+# used in extensions
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
 # used in tests
 kotest = "io.kotest:kotest-assertions-core:5.8.0"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 r8 = "com.android.tools:r8:8.1.72"
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # build logic
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version="1.9.10"}
-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version="0.25.3"}
+dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.10" }
+publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.25.3" }
 
 [plugins]
 graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.28"
