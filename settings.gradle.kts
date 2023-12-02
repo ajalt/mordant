@@ -2,6 +2,7 @@ rootProject.name = "mordant"
 
 include(
     "mordant",
+    "extensions:mordant-coroutines",
     "samples:detection",
     "samples:markdown",
     "samples:progress",

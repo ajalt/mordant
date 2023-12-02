@@ -6,19 +6,13 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(libs.colormath)
-            implementation(libs.markdown)
-            implementation(libs.jna.core)
+            api(project(":mordant"))
+            api(libs.coroutines.core)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotest)
-        }
-        jvmMain.dependencies {
-            compileOnly(libs.graalvm.svm)
-        }
-        jvmTest.dependencies {
-            api(libs.systemrules)
+            implementation(libs.coroutines.test)
         }
     }
 }

@@ -8,10 +8,8 @@ kotlin {
     jvm { withJava() }
 
     sourceSets {
-        val jvmMain by getting {
-            dependencies {
-                implementation(project(":mordant"))
-            }
+        jvmMain.dependencies {
+            implementation(project(":mordant"))
         }
     }
 }
