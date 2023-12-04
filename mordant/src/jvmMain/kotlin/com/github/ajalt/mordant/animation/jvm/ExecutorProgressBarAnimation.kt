@@ -19,7 +19,8 @@ class ExecutorProgressBarAnimation<T>(
     private val executor: ScheduledExecutorService = defaultExecutor(),
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     speedEstimateDuration: Duration = 30.seconds,
-) : AbstractProgressBarAnimation<T>(terminal, factory, timeSource, speedEstimateDuration) {
+) : AbstractProgressBarAnimation<T>(terminal, factory, timeSource, speedEstimateDuration),
+    AutoCloseable {
     private val lock = Any()
     private var future: ScheduledFuture<*>? = null
     private val rate = (1.0 / factory.refreshRate).seconds.inWholeMilliseconds
@@ -48,7 +49,7 @@ class ExecutorProgressBarAnimation<T>(
     /**
      * Shutdown the executor and show the terminal cursor.
      */
-    fun shutdown() = withLock {
+    override fun close() = withLock {
         try {
             executor.shutdown()
         } finally {
@@ -65,7 +66,7 @@ class ExecutorProgressBarAnimation<T>(
     private fun execute() = withLock {
         refresh()
         if (finished) {
-            shutdown()
+            close()
         } else {
             future = executor.schedule(::execute, rate, TimeUnit.MILLISECONDS)
         }
