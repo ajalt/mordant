@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.widgets.*
 fun main() {
     val terminal = Terminal()
 
-    val progress = progressBarLayout {
+    progressBarLayout {
         spinner(Spinner.Dots(brightBlue))
         text("my-file.bin")
         percentage()
@@ -18,21 +18,19 @@ fun main() {
         completed()
         speed("B/s")
         timeRemaining()
-    }.animateOnExecutor(terminal)
+    }.animateOnExecutor(terminal).use { progress ->
+        val task = progress.addTask()
 
-    val task = progress.addTask()
+        progress.start()
 
-    progress.start()
+        // Sleep for a few seconds to show the indeterminate state
+        Thread.sleep(5000)
 
-    // Sleep for a few seconds to show the indeterminate state
-    Thread.sleep(5000)
-
-    // Update the progress as the download progresses
-    task.update { total = 3_000_000_000 }
-    repeat(200) {
-        task.advance(15_000_000)
-        Thread.sleep(100)
+        // Update the progress as the download progresses
+        task.update { total = 3_000_000_000 }
+        repeat(200) {
+            task.advance(15_000_000)
+            Thread.sleep(100)
+        }
     }
-
-    progress.shutdown()
 }
