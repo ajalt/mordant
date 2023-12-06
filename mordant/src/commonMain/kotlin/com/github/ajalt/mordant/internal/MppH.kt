@@ -8,6 +8,14 @@ internal interface MppAtomicInt {
     fun set(value: Int)
 }
 
+internal interface MppAtomicRef<T> {
+    val value: T
+    fun compareAndSet(expected: T, newValue: T): Boolean
+    fun getAndSet(newValue: T): T
+}
+
+internal expect fun <T> MppAtomicRef(value: T): MppAtomicRef<T>
+
 internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
 
 internal expect fun getEnv(key: String): String?

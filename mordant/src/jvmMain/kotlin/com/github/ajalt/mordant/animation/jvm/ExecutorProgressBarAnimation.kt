@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.animation.jvm
 
-import com.github.ajalt.mordant.animation.AbstractProgressBarAnimation
+import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
+import com.github.ajalt.mordant.animation.ProgressBarAnimation
+import com.github.ajalt.mordant.animation.ProgressTask
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.CachedProgressBarWidgetFactory
 import com.github.ajalt.mordant.widgets.ProgressBarWidgetFactory
@@ -13,21 +15,29 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-class ExecutorProgressBarAnimation<T>(
-    terminal: Terminal,
-    factory: CachedProgressBarWidgetFactory<T>,
-    private val executor: ScheduledExecutorService = defaultExecutor(),
-    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
-    speedEstimateDuration: Duration = 30.seconds,
-) : AbstractProgressBarAnimation<T>(terminal, factory, timeSource, speedEstimateDuration),
-    AutoCloseable {
+class ExecutorProgressBarAnimation<T> private constructor(
+    private val terminal: Terminal,
+    private val base: ProgressBarAnimation<T>,
+    private val executor: ScheduledExecutorService,
+    private val rate: Long,
+) : AutoCloseable, ProgressBarAnimation<T> by base {
+    constructor(
+        terminal: Terminal,
+        factory: CachedProgressBarWidgetFactory<T>,
+        executor: ScheduledExecutorService = defaultExecutor(),
+        timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+        speedEstimateDuration: Duration = 30.seconds,
+    ) : this(
+        terminal,
+        BaseProgressBarAnimation(terminal, factory, timeSource, speedEstimateDuration),
+        executor,
+        (1.0 / factory.refreshRate).seconds.inWholeMilliseconds
+    )
+
     private val lock = Any()
     private var future: ScheduledFuture<*>? = null
-    private val rate = (1.0 / factory.refreshRate).seconds.inWholeMilliseconds
 
-    override fun <T> withLock(block: () -> T): T = synchronized(lock) { block() }
-
-    fun start() = withLock {
+    fun start() {
         if (future.let { it == null || !it.isDone }) {
             execute()
         }
@@ -41,7 +51,7 @@ class ExecutorProgressBarAnimation<T>(
      * Not that this does not pause any of the tasks, only the animation. Call [ProgressTask.pause]
      * if you want to pause a task's speed calculation.
      */
-    fun pause() = withLock {
+    fun pause() = synchronized(lock) {
         future?.cancel(false)
         future = null
     }
@@ -49,7 +59,7 @@ class ExecutorProgressBarAnimation<T>(
     /**
      * Shutdown the executor and show the terminal cursor.
      */
-    override fun close() = withLock {
+    override fun close() = synchronized(lock) {
         try {
             executor.shutdown()
         } finally {
@@ -57,13 +67,12 @@ class ExecutorProgressBarAnimation<T>(
         }
     }
 
-    // TODO docs
-    override fun clear() = withLock {
+    override fun clear() = synchronized(lock) {
         pause()
-        super.clear()
+        base.clear()
     }
 
-    private fun execute() = withLock {
+    private fun execute() = synchronized(lock) {
         refresh()
         if (finished) {
             close()

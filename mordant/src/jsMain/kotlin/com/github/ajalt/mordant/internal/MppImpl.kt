@@ -7,6 +7,20 @@ private external val console: dynamic
 private external val Symbol: dynamic
 private external val Buffer: dynamic
 
+private class JsAtomicRef<T>(override var value: T) : MppAtomicRef<T> {
+    override fun compareAndSet(expected: T, newValue: T): Boolean {
+        if (value != expected) return false
+        value = newValue
+        return true
+    }
+
+    override fun getAndSet(newValue: T): T {
+        val old = value
+        value = newValue
+        return old
+    }
+}
+
 private class JsAtomicInt(initial: Int) : MppAtomicInt{
     private var backing = initial
     override fun getAndIncrement(): Int {
@@ -23,6 +37,7 @@ private class JsAtomicInt(initial: Int) : MppAtomicInt{
 }
 
 internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JsAtomicInt(initial)
+internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = JsAtomicRef(value)
 
 
 private interface JsMppImpls {

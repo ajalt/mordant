@@ -1,8 +1,10 @@
 package com.github.ajalt.mordant.animation.coroutines
 
-import com.github.ajalt.mordant.animation.AbstractProgressBarAnimation
+import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.CachedProgressBarWidgetFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.internal.LockFreeLinkedListHead
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -12,8 +14,10 @@ class CoroutinesProgressBarAnimation<T>(
     factory: CachedProgressBarWidgetFactory<T>,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     speedEstimateDuration: Duration = 30.seconds,
-) : AbstractProgressBarAnimation<T>(terminal, factory, timeSource, speedEstimateDuration) {
-    override fun <T> withLock(block: () -> T): T {
-        TODO()
-    }
+) : BaseProgressBarAnimation<T>(terminal, factory, timeSource, speedEstimateDuration) {
+
+}
+
+fun foo() {
+    Dispatchers.Default.limitedParallelism()
 }

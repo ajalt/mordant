@@ -11,6 +11,14 @@ interface ProgressTaskUpdateScope<T> {
 }
 
 interface ProgressTask<T> {
+    /**
+     * Update the task's state.
+     *
+     * If the completed count is equal to the total, the task will be marked as [finished].
+     *
+     * If the task is already finished, this method will still update the task's state, but it will
+     * remain marked as finished. Use [reset] if you want to start the task again.
+     */
     fun update(block: ProgressTaskUpdateScope<T>.() -> Unit)
     fun start() // doc that this is for calculating elapsed times
     fun pause()
@@ -29,6 +37,8 @@ interface ProgressTask<T> {
     fun makeState(): ProgressState<T>
 
     val finished: Boolean
+    val started: Boolean
+    val paused: Boolean
     val id: TaskId
 }
 
@@ -37,8 +47,14 @@ interface ProgressTask<T> {
  *
  * This is a shortcut for `update { completed += amount }`.
  */
-fun <T> ProgressTask<T>.advance(amount: Long = 1) = update { completed += amount }
+fun ProgressTask<*>.advance(amount: Long = 1) = update { completed += amount }
 
+/**
+ * Set the completed progress of this task to [completed].
+ *
+ * This is a shortcut for `update { this.completed += completed }`.
+ */
+fun ProgressTask<*>.update(completed: Long) = update { this.completed = completed }
 
 interface ProgressBarAnimation<T> {
     fun addTask(

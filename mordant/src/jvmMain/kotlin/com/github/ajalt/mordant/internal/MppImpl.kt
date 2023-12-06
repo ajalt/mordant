@@ -8,6 +8,21 @@ import com.github.ajalt.mordant.internal.nativeimage.NativeImageWin32MppImpls
 import com.github.ajalt.mordant.terminal.*
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
+
+private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
+    private val ref = AtomicReference(value)
+    override val value: T
+        get() = ref.get()
+
+    override fun compareAndSet(expected: T, newValue: T): Boolean {
+        return ref.compareAndSet(expected, newValue)
+    }
+
+    override fun getAndSet(newValue: T): T {
+        return ref.getAndSet(newValue)
+    }
+}
 
 private class JvmAtomicInt(initial: Int): MppAtomicInt {
     private val backing = AtomicInteger(initial)
@@ -25,6 +40,7 @@ private class JvmAtomicInt(initial: Int): MppAtomicInt {
 }
 
 internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JvmAtomicInt(initial)
+internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = JvmAtomicRef(value)
 
 internal actual fun getEnv(key: String): String? = System.getenv(key)
 
