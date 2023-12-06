@@ -1,9 +1,6 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.internal.makePrintingTerminalCursor
-import com.github.ajalt.mordant.internal.renderLinesAnsi
-import com.github.ajalt.mordant.internal.sendInterceptedPrintRequest
-import com.github.ajalt.mordant.internal.synchronizeJvm
+import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.widgets.HorizontalRule
@@ -24,7 +21,7 @@ class Terminal private constructor(
     val theme: Theme,
     val tabWidth: Int,
     private val terminalInterface: TerminalInterface,
-    private val interceptors: MutableList<TerminalInterceptor>,
+    private val interceptors: MppAtomicRef<List<TerminalInterceptor>>,
     private val lock: Any,
 ) {
     /**
@@ -65,7 +62,7 @@ class Terminal private constructor(
         theme: Theme,
         tabWidth: Int,
         terminalInterface: TerminalInterface,
-    ) : this(theme, tabWidth, terminalInterface, mutableListOf(), Any())
+    ) : this(theme, tabWidth, terminalInterface, MppAtomicRef(emptyList()), Any())
 
     /**
      * @param theme The theme to use for widgets and styles like [success]
@@ -74,14 +71,14 @@ class Terminal private constructor(
     constructor(
         theme: Theme,
         terminalInterface: TerminalInterface,
-    ) : this(theme, 8, terminalInterface, mutableListOf(), Any())
+    ) : this(theme, 8, terminalInterface, MppAtomicRef(emptyList()), Any())
 
     /**
      * @param terminalInterface The [TerminalInterface] to use to read and write
      */
     constructor(
         terminalInterface: TerminalInterface,
-    ) : this(Theme.Default, 8, terminalInterface, mutableListOf(), Any())
+    ) : this(Theme.Default, 8, terminalInterface, MppAtomicRef(emptyList()), Any())
 
     /**
      * The terminal capabilities that were detected or set in the constructor.
@@ -366,15 +363,11 @@ class Terminal private constructor(
     }
 
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
-        synchronizeJvm(lock) {
-            interceptors += interceptor
-        }
+        interceptors.update { this + interceptor }
     }
 
     internal fun removeInterceptor(interceptor: TerminalInterceptor) {
-        synchronizeJvm(lock) {
-            interceptors.remove(interceptor)
-        }
+        interceptors.update { filter { it != interceptor } }
     }
 
     private fun rawPrintln(message: String, stderr: Boolean) {
@@ -382,8 +375,6 @@ class Terminal private constructor(
     }
 
     private fun sendPrintRequest(request: PrintRequest) {
-        synchronizeJvm(lock) {
-            sendInterceptedPrintRequest(request, terminalInterface, interceptors)
-        }
+        sendInterceptedPrintRequest(request, terminalInterface, interceptors.value)
     }
 }

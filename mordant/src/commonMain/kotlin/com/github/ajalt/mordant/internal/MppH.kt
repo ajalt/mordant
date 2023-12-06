@@ -14,6 +14,15 @@ internal interface MppAtomicRef<T> {
     fun getAndSet(newValue: T): T
 }
 
+internal inline fun <T> MppAtomicRef<T>.update(attempts: Int = 10, block: T.() -> T): Pair<T, T>? {
+    repeat(attempts) { // spin a few times; skip the update if we still can't succeed
+        val old = value
+        val newValue = block(old)
+        if (compareAndSet(old, newValue)) return old to newValue
+    }
+    return null
+}
+
 internal expect fun <T> MppAtomicRef(value: T): MppAtomicRef<T>
 
 internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
@@ -42,5 +51,3 @@ internal expect fun sendInterceptedPrintRequest(
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
 )
-
-internal expect inline fun synchronizeJvm(lock: Any, block: () -> Unit)

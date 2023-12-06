@@ -144,5 +144,3 @@ internal actual fun sendInterceptedPrintRequest(
         interceptors.fold(request) { acc, it -> it.intercept(acc) }
     )
 }
-
-internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = block()
