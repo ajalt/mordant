@@ -9,6 +9,19 @@ import kotlin.concurrent.AtomicInt
 import kotlin.concurrent.AtomicReference
 import kotlin.experimental.ExperimentalNativeApi
 
+private class NativeAtomicRef<T>(value: T) : MppAtomicRef<T> {
+    private val ref = AtomicReference(value)
+    override val value: T
+        get() = ref.value
+
+    override fun compareAndSet(expected: T, newValue: T): Boolean {
+        return ref.compareAndSet(expected, newValue)
+    }
+
+    override fun getAndSet(newValue: T): T {
+        return ref.getAndSet(newValue)
+    }
+}
 
 private class NativeAtomicInt(initial: Int) : MppAtomicInt {
     private val backing = AtomicInt(initial)
@@ -26,6 +39,7 @@ private class NativeAtomicInt(initial: Int) : MppAtomicInt {
 }
 
 internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = NativeAtomicInt(initial)
+internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = NativeAtomicRef(value)
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 

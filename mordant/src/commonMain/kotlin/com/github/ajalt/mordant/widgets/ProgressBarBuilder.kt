@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
@@ -234,7 +235,7 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
     cells: List<ProgressBarFactoryBuilderImpl.Cell<T>>,
     private val timeSource: TimeSource.WithComparableMarks,
 ) : CachedProgressBarWidgetFactory<T> {
-    private var invalidatedAt = timeSource.markNow()
+    private var invalidatedAt = MppAtomicRef(timeSource.markNow())
 
     private val factory = ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells.map(::makeCell))
 
@@ -255,7 +256,7 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
         cachedWidgets: MutableMap<TaskId, Pair<ComparableTimeMark, Widget>>,
     ): Widget? {
         val (lastFrameTime, widget) = cachedWidgets[taskId] ?: return null
-        if (lastFrameTime < invalidatedAt) return null
+        if (lastFrameTime < invalidatedAt.value) return null
         val timeSinceLastFrame = lastFrameTime.elapsedNow()
         // if fps is 0 this will be Infinity, so it will be cached forever
         val timePerFrame = (1.0 / cell.fps).seconds
@@ -264,7 +265,7 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
     }
 
     override fun invalidateCache() {
-        invalidatedAt = timeSource.markNow()
+        invalidatedAt.getAndSet(timeSource.markNow())
     }
 
     override fun build(states: List<ProgressState<T>>) = factory.build(states)
