@@ -112,8 +112,6 @@ internal actual fun sendInterceptedPrintRequest(
     terminalInterface.completePrintRequest(interceptors.fold(request) { acc, it -> it.intercept(acc) })
 }
 
-internal actual inline fun synchronizeJvm(lock: Any, block: () -> Unit) = synchronized(lock, block)
-
 private val impls: MppImpls = System.getProperty("os.name").let { os ->
     try {
         // Inlined version of ImageInfo.inImageCode()

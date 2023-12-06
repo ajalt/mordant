@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.MppAtomicRef
+import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.CachedProgressBarWidgetFactory
 import com.github.ajalt.mordant.widgets.ProgressState
@@ -186,13 +187,4 @@ private fun <T> estimateSpeed(state: TaskState<T>): Double? = state.run {
     val sampleTimespan = (samples.last().time - samples.first().time).toDouble(SECONDS)
     val complete = samples.last().completed - samples.first().completed
     if (complete <= 0 || sampleTimespan <= 0.0) null else complete / sampleTimespan
-}
-
-private inline fun <T> MppAtomicRef<T>.update(attempts: Int = 10, block: T.() -> T): Pair<T, T>? {
-    repeat(attempts) { // spin a few times; skip the update if we still can't succeed
-        val old = value
-        val newValue = block(old)
-        if (compareAndSet(old, newValue)) return old to newValue
-    }
-    return null
 }
