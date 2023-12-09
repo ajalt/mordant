@@ -33,6 +33,7 @@ abstract class Animation<T>(
     private val trailingLinebreak: Boolean = true,
     private val terminal: Terminal,
 ) {
+    // TODO atomics
     private var size: Pair<Int, Int>? = null
     private var text: String? = null
     private var needsClear = false

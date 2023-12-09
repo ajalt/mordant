@@ -3,11 +3,13 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
 open class ProgressBuilder internal constructor(
-    private val builder: ProgressBarFactoryBuilder<Unit>,
+    internal val builder: ProgressBarBuilderImpl<Unit>,
 ) {
     var padding: Int = 2
 
@@ -99,11 +101,6 @@ open class ProgressBuilder internal constructor(
     fun spinner(spinner: Spinner, frameRate: Int = 8) {
         builder.spinner(spinner, frameRate)
     }
-
-    internal fun build(): ProgressLayout {
-        // TODO buildCached for the animation case
-        return ProgressLayout(builder.build(padding, true))
-    }
 }
 
 /**
@@ -135,10 +132,16 @@ class ProgressLayout internal constructor(
     }
 }
 
+private fun calcHz(completed: Long, elapsed: Duration): Double = when {
+    completed <= 0 || elapsed <= Duration.ZERO -> 0.0
+    else -> completed / elapsed.toDouble(DurationUnit.SECONDS)
+}
+
 // TODO: make a ProgressBuilder() function so that the DSL is optional
 /**
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    return ProgressBuilder(ProgressBarFactoryBuilderImpl()).apply(init).build()
+    val builder = ProgressBuilder(ProgressBarBuilderImpl()).apply(init)
+    return ProgressLayout(builder.builder.build(builder.padding, true))
 }
