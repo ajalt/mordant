@@ -46,8 +46,7 @@ class BaseProgressBarAnimation<T>(
     override fun refresh() {
         // If we can't update the state, skip the animation refresh
         val result = state.update { copy(started = true) } ?: return
-        val (oldState, newState) = result
-        if (!oldState.started) terminal.cursor.hide(showOnExit = true)
+        val (_, newState) = result
         animation.update(newState.tasks.map { it.makeState() })
     }
 
@@ -95,7 +94,7 @@ private class ProgressTaskImpl<T>(
     private val timeSource: TimeSource.WithComparableMarks,
     private val speedEstimateDuration: Duration,
 ) : ProgressTask<T> {
-    override val id: TaskId = object : TaskId {}
+    override val id: TaskId = TaskId()
     private val state = MppAtomicRef(state)
 
     override fun update(block: ProgressTaskUpdateScope<T>.() -> Unit) {
@@ -172,6 +171,7 @@ private class ProgressTaskImpl<T>(
                 pausedTime = pausedTime,
                 finishedTime = finishedTime,
                 speed = finishedSpeed ?: estimateSpeed(this),
+                taskId = id,
             )
         }
     }
@@ -184,7 +184,7 @@ private class ProgressTaskImpl<T>(
 
 private fun <T> estimateSpeed(state: TaskState<T>): Double? = state.run {
     if (startedTime == null || samples.size < 2) return null
-    val sampleTimespan = (samples.last().time - samples.first().time).toDouble(SECONDS)
+    val sampleTimespan = samples.first().time.elapsedNow().toDouble(SECONDS)
     val complete = samples.last().completed - samples.first().completed
     if (complete <= 0 || sampleTimespan <= 0.0) null else complete / sampleTimespan
 }

@@ -37,8 +37,9 @@ class ExecutorProgressBarAnimation<T> private constructor(
     private val lock = Any()
     private var future: ScheduledFuture<*>? = null
 
-    fun start() {
-        if (future.let { it == null || !it.isDone }) {
+    fun start() = synchronized(lock) {
+        if (future == null) {
+            terminal.cursor.hide(showOnExit = true)
             execute()
         }
     }

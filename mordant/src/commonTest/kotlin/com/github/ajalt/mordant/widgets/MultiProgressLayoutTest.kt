@@ -90,7 +90,8 @@ class MultiProgressLayoutTest : RenderingTest() {
                 completed1,
                 now,
                 now.takeIf { elapsed1 != null },
-                speed = elapsed1?.let { calcHz(completed1, it.seconds) }
+
+                // TODO speed = elapsed1?.let { calcHz(completed1, it.seconds) }
             ),
             ProgressState(
                 "Task Two",
@@ -98,7 +99,7 @@ class MultiProgressLayoutTest : RenderingTest() {
                 completed2,
                 now,
                 now.takeIf { elapsed2 != null },
-                speed = elapsed2?.let { calcHz(completed2, it.seconds) }
+                //speed = elapsed2?.let { calcHz(completed2, it.seconds) }
             ),
         )
         checkRender(

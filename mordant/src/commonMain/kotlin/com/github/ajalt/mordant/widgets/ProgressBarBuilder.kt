@@ -5,12 +5,10 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
 import kotlin.time.ComparableTimeMark
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
-interface TaskId
+class TaskId
 
 // TODO: docs
 // TODO: make total and completed `Double`?
@@ -40,7 +38,7 @@ data class ProgressState<T>(
      */
     val speed: Double? = null,
 
-    val taskId: TaskId = object : TaskId {},
+    val taskId: TaskId = TaskId(),
 ) {
     val isIndeterminate: Boolean get() = total == null
     val isPaused: Boolean get() = pausedTime != null
@@ -113,6 +111,7 @@ fun <T> ProgressBarWidgetFactory<T>.cache(
     }
 }
 
+// TODO: review all of these interface names
 interface CachedProgressBarWidgetFactory<T> : ProgressBarWidgetFactory<T> {
     fun invalidateCache()
 }
@@ -134,7 +133,7 @@ fun <T> ProgressBarWidgetFactory<T>.build(
     )
 }
 
-// TODO test these
+// TODO test these, add docs
 fun ProgressBarWidgetFactory<Unit>.build(
     total: Long?,
     completed: Long,
@@ -156,10 +155,9 @@ fun <T> progressBarContextLayout(
     alignColumns: Boolean = true,
     init: ProgressBarBuilder<T>.() -> Unit,
 ): ProgressBarWidgetFactory<T> {
-    return ProgressBarFactoryBuilderImpl<T>().apply(init).build(spacing, alignColumns)
+    return ProgressBarBuilderImpl<T>().apply(init).build(spacing, alignColumns)
 }
 
-// TODO test this
 fun progressBarLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
@@ -172,7 +170,7 @@ fun progressBarLayout(
 internal class ProgressBarWidgetFactoryImpl<T>(
     val spacing: Int,
     val alignColumns: Boolean,
-    val cells: List<ProgressBarFactoryBuilderImpl.Cell<T>>,
+    val cells: List<ProgressBarBuilderImpl.Cell<T>>,
 ) : ProgressBarWidgetFactory<T> {
 
     override fun build(states: List<ProgressState<T>>): Widget {
@@ -232,7 +230,7 @@ internal class ProgressBarWidgetFactoryImpl<T>(
 internal class CachedProgressBarWidgetFactoryImpl<T>(
     spacing: Int,
     alignColumns: Boolean,
-    cells: List<ProgressBarFactoryBuilderImpl.Cell<T>>,
+    cells: List<ProgressBarBuilderImpl.Cell<T>>,
     private val timeSource: TimeSource.WithComparableMarks,
 ) : CachedProgressBarWidgetFactory<T> {
     private var invalidatedAt = MppAtomicRef(timeSource.markNow())
@@ -240,11 +238,11 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
     private val factory = ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells.map(::makeCell))
 
     private fun makeCell(
-        cell: ProgressBarFactoryBuilderImpl.Cell<T>,
-    ): ProgressBarFactoryBuilderImpl.Cell<T> {
+        cell: ProgressBarBuilderImpl.Cell<T>,
+    ): ProgressBarBuilderImpl.Cell<T> {
         // Wrap the cell builder in a block that caches the widget
         val cachedWidgets = mutableMapOf<TaskId, Pair<ComparableTimeMark, Widget>>()
-        return ProgressBarFactoryBuilderImpl.Cell(cell.columnWidth, cell.fps, cell.align) {
+        return ProgressBarBuilderImpl.Cell(cell.columnWidth, cell.fps, cell.align) {
             getCachedWidget(cell, cachedWidgets) ?: cell.builder(this).also {
                 cachedWidgets[taskId] = timeSource.markNow() to it
             }
@@ -252,7 +250,7 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
     }
 
     private fun ProgressState<T>.getCachedWidget(
-        cell: ProgressBarFactoryBuilderImpl.Cell<T>,
+        cell: ProgressBarBuilderImpl.Cell<T>,
         cachedWidgets: MutableMap<TaskId, Pair<ComparableTimeMark, Widget>>,
     ): Widget? {
         val (lastFrameTime, widget) = cachedWidgets[taskId] ?: return null
@@ -272,26 +270,16 @@ internal class CachedProgressBarWidgetFactoryImpl<T>(
     override val refreshRate: Int get() = factory.refreshRate
 }
 
-// XXX: this interface is just for backcompat with ProgressBuilder
-internal interface ProgressBarFactoryBuilder<T> : ProgressBarBuilder<T> {
-    fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T>
-    fun buildCached(
-        spacing: Int,
-        alignColumns: Boolean,
-        timeSource: TimeSource.WithComparableMarks,
-    ): CachedProgressBarWidgetFactory<T>
-}
-
 // XXX: this is internal for backcompat, could be `private`
-internal class ProgressBarFactoryBuilderImpl<T> : ProgressBarFactoryBuilder<T> {
-    class Cell<T>(
+internal class ProgressBarBuilderImpl<T> : ProgressBarBuilder<T> {
+    data class Cell<T>(
         val columnWidth: ColumnWidth,
         val fps: Int,
         val align: TextAlign?,
         val builder: ProgressState<T>.() -> Widget,
     )
 
-    private val cells: MutableList<Cell<T>> = mutableListOf()
+    private var cells: MutableList<Cell<T>> = mutableListOf()
 
     override fun cell(
         width: ColumnWidth,
@@ -303,22 +291,22 @@ internal class ProgressBarFactoryBuilderImpl<T> : ProgressBarFactoryBuilder<T> {
         cells += Cell(width, fps, align, builder)
     }
 
-    override fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T> {
+    // XXX: only for backcompat
+    fun overrideFps(textFps: Int, animationFps: Int) {
+        cells = cells.mapTo(mutableListOf()) {
+            it.copy(
+                fps = when (it.fps) {
+                    5 -> textFps
+                    30 -> animationFps
+                    else -> it.fps
+                }
+            )
+        }
+    }
+
+    fun build(spacing: Int, alignColumns: Boolean): ProgressBarWidgetFactory<T> {
         return ProgressBarWidgetFactoryImpl(spacing, alignColumns, cells)
     }
-
-    override fun buildCached(
-        spacing: Int,
-        alignColumns: Boolean,
-        timeSource: TimeSource.WithComparableMarks,
-    ): CachedProgressBarWidgetFactory<T> {
-        return CachedProgressBarWidgetFactoryImpl(spacing, alignColumns, cells, timeSource)
-    }
 }
 
-// XXX: this is internal for backcompat, could be `private`
-internal fun calcHz(completed: Long, elapsed: Duration): Double = when {
-    completed <= 0 || elapsed <= Duration.ZERO -> 0.0
-    else -> completed / elapsed.toDouble(SECONDS)
-}
 // </editor-fold>

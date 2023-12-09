@@ -20,7 +20,7 @@ interface ProgressTask<T> {
      * remain marked as finished. Use [reset] if you want to start the task again.
      */
     fun update(block: ProgressTaskUpdateScope<T>.() -> Unit)
-    fun start() // doc that this is for calculating elapsed times
+    fun start() //TODO doc that this is for calculating elapsed times
     fun pause()
 
     /**
@@ -48,6 +48,7 @@ interface ProgressTask<T> {
  * This is a shortcut for `update { completed += amount }`.
  */
 fun ProgressTask<*>.advance(amount: Long = 1) = update { completed += amount }
+fun ProgressTask<*>.advance(amount: Int) = advance(amount.toLong())
 
 /**
  * Set the completed progress of this task to [completed].
@@ -55,6 +56,7 @@ fun ProgressTask<*>.advance(amount: Long = 1) = update { completed += amount }
  * This is a shortcut for `update { this.completed += completed }`.
  */
 fun ProgressTask<*>.update(completed: Long) = update { this.completed = completed }
+fun ProgressTask<*>.update(completed: Int) = update(completed.toLong())
 
 interface ProgressBarAnimation<T> {
     fun addTask(
