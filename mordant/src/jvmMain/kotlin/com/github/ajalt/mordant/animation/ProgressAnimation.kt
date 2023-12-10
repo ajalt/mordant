@@ -3,15 +3,16 @@ package com.github.ajalt.mordant.animation
 import com.github.ajalt.mordant.animation.jvm.ExecutorProgressBarAnimation
 import com.github.ajalt.mordant.animation.jvm.animateOnExecutor
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.ProgressBarBuilderImpl
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
+import com.github.ajalt.mordant.widgets.progress.BaseProgressBarBuilder
+import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
-    ProgressBarBuilderImpl()
+    BaseProgressBarBuilder()
 ) {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
@@ -142,10 +143,19 @@ internal fun Terminal.progressAnimation(
     init: ProgressAnimationBuilder.() -> Unit,
 ): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
-    builder.builder.overrideFps(builder.textFrameRate, builder.animationFrameRate)
-    val widgetFactory = builder.builder.build(builder.padding, true)
+    val origDef = builder.builder.build(builder.padding, true)
+    val cells = origDef.cells.mapTo(mutableListOf()) {
+        it.copy(
+            fps = when (it.fps) {
+                5 -> builder.textFrameRate
+                30 -> builder.animationFrameRate
+                else -> it.fps
+            }
+        )
+    }
+    val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
     return ProgressAnimation(
-        widgetFactory.animateOnExecutor(
+        definition.animateOnExecutor(
             this,
             timeSource = timeSource,
             speedEstimateDuration = builder.historyLength.toDouble().seconds

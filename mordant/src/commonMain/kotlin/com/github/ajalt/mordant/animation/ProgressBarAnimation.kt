@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.widgets.ProgressState
-import com.github.ajalt.mordant.widgets.TaskId
+import com.github.ajalt.mordant.widgets.progress.ProgressState
+import com.github.ajalt.mordant.widgets.progress.TaskId
 
 interface ProgressTaskUpdateScope<T> {
     var context: T
@@ -48,6 +48,12 @@ interface ProgressTask<T> {
  * This is a shortcut for `update { completed += amount }`.
  */
 fun ProgressTask<*>.advance(amount: Long = 1) = update { completed += amount }
+
+/**
+ * Advance the completed progress of this task by [amount].
+ *
+ * This is a shortcut for `update { completed += amount }`.
+ */
 fun ProgressTask<*>.advance(amount: Int) = advance(amount.toLong())
 
 /**
@@ -56,6 +62,12 @@ fun ProgressTask<*>.advance(amount: Int) = advance(amount.toLong())
  * This is a shortcut for `update { this.completed += completed }`.
  */
 fun ProgressTask<*>.update(completed: Long) = update { this.completed = completed }
+
+/**
+ * Set the completed progress of this task to [completed].
+ *
+ * This is a shortcut for `update { this.completed += completed }`.
+ */
 fun ProgressTask<*>.update(completed: Int) = update(completed.toLong())
 
 interface ProgressBarAnimation<T> {
@@ -78,7 +90,7 @@ interface ProgressBarAnimation<T> {
     /**
      * Refresh the progress and draw it to the screen.
      */
-    fun refresh() // was tick()
+    fun refresh()
 
     fun clear()
 

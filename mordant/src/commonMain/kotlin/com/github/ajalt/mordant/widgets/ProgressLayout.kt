@@ -3,13 +3,15 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.progress.BaseProgressBarBuilder
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
 open class ProgressBuilder internal constructor(
-    internal val builder: ProgressBarBuilderImpl<Unit>,
+    internal val builder: BaseProgressBarBuilder<Unit>,
 ) {
     var padding: Int = 2
 
@@ -107,7 +109,7 @@ open class ProgressBuilder internal constructor(
  * A builder for creating an animated progress bar widget.
  */
 class ProgressLayout internal constructor(
-    private val factory: ProgressBarWidgetFactory<Unit>,
+    private val factory: ProgressBarDefinition<Unit>,
 ) {
     fun build(
         completed: Long,
@@ -142,6 +144,6 @@ private fun calcHz(completed: Long, elapsed: Duration): Double = when {
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    val builder = ProgressBuilder(ProgressBarBuilderImpl()).apply(init)
+    val builder = ProgressBuilder(BaseProgressBarBuilder()).apply(init)
     return ProgressLayout(builder.builder.build(builder.padding, true))
 }

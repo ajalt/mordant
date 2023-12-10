@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.widgets
+package com.github.ajalt.mordant.widgets.progress
 
 import com.github.ajalt.mordant.internal.BlankWidgetWrapper
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
@@ -8,6 +8,9 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
+import com.github.ajalt.mordant.widgets.ProgressBar
+import com.github.ajalt.mordant.widgets.Spinner
+import com.github.ajalt.mordant.widgets.Text
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit

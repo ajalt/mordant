@@ -4,9 +4,7 @@ import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
 import com.github.ajalt.mordant.animation.ProgressBarAnimation
 import com.github.ajalt.mordant.animation.ProgressTask
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.CachedProgressBarWidgetFactory
-import com.github.ajalt.mordant.widgets.ProgressBarWidgetFactory
-import com.github.ajalt.mordant.widgets.cache
+import com.github.ajalt.mordant.widgets.progress.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -23,7 +21,7 @@ class ExecutorProgressBarAnimation<T> private constructor(
 ) : AutoCloseable, ProgressBarAnimation<T> by base {
     constructor(
         terminal: Terminal,
-        factory: CachedProgressBarWidgetFactory<T>,
+        factory: CachedProgressBarWidgetMaker<T>,
         executor: ScheduledExecutorService = defaultExecutor(),
         timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
         speedEstimateDuration: Duration = 30.seconds,
@@ -83,26 +81,27 @@ class ExecutorProgressBarAnimation<T> private constructor(
     }
 }
 
+// TODO docs
+fun <T> ProgressBarDefinition<T>.animateOnExecutor(
+    terminal: Terminal,
+    executor: ScheduledExecutorService = defaultExecutor(),
+    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+    speedEstimateDuration: Duration = 30.seconds,
+    maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
+): ExecutorProgressBarAnimation<T> {
+    return ExecutorProgressBarAnimation(
+        terminal,
+        cache(timeSource, maker),
+        executor,
+        timeSource,
+        speedEstimateDuration,
+    )
+}
+
 private fun defaultExecutor(): ScheduledExecutorService {
     return Executors.newSingleThreadScheduledExecutor {
         Thread().also {
             it.isDaemon = true
         }
     }
-}
-
-// TODO docs
-fun <T> ProgressBarWidgetFactory<T>.animateOnExecutor(
-    terminal: Terminal,
-    executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
-    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
-    speedEstimateDuration: Duration = 30.seconds,
-): ExecutorProgressBarAnimation<T> {
-    return ExecutorProgressBarAnimation(
-        terminal,
-        cache(timeSource),
-        executor,
-        timeSource,
-        speedEstimateDuration
-    )
 }
