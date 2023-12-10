@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.widgets.progress.*
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.minutes

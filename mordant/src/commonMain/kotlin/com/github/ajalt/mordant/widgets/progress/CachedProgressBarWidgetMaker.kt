@@ -1,0 +1,106 @@
+package com.github.ajalt.mordant.widgets.progress
+
+import com.github.ajalt.mordant.internal.MppAtomicRef
+import com.github.ajalt.mordant.internal.update
+import com.github.ajalt.mordant.rendering.Widget
+import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
+
+// TODO: docs, review all of these interface names
+/**
+ * A [ProgressBarWidgetMaker] that caches the widgets for each cell so that they only update as fast
+ * as their [fps][ProgressBarCell.fps].
+ */
+interface CachedProgressBarWidgetMaker<T> {
+    /**
+     * Build a progress bar widget from the given [states], using the cached definition.
+     */
+    fun build(states: List<ProgressState<T>>): Widget
+
+    /**
+     * Invalidate the cache for the task with id [taskId], or all tasks if [taskId] is null.
+     */
+    fun invalidateCache(taskId: TaskId? = null)
+
+    /**
+     * The refresh rate, in frames per second, that will satisfy the [fps][ProgressBarCell.fps] of
+     * all this progress bar's cells.
+     */
+    val refreshRate: Int
+}
+
+fun <T> ProgressBarDefinition<T>.cache(
+    timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+    maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
+): CachedProgressBarWidgetMaker<T> {
+    return CachedProgressBarWidgetMakerImpl(this, maker, timeSource)
+}
+
+private class CachedProgressBarWidgetMakerImpl<T>(
+    definition: ProgressBarDefinition<T>,
+    private val maker: ProgressBarWidgetMaker,
+    private val timeSource: TimeSource.WithComparableMarks,
+) : CachedProgressBarWidgetMaker<T> {
+    private data class Invalidations(
+        val all: ComparableTimeMark,
+        val byTask: Map<TaskId, ComparableTimeMark>,
+    )
+
+    private val d = ProgressBarDefinition(
+        definition.cells.map { makeCell(it) },
+        definition.spacing,
+        definition.alignColumns,
+    )
+
+    private val invalidations = MppAtomicRef(Invalidations(timeSource.markNow(), emptyMap()))
+
+    private fun makeCell(
+        cell: ProgressBarCell<T>,
+    ): ProgressBarCell<T> {
+        // Wrap the cell builder in a block that caches the widget
+        val cachedWidgets = MppAtomicRef(mapOf<TaskId, Pair<ComparableTimeMark, Widget>>())
+        return ProgressBarCell(cell.columnWidth, cell.fps, cell.align) {
+            val result = cachedWidgets.update {
+                when {
+                    isCacheValid(cell, this) -> this
+                    else -> {
+                        val content = cell.content(this@ProgressBarCell)
+                        this + (taskId to (timeSource.markNow() to content))
+                    }
+                }
+            }
+
+            result?.second?.get(taskId)?.second ?: cell.content(this)
+        }
+    }
+
+    private fun ProgressState<T>.isCacheValid(
+        cell: ProgressBarCell<T>,
+        cachedWidgets: Map<TaskId, Pair<ComparableTimeMark, Widget>>,
+    ): Boolean {
+        val (lastFrameTime, _) = cachedWidgets[taskId] ?: return false
+        val invals = invalidations.value
+        val invalAt = maxOf(invals.all, invals.byTask[taskId] ?: invals.all)
+        if (lastFrameTime < invalAt) return false
+        val timeSinceLastFrame = lastFrameTime.elapsedNow()
+        // if fps is 0 this will be Infinity, so it will be cached forever
+        val maxCacheRetentionDuration = (1.0 / cell.fps).seconds
+        return timeSinceLastFrame < maxCacheRetentionDuration
+    }
+
+    override fun invalidateCache(taskId: TaskId?) {
+        invalidations.update {
+            copy(
+                all = if (taskId == null) timeSource.markNow() else all,
+                byTask = if (taskId != null) byTask + (taskId to timeSource.markNow()) else byTask,
+            )
+        }
+    }
+
+    override fun build(states: List<ProgressState<T>>): Widget {
+        return maker.build(d, states)
+    }
+
+    override val refreshRate: Int get() = d.cells.maxOfOrNull { it.fps } ?: 0
+}

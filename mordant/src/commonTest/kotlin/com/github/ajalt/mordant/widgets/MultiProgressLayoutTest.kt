@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.widgets.progress.*
 import kotlin.js.JsName
 import kotlin.math.max
 import kotlin.test.Test
@@ -67,7 +68,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         val t = TestTimeSource()
         t += max(elapsed1 ?: 0.0, elapsed2 ?: 0.0).seconds
         val now = t.markNow()
-        val factory: ProgressBarWidgetFactory<String> = progressBarContextLayout(
+        val factory: ProgressBarDefinition<String> = progressBarContextLayout(
             spacing = 0,
             alignColumns = alignColumns,
         ) {

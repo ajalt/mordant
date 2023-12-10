@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.animation.jvm.animateOnExecutor
 import com.github.ajalt.mordant.rendering.TextColors.brightBlue
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.*
+import com.github.ajalt.mordant.widgets.progress.*
 
 fun main() {
     val terminal = Terminal()
