@@ -54,13 +54,14 @@ fun <T> ProgressLayoutScope<T>.text(
  * @param suffix A string to append to the end of the displayed count, such as "B" if you are tracking bytes. Empty by default.
  * @param includeTotal If true, the total count will be displayed after the completed count, separated by a slash. True by default.
  * @param style The style to use for the displayed count.
- * @param fps The number of times per second to update the displayed count. 5 by default.
+ * @param fps The number of times per second to update the displayed count. Uses the
+ *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.completed(
     suffix: String = "",
     includeTotal: Boolean = true,
     style: TextStyle = DEFAULT_STYLE,
-    fps: Int = 5,
+    fps: Int = textFps,
 ) = cell(
     // " 100.0M"
     // " 100.0/200.0M"
@@ -85,12 +86,13 @@ fun ProgressLayoutScope<*>.completed(
  *
  * @param suffix A string to append to the end of the displayed speed, such as "B/s" if you are tracking bytes. "it/s" by default.
  * @param style The style to use for the displayed speed.
- * @param fps The number of times per second to update the displayed speed. 5 by default.
+ * @param fps The number of times per second to update the displayed speed. Uses the
+ *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.speed(
     suffix: String = "it/s",
     style: TextStyle = DEFAULT_STYLE,
-    fps: Int = 5,
+    fps: Int = textFps,
 ) = cell(
     ColumnWidth.Fixed(6 + suffix.length), // " 100.0M"
     fps = fps
@@ -105,9 +107,10 @@ fun ProgressLayoutScope<*>.speed(
 /**
  * Add a cell that displays the current percentage to this layout.
  *
- * @param fps The number of times per second to update the displayed percentage. 5 by default.
+ * @param fps The number of times per second to update the displayed percentage. Uses the
+ *  [text fps][ProgressLayoutScope.textFps] by default.
  */
-fun ProgressLayoutScope<*>.percentage(fps: Int = 5) = cell(
+fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
     ColumnWidth.Fixed(4),  // " 100%"
     fps = fps
 ) {
@@ -126,13 +129,14 @@ fun ProgressLayoutScope<*>.percentage(fps: Int = 5) = cell(
  * @param prefix A string to prepend to the displayed time, such as "eta " or "time left: ". "eta " by default.
  * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
  * @param style The style to use for the displayed time.
- * @param fps The number of times per second to update the displayed time. 5 by default.
+ * @param fps The number of times per second to update the displayed time. Uses the
+ *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.timeRemaining(
     prefix: String = "eta ",
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
-    fps: Int = 5,
+    fps: Int = textFps,
 ) = cell(
     ColumnWidth.Fixed(7 + prefix.length), // " 0:00:02"
     fps = fps
@@ -152,12 +156,13 @@ fun ProgressLayoutScope<*>.timeRemaining(
  *
  * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
  * @param style The style to use for the displayed time.
- * @param fps The number of times per second to update the displayed time. 5 by default.
+ * @param fps The number of times per second to update the displayed time. Uses the
+ *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.timeElapsed(
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
-    fps: Int = 5,
+    fps: Int = textFps,
 ) = cell(ColumnWidth.Auto, fps = fps) {
     val elapsed = when {
         finishedTime != null && startedTime != null -> finishedTime - startedTime // TODO: test this
@@ -196,7 +201,8 @@ fun ProgressLayoutScope<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = 
  * @param finishedStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when total <= completed
  * @param indeterminateStyle e (theme style: "progressbar.separator") The style to use when the state us indeterminate
  * @param showPulse (theme flag: "progressbar.pulse") If false, never draw the pulse animation in the indeterminate state.
- * @param fps The number of times per second to update the displayed bar. 30 by default.
+ * @param fps The number of times per second to update the displayed bar.  Uses the
+ *  [animation fps][ProgressLayoutScope.animationFps] by default.
  */
 fun ProgressLayoutScope<*>.progressBar(
     width: Int? = null,
@@ -209,7 +215,7 @@ fun ProgressLayoutScope<*>.progressBar(
     finishedStyle: TextStyle? = null,
     indeterminateStyle: TextStyle? = null,
     showPulse: Boolean? = null, // TODO replace with `pulseDuration: Duration?`
-    fps: Int = 30,
+    fps: Int = animationFps,
 ) = cell(
     width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand(),
     fps = fps

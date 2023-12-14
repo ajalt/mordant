@@ -2,8 +2,11 @@ package com.github.ajalt.mordant.widgets.progress
 
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.table.*
+import com.github.ajalt.mordant.table.ColumnWidth
 import kotlin.time.ComparableTimeMark
+
+internal const val TEXT_FPS = 5
+internal const val ANIMATION_FPS = 30
 
 class TaskId
 
@@ -22,21 +25,21 @@ interface ProgressLayoutScope<T> {
      */
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
-        fps: Int = 5,
+        fps: Int = TEXT_FPS,
         align: TextAlign? = null,
         builder: ProgressState<T>.() -> Widget,
     )
-//    // TODO:
-//    /** The default fps for text based cells */
-//    val textFps: Int
-//
-//    /** The default fps for animation cells */
-//    val animationFps: Int
+
+    /** The default framerate for text based cells */
+    val textFps: Int
+
+    /** The default framerate for animation cells */
+    val animationFps: Int
 }
 
 data class ProgressBarCell<T>(
     val columnWidth: ColumnWidth = ColumnWidth.Auto,
-    val fps: Int = 5,
+    val fps: Int = TEXT_FPS,
     val align: TextAlign? = null,
     val content: ProgressState<T>.() -> Widget,
 ) {
@@ -106,24 +109,34 @@ fun ProgressBarDefinition<Unit>.build(
     return build(state, maker = maker)
 }
 
+// TODO: docs
 fun <T> progressBarContextLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
+    textFps: Int = TEXT_FPS,
+    animationFps: Int = ANIMATION_FPS,
     init: ProgressLayoutScope<T>.() -> Unit,
 ): ProgressBarDefinition<T> {
-    return BaseProgressLayoutScope<T>().apply(init).build(spacing, alignColumns)
+    return BaseProgressLayoutScope<T>(textFps, animationFps)
+        .apply(init)
+        .build(spacing, alignColumns)
 }
 
 fun progressBarLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
+    textFps: Int = TEXT_FPS,
+    animationFps: Int = ANIMATION_FPS,
     init: ProgressLayoutScope<Unit>.() -> Unit,
 ): ProgressBarDefinition<Unit> {
-    return progressBarContextLayout(spacing, alignColumns, init)
+    return progressBarContextLayout(spacing, alignColumns,textFps, animationFps, init)
 }
 
 
-class BaseProgressLayoutScope<T> : ProgressLayoutScope<T> {
+class BaseProgressLayoutScope<T>(
+    override val textFps: Int = TEXT_FPS,
+    override val animationFps: Int = ANIMATION_FPS,
+) : ProgressLayoutScope<T> {
     private val cells: MutableList<ProgressBarCell<T>> = mutableListOf()
 
     override fun cell(

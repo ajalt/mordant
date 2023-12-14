@@ -5,8 +5,10 @@ import com.github.ajalt.mordant.animation.jvm.animateOnExecutor
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
+import com.github.ajalt.mordant.widgets.progress.ANIMATION_FPS
 import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
+import com.github.ajalt.mordant.widgets.progress.TEXT_FPS
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
@@ -144,11 +146,12 @@ internal fun Terminal.progressAnimation(
 ): ProgressAnimation {
     val builder = ProgressAnimationBuilder().apply(init)
     val origDef = builder.builder.build(builder.padding, true)
+    // Since the new builder requires the fps upfront, we copy the cells and replace the fps
     val cells = origDef.cells.mapTo(mutableListOf()) {
         it.copy(
             fps = when (it.fps) {
-                5 -> builder.textFrameRate
-                30 -> builder.animationFrameRate
+                TEXT_FPS -> builder.textFrameRate
+                ANIMATION_FPS -> builder.animationFrameRate
                 else -> it.fps
             }
         )
