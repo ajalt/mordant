@@ -22,8 +22,8 @@ class BaseProgressAnimationTest : RenderingTest() {
 
     @Test
     fun throttling() {
-        val l = progressBarLayout(spacing = 0) {
-            speed(fps = 1)
+        val l = progressBarLayout(spacing = 0, textFps = 1) {
+            speed()
             text("|")
             timeRemaining(fps = 1)
         }
@@ -57,18 +57,18 @@ class BaseProgressAnimationTest : RenderingTest() {
 
     @Test
     fun animation() {
-        val l = progressBarLayout(spacing = 0) {
+        val l = progressBarLayout(spacing = 0, textFps = 1, animationFps = 1) {
             text("text.txt")
             text("|")
-            percentage(fps = 1)
+            percentage()
             text("|")
-            progressBar(fps = 1)
+            progressBar()
             text("|")
-            completed(fps = 1)
+            completed()
             text("|")
             speed()
             text("|")
-            timeRemaining(fps = 1)
+            timeRemaining()
         }
         val a = BaseProgressBarAnimation(t, l.cache(now), now, 1.minutes)
         val pt = a.addTask(total = 100)
