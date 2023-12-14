@@ -8,6 +8,7 @@ import com.github.ajalt.mordant.widgets.progress.ProgressState
 import com.github.ajalt.mordant.widgets.progress.TaskId
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
@@ -16,9 +17,9 @@ class BaseProgressBarAnimation<T>(
     terminal: Terminal,
     private val maker: CachedProgressBarWidgetMaker<T>,
     private val timeSource: TimeSource.WithComparableMarks,
-    private val speedEstimateDuration: Duration,
+    private val speedEstimateDuration: Duration = 30.seconds,
 ) : ProgressBarAnimation<T> {
-    private val state = MppAtomicRef(ProgressAnimationState<T>(false, emptyList()))
+    private val state = MppAtomicRef(listOf<ProgressTaskImpl<T>>())
     private val animationTime = timeSource.markNow()
     private val animation = terminal.animation<List<ProgressState<T>>> { maker.build(it) }
 
@@ -29,25 +30,29 @@ class BaseProgressBarAnimation<T>(
         start: Boolean,
         visible: Boolean,
     ): ProgressTask<T> {
-        val ts = TaskState(
-            context, total, completed, visible,
-            startedTime = if (start) timeSource.markNow() else null,
+        val task = ProgressTaskImpl(
+            context = context,
+            total = total,
+            completed = completed,
+            visible = visible,
+            now = timeSource.markNow(),
+            start = start,
+            maker = maker,
+            animationTime = animationTime,
+            timeSource = timeSource,
+            speedEstimateDuration = speedEstimateDuration
         )
-        val task = ProgressTaskImpl(ts, maker, animationTime, timeSource, speedEstimateDuration)
-        check(state.update { copy(tasks = tasks + task) } != null) { "Failed to add task" }
+        check(state.update { this + task } != null) { "Failed to add task" }
         return task
     }
 
     override fun removeTask(task: ProgressTask<T>): Boolean {
-        val result = state.update { copy(tasks = tasks.filter { it.id != task.id }) }
-        return result != null && result.first.tasks.any { it.id == task.id }
+        val result = state.update { filter { it.id != task.id } }
+        return result != null && result.first.any { it.id == task.id }
     }
 
     override fun refresh() {
-        // If we can't update the state, skip the animation refresh
-        val result = state.update { copy(started = true) } ?: return
-        val (_, newState) = result
-        animation.update(newState.tasks.map { it.makeState() })
+        animation.update(state.value.map { it.makeState() })
     }
 
     override fun clear() {
@@ -56,16 +61,10 @@ class BaseProgressBarAnimation<T>(
     }
 
     override val finished: Boolean
-        get() = state.value.tasks.all { it.finished }
+        get() = state.value.all { it.finished }
 }
 
 private class HistoryEntry(val time: ComparableTimeMark, val completed: Long)
-
-
-private data class ProgressAnimationState<T>(
-    val started: Boolean,
-    val tasks: List<ProgressTaskImpl<T>>,
-)
 
 private data class TaskState<T>(
     val context: T,
@@ -74,12 +73,24 @@ private data class TaskState<T>(
     val visible: Boolean,
     val startedTime: ComparableTimeMark?,
     // newest samples are at the end
-    val samples: List<HistoryEntry> = emptyList(),
-    val pausedTime: ComparableTimeMark? = null,
-    val finishedTime: ComparableTimeMark? = null,
-    val finishedSpeed: Double? = null,
-)
-
+    val samples: List<HistoryEntry>,
+    val pausedTime: ComparableTimeMark?,
+    val finishedTime: ComparableTimeMark?,
+    val finishedSpeed: Double?,
+) {
+    constructor(
+        context: T,
+        total: Long?,
+        completed: Long,
+        visible: Boolean,
+        now: ComparableTimeMark,
+        start: Boolean,
+    ) : this(
+        context, total, completed, visible, now.takeIf { start },
+        if (start) listOf(HistoryEntry(now, completed)) else emptyList(),
+        null, null, null
+    )
+}
 
 private class UpdateScopeImpl<T>(
     override var context: T,
@@ -89,14 +100,19 @@ private class UpdateScopeImpl<T>(
 ) : ProgressTaskUpdateScope<T>
 
 private class ProgressTaskImpl<T>(
-    state: TaskState<T>,
+    context: T,
+    total: Long?,
+    completed: Long,
+    visible: Boolean,
+    now: ComparableTimeMark,
+    start: Boolean,
     private val maker: CachedProgressBarWidgetMaker<T>,
     private val animationTime: ComparableTimeMark,
     private val timeSource: TimeSource.WithComparableMarks,
     private val speedEstimateDuration: Duration,
 ) : ProgressTask<T> {
     override val id: TaskId = TaskId()
-    private val state = MppAtomicRef(state)
+    private val state = MppAtomicRef(TaskState(context, total, completed, visible, now, start))
 
     override fun update(block: ProgressTaskUpdateScope<T>.() -> Unit) {
         state.update {
@@ -145,18 +161,15 @@ private class ProgressTaskImpl<T>(
     ) {
         val result = state.update {
             val s = state.value
-            val scope = UpdateScopeImpl(s.context, s.completed, s.total, s.visible)
+            val scope = UpdateScopeImpl(s.context, 0, s.total, s.visible)
             scope.block()
-            s.copy(
-                samples = emptyList(),
+            TaskState(
                 context = scope.context,
-                completed = scope.completed,
                 total = scope.total,
+                completed = scope.completed,
                 visible = scope.visible,
-                startedTime = if (start) timeSource.markNow() else null,
-                pausedTime = null,
-                finishedTime = null,
-                finishedSpeed = null,
+                now = timeSource.markNow(),
+                start = start,
             )
         }
         if (result != null) {

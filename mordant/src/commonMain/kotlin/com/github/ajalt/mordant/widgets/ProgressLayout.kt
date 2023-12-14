@@ -4,14 +4,14 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.widgets.progress.*
-import com.github.ajalt.mordant.widgets.progress.BaseProgressBarBuilder
+import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
 open class ProgressBuilder internal constructor(
-    internal val builder: BaseProgressBarBuilder<Unit>,
+    internal val builder: BaseProgressLayoutScope<Unit>,
 ) {
     var padding: Int = 2
 
@@ -144,6 +144,6 @@ private fun calcHz(completed: Long, elapsed: Duration): Double = when {
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    val builder = ProgressBuilder(BaseProgressBarBuilder()).apply(init)
+    val builder = ProgressBuilder(BaseProgressLayoutScope()).apply(init)
     return ProgressLayout(builder.builder.build(builder.padding, true))
 }

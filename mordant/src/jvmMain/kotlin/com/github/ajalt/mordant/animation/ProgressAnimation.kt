@@ -5,14 +5,14 @@ import com.github.ajalt.mordant.animation.jvm.animateOnExecutor
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
-import com.github.ajalt.mordant.widgets.progress.BaseProgressBarBuilder
+import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
-    BaseProgressBarBuilder()
+    BaseProgressLayoutScope()
 ) {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse

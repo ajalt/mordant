@@ -21,7 +21,7 @@ import kotlin.time.DurationUnit
  * @param content The text to display in this cell.
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  */
-fun ProgressBarBuilder<*>.text(content: String, align: TextAlign? = null) {
+fun ProgressLayoutScope<*>.text(content: String, align: TextAlign? = null) {
     cell(align = align, fps = 0) { Text(content) }
 }
 
@@ -39,7 +39,7 @@ fun ProgressBarBuilder<*>.text(content: String, align: TextAlign? = null) {
  * @param content A lambda returning the text to display in this cell.
  *
  */
-fun <T> ProgressBarBuilder<T>.text(
+fun <T> ProgressLayoutScope<T>.text(
     align: TextAlign? = null,
     content: ProgressState<T>.() -> String,
 ) {
@@ -56,7 +56,7 @@ fun <T> ProgressBarBuilder<T>.text(
  * @param style The style to use for the displayed count.
  * @param fps The number of times per second to update the displayed count. 5 by default.
  */
-fun ProgressBarBuilder<*>.completed(
+fun ProgressLayoutScope<*>.completed(
     suffix: String = "",
     includeTotal: Boolean = true,
     style: TextStyle = DEFAULT_STYLE,
@@ -87,7 +87,7 @@ fun ProgressBarBuilder<*>.completed(
  * @param style The style to use for the displayed speed.
  * @param fps The number of times per second to update the displayed speed. 5 by default.
  */
-fun ProgressBarBuilder<*>.speed(
+fun ProgressLayoutScope<*>.speed(
     suffix: String = "it/s",
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = 5,
@@ -107,7 +107,7 @@ fun ProgressBarBuilder<*>.speed(
  *
  * @param fps The number of times per second to update the displayed percentage. 5 by default.
  */
-fun ProgressBarBuilder<*>.percentage(fps: Int = 5) = cell(
+fun ProgressLayoutScope<*>.percentage(fps: Int = 5) = cell(
     ColumnWidth.Fixed(4),  // " 100%"
     fps = fps
 ) {
@@ -128,7 +128,7 @@ fun ProgressBarBuilder<*>.percentage(fps: Int = 5) = cell(
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. 5 by default.
  */
-fun ProgressBarBuilder<*>.timeRemaining(
+fun ProgressLayoutScope<*>.timeRemaining(
     prefix: String = "eta ",
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
@@ -154,7 +154,7 @@ fun ProgressBarBuilder<*>.timeRemaining(
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. 5 by default.
  */
-fun ProgressBarBuilder<*>.timeElapsed(
+fun ProgressLayoutScope<*>.timeElapsed(
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = 5,
@@ -177,7 +177,7 @@ fun ProgressBarBuilder<*>.timeElapsed(
  * @param spinner The spinner to display
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
-fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
+fun ProgressLayoutScope<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
     spinner.tick = (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) * fps).toInt()
     if (isPaused) BlankWidgetWrapper(spinner)
     else spinner
@@ -198,7 +198,7 @@ fun ProgressBarBuilder<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = f
  * @param showPulse (theme flag: "progressbar.pulse") If false, never draw the pulse animation in the indeterminate state.
  * @param fps The number of times per second to update the displayed bar. 30 by default.
  */
-fun ProgressBarBuilder<*>.progressBar(
+fun ProgressLayoutScope<*>.progressBar(
     width: Int? = null,
     pendingChar: String? = null,
     separatorChar: String? = null,
