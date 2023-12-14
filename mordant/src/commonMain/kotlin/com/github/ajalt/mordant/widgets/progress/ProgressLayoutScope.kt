@@ -8,7 +8,7 @@ import kotlin.time.ComparableTimeMark
 class TaskId
 
 // TODO: docs on all of these
-interface ProgressBarBuilder<T> {
+interface ProgressLayoutScope<T> {
     /**
      * Add a cell to this layout.
      *
@@ -26,6 +26,12 @@ interface ProgressBarBuilder<T> {
         align: TextAlign? = null,
         builder: ProgressState<T>.() -> Widget,
     )
+//    // TODO:
+//    /** The default fps for text based cells */
+//    val textFps: Int
+//
+//    /** The default fps for animation cells */
+//    val animationFps: Int
 }
 
 data class ProgressBarCell<T>(
@@ -103,21 +109,21 @@ fun ProgressBarDefinition<Unit>.build(
 fun <T> progressBarContextLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
-    init: ProgressBarBuilder<T>.() -> Unit,
+    init: ProgressLayoutScope<T>.() -> Unit,
 ): ProgressBarDefinition<T> {
-    return BaseProgressBarBuilder<T>().apply(init).build(spacing, alignColumns)
+    return BaseProgressLayoutScope<T>().apply(init).build(spacing, alignColumns)
 }
 
 fun progressBarLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
-    init: ProgressBarBuilder<Unit>.() -> Unit,
+    init: ProgressLayoutScope<Unit>.() -> Unit,
 ): ProgressBarDefinition<Unit> {
     return progressBarContextLayout(spacing, alignColumns, init)
 }
 
 
-class BaseProgressBarBuilder<T> : ProgressBarBuilder<T> {
+class BaseProgressLayoutScope<T> : ProgressLayoutScope<T> {
     private val cells: MutableList<ProgressBarCell<T>> = mutableListOf()
 
     override fun cell(

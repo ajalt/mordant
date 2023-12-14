@@ -13,8 +13,8 @@ import kotlin.time.TestTimeSource
 class MultiProgressLayoutTest : RenderingTest() {
     @Test
     fun indeterminate() = doTest(
-        completed1 = 0, total1 = null, elapsed1 = null,
-        completed2 = 0, total2 = null, elapsed2 = null,
+        completed1 = 0, total1 = null, elapsed1 = null, speed1 = null,
+        completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         expected = """
         ░Task 1  |  0%|##############|   0.0/---.-| ---.-it/s|eta -:--:--
         ░Task Two|  0%|##############|   0.0/---.-| ---.-it/s|eta -:--:--
@@ -24,8 +24,8 @@ class MultiProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("indeterminate_unaligned")
     fun `indeterminate unaligned`() = doTest(
-        completed1 = 0, total1 = null, elapsed1 = null,
-        completed2 = 0, total2 = null, elapsed2 = null,
+        completed1 = 0, total1 = null, elapsed1 = null, speed1 = null,
+        completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         alignColumns = false,
         expected = """
         ░Task 1|  0%|################|   0.0/---.-| ---.-it/s|eta -:--:--
@@ -36,8 +36,8 @@ class MultiProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("one_in_progress")
     fun `one in progress`() = doTest(
-        completed1 = 5, total1 = 10, elapsed1 = 5.0,
-        completed2 = 0, total2 = null, elapsed2 = null,
+        completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
+        completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         expected = """
         ░Task 1  | 50%|#######>......|    5.0/10.0|   1.0it/s|eta 0:00:05
         ░Task Two|  0%|##############|   0.0/---.-| ---.-it/s|eta -:--:--
@@ -47,8 +47,8 @@ class MultiProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("two_finished")
     fun `two finished`() = doTest(
-        completed1 = 5, total1 = 10, elapsed1 = 5.0,
-        completed2 = 20, total2 = 20, elapsed2 = 10.0,
+        completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
+        completed2 = 20, total2 = 20, elapsed2 = 10.0, speed2 = 2.0,
         expected = """
         ░Task 1  | 50%|#######>......|    5.0/10.0|   1.0it/s|eta 0:00:05
         ░Task Two|100%|##############|   20.0/20.0|   2.0it/s|eta 0:00:00
@@ -60,8 +60,10 @@ class MultiProgressLayoutTest : RenderingTest() {
         total1: Long?,
         elapsed1: Double?,
         completed2: Long,
+        speed1: Double? = null,
         total2: Long?,
         elapsed2: Double?,
+        speed2: Double? = null,
         expected: String,
         alignColumns: Boolean = true,
     ) {
@@ -91,8 +93,7 @@ class MultiProgressLayoutTest : RenderingTest() {
                 completed1,
                 now,
                 now.takeIf { elapsed1 != null },
-
-                // TODO speed = elapsed1?.let { calcHz(completed1, it.seconds) }
+                speed = speed1,
             ),
             ProgressState(
                 "Task Two",
@@ -100,7 +101,7 @@ class MultiProgressLayoutTest : RenderingTest() {
                 completed2,
                 now,
                 now.takeIf { elapsed2 != null },
-                //speed = elapsed2?.let { calcHz(completed2, it.seconds) }
+                speed = speed2,
             ),
         )
         checkRender(

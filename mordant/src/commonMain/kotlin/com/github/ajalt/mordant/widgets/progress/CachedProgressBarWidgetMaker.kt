@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.rendering.Widget
 import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
@@ -53,7 +54,10 @@ private class CachedProgressBarWidgetMakerImpl<T>(
         definition.alignColumns,
     )
 
-    private val invalidations = MppAtomicRef(Invalidations(timeSource.markNow(), emptyMap()))
+    private val invalidations = MppAtomicRef(
+        // Start with an invalidation time in the past so that the first frame is always rendered
+        Invalidations(timeSource.markNow() - 99.days, emptyMap())
+    )
 
     private fun makeCell(
         cell: ProgressBarCell<T>,
@@ -82,7 +86,7 @@ private class CachedProgressBarWidgetMakerImpl<T>(
         val (lastFrameTime, _) = cachedWidgets[taskId] ?: return false
         val invals = invalidations.value
         val invalAt = maxOf(invals.all, invals.byTask[taskId] ?: invals.all)
-        if (lastFrameTime < invalAt) return false
+        if (lastFrameTime <= invalAt) return false
         val timeSinceLastFrame = lastFrameTime.elapsedNow()
         // if fps is 0 this will be Infinity, so it will be cached forever
         val maxCacheRetentionDuration = (1.0 / cell.fps).seconds

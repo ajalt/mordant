@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.animation
 import com.github.ajalt.mordant.widgets.progress.ProgressState
 import com.github.ajalt.mordant.widgets.progress.TaskId
 
+// TODO docs
 interface ProgressTaskUpdateScope<T> {
     var context: T
     var completed: Long

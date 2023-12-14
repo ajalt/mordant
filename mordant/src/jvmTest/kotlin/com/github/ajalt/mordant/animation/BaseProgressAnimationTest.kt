@@ -5,12 +5,14 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.widgets.progress.*
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TestTimeSource
 
-class DeprecatedProgressAnimationTest : RenderingTest() {
+class BaseProgressAnimationTest : RenderingTest() {
     private val now = TestTimeSource()
     private val vt = TerminalRecorder(width = 56)
     private val t = Terminal(
@@ -20,80 +22,85 @@ class DeprecatedProgressAnimationTest : RenderingTest() {
 
     @Test
     fun throttling() {
-        val pt = t.progressAnimation(now) {
-            textFrameRate = 1
-            padding = 0
-            speed()
+        val l = progressBarLayout(spacing = 0) {
+            speed(fps = 1)
             text("|")
-            timeRemaining()
+            timeRemaining(fps = 1)
         }
+        val a = BaseProgressBarAnimation(t, l.cache(now), now)
+        val pt = a.addTask(total = 1000)
 
-        pt.update(0, 1000)
+        a.refresh()
         vt.normalizedOutput() shouldBe " ---.-it/s|eta -:--:--"
 
         now += 0.5.seconds
         vt.clearOutput()
         pt.update(40)
+        a.refresh()
         vt.normalizedOutput() shouldBe " ---.-it/s|eta -:--:--"
 
         now += 0.1.seconds
         vt.clearOutput()
-        pt.update()
+        a.refresh()
         vt.normalizedOutput() shouldBe " ---.-it/s|eta -:--:--"
 
         now += 0.4.seconds
         vt.clearOutput()
-        pt.update()
+        a.refresh()
         vt.normalizedOutput() shouldBe "  40.0it/s|eta 0:00:24"
 
         now += 0.9.seconds
         vt.clearOutput()
-        pt.update()
+        a.refresh()
         vt.normalizedOutput() shouldBe "  40.0it/s|eta 0:00:24"
     }
 
     @Test
     fun animation() {
-        val pt = t.progressAnimation(now) {
-            textFrameRate = 1
-            padding = 0
+        val l = progressBarLayout(spacing = 0) {
             text("text.txt")
             text("|")
-            percentage()
+            percentage(fps = 1)
             text("|")
-            progressBar()
+            progressBar(fps = 1)
             text("|")
-            completed()
+            completed(fps = 1)
             text("|")
             speed()
             text("|")
-            timeRemaining()
+            timeRemaining(fps = 1)
         }
-        pt.update(0, 100)
+        val a = BaseProgressBarAnimation(t, l.cache(now), now, 1.minutes)
+        val pt = a.addTask(total = 100)
+
+        a.refresh()
         vt.normalizedOutput() shouldBe "text.txt|  0%|......|   0.0/100.0| ---.-it/s|eta -:--:--"
 
         now += 10.0.seconds
         vt.clearOutput()
         pt.update(40)
+        a.refresh()
         vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|  40.0/100.0|   4.0it/s|eta 0:00:15"
 
         now += 10.0.seconds
         vt.clearOutput()
-        pt.update()
+        a.refresh()
         vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|  40.0/100.0|   2.0it/s|eta 0:00:30"
 
         now += 10.0.seconds
         vt.clearOutput()
-        pt.updateTotal(200)
+        pt.update { total = 200 }
+        a.refresh()
         vt.normalizedOutput() shouldBe "text.txt| 20%|#>....|  40.0/200.0|   1.3it/s|eta 0:02:00"
 
         vt.clearOutput()
-        pt.restart()
+        pt.reset()
+        a.refresh()
         vt.normalizedOutput() shouldBe "text.txt|  0%|......|   0.0/200.0| ---.-it/s|eta -:--:--"
 
         vt.clearOutput()
-        pt.clear()
-        vt.normalizedOutput() shouldBe "${CSI}?25h" // show cursor
+        a.clear()
+        vt.normalizedOutput() shouldBe ""
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
