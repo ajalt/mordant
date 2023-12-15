@@ -87,14 +87,22 @@ interface ProgressBarAnimation<T> {
      */
     fun removeTask(task: ProgressTask<T>): Boolean
 
-    // TODO mention this is called automatically
     /**
      * Refresh the progress and draw it to the screen.
+     *
+     * This is called automatically when the animation is running, so you don't usually need to call
+     * it manually.
      */
     fun refresh()
 
+    /**
+     * Clear the progress bar from the screen.
+     */
     fun clear()
 
+    /**
+     * Return `true` if all tasks are [finished][ProgressTask.finished].
+     */
     val finished: Boolean
 }
 
