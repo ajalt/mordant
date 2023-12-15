@@ -1,16 +1,15 @@
-package com.github.ajalt.mordant.animation.coroutines
+package com.github.ajalt.mordant.animation.jvm
 
 import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
 import com.github.ajalt.mordant.animation.ProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
-import kotlinx.coroutines.delay
+import java.util.concurrent.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
-
-class CoroutinesProgressBarAnimation<T> private constructor(
+class BlockingProgressBarAnimation<T> private constructor(
     private val terminal: Terminal,
     private val base: ProgressBarAnimation<T>,
     private val rate: Long,
@@ -23,18 +22,20 @@ class CoroutinesProgressBarAnimation<T> private constructor(
     ) : this(
         terminal,
         BaseProgressBarAnimation(terminal, factory, timeSource, speedEstimateDuration),
-        (1.0 / factory.refreshRate).seconds.inWholeMilliseconds
+        factory.refreshPeriod.inWholeMilliseconds
     )
 
     /**
      * Start the animation and refresh it until all its tasks are finished.
+     *
+     * This calls [Thread.sleep] between each frame, so it should be run in a background thread.
      */
-    suspend fun run() {
+    fun run() {
         terminal.cursor.hide(showOnExit = true)
         try {
             while (!base.finished) {
                 base.refresh()
-                delay(rate)
+                Thread.sleep(rate)
             }
         } finally {
             terminal.cursor.show()
@@ -43,24 +44,26 @@ class CoroutinesProgressBarAnimation<T> private constructor(
 }
 
 /**
- * Create a progress bar animation that runs in a coroutine.
+ * Create a progress bar animation that runs synchronously.
+ *
+ * Use [execute] to run the animation on a background thread.
  *
  * ### Example
  *
  * ```
- * val animation = progressBarLayout { ... }.animateInCoroutine(terminal)
+ * val animation = progressBarLayout { ... }.animateOnThread(terminal)
  * val task = animation.addTask()
- * launch { animation.run() }
+ * animation.execute()
  * task.update { ... }
  * ```
  */
-fun <T> ProgressBarDefinition<T>.animateInCoroutine(
+fun <T> ProgressBarDefinition<T>.animateOnThread(
     terminal: Terminal,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     speedEstimateDuration: Duration = 30.seconds,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
-): CoroutinesProgressBarAnimation<T> {
-    return CoroutinesProgressBarAnimation(
+): BlockingProgressBarAnimation<T> {
+    return BlockingProgressBarAnimation(
         terminal,
         cache(timeSource, maker),
         timeSource,
@@ -68,3 +71,21 @@ fun <T> ProgressBarDefinition<T>.animateInCoroutine(
     )
 }
 
+/**
+ * Run the animation in a background thread on an [executor].
+ *
+ * @return a [Future] that can be used to cancel the animation.
+ */
+fun <T> BlockingProgressBarAnimation<T>.execute(
+    executor: ExecutorService = defaultExecutor(),
+): Future<*> {
+    return executor.submit(::run)
+}
+
+private fun defaultExecutor(): ExecutorService {
+    return Executors.newSingleThreadExecutor {
+        Thread().also {
+            it.isDaemon = true
+        }
+    }
+}

@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.rendering.Widget
 import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -30,6 +31,10 @@ interface CachedProgressBarWidgetMaker<T> {
      */
     val refreshRate: Int
 }
+
+/** The time between refreshes. This is `1 / refreshRate` */
+val CachedProgressBarWidgetMaker<*>.refreshPeriod: Duration
+    get() = (1.0 / refreshRate).seconds
 
 fun <T> ProgressBarDefinition<T>.cache(
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,

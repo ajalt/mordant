@@ -1,7 +1,8 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.animation.jvm.ExecutorProgressBarAnimation
-import com.github.ajalt.mordant.animation.jvm.animateOnExecutor
+import com.github.ajalt.mordant.animation.jvm.BlockingProgressBarAnimation
+import com.github.ajalt.mordant.animation.jvm.animateOnThread
+import com.github.ajalt.mordant.animation.jvm.execute
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
@@ -9,6 +10,9 @@ import com.github.ajalt.mordant.widgets.progress.ANIMATION_FPS
 import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import com.github.ajalt.mordant.widgets.progress.TEXT_FPS
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
@@ -39,9 +43,12 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
  * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
  */
 class ProgressAnimation internal constructor(
-    private val inner: ExecutorProgressBarAnimation<Unit>,
+    private val inner: BlockingProgressBarAnimation<Unit>,
 ) {
     private val task = inner.addTask()
+    private val executor = defaultExecutor()
+    private val lock = Any()
+    private var future: Future<*>? = null
 
     /**
      * Set the current progress to the [completed] value.
@@ -97,8 +104,9 @@ class ProgressAnimation internal constructor(
     /**
      * Start the progress bar animation.
      */
-    fun start() {
-        inner.start()
+    fun start() = synchronized(lock) {
+        if (future != null) return
+        future = inner.execute(executor)
     }
 
     /**
@@ -107,16 +115,17 @@ class ProgressAnimation internal constructor(
      * The progress bar will remain on the screen until you call [clear].
      * You can call [start] again to resume the animation.
      */
-    fun stop() {
-        inner.pause()
+    fun stop() = synchronized(lock) {
+        future?.cancel(false)
+        future = null
     }
 
     /**
      * Set the progress to 0 and restart the animation.
      */
-    fun restart() {
+    fun restart() = synchronized(lock) {
         task.reset()
-        inner.start()
+        start()
     }
 
     /**
@@ -124,9 +133,9 @@ class ProgressAnimation internal constructor(
      *
      * If you want to leave the animation on the screen, call [stop] instead.
      */
-    fun clear() {
+    fun clear() = synchronized(lock) {
+        stop()
         inner.clear()
-        inner.close()
     }
 }
 
@@ -158,10 +167,18 @@ internal fun Terminal.progressAnimation(
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
     return ProgressAnimation(
-        definition.animateOnExecutor(
+        definition.animateOnThread(
             this,
             timeSource = timeSource,
             speedEstimateDuration = builder.historyLength.toDouble().seconds
         )
     )
+}
+
+private fun defaultExecutor(): ExecutorService {
+    return Executors.newSingleThreadExecutor {
+        Thread().also {
+            it.isDaemon = true
+        }
+    }
 }
