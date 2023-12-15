@@ -47,7 +47,7 @@ fun <T> ProgressLayoutScope<T>.text(
 }
 
 // TODO add a fixed width text cell that scrolls its contents if they're too large
-
+// TODO: make decimal places configurable?
 /**
  * Add a cell that displays the current completed count to this layout.
  *
