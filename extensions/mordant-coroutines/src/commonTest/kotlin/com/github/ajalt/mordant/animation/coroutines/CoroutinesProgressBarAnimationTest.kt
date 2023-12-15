@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.animation.coroutines
 
-import com.github.ajalt.mordant.animation.addTask
-import com.github.ajalt.mordant.animation.update
+import com.github.ajalt.mordant.animation.progress.addTask
+import com.github.ajalt.mordant.animation.progress.update
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed

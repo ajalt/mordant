@@ -1,5 +1,6 @@
-package com.github.ajalt.mordant.animation
+package com.github.ajalt.mordant.animation.progress
 
+import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.terminal.Terminal

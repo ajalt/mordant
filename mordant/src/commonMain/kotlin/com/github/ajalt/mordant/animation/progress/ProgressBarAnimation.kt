@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.animation
+package com.github.ajalt.mordant.animation.progress
 
 import com.github.ajalt.mordant.widgets.progress.ProgressState
 import com.github.ajalt.mordant.widgets.progress.TaskId

@@ -1,9 +1,9 @@
 package com.github.ajalt.mordant.samples
 
-import com.github.ajalt.mordant.animation.addTask
-import com.github.ajalt.mordant.animation.advance
-import com.github.ajalt.mordant.animation.jvm.animateOnThread
-import com.github.ajalt.mordant.animation.jvm.execute
+import com.github.ajalt.mordant.animation.progress.addTask
+import com.github.ajalt.mordant.animation.progress.advance
+import com.github.ajalt.mordant.animation.progress.animateOnThread
+import com.github.ajalt.mordant.animation.progress.execute
 import com.github.ajalt.mordant.rendering.TextColors.brightBlue
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.*
