@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.animation.coroutines
 
-import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
-import com.github.ajalt.mordant.animation.ProgressBarAnimation
+import com.github.ajalt.mordant.animation.progress.BaseProgressBarAnimation
+import com.github.ajalt.mordant.animation.progress.ProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.delay

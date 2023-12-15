@@ -1,8 +1,11 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.animation.jvm.BlockingProgressBarAnimation
-import com.github.ajalt.mordant.animation.jvm.animateOnThread
-import com.github.ajalt.mordant.animation.jvm.execute
+import com.github.ajalt.mordant.animation.progress.BlockingProgressBarAnimation
+import com.github.ajalt.mordant.animation.progress.animateOnThread
+import com.github.ajalt.mordant.animation.progress.execute
+import com.github.ajalt.mordant.animation.progress.addTask
+import com.github.ajalt.mordant.animation.progress.advance
+import com.github.ajalt.mordant.animation.progress.update
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout

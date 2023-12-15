@@ -1,7 +1,5 @@
-package com.github.ajalt.mordant.animation.jvm
+package com.github.ajalt.mordant.animation.progress
 
-import com.github.ajalt.mordant.animation.BaseProgressBarAnimation
-import com.github.ajalt.mordant.animation.ProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
 import java.util.concurrent.*
@@ -28,9 +26,11 @@ class BlockingProgressBarAnimation<T> private constructor(
     /**
      * Start the animation and refresh it until all its tasks are finished.
      *
-     * This calls [Thread.sleep] between each frame, so it should be run in a background thread.
+     * This calls [Thread.sleep] between each frame, so it should usually be run in a background thread.
+     *
+     * @see execute
      */
-    fun run() {
+    fun runBlocking() {
         terminal.cursor.hide(showOnExit = true)
         try {
             while (!base.finished) {
@@ -79,7 +79,7 @@ fun <T> ProgressBarDefinition<T>.animateOnThread(
 fun <T> BlockingProgressBarAnimation<T>.execute(
     executor: ExecutorService = defaultExecutor(),
 ): Future<*> {
-    return executor.submit(::run)
+    return executor.submit(::runBlocking)
 }
 
 private fun defaultExecutor(): ExecutorService {
