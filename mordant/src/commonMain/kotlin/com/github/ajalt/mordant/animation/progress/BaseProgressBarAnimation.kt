@@ -57,7 +57,7 @@ class BaseProgressBarAnimation<T>(
     override fun refresh() {
         val s = state.value
         if (!s.visible) return
-        animation.update(s.tasks.map { it.makeState() })
+        animation.update(s.tasks.filter { it.visible }.map { it.makeState() })
     }
 
     override var visible: Boolean
@@ -202,7 +202,7 @@ private class ProgressTaskImpl<T>(
     override val finished: Boolean get() = state.value.finishedTime != null
     override val started: Boolean get() = state.value.startedTime != null
     override val paused: Boolean get() = state.value.pausedTime != null
-
+    override val visible: Boolean get() = state.value.visible
 }
 
 private fun <T> estimateSpeed(state: TaskState<T>): Double? = state.run {

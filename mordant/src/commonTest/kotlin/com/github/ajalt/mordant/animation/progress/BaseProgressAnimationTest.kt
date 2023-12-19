@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
 import io.kotest.matchers.shouldBe
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -104,7 +105,47 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.normalizedOutput() shouldBe ""
     }
 
+    @Test
+    @JsName("task_visibility")
+    fun `task visibility`() {
+        val l = progressBarContextLayout<Int>(textFps = 1, animationFps = 1) {
+            text { "Task $context" }
+        }
+        val a = BaseProgressBarAnimation(t, l.cache(now))
+        val t1 = a.addTask(1)
+        val t2 = a.addTask(2)
+
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 1\nTask 2"
+
+        vt.clearOutput()
+        t1.update { visible = false }
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 2"
+
+        vt.clearOutput()
+        t2.update { visible = false }
+        a.refresh()
+        vt.normalizedOutput() shouldBe ""
+
+        vt.clearOutput()
+        t1.update { visible = true }
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 1"
+
+        vt.clearOutput()
+        t2.update { visible = true }
+        a.visible = false
+        a.refresh()
+        vt.normalizedOutput() shouldBe ""
+
+        vt.clearOutput()
+        a.visible = true
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 1\nTask 2"
+    }
+
     private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimEnd()
+        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trim()
     }
 }
