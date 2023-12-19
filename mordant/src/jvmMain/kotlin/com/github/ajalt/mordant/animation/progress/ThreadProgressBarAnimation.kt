@@ -78,15 +78,13 @@ fun <T> ProgressBarDefinition<T>.animateOnThread(
  * @return a [Future] that can be used to cancel the animation.
  */
 fun <T> BlockingProgressBarAnimation<T>.execute(
-    executor: ExecutorService = defaultExecutor(),
+    executor: ExecutorService = Executors.newSingleThreadExecutor(DaemonThreadFactory()),
 ): Future<*> {
     return executor.submit(::runBlocking)
 }
 
-private fun defaultExecutor(): ExecutorService {
-    return Executors.newSingleThreadExecutor {
-        Thread().also {
-            it.isDaemon = true
-        }
+private class DaemonThreadFactory: ThreadFactory {
+    override fun newThread(r: Runnable): Thread = Thread(r).also {
+        it.isDaemon = true
     }
 }
