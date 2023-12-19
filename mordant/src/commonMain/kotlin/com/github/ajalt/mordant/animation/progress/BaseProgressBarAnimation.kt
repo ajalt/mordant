@@ -45,13 +45,13 @@ class BaseProgressBarAnimation<T>(
             timeSource = timeSource,
             speedEstimateDuration = speedEstimateDuration
         )
-        check(state.update { copy(tasks = tasks + task) } != null) { "Failed to add task" }
+        state.update { copy(tasks = tasks + task) }
         return task
     }
 
     override fun removeTask(task: ProgressTask<T>): Boolean {
-        val result = state.update { copy(tasks = tasks.filter { it.id != task.id }) }
-        return result != null && result.first.tasks.any { it.id == task.id }
+        val (old, _) = state.update { copy(tasks = tasks.filter { it.id != task.id }) }
+        return old.tasks.any { it.id == task.id }
     }
 
     override fun refresh() {
@@ -167,7 +167,7 @@ private class ProgressTaskImpl<T>(
         start: Boolean,
         block: ProgressTaskUpdateScope<T>.() -> Unit,
     ) {
-        val result = state.update {
+        state.update {
             val s = state.value
             val scope = UpdateScopeImpl(s.context, 0, s.total, s.visible)
             scope.block()
@@ -180,9 +180,7 @@ private class ProgressTaskImpl<T>(
                 start = start,
             )
         }
-        if (result != null) {
-            maker.invalidateCache(id)
-        }
+        maker.invalidateCache(id)
     }
 
     override fun makeState(): ProgressState<T> {

@@ -70,7 +70,7 @@ private class CachedProgressBarWidgetMakerImpl<T>(
         // Wrap the cell builder in a block that caches the widget
         val cachedWidgets = MppAtomicRef(mapOf<TaskId, Pair<ComparableTimeMark, Widget>>())
         return ProgressBarCell(cell.columnWidth, cell.fps, cell.align) {
-            val result = cachedWidgets.update {
+            val (_, new) = cachedWidgets.update {
                 when {
                     isCacheValid(cell, this) -> this
                     else -> {
@@ -80,7 +80,7 @@ private class CachedProgressBarWidgetMakerImpl<T>(
                 }
             }
 
-            result?.second?.get(taskId)?.second ?: cell.content(this)
+            new[taskId]?.second ?: cell.content(this)
         }
     }
 

@@ -14,13 +14,14 @@ internal interface MppAtomicRef<T> {
     fun getAndSet(newValue: T): T
 }
 
-internal inline fun <T> MppAtomicRef<T>.update(attempts: Int = 10, block: T.() -> T): Pair<T, T>? {
-    repeat(attempts) { // spin a few times; skip the update if we still can't succeed
+/** Update the reference via spin lock, spinning up to [attempts] times. */
+internal inline fun <T> MppAtomicRef<T>.update(attempts: Int = 99, block: T.() -> T): Pair<T, T> {
+    repeat(attempts) {
         val old = value
         val newValue = block(old)
         if (compareAndSet(old, newValue)) return old to newValue
     }
-    return null
+    throw ConcurrentModificationException("Failed to update state due to concurrent updates")
 }
 
 internal expect fun <T> MppAtomicRef(value: T): MppAtomicRef<T>
@@ -29,7 +30,7 @@ internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
 
 internal expect fun getEnv(key: String): String?
 
-/** Returns pair of [width, height], or null if it can't be detected */
+/** Return a pair of [width, height], or null if it can't be detected */
 internal expect fun getTerminalSize(): Pair<Int, Int>?
 
 internal expect fun runningInIdeaJavaAgent(): Boolean
