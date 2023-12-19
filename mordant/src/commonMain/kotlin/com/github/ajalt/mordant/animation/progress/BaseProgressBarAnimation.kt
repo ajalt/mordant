@@ -17,12 +17,12 @@ class BaseProgressBarAnimation<T>(
     // TODO: param docs
     terminal: Terminal,
     private val maker: CachedProgressBarWidgetMaker<T>,
-    private val timeSource: TimeSource.WithComparableMarks,
     private val speedEstimateDuration: Duration = 30.seconds,
 ) : ProgressBarAnimation<T> {
     private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
 
     private val state = MppAtomicRef(State(true, listOf<ProgressTaskImpl<T>>()))
+    private val timeSource get() = maker.timeSource
     private val animationTime = timeSource.markNow()
     private val animation = terminal.animation<List<ProgressState<T>>> { maker.build(it) }
 

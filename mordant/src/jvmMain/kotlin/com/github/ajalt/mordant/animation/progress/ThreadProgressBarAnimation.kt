@@ -15,11 +15,10 @@ class BlockingProgressBarAnimation<T> private constructor(
     constructor(
         terminal: Terminal,
         factory: CachedProgressBarWidgetMaker<T>,
-        timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
         speedEstimateDuration: Duration = 30.seconds,
     ) : this(
         terminal,
-        BaseProgressBarAnimation(terminal, factory, timeSource, speedEstimateDuration),
+        BaseProgressBarAnimation(terminal, factory, speedEstimateDuration),
         factory.refreshPeriod.inWholeMilliseconds
     )
 
@@ -67,7 +66,6 @@ fun <T> ProgressBarDefinition<T>.animateOnThread(
     return BlockingProgressBarAnimation(
         terminal,
         cache(timeSource, maker),
-        timeSource,
         speedEstimateDuration,
     )
 }

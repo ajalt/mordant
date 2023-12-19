@@ -27,7 +27,7 @@ class BaseProgressAnimationTest : RenderingTest() {
             text("|")
             timeRemaining(fps = 1)
         }
-        val a = BaseProgressBarAnimation(t, l.cache(now), now)
+        val a = BaseProgressBarAnimation(t, l.cache(now))
         val pt = a.addTask(total = 1000)
 
         a.refresh()
@@ -70,7 +70,7 @@ class BaseProgressAnimationTest : RenderingTest() {
             text("|")
             timeRemaining()
         }
-        val a = BaseProgressBarAnimation(t, l.cache(now), now, 1.minutes)
+        val a = BaseProgressBarAnimation(t, l.cache(now), 1.minutes)
         val pt = a.addTask(total = 100)
 
         a.refresh()

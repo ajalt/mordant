@@ -30,6 +30,9 @@ interface CachedProgressBarWidgetMaker<T> {
      * all this progress bar's cells.
      */
     val refreshRate: Int
+
+    /** The TimeSource used by this cache */
+    val timeSource: TimeSource.WithComparableMarks
 }
 
 /** The time between refreshes. This is `1 / refreshRate` */
@@ -46,7 +49,7 @@ fun <T> ProgressBarDefinition<T>.cache(
 private class CachedProgressBarWidgetMakerImpl<T>(
     definition: ProgressBarDefinition<T>,
     private val maker: ProgressBarWidgetMaker,
-    private val timeSource: TimeSource.WithComparableMarks,
+    override val timeSource: TimeSource.WithComparableMarks,
 ) : CachedProgressBarWidgetMaker<T> {
     private data class Invalidations(
         val all: ComparableTimeMark,
