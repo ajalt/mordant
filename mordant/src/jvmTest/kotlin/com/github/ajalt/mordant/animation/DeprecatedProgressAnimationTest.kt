@@ -93,7 +93,7 @@ class DeprecatedProgressAnimationTest : RenderingTest() {
 
         vt.clearOutput()
         pt.clear()
-        vt.normalizedOutput() shouldBe "${CSI}?25h" // show cursor
+        vt.normalizedOutput() shouldBe ""
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {

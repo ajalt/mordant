@@ -55,7 +55,7 @@ fun ProgressTask<*>.advance(amount: Long = 1) = update { completed += amount }
  *
  * This is a shortcut for `update { completed += amount }`.
  */
-fun ProgressTask<*>.advance(amount: Int) = advance(amount.toLong())
+fun ProgressTask<*>.advance(amount: Number) = advance(amount.toLong())
 
 /**
  * Set the completed progress of this task to [completed].
@@ -69,7 +69,7 @@ fun ProgressTask<*>.update(completed: Long) = update { this.completed = complete
  *
  * This is a shortcut for `update { this.completed += completed }`.
  */
-fun ProgressTask<*>.update(completed: Int) = update(completed.toLong())
+fun ProgressTask<*>.update(completed: Number) = update(completed.toLong())
 
 interface ProgressBarAnimation<T> {
     fun addTask(
@@ -88,7 +88,9 @@ interface ProgressBarAnimation<T> {
     fun removeTask(task: ProgressTask<T>): Boolean
 
     /**
-     * Refresh the progress and draw it to the screen.
+     * Draw the progress bar to the screen.
+     *
+     * If [visible] is `false`, this call has no effect.
      *
      * This is called automatically when the animation is running, so you don't usually need to call
      * it manually.
@@ -96,9 +98,9 @@ interface ProgressBarAnimation<T> {
     fun refresh()
 
     /**
-     * Clear the progress bar from the screen.
+     * Set to `false` to remove the animation from the screen.
      */
-    fun clear()
+    var visible: Boolean
 
     /**
      * Return `true` if all tasks are [finished][ProgressTask.finished].

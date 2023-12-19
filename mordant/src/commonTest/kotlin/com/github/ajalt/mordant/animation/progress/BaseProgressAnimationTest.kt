@@ -99,7 +99,8 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.normalizedOutput() shouldBe "text.txt|  0%|......|   0.0/200.0| ---.-it/s|eta -:--:--"
 
         vt.clearOutput()
-        a.clear()
+        a.visible = false
+        a.refresh()
         vt.normalizedOutput() shouldBe ""
     }
 

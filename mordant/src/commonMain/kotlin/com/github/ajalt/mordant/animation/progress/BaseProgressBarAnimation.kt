@@ -20,7 +20,9 @@ class BaseProgressBarAnimation<T>(
     private val timeSource: TimeSource.WithComparableMarks,
     private val speedEstimateDuration: Duration = 30.seconds,
 ) : ProgressBarAnimation<T> {
-    private val state = MppAtomicRef(listOf<ProgressTaskImpl<T>>())
+    private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
+
+    private val state = MppAtomicRef(State(true, listOf<ProgressTaskImpl<T>>()))
     private val animationTime = timeSource.markNow()
     private val animation = terminal.animation<List<ProgressState<T>>> { maker.build(it) }
 
@@ -43,26 +45,31 @@ class BaseProgressBarAnimation<T>(
             timeSource = timeSource,
             speedEstimateDuration = speedEstimateDuration
         )
-        check(state.update { this + task } != null) { "Failed to add task" }
+        check(state.update { copy(tasks = tasks + task) } != null) { "Failed to add task" }
         return task
     }
 
     override fun removeTask(task: ProgressTask<T>): Boolean {
-        val result = state.update { filter { it.id != task.id } }
-        return result != null && result.first.any { it.id == task.id }
+        val result = state.update { copy(tasks = tasks.filter { it.id != task.id }) }
+        return result != null && result.first.tasks.any { it.id == task.id }
     }
 
     override fun refresh() {
-        animation.update(state.value.map { it.makeState() })
+        val s = state.value
+        if (!s.visible) return
+        animation.update(s.tasks.map { it.makeState() })
     }
 
-    override fun clear() {
-        animation.clear()
-        maker.invalidateCache()
-    }
+    override var visible: Boolean
+        get() = state.value.visible
+        set(value) {
+            state.update { copy(visible = value) }
+            if (!value) animation.clear()
+            maker.invalidateCache()
+        }
 
     override val finished: Boolean
-        get() = state.value.all { it.finished }
+        get() = state.value.tasks.all { it.finished }
 }
 
 private class HistoryEntry(val time: ComparableTimeMark, val completed: Long)
