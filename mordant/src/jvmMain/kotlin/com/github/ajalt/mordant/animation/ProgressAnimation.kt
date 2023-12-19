@@ -1,11 +1,6 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.animation.progress.BlockingProgressBarAnimation
-import com.github.ajalt.mordant.animation.progress.animateOnThread
-import com.github.ajalt.mordant.animation.progress.execute
-import com.github.ajalt.mordant.animation.progress.addTask
-import com.github.ajalt.mordant.animation.progress.advance
-import com.github.ajalt.mordant.animation.progress.update
+import com.github.ajalt.mordant.animation.progress.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
@@ -46,6 +41,7 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
  * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
  */
 class ProgressAnimation internal constructor(
+    private val terminal: Terminal,
     private val inner: BlockingProgressBarAnimation<Unit>,
 ) {
     private val task = inner.addTask()
@@ -108,6 +104,7 @@ class ProgressAnimation internal constructor(
      * Start the progress bar animation.
      */
     fun start() = synchronized(lock) {
+        inner.visible = true
         if (future != null) return
         future = inner.execute(executor)
     }
@@ -128,7 +125,8 @@ class ProgressAnimation internal constructor(
      */
     fun restart() = synchronized(lock) {
         task.reset()
-        start()
+        inner.visible = true
+        if (future == null) update()
     }
 
     /**
@@ -138,7 +136,7 @@ class ProgressAnimation internal constructor(
      */
     fun clear() = synchronized(lock) {
         stop()
-        inner.clear()
+        inner.visible = false
     }
 }
 
@@ -170,6 +168,7 @@ internal fun Terminal.progressAnimation(
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
     return ProgressAnimation(
+        this,
         definition.animateOnThread(
             this,
             timeSource = timeSource,

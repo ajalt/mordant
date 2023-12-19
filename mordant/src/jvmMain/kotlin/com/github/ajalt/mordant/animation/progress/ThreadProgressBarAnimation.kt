@@ -26,7 +26,8 @@ class BlockingProgressBarAnimation<T> private constructor(
     /**
      * Start the animation and refresh it until all its tasks are finished.
      *
-     * This calls [Thread.sleep] between each frame, so it should usually be run in a background thread.
+     * This calls [Thread.sleep] between each frame, so it should usually be run in a separate
+     * thread so that you can update the state concurrently.
      *
      * @see execute
      */
