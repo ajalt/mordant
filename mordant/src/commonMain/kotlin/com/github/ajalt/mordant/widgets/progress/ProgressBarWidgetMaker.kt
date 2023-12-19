@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.widgets.progress
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
+import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 
 interface ProgressBarWidgetMaker {
@@ -18,6 +19,7 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
         states: List<ProgressState<T>>,
     ): Widget {
         return when {
+            states.isEmpty() -> EmptyWidget
             definition.alignColumns -> makeTable(definition, states)
             else -> makeLinearLayout(definition, states)
         }

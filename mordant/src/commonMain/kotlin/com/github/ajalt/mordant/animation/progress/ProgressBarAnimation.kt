@@ -41,6 +41,7 @@ interface ProgressTask<T> {
     val started: Boolean
     val paused: Boolean
     val id: TaskId
+    val visible: Boolean
 }
 
 /**
