@@ -1,5 +1,7 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.MppAtomicRef
+import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Whitespace
@@ -10,6 +12,7 @@ import com.github.ajalt.mordant.terminal.TerminalInfo
 import com.github.ajalt.mordant.terminal.TerminalInterceptor
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Text
+import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 
 /**
  * An Animation renders a widget to the screen each time [update] is called, clearing the render
@@ -22,8 +25,11 @@ import com.github.ajalt.mordant.widgets.Text
  * when your data changes. If your terminal is not [interactive][TerminalInfo.interactive], the
  * animation will not render anything.
  *
- * You can create instances of Animations with [animation], [textAnimation], and `progressAnimation`
- * (on JVM), or by creating a subclass.
+ * You can create instances of Animations with [animation], [textAnimation], animate a
+ * [progressBarLayout], or by creating a subclass.
+ *
+ * Note that although this class's state is thread safe, calling [update] concurrently will likely
+ * cause garbled output, so usage of this class should be serialized.
  */
 abstract class Animation<T>(
     /**
@@ -33,22 +39,24 @@ abstract class Animation<T>(
     private val trailingLinebreak: Boolean = true,
     private val terminal: Terminal,
 ) {
-    // TODO atomics
-    private var size: Pair<Int, Int>? = null
-    private var text: String? = null
-    private var needsClear = false
-    private var interceptorInstalled = false
+    private data class State(
+        var size: Pair<Int, Int>? = null,
+        var text: String? = null,
+        var needsClear: Boolean = false,
+        var interceptorInstalled: Boolean = false,
+        // Don't move the cursor the first time the animation is drawn
+        var firstDraw: Boolean = true,
+    )
 
-    // Don't move the cursor the first time the animation is drawn
-    private var firstDraw = true
+    private val state = MppAtomicRef(State())
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        val t = text ?: return@TerminalInterceptor req
+        val (old, _) = state.update { copy(firstDraw = false) }
+        val t = old.text ?: return@TerminalInterceptor req
         val newText = buildString {
-            if (!firstDraw) {
-                getCursorMoves(needsClear || req.text.isNotEmpty())?.let { append(it) }
+            if (!old.firstDraw) {
+                getCursorMoves(old.needsClear || req.text.isNotEmpty())?.let { append(it) }
             }
-            firstDraw = false
             if (req.text.isNotEmpty()) {
                 appendLine(req.text)
             }
@@ -69,9 +77,8 @@ abstract class Animation<T>(
      * Future calls to [update] will cause the animation to resume.
      */
     fun clear() {
-        stop()
+        doStop(true)
         getCursorMoves(clearScreen = true)?.let { terminal.rawPrint(it) }
-        size = null
     }
 
     /**
@@ -89,10 +96,20 @@ abstract class Animation<T>(
      * animation.
      */
     fun stop() {
-        if (interceptorInstalled) terminal.removeInterceptor(interceptor)
-        interceptorInstalled = false
-        firstDraw = true
-        text = null
+        doStop(false)
+    }
+
+    private fun doStop(clearSize: Boolean) {
+        val (old, _) = state.update {
+            copy(
+                interceptorInstalled = false,
+                firstDraw = true,
+                text = null,
+                size = if (clearSize) null else size,
+            )
+        }
+        if (old.interceptorInstalled) terminal.removeInterceptor(interceptor)
+
     }
 
     /**
@@ -102,24 +119,29 @@ abstract class Animation<T>(
      * place.
      */
     fun update(data: T) {
-        if (!interceptorInstalled && terminal.info.outputInteractive) {
-            terminal.addInterceptor(interceptor)
-        }
-        interceptorInstalled = true
         val rendered = renderData(data).render(terminal)
         val height = rendered.height
         val width = rendered.width
-        // To avoid flickering don't clear the screen if the render will completely cover the last frame
-        needsClear = size?.let { (h, w) -> height < h || width < w } ?: false
-        text = terminal.render(rendered)
+        val (old, _) = state.update {
+            copy(
+                // To avoid flickering don't clear the screen if the render will completely cover
+                // the last frame
+                needsClear = size?.let { (h, w) -> height < h || width < w } ?: false,
+                interceptorInstalled = true,
+                text = terminal.render(rendered)
+            )
+        }
+        if (!old.interceptorInstalled && terminal.info.outputInteractive) {
+            terminal.addInterceptor(interceptor)
+        }
         // Print an empty renderable to trigger our interceptor, which will add the rendered text
         terminal.print(EmptyWidget)
         // Update the size now that the old frame has been cleared
-        size = height to width
+        state.update { copy(size = height to width) }
     }
 
     private fun getCursorMoves(clearScreen: Boolean): String? {
-        val (height, _) = size ?: return null
+        val (height, _) = state.value.size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
             up(if (trailingLinebreak && !terminal.info.crClearsLine) height else height - 1)
