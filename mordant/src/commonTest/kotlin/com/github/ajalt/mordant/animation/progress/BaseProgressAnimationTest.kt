@@ -146,6 +146,7 @@ class BaseProgressAnimationTest : RenderingTest() {
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trim()
+        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimStart('\r')
+            .trimEnd()
     }
 }
