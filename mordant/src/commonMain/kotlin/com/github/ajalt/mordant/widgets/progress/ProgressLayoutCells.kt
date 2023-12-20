@@ -21,7 +21,7 @@ import kotlin.time.DurationUnit
  * @param content The text to display in this cell.
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  */
-fun ProgressLayoutScope<*>.text(content: String, align: TextAlign? = null) {
+fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RIGHT) {
     cell(align = align, fps = 0) { Text(content) }
 }
 
@@ -40,7 +40,7 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign? = null) {
  *
  */
 fun <T> ProgressLayoutScope<T>.text(
-    align: TextAlign? = null,
+    align: TextAlign = TextAlign.RIGHT,
     content: ProgressState<T>.() -> String,
 ) {
     cell(align = align, fps = 0) { Text(content()) }
@@ -114,7 +114,6 @@ fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
     ColumnWidth.Fixed(4),  // " 100%"
     fps = fps
 ) {
-    val total = total
     val percent = when {
         total == null || total <= 0 -> 0
         else -> (100.0 * completed / total).toInt()
@@ -138,7 +137,7 @@ fun ProgressLayoutScope<*>.timeRemaining(
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = textFps,
 ) = cell(
-    ColumnWidth.Fixed(7 + prefix.length), // " 0:00:02"
+    ColumnWidth.Fixed(7 + prefix.length), // "0:00:02"
     fps = fps
 ) {
     val eta = when {
@@ -150,11 +149,11 @@ fun ProgressLayoutScope<*>.timeRemaining(
     Text(style(prefix + renderDuration(duration, compact)), whitespace = Whitespace.PRE)
 }
 
-
+// TODO add tests for this and timeRemaining in compact mode
 /**
  * Add a cell that displays the elapsed time to this layout.
  *
- * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
+ * @param compact If `true`, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. `false` by default.
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
@@ -165,8 +164,9 @@ fun ProgressLayoutScope<*>.timeElapsed(
     fps: Int = textFps,
 ) = cell(ColumnWidth.Auto, fps = fps) {
     val elapsed = when {
-        finishedTime != null && startedTime != null -> finishedTime - startedTime // TODO: test this
-        else -> animationTime.elapsedNow()
+        finishedTime != null && startedTime != null -> finishedTime - startedTime
+        startedTime != null -> startedTime.elapsedNow()
+        else -> null
     }
     Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
 }
@@ -242,10 +242,12 @@ fun ProgressLayoutScope<*>.progressBar(
     )
 }
 
-private fun renderDuration(duration: Duration?, comapct: Boolean): String {
-    if (duration == null || duration < Duration.ZERO) return "-:--:--"
+private fun renderDuration(duration: Duration?, compact: Boolean): String {
+    if (duration == null || duration < Duration.ZERO) {
+        return if (compact) "--:--" else "-:--:--"
+    }
     return duration.toComponents { h, m, s, _ ->
-        val hrs = if (comapct && h <= 0) "" else "$h:"
+        val hrs = if (compact && h <= 0) "" else "$h:"
         "$hrs${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}"
     }
 }
