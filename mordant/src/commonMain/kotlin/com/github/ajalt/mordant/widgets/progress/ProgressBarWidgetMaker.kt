@@ -35,7 +35,7 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
                     this.spacing = d.spacing
                     d.cells.forEachIndexed { i, cell ->
                         column(i) {
-                            align = cell.align ?: TextAlign.RIGHT
+                            align = cell.align
                             width = cell.columnWidth
                         }
                     }
@@ -53,7 +53,7 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
             column(0) { padding = Padding(0) }
             d.cells.forEachIndexed { i, cell ->
                 column(i) {
-                    align = cell.align ?: TextAlign.RIGHT
+                    align = cell.align
                     val w = cell.columnWidth
                     width = when {
                         // The fixed width cells don't include padding, so add it here

@@ -32,6 +32,9 @@ data class ProgressState<T>(
      */
     val speed: Double? = null,
 
+    /**
+     * The unique id of this state's task.
+     */
     val taskId: TaskId = TaskId(),
 ) {
     val isIndeterminate: Boolean get() = total == null

@@ -26,7 +26,7 @@ interface ProgressLayoutScope<T> {
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
         fps: Int = TEXT_FPS,
-        align: TextAlign? = null,
+        align: TextAlign = TextAlign.RIGHT,
         builder: ProgressState<T>.() -> Widget,
     )
 
@@ -40,7 +40,7 @@ interface ProgressLayoutScope<T> {
 data class ProgressBarCell<T>(
     val columnWidth: ColumnWidth = ColumnWidth.Auto,
     val fps: Int = TEXT_FPS,
-    val align: TextAlign? = null,
+    val align: TextAlign = TextAlign.RIGHT,
     val content: ProgressState<T>.() -> Widget,
 ) {
     init {
@@ -92,7 +92,7 @@ fun <T> ProgressBarDefinition<T>.build(
     return build(state, maker = maker)
 }
 
-// TODO test these, add docs
+// TODO add docs
 fun ProgressBarDefinition<Unit>.build(
     total: Long?,
     completed: Long,
@@ -142,7 +142,7 @@ class BaseProgressLayoutScope<T>(
     override fun cell(
         width: ColumnWidth,
         fps: Int,
-        align: TextAlign?,
+        align: TextAlign,
         builder: ProgressState<T>.() -> Widget,
     ) {
         cells += ProgressBarCell(width, fps, align, builder)

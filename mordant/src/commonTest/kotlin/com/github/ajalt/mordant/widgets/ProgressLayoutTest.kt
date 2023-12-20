@@ -4,8 +4,12 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.ZERO
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TestTimeSource
@@ -17,14 +21,14 @@ class ProgressLayoutTest : RenderingTest() {
 
     @Test
     fun indeterminate() = doTest(
-        "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|-:--:--",
         0
     )
 
     @Test
     @JsName("no_progress")
     fun `no progress`() = doTest(
-        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|-:--:--",
         0, 0
     )
 
@@ -47,6 +51,27 @@ class ProgressLayoutTest : RenderingTest() {
     fun `long eta`() = doTest(
         "text.txt| 50%|####>....|150.0/300.0MB|   2.0it/s|eta -:--:--|0:00:01",
         150_000_000, 300_000_000, 1.5, 2.0
+    )
+
+    @Test
+    @JsName("zero_total")
+    fun `zero total`() = doTest(
+        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|-:--:--",
+        0, 0
+    )
+
+    @Test
+    @JsName("negative_completed_value")
+    fun `negative completed value`() = doTest(
+        "text.txt|-50%|.........|    -1.0/2.0B| ---.-it/s|eta -:--:--|-:--:--",
+        -1, 2
+    )
+
+    @Test
+    @JsName("completed_greater_than_total")
+    fun `completed value greater than total`() = doTest(
+        "text.txt|200%|#########|    10.0/5.0B| ---.-it/s|eta -:--:--|-:--:--",
+        10, 5
     )
 
     @Test
@@ -104,7 +129,43 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    // TODO test layout with no cells, no states, etc
+    @Test
+    @JsName("layout_no_cells")
+    fun `layout with no cells`() {
+        val layout = progressBarLayout { }.build(null, 0, now)
+        checkRender(layout, "")
+    }
+
+    @Test
+    @JsName("layout_no_states")
+    fun `layout with no states`() {
+        val layout = progressBarLayout { completed() }.build()
+        checkRender(layout, "")
+    }
+
+    @Test
+    @JsName("eta_and_remaining_compact")
+    fun `eta and remaining compact`() = forAll(
+        row(null, null, "--:--|  eta --:--"),
+        row(0.seconds, 1.seconds, "00:00|  eta 00:01"),
+        row(1.seconds, 0.seconds, "00:01|  eta --:--"),
+        row(1.hours - 1.seconds, 1.hours - 1.seconds, "59:59|  eta 59:59"),
+        row(1.hours, 1.hours, "1:00:00|eta 1:00:00"),
+        row(10.hours - 1.seconds, 10.hours - 1.seconds, "9:59:59|eta 9:59:59"),
+        row(10.hours, 10.hours, "10:00:00|  eta --:--"),
+        row(100.hours, 100.hours, "100:00:00|  eta --:--"),
+    ) { elapsed, remaining, expected ->
+        val t = TestTimeSource()
+        val now = t.markNow()
+        val speed = remaining?.let { if (it == ZERO) 0.0 else 100.0 / it.inWholeSeconds }
+        if (elapsed != null) t += elapsed
+        val layout = progressBarLayout(spacing = 0) {
+            timeElapsed(compact = true)
+            text("|")
+            timeRemaining(compact = true)
+        }.build(100, 0, now, now.takeIf { elapsed != null }, speed = speed)
+        checkRender(layout, expected)
+    }
 
     private fun doTest(
         expected: String,
@@ -129,7 +190,7 @@ class ProgressLayoutTest : RenderingTest() {
                 timeRemaining()
                 text("|")
                 timeElapsed()
-            }.build(total, completed, now, now, speed=speed),
+            }.build(total, completed, now, now, speed = speed),
             expected,
             width = 68,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
