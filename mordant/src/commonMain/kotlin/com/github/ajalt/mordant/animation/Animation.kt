@@ -51,11 +51,12 @@ abstract class Animation<T>(
     private val state = MppAtomicRef(State())
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        val (old, _) = state.update { copy(firstDraw = false) }
+        val (old, new) = state.update { copy(firstDraw = false) }
         val t = old.text ?: return@TerminalInterceptor req
         val newText = buildString {
             if (!old.firstDraw) {
-                getCursorMoves(old.needsClear || req.text.isNotEmpty())?.let { append(it) }
+                val moves = getCursorMoves(old.needsClear || req.text.isNotEmpty(), new.size)
+                moves?.let { append(it) }
             }
             if (req.text.isNotEmpty()) {
                 appendLine(req.text)
@@ -77,8 +78,8 @@ abstract class Animation<T>(
      * Future calls to [update] will cause the animation to resume.
      */
     fun clear() {
-        doStop(true)
-        getCursorMoves(clearScreen = true)?.let { terminal.rawPrint(it) }
+        val (old, _) = doStop(true)
+        getCursorMoves(clearScreen = true, old.size)?.let { terminal.rawPrint(it) }
     }
 
     /**
@@ -99,8 +100,8 @@ abstract class Animation<T>(
         doStop(false)
     }
 
-    private fun doStop(clearSize: Boolean) {
-        val (old, _) = state.update {
+    private fun doStop(clearSize: Boolean): Pair<State, State> {
+        val (old, new) = state.update {
             copy(
                 interceptorInstalled = false,
                 firstDraw = true,
@@ -109,7 +110,7 @@ abstract class Animation<T>(
             )
         }
         if (old.interceptorInstalled) terminal.removeInterceptor(interceptor)
-
+        return old to new
     }
 
     /**
@@ -140,8 +141,8 @@ abstract class Animation<T>(
         state.update { copy(size = height to width) }
     }
 
-    private fun getCursorMoves(clearScreen: Boolean): String? {
-        val (height, _) = state.value.size ?: return null
+    private fun getCursorMoves(clearScreen: Boolean, size: Pair<Int, Int>?): String? {
+        val (height, _) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
             up(if (trailingLinebreak && !terminal.info.crClearsLine) height else height - 1)
