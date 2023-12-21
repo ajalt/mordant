@@ -19,16 +19,25 @@ class ProgressLayoutTest : RenderingTest() {
     private val now = t.markNow()
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
 
+
     @Test
-    fun indeterminate() = doTest(
+    @JsName("indeterminate_not_started")
+    fun `indeterminate not started`() = doTest(
         "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|-:--:--",
+        0, started = false
+    )
+
+    @Test
+    @JsName("indeterminate_started")
+    fun `indeterminate started`() = doTest(
+        "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|0:00:00",
         0
     )
 
     @Test
     @JsName("no_progress")
     fun `no progress`() = doTest(
-        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|-:--:--",
+        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|0:00:00",
         0, 0
     )
 
@@ -56,21 +65,21 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("zero_total")
     fun `zero total`() = doTest(
-        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|-:--:--",
+        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|0:00:00",
         0, 0
     )
 
     @Test
     @JsName("negative_completed_value")
     fun `negative completed value`() = doTest(
-        "text.txt|-50%|.........|    -1.0/2.0B| ---.-it/s|eta -:--:--|-:--:--",
+        "text.txt|-50%|.........|    -1.0/2.0B| ---.-it/s|eta -:--:--|0:00:00",
         -1, 2
     )
 
     @Test
     @JsName("completed_greater_than_total")
     fun `completed value greater than total`() = doTest(
-        "text.txt|200%|#########|    10.0/5.0B| ---.-it/s|eta -:--:--|-:--:--",
+        "text.txt|200%|#########|    10.0/5.0B| ---.-it/s|eta -:--:--|0:00:00",
         10, 5
     )
 
@@ -167,12 +176,50 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(layout, expected)
     }
 
+    @Test
+    @JsName("eta_and_remaining_finished")
+    fun `eta and remaining finished`() {
+        t += 1.hours
+        val finishedTime = t.markNow()
+        t += 1.hours
+        val layout = progressBarLayout(spacing = 0) {
+            timeElapsed()
+            text("|")
+            timeRemaining()
+        }.build(100, 100, now, now, finishedTime = finishedTime)
+        checkRender(layout, "1:00:00|eta -:--:--")
+    }
+
+    @Test
+    @JsName("eta_elapsed_when_finished")
+    fun `eta elapsed when finished`() {
+        val layout = progressBarLayout(spacing = 0) {
+            timeElapsed()
+            text("|")
+            timeRemaining(elapsedWhenFinished = true)
+        }
+        t += 1.hours
+
+        checkRender(
+            layout.build(100, 25, now, now, speed = 1.0),
+            "1:00:00|eta 0:01:15"
+        )
+
+        val finishedTime = t.markNow()
+        t += 1.hours
+        checkRender(
+            layout.build(100, 100, now, now, finishedTime = finishedTime),
+            "1:00:00| in 1:00:00"
+        )
+    }
+
     private fun doTest(
         expected: String,
         completed: Long,
         total: Long? = null,
         elapsedSeconds: Double = 0.0,
         speed: Double? = null,
+        started: Boolean = true
     ) {
         t += elapsedSeconds.seconds
         checkRender(
@@ -190,7 +237,7 @@ class ProgressLayoutTest : RenderingTest() {
                 timeRemaining()
                 text("|")
                 timeElapsed()
-            }.build(total, completed, now, now, speed = speed),
+            }.build(total, completed, now, now.takeIf { started }, speed = speed),
             expected,
             width = 68,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
