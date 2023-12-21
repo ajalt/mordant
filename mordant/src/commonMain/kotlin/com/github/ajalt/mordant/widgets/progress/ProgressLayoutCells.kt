@@ -11,6 +11,7 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.Text
+import kotlin.math.max
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -121,12 +122,13 @@ fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
     Text("$percent%")
 }
 
-// TODO: add an option to show elapsed time once the task is finished
 /**
  * Add a cell that displays the time remaining to this layout.
  *
- * @param prefix A string to prepend to the displayed time, such as "eta " or "time left: ". "eta " by default.
- * @param compact If true, the displayed time will be formatted as "MM:SS" if time remaining is less than an hour. False by default.
+ * @param prefix A string to prepend to the displayed time, such as `"eta "` or `"time left: "`. `"eta "` by default.
+ * @param compact If `true`, the displayed time will be formatted as `"MM:SS"` if time remaining is less than an hour. `false` by default.
+ * @param elapsedWhenFinished If `true`, the elapsed time will be displayed when the task is finished. `false` by default.
+    * @param elapsedPrefix A string to prepend to the displayed time when [elapsedWhenFinished] is `true`. `" in "` by default.
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
@@ -134,22 +136,27 @@ fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
 fun ProgressLayoutScope<*>.timeRemaining(
     prefix: String = "eta ",
     compact: Boolean = false,
+    elapsedWhenFinished: Boolean = false,
+    elapsedPrefix: String = " in ",
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = textFps,
 ) = cell(
-    ColumnWidth.Fixed(7 + prefix.length), // "0:00:02"
+    ColumnWidth.Fixed(7 + max(prefix.length, elapsedPrefix.length)), // "0:00:02"
     fps = fps
 ) {
     val eta = when {
+        elapsedWhenFinished && finishedTime != null && startedTime != null -> {
+            finishedTime - startedTime
+        }
         isFinished || isPaused || speed == null || total == null -> null
-        else -> (total - completed) / speed
+        else -> ((total - completed) / speed).seconds
     }
-    val maxEta = 35_999 // 9:59:59
-    val duration = if (eta != null && eta <= maxEta) eta.seconds else null
-    Text(style(prefix + renderDuration(duration, compact)), whitespace = Whitespace.PRE)
+    val p = if (isFinished && elapsedWhenFinished) elapsedPrefix else prefix
+    val maxEta = 35_999.seconds // 9:59:59
+    val duration = if (eta != null && eta <= maxEta) eta else null
+    Text(style(p + renderDuration(duration, compact)), whitespace = Whitespace.PRE)
 }
 
-// TODO add tests for this and timeRemaining in compact mode
 /**
  * Add a cell that displays the elapsed time to this layout.
  *

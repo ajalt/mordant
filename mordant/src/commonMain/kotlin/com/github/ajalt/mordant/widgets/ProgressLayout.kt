@@ -4,7 +4,6 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.widgets.progress.*
-import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -91,7 +90,7 @@ open class ProgressBuilder internal constructor(
      * Add a cell that displays the time remaining to this layout.
      */
     fun timeRemaining(prefix: String = "eta ", style: TextStyle = DEFAULT_STYLE) {
-        builder.timeRemaining(prefix, false, style)
+        builder.timeRemaining(prefix, false, style = style)
     }
 
     /**

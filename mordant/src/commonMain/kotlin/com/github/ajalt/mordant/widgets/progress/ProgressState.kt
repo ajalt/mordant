@@ -6,6 +6,7 @@ import kotlin.time.ComparableTimeMark
 // TODO: make total and completed `Double`?
 // TODO: test paused/started time in animation
 // TODO: move eta into here
+// TODO: sealed class for all the time combos?
 data class ProgressState<T>(
     /** The context object passed to the progress task. */
     val context: T,
