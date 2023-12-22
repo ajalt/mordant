@@ -18,7 +18,7 @@ internal object TerminalDetection {
         val outputInteractive = interactive ?: (ij || stdoutInteractive())
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
-        val (w, h) = detectInitialSize()
+        val (w, h) = detectInitialSize(outputInteractive)
         return TerminalInfo(
             width = width ?: w,
             height = height ?: h,
@@ -33,10 +33,10 @@ internal object TerminalDetection {
     /** Returns a pair of `[width, height]`, or `null` if the size can't be detected */
     fun detectSize(): Pair<Int, Int>? = getTerminalSize()
 
-    private fun detectInitialSize(): Pair<Int, Int> {
+    private fun detectInitialSize(outputInteractive: Boolean): Pair<Int, Int> {
         return getTerminalSize() ?: Pair(
-            (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
-            (getEnv("LINES")?.toIntOrNull() ?: 24)
+            (getEnv("COLUMNS")?.toIntOrNull() ?: if (outputInteractive) 79 else Int.MAX_VALUE),
+            (getEnv("LINES")?.toIntOrNull() ?: if (outputInteractive) 24 else Int.MAX_VALUE)
         )
     }
 
