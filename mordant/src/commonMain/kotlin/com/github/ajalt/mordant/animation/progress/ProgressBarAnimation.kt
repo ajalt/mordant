@@ -9,6 +9,8 @@ interface ProgressTaskUpdateScope<T> {
     var completed: Long
     var total: Long?
     var visible: Boolean
+    var started: Boolean
+    var paused: Boolean
 }
 
 interface ProgressTask<T> {
@@ -21,8 +23,6 @@ interface ProgressTask<T> {
      * remain marked as finished. Use [reset] if you want to start the task again.
      */
     fun update(block: ProgressTaskUpdateScope<T>.() -> Unit)
-    fun start() //TODO doc that this is for calculating elapsed times
-    fun pause()
 
     /**
      * Reset the task so its completed count is 0 and its clock is reset.

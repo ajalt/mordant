@@ -16,7 +16,7 @@ import kotlin.time.TestTimeSource
 
 class ProgressLayoutTest : RenderingTest() {
     private val t = TestTimeSource()
-    private val now = t.markNow()
+    private val start = t.markNow()
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
 
 
@@ -92,7 +92,7 @@ class ProgressLayoutTest : RenderingTest() {
             text("|")
             speed()
             text("|")
-        }.build(null, 0, now),
+        }.build(null, 0, start),
         "|    0%  |   ---.-it/s  |",
     )
 
@@ -102,7 +102,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(
             progressBarLayout {
                 progressBar()
-            }.build(null, 0, now, now),
+            }.build(null, 0, start, start),
             indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
             width = 3,
         )
@@ -115,7 +115,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(
             progressBarLayout {
                 progressBar(showPulse = false)
-            }.build(null, 0, now, now),
+            }.build(null, 0, start, start),
             indetermStyle("━━━"),
             width = 3,
         )
@@ -129,11 +129,11 @@ class ProgressLayoutTest : RenderingTest() {
         }
         t += 1.minutes
         checkRender(
-            l.build(100, 90, now, speed = .01),
+            l.build(100, 90, start, speed = .01),
             "  eta 16:40", // 10remaining/.01hz == 1000s
         )
         checkRender(
-            l.build(100, 90, now, speed = .001),
+            l.build(100, 90, start, speed = .001),
             "eta 2:46:40", // 10remaining/.001hz == 10000s
         )
     }
@@ -141,7 +141,7 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("layout_no_cells")
     fun `layout with no cells`() {
-        val layout = progressBarLayout { }.build(null, 0, now)
+        val layout = progressBarLayout { }.build(null, 0, start)
         checkRender(layout, "")
     }
 
@@ -182,33 +182,37 @@ class ProgressLayoutTest : RenderingTest() {
         t += 1.hours
         val finishedTime = t.markNow()
         t += 1.hours
-        val layout = progressBarLayout(spacing = 0) {
-            timeElapsed()
-            text("|")
-            timeRemaining()
-        }.build(100, 100, now, now, finishedTime = finishedTime)
+        checkRender(
+            etaLayout().build(100, 100, start, start, finishedTime = finishedTime, speed = 10.0),
+            "1:00:00|eta -:--:--"
+        )
+    }
+
+    @Test
+    @JsName("eta_and_remaining_paused")
+    fun `eta and remaining paused`() {
+        t += 1.hours
+        val pausedTime = t.markNow()
+        t += 1.hours
+        val layout = etaLayout().build(100, 50, start, start, pausedTime = pausedTime, speed = 10.0)
         checkRender(layout, "1:00:00|eta -:--:--")
     }
 
     @Test
-    @JsName("eta_elapsed_when_finished")
-    fun `eta elapsed when finished`() {
-        val layout = progressBarLayout(spacing = 0) {
-            timeElapsed()
-            text("|")
-            timeRemaining(elapsedWhenFinished = true)
-        }
+    @JsName("eta_elapsedWhenFinished")
+    fun `eta elapsedWhenFinished`() {
+        val layout = etaLayout(elapsedWhenFinished = true)
         t += 1.hours
 
         checkRender(
-            layout.build(100, 25, now, now, speed = 1.0),
+            layout.build(100, 25, start, start, speed = 1.0),
             "1:00:00|eta 0:01:15"
         )
 
         val finishedTime = t.markNow()
         t += 1.hours
         checkRender(
-            layout.build(100, 100, now, now, finishedTime = finishedTime),
+            layout.build(100, 100, start, start, finishedTime = finishedTime),
             "1:00:00| in 1:00:00"
         )
     }
@@ -219,7 +223,7 @@ class ProgressLayoutTest : RenderingTest() {
         total: Long? = null,
         elapsedSeconds: Double = 0.0,
         speed: Double? = null,
-        started: Boolean = true
+        started: Boolean = true,
     ) {
         t += elapsedSeconds.seconds
         checkRender(
@@ -237,10 +241,18 @@ class ProgressLayoutTest : RenderingTest() {
                 timeRemaining()
                 text("|")
                 timeElapsed()
-            }.build(total, completed, now, now.takeIf { started }, speed = speed),
+            }.build(total, completed, start, start.takeIf { started }, speed = speed),
             expected,
             width = 68,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
         )
+    }
+
+    private fun etaLayout(elapsedWhenFinished: Boolean = false): ProgressBarDefinition<Unit> {
+        return progressBarLayout(spacing = 0) {
+            timeElapsed()
+            text("|")
+            timeRemaining(elapsedWhenFinished = elapsedWhenFinished)
+        }
     }
 }

@@ -79,9 +79,8 @@ private data class TaskState<T>(
     val total: Long?,
     val completed: Long,
     val visible: Boolean,
+    val samples: List<HistoryEntry>, // newest samples are at the end
     val startedTime: ComparableTimeMark?,
-    // newest samples are at the end
-    val samples: List<HistoryEntry>,
     val pausedTime: ComparableTimeMark?,
     val finishedTime: ComparableTimeMark?,
     val finishedSpeed: Double?,
@@ -94,9 +93,15 @@ private data class TaskState<T>(
         now: ComparableTimeMark,
         start: Boolean,
     ) : this(
-        context, total, completed, visible, now.takeIf { start },
-        if (start) listOf(HistoryEntry(now, completed)) else emptyList(),
-        null, null, null
+        context = context,
+        total = total,
+        completed = completed,
+        visible = visible,
+        samples = if (start) listOf(HistoryEntry(now, completed)) else emptyList(),
+        startedTime = now.takeIf { start },
+        pausedTime = null,
+        finishedTime = null,
+        finishedSpeed = null
     )
 }
 
@@ -105,6 +110,8 @@ private class UpdateScopeImpl<T>(
     override var completed: Long,
     override var total: Long?,
     override var visible: Boolean,
+    override var started: Boolean,
+    override var paused: Boolean,
 ) : ProgressTaskUpdateScope<T>
 
 private class ProgressTaskImpl<T>(
@@ -124,42 +131,35 @@ private class ProgressTaskImpl<T>(
 
     override fun update(block: ProgressTaskUpdateScope<T>.() -> Unit) {
         state.update {
-            val scope = UpdateScopeImpl(context, completed, total, visible)
+            val scope = UpdateScopeImpl(
+                context, completed, total, visible, startedTime != null, pausedTime != null
+            )
             scope.block()
 
             // Remove samples older than the speed estimate duration
             val oldestSampleTime = timeSource.markNow() - speedEstimateDuration
             val entry = HistoryEntry(timeSource.markNow(), scope.completed)
             val samples = samples.dropWhile { it.time < oldestSampleTime } + entry
+            val total = scope.total
+            val startedTime = if (scope.started) startedTime ?: timeSource.markNow() else null
+            val pausedTime = if (scope.paused) pausedTime ?: timeSource.markNow() else null
             var finishedTime = finishedTime
             var finishedSpeed = finishedSpeed
-            val total = scope.total
-            if (finishedTime == null && total != null && scope.completed == total) {
+            if (finishedTime == null && total != null && scope.completed >= total) {
                 finishedTime = timeSource.markNow()
-                finishedSpeed = estimateSpeed(this)
+                finishedSpeed = estimateSpeed(startedTime, samples)
             }
-
             copy(
                 samples = samples,
                 context = scope.context,
                 completed = scope.completed,
                 total = total,
                 visible = scope.visible,
+                startedTime = startedTime,
+                pausedTime = pausedTime,
                 finishedTime = finishedTime,
                 finishedSpeed = finishedSpeed,
             )
-        }
-    }
-
-    override fun start() {
-        state.update {
-            copy(startedTime = startedTime ?: timeSource.markNow())
-        }
-    }
-
-    override fun pause() {
-        state.update {
-            copy(pausedTime = pausedTime ?: timeSource.markNow())
         }
     }
 
@@ -169,7 +169,7 @@ private class ProgressTaskImpl<T>(
     ) {
         state.update {
             val s = state.value
-            val scope = UpdateScopeImpl(s.context, 0, s.total, s.visible)
+            val scope = UpdateScopeImpl(s.context, 0, s.total, s.visible, start, false)
             scope.block()
             TaskState(
                 context = scope.context,
@@ -177,7 +177,7 @@ private class ProgressTaskImpl<T>(
                 completed = scope.completed,
                 visible = scope.visible,
                 now = timeSource.markNow(),
-                start = start,
+                start = scope.started,
             )
         }
         maker.invalidateCache(id)
@@ -193,7 +193,7 @@ private class ProgressTaskImpl<T>(
                 startedTime = startedTime,
                 pausedTime = pausedTime,
                 finishedTime = finishedTime,
-                speed = finishedSpeed ?: estimateSpeed(this),
+                speed = finishedSpeed ?: estimateSpeed(startedTime, samples),
                 taskId = id,
             )
         }
@@ -205,9 +205,12 @@ private class ProgressTaskImpl<T>(
     override val visible: Boolean get() = state.value.visible
 }
 
-private fun <T> estimateSpeed(state: TaskState<T>): Double? = state.run {
+private fun estimateSpeed(
+    startedTime: ComparableTimeMark?,
+    samples: List<HistoryEntry>,
+): Double? {
     if (startedTime == null || samples.size < 2) return null
     val sampleTimespan = samples.first().time.elapsedNow().toDouble(SECONDS)
     val complete = samples.last().completed - samples.first().completed
-    if (complete <= 0 || sampleTimespan <= 0.0) null else complete / sampleTimespan
+    return if (complete <= 0 || sampleTimespan <= 0.0) null else complete / sampleTimespan
 }
