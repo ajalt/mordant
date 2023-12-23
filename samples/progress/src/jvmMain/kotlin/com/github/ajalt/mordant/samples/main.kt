@@ -30,7 +30,7 @@ fun main() {
 
     // Update the progress as the download progresses
     task.update { total = 3_000_000_000 }
-    repeat(200) {
+    while(!progress.finished) {
         task.advance(15_000_000)
         Thread.sleep(100)
     }

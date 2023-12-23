@@ -172,6 +172,7 @@ fun ProgressLayoutScope<*>.timeElapsed(
 ) = cell(ColumnWidth.Auto, fps = fps) {
     val elapsed = when {
         finishedTime != null && startedTime != null -> finishedTime - startedTime
+        pausedTime != null && startedTime != null -> pausedTime - startedTime
         startedTime != null -> startedTime.elapsedNow()
         else -> null
     }
