@@ -4,9 +4,8 @@ import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.progress.CachedProgressBarWidgetMaker
-import com.github.ajalt.mordant.widgets.progress.ProgressState
-import com.github.ajalt.mordant.widgets.progress.TaskId
+import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -80,9 +79,7 @@ private data class TaskState<T>(
     val completed: Long,
     val visible: Boolean,
     val samples: List<HistoryEntry>, // newest samples are at the end
-    val startedTime: ComparableTimeMark?,
-    val pausedTime: ComparableTimeMark?,
-    val finishedTime: ComparableTimeMark?,
+    val status: Status,
     val finishedSpeed: Double?,
 ) {
     constructor(
@@ -98,10 +95,8 @@ private data class TaskState<T>(
         completed = completed,
         visible = visible,
         samples = if (start) listOf(HistoryEntry(now, completed)) else emptyList(),
-        startedTime = now.takeIf { start },
-        pausedTime = null,
-        finishedTime = null,
-        finishedSpeed = null
+        status = if (start) Status.Running(now) else Status.NotStarted,
+        finishedSpeed = null,
     )
 }
 
@@ -132,7 +127,12 @@ private class ProgressTaskImpl<T>(
     override fun update(block: ProgressTaskUpdateScope<T>.() -> Unit) {
         state.update {
             val scope = UpdateScopeImpl(
-                context, completed, total, visible, startedTime != null, pausedTime != null
+                context = context,
+                completed = completed,
+                total = total,
+                visible = visible,
+                started = status !is Status.NotStarted,
+                paused = status is Status.Paused
             )
             scope.block()
 
@@ -141,23 +141,30 @@ private class ProgressTaskImpl<T>(
             val entry = HistoryEntry(timeSource.markNow(), scope.completed)
             val samples = samples.dropWhile { it.time < oldestSampleTime } + entry
             val total = scope.total
-            val startedTime = if (scope.started) startedTime ?: timeSource.markNow() else null
-            val pausedTime = if (scope.paused) pausedTime ?: timeSource.markNow() else null
-            var finishedTime = finishedTime
-            var finishedSpeed = finishedSpeed
-            if (finishedTime == null && total != null && scope.completed >= total) {
-                finishedTime = timeSource.markNow()
-                finishedSpeed = estimateSpeed(startedTime, samples)
+
+            val startTime = status.pauseTime ?: timeSource.markNow()
+            val finishTime = status.finishTime ?: timeSource.markNow()
+            val pauseTime = status.pauseTime ?: timeSource.markNow()
+
+            val status = when {
+                total != null && scope.completed >= total -> Status.Finished(startTime, finishTime)
+                scope.started && scope.paused -> Status.Paused(startTime, pauseTime)
+                scope.started -> Status.Running(startTime)
+                else -> Status.NotStarted
             }
+
+            val finishedSpeed = when (status) {
+                is Status.Finished -> finishedSpeed ?: estimateSpeed(startTime, samples)
+                else -> null
+            }
+
             copy(
                 samples = samples,
                 context = scope.context,
                 completed = scope.completed,
                 total = total,
                 visible = scope.visible,
-                startedTime = startedTime,
-                pausedTime = pausedTime,
-                finishedTime = finishedTime,
+                status = status,
                 finishedSpeed = finishedSpeed,
             )
         }
@@ -190,18 +197,16 @@ private class ProgressTaskImpl<T>(
                 total = total,
                 completed = completed,
                 animationTime = animationTime,
-                startedTime = startedTime,
-                pausedTime = pausedTime,
-                finishedTime = finishedTime,
-                speed = finishedSpeed ?: estimateSpeed(startedTime, samples),
+                status = status,
+                speed = finishedSpeed ?: estimateSpeed(status.startTime, samples),
                 taskId = id,
             )
         }
     }
 
-    override val finished: Boolean get() = state.value.finishedTime != null
-    override val started: Boolean get() = state.value.startedTime != null
-    override val paused: Boolean get() = state.value.pausedTime != null
+    override val finished: Boolean get() = state.value.status is Status.Finished
+    override val started: Boolean get() = state.value.status !is Status.NotStarted
+    override val paused: Boolean get() = state.value.status is Status.Paused
     override val visible: Boolean get() = state.value.visible
 }
 

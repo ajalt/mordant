@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import kotlin.js.JsName
@@ -102,7 +103,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(
             progressBarLayout {
                 progressBar()
-            }.build(null, 0, start, start),
+            }.build(null, 0, start, Running(start)),
             indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
             width = 3,
         )
@@ -115,7 +116,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(
             progressBarLayout {
                 progressBar(showPulse = false)
-            }.build(null, 0, start, start),
+            }.build(null, 0, start, Running(start)),
             indetermStyle("━━━"),
             width = 3,
         )
@@ -129,11 +130,11 @@ class ProgressLayoutTest : RenderingTest() {
         }
         t += 1.minutes
         checkRender(
-            l.build(100, 90, start, speed = .01),
+            l.build(100, 90, start, Running(start), speed = .01),
             "  eta 16:40", // 10remaining/.01hz == 1000s
         )
         checkRender(
-            l.build(100, 90, start, speed = .001),
+            l.build(100, 90, start, Running(start), speed = .001),
             "eta 2:46:40", // 10remaining/.001hz == 10000s
         )
     }
@@ -172,7 +173,7 @@ class ProgressLayoutTest : RenderingTest() {
             timeElapsed(compact = true)
             text("|")
             timeRemaining(compact = true)
-        }.build(100, 0, now, now.takeIf { elapsed != null }, speed = speed)
+        }.build(100, 0, now, if (elapsed == null) NotStarted else Running(now), speed = speed)
         checkRender(layout, expected)
     }
 
@@ -183,7 +184,7 @@ class ProgressLayoutTest : RenderingTest() {
         val finishedTime = t.markNow()
         t += 1.hours
         checkRender(
-            etaLayout().build(100, 100, start, start, finishedTime = finishedTime, speed = 10.0),
+            etaLayout().build(100, 100, start, Finished(start, finishedTime), speed = 10.0),
             "1:00:00|eta -:--:--"
         )
     }
@@ -194,7 +195,7 @@ class ProgressLayoutTest : RenderingTest() {
         t += 1.hours
         val pausedTime = t.markNow()
         t += 1.hours
-        val layout = etaLayout().build(100, 50, start, start, pausedTime = pausedTime, speed = 10.0)
+        val layout = etaLayout().build(100, 50, start, Paused(start, pausedTime), speed = 10.0)
         checkRender(layout, "1:00:00|eta -:--:--")
     }
 
@@ -205,14 +206,14 @@ class ProgressLayoutTest : RenderingTest() {
         t += 1.hours
 
         checkRender(
-            layout.build(100, 25, start, start, speed = 1.0),
+            layout.build(100, 25, start, Running(start), speed = 1.0),
             "1:00:00|eta 0:01:15"
         )
 
         val finishedTime = t.markNow()
         t += 1.hours
         checkRender(
-            layout.build(100, 100, start, start, finishedTime = finishedTime),
+            layout.build(100, 100, start, Finished(start, finishedTime), speed = 1.0),
             "1:00:00| in 1:00:00"
         )
     }
@@ -226,6 +227,7 @@ class ProgressLayoutTest : RenderingTest() {
         started: Boolean = true,
     ) {
         t += elapsedSeconds.seconds
+        val status = if (started) Running(start) else NotStarted
         checkRender(
             progressBarLayout(spacing = 0) {
                 text("text.txt")
@@ -241,7 +243,7 @@ class ProgressLayoutTest : RenderingTest() {
                 timeRemaining()
                 text("|")
                 timeElapsed()
-            }.build(total, completed, start, start.takeIf { started }, speed = speed),
+            }.build(total, completed, start, status, speed = speed),
             expected,
             width = 68,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
