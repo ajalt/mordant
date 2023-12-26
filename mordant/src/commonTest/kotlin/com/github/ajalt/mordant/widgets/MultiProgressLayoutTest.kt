@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
 import kotlin.js.JsName
 import kotlin.math.max
 import kotlin.test.Test
@@ -68,6 +69,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         alignColumns: Boolean = true,
     ) {
         val t = TestTimeSource()
+        val animTime = t.markNow()
         t += max(elapsed1 ?: 0.0, elapsed2 ?: 0.0).seconds
         val now = t.markNow()
         val factory: ProgressBarDefinition<String> = progressBarContextLayout(
@@ -88,19 +90,19 @@ class MultiProgressLayoutTest : RenderingTest() {
         }
         val widget = factory.build(
             ProgressState(
-                "Task 1",
-                total1,
-                completed1,
-                now,
-                now.takeIf { elapsed1 != null },
+                context = "Task 1",
+                total = total1,
+                completed = completed1,
+                animationTime = animTime,
+                status = if (elapsed1 == null) NotStarted else Running(now - elapsed1.seconds),
                 speed = speed1,
             ),
             ProgressState(
-                "Task Two",
-                total2,
-                completed2,
-                now,
-                now.takeIf { elapsed2 != null },
+                context = "Task Two",
+                total = total2,
+                completed = completed2,
+                animationTime = animTime,
+                status = if (elapsed2 == null) NotStarted else Running(now - elapsed2.seconds),
                 speed = speed2,
             ),
         )

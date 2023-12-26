@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.widgets.progress
 
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
 import kotlin.time.ComparableTimeMark
 
 // TODO: docs
@@ -18,12 +19,10 @@ data class ProgressState<T>(
      * Use this for continuous animations, since it's the same for all tasks.
      */
     val animationTime: ComparableTimeMark,
-    /** The time that the progress task was started, or `null` if it hasn't been started. */
-    val startedTime: ComparableTimeMark? = null,
-    /** The time that the progress task was paused, or `null` if it isn't paused. */
-    val pausedTime: ComparableTimeMark? = null,
-    /** The time that the progress task was finished, or `null` if it isn't finished. */
-    val finishedTime: ComparableTimeMark? = null,
+
+    /** The running status of the task. */
+    val status: Status,
+
     /**
      * The estimated speed of the progress task, in steps per second, or `null` if it hasn't started.
      *
@@ -36,11 +35,71 @@ data class ProgressState<T>(
      */
     val taskId: TaskId = TaskId(),
 ) {
-    val isIndeterminate: Boolean get() = total == null
-    val isPaused: Boolean get() = pausedTime != null
-    val isStarted: Boolean get() = startedTime != null
-    val isFinished: Boolean get() = finishedTime != null
+
+    sealed class Status {
+        data object NotStarted : Status()
+        data class Running(
+            val startTime: ComparableTimeMark,
+        ) : Status()
+
+        data class Paused(
+            val startTime: ComparableTimeMark,
+            val pauseTime: ComparableTimeMark,
+        ) : Status()
+
+        data class Finished(
+            val startTime: ComparableTimeMark,
+            val finishTime: ComparableTimeMark,
+        ) : Status()
+    }
 }
+
+/** `true` if the task does not have a [total][ProgressState.total] specified. */
+val <T> ProgressState<T>.isIndeterminate: Boolean get() = total == null
+
+/** `true if the task's status is [Paused][Status.Paused]. */
+val <T> ProgressState<T>.isPaused: Boolean get() = status is Status.Paused
+
+/** `true` if the task's status is [Running][Status.Running]. */
+val <T> ProgressState<T>.isRunning: Boolean get() = status is Status.Running
+
+/** `true` if the task's status is [NotStarted][Status.NotStarted]. */
+val <T> ProgressState<T>.isFinished: Boolean get() = status is Status.Finished
+
+/**
+ * The time that this task started, or `null` if it hasn't started.
+ */
+val Status.startTime: ComparableTimeMark?
+    get() {
+        return when (this) {
+            is Status.NotStarted -> null
+            is Status.Running -> startTime
+            is Status.Paused -> startTime
+            is Status.Finished -> startTime
+        }
+    }
+
+/**
+ * The time that this task was paused, or `null` if it isn't paused.
+ */
+val Status.pauseTime: ComparableTimeMark?
+    get() {
+        return when (this) {
+            is Status.Paused -> pauseTime
+            else -> null
+        }
+    }
+
+/**
+ * The time that this task finished, or `null` if it isn't finished.
+ */
+val Status.finishTime: ComparableTimeMark?
+    get() {
+        return when (this) {
+            is Status.Finished -> finishTime
+            else -> null
+        }
+    }
 
 /**
  * Create a [ProgressState] with no context.
@@ -48,13 +107,11 @@ data class ProgressState<T>(
 fun ProgressState(
     total: Long?,
     completed: Long,
-    displayedTime: ComparableTimeMark,
-    startedTime: ComparableTimeMark? = null,
-    pausedTime: ComparableTimeMark? = null,
-    finishedTime: ComparableTimeMark? = null,
+    animationTime: ComparableTimeMark,
+    status: Status,
     speed: Double? = null,
 ): ProgressState<Unit> {
     return ProgressState(
-        Unit, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+        Unit, total, completed, animationTime, status, speed
     )
 }

@@ -128,7 +128,7 @@ fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
  * @param prefix A string to prepend to the displayed time, such as `"eta "` or `"time left: "`. `"eta "` by default.
  * @param compact If `true`, the displayed time will be formatted as `"MM:SS"` if time remaining is less than an hour. `false` by default.
  * @param elapsedWhenFinished If `true`, the elapsed time will be displayed when the task is finished. `false` by default.
-    * @param elapsedPrefix A string to prepend to the displayed time when [elapsedWhenFinished] is `true`. `" in "` by default.
+ * @param elapsedPrefix A string to prepend to the displayed time when [elapsedWhenFinished] is `true`. `" in "` by default.
  * @param style The style to use for the displayed time.
  * @param fps The number of times per second to update the displayed time. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
@@ -145,11 +145,15 @@ fun ProgressLayoutScope<*>.timeRemaining(
     fps = fps
 ) {
     val eta = when {
-        elapsedWhenFinished && finishedTime != null && startedTime != null -> {
-            finishedTime - startedTime
+        status is ProgressState.Status.Finished && elapsedWhenFinished -> {
+            status.finishTime - status.startTime
         }
-        isFinished || isPaused || speed == null || total == null -> null
-        else -> ((total - completed) / speed).seconds
+
+        status is ProgressState.Status.Running && speed != null && total != null -> {
+            ((total - completed) / speed).seconds
+        }
+
+        else -> null
     }
     val p = if (isFinished && elapsedWhenFinished) elapsedPrefix else prefix
     val maxEta = 35_999.seconds // 9:59:59
@@ -170,11 +174,11 @@ fun ProgressLayoutScope<*>.timeElapsed(
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = textFps,
 ) = cell(ColumnWidth.Auto, fps = fps) {
-    val elapsed = when {
-        finishedTime != null && startedTime != null -> finishedTime - startedTime
-        pausedTime != null && startedTime != null -> pausedTime - startedTime
-        startedTime != null -> startedTime.elapsedNow()
-        else -> null
+    val elapsed = when (status) {
+        ProgressState.Status.NotStarted -> null
+        is ProgressState.Status.Finished -> status.finishTime - status.startTime
+        is ProgressState.Status.Paused -> status.pauseTime - status.startTime
+        is ProgressState.Status.Running -> status.startTime.elapsedNow()
     }
     Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
 }
@@ -233,20 +237,20 @@ fun ProgressLayoutScope<*>.progressBar(
     val pulsePosition = ((elapsedSeconds % period) / period)
 
     ProgressBar(
-        total ?: 0,
-        completed,
-        isIndeterminate,
-        width,
-        pulsePosition.toFloat(),
-        if (isStarted) showPulse else false,
-        pendingChar,
-        separatorChar,
-        completeChar,
-        pendingStyle,
-        separatorStyle,
-        completeStyle,
-        finishedStyle,
-        indeterminateStyle
+        total = total ?: 0,
+        completed = completed,
+        indeterminate = isIndeterminate,
+        width = width,
+        pulsePosition = pulsePosition.toFloat(),
+        showPulse = if (isRunning) showPulse else false,
+        pendingChar = pendingChar,
+        separatorChar = separatorChar,
+        completeChar = completeChar,
+        pendingStyle = pendingStyle,
+        separatorStyle = separatorStyle,
+        completeStyle = completeStyle,
+        finishedStyle = finishedStyle,
+        indeterminateStyle = indeterminateStyle
     )
 }
 

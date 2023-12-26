@@ -80,14 +80,12 @@ fun <T> ProgressBarDefinition<T>.build(
     total: Long?,
     completed: Long,
     displayedTime: ComparableTimeMark,
-    startedTime: ComparableTimeMark? = null,
-    pausedTime: ComparableTimeMark? = null,
-    finishedTime: ComparableTimeMark? = null,
+    status: ProgressState.Status = ProgressState.Status.NotStarted,
     speed: Double? = null,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
 ): Widget {
     val state = ProgressState(
-        context, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+        context, total, completed, displayedTime, status, speed
     )
     return build(state, maker = maker)
 }
@@ -97,14 +95,12 @@ fun ProgressBarDefinition<Unit>.build(
     total: Long?,
     completed: Long,
     displayedTime: ComparableTimeMark,
-    startedTime: ComparableTimeMark? = null,
-    pausedTime: ComparableTimeMark? = null,
-    finishedTime: ComparableTimeMark? = null,
+    status: ProgressState.Status = ProgressState.Status.NotStarted,
     speed: Double? = null,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
 ): Widget {
     val state = ProgressState(
-        Unit, total, completed, displayedTime, startedTime, pausedTime, finishedTime, speed
+        Unit, total, completed, displayedTime, status, speed
     )
     return build(state, maker = maker)
 }

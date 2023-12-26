@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -121,12 +122,16 @@ class ProgressLayout internal constructor(
         t += elapsedSeconds.seconds
         val speed = (completedPerSecond ?: calcHz(completed, elapsedSeconds.seconds))
             .takeIf { it > 0 }
+        val status = when {
+            total != null && completed >= total -> Finished(displayedTime, displayedTime)
+            else -> Running(displayedTime)
+        }
         return factory.build(
             ProgressState(
                 total,
                 completed,
                 displayedTime,
-                displayedTime,
+                status,
                 speed = speed
             )
         )
