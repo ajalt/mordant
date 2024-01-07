@@ -218,6 +218,22 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
+    @Test
+    fun spinner()  = forAll(
+        row(0, "1"),
+        row(1, "2"),
+        row(2, "3"),
+        row(3, "1"),
+        row(4, "2"),
+        row(5, "3"),
+    ) { elapsed, expected ->
+        val layout = progressBarLayout { spinner(Spinner("123"), fps = 1) }
+        val t = TestTimeSource()
+        val start = t.markNow()
+        t += elapsed.seconds
+        checkRender(layout.build(null, 0, start), expected)
+    }
+
     private fun doTest(
         expected: String,
         completed: Long,

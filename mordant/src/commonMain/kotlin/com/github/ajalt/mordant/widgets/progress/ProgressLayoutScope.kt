@@ -15,19 +15,19 @@ interface ProgressLayoutScope<T> {
     /**
      * Add a cell to this layout.
      *
-     * The [builder] will be called every time the cell is rendered. In the case of
+     * The [content] will be called every time the cell is rendered. In the case of
      * animations, that will be at its [fps].
      *
      * @param width The width of the cell.
      * @param fps The number of times per second to refresh the cell when animated. If 0, the cell will not be refreshed.
      * @param align The text alignment for the cell when multiple tasks are present and cells are aligned.
-     * @param builder A lambda returning the widget to display in this cell.
+     * @param content A lambda returning the widget to display in this cell.
      */
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
         fps: Int = TEXT_FPS,
         align: TextAlign = TextAlign.RIGHT,
-        builder: ProgressState<T>.() -> Widget,
+        content: ProgressState<T>.() -> Widget,
     )
 
     /** The default framerate for text based cells */
@@ -139,9 +139,9 @@ class BaseProgressLayoutScope<T>(
         width: ColumnWidth,
         fps: Int,
         align: TextAlign,
-        builder: ProgressState<T>.() -> Widget,
+        content: ProgressState<T>.() -> Widget,
     ) {
-        cells += ProgressBarCell(width, fps, align, builder)
+        cells += ProgressBarCell(width, fps, align, content)
     }
 
     fun build(spacing: Int, alignColumns: Boolean): ProgressBarDefinition<T> {
