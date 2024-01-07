@@ -67,16 +67,23 @@ internal fun flatLine(vararg parts: Any?): Line {
 
 /**
  * Pad or crop every line so its width is exactly [newWidth], and add or remove lines so its height
- * is exactly [newHeight]
+ * is exactly [newHeight].
+ *
+ * If [newWidth] is null, the width if each line will be unchanged.
  */
 internal fun Lines.setSize(
-    newWidth: Int,
+    newWidth: Int?,
     newHeight: Int = lines.size,
     verticalAlign: VerticalAlign = TOP,
     textAlign: TextAlign = NONE,
 ): Lines {
     if (newHeight == 0) return EMPTY_LINES
     if (newWidth == 0) return Lines(List(newHeight) { EMPTY_LINE })
+    if (newWidth == null) {
+        return if (newHeight == lines.size) this
+        else if (newHeight < lines.size ) Lines(lines.take(newHeight))
+        else Lines(lines + List(newHeight - lines.size) { EMPTY_LINE })
+    }
 
     val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
 
