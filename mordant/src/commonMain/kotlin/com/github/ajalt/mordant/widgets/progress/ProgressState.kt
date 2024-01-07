@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.widgets.progress
 
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
 import kotlin.time.ComparableTimeMark
+import kotlin.time.DurationUnit
 
 // TODO: docs
 // TODO: make total and completed `Double`?
@@ -100,6 +101,14 @@ val Status.finishTime: ComparableTimeMark?
             else -> null
         }
     }
+
+/**
+ * Return the number of frames that have elapsed at the given [fps] since the start of the
+ * [animationTime][ProgressState.animationTime].
+ */
+fun ProgressState<*>.frameCount(fps: Int): Int {
+    return (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) * fps).toInt()
+}
 
 /**
  * Create a [ProgressState] with no context.

@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.internal.formatWithSiSuffix
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Spinner
@@ -195,7 +196,7 @@ fun ProgressLayoutScope<*>.timeElapsed(
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
 fun ProgressLayoutScope<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
-    spinner.tick = (animationTime.elapsedNow().toDouble(DurationUnit.SECONDS) * fps).toInt()
+    spinner.tick = frameCount(fps)
     if (isPaused) BlankWidgetWrapper(spinner)
     else spinner
 }
