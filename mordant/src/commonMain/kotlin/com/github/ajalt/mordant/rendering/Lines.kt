@@ -79,22 +79,22 @@ internal fun Lines.setSize(
     newHeight: Int = lines.size,
     verticalAlign: VerticalAlign = TOP,
     textAlign: TextAlign = NONE,
-    horizontalOffset: Int = 0,
-    verticalOffset: Int = 0,
+    scrollRight: Int = 0,
+    scrollDown: Int = 0,
 ): Lines {
     if (newHeight <= 0) return EMPTY_LINES
     if (newWidth <= 0) return Lines(List(newHeight) { EMPTY_LINE })
     val emptyLine = Line(listOf(Span.space(newWidth)))
 
     val offsetLines = when {
-        verticalOffset == 0 -> lines
-        verticalOffset > lines.lastIndex -> emptyList()
-        verticalOffset < 0 -> buildList {
-            repeat(-verticalOffset) { add(emptyLine) }
+        scrollDown == 0 -> lines
+        scrollDown > lines.lastIndex -> emptyList()
+        scrollDown < 0 -> buildList {
+            repeat(-scrollDown) { add(emptyLine) }
             addAll(lines)
         }
 
-        else -> lines.subList(verticalOffset, lines.size)
+        else -> lines.subList(scrollDown, lines.size)
     }
 
     val heightToAdd = (newHeight - offsetLines.size).coerceAtLeast(0)
@@ -114,24 +114,24 @@ internal fun Lines.setSize(
         var offset = 0
         var offsetLine = line.spans
         var splitOffsetSpan: Span? = null
-        if (horizontalOffset < 0) {
-            offsetLine = listOf(Span.space(-horizontalOffset, line.startStyle)) + offsetLine
+        if (scrollRight < 0) {
+            offsetLine = listOf(Span.space(-scrollRight, line.startStyle)) + offsetLine
         }
         for ((j, span) in offsetLine.withIndex()) {
             when {
                 // If we have an offset, skip spans until we reach it
-                horizontalOffset > 0 && offset + span.cellWidth < horizontalOffset -> {
+                scrollRight > 0 && offset + span.cellWidth < scrollRight -> {
                     offset += span.cellWidth
                     offsetLine = line.subList(j + 1, line.size)
                 }
 
                 // If we have an offset, and this span is the one that contains it, split it
-                horizontalOffset > 0 && offset < horizontalOffset -> {
-                    if (offset + span.cellWidth > horizontalOffset) {
-                        splitOffsetSpan = span.drop(horizontalOffset - offset)
+                scrollRight > 0 && offset < scrollRight -> {
+                    if (offset + span.cellWidth > scrollRight) {
+                        splitOffsetSpan = span.drop(scrollRight - offset)
                         width += splitOffsetSpan.cellWidth
                     }
-                    offset = horizontalOffset
+                    offset = scrollRight
                     offsetLine = line.subList(j + 1, line.size)
                 }
 

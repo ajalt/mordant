@@ -8,24 +8,55 @@ import com.github.ajalt.mordant.terminal.Terminal
 
 
 /**
- * Crop or pad another [content] widget to a fixed size.
+ * Crop or pad another [content] widget to a fixed size, and optionally scroll visible portion of
+ * the widget within that size.
  *
  * If [width] or [height] are larger than the size of the [content] widget, the extra space will be
  * filled with spaces.
  *
- * You can specify [horizontalOffset] and [verticalOffset] to scroll the content widget.
+ * You can specify [scrollRight] and [scrollDown] to scroll the content widget. Negative values will
+ * scroll the widget to the right or up, respectively.
+ *
+ * ### Example
+ *
+ * If you have text content
+ *
+ * ```
+ * 123
+ * 456
+ * 7890
+ * ```
+ *
+ * A viewport with `width=2, height=2, scrollRight=1, scrollDown=1` will render as
+ *
+ * ```
+ * 56
+ * 89
+ * ```
+ *
+ * A viewport with `width=2, height=2, scrollRight=-1, scrollDown=-1` will render as
+ *
+ * ```
+ *
+ *  1
+ * ```
  */
-class Crop(
+class Viewport(
     /** The widget to crop. */
     private val content: Widget,
-    /** The width to crop the widget to, or `null` to leave the width unchanged */
+    /** The width to crop the widget to, or `null` to use the width of the longest line */
     private val width: Int?,
     /** The height to crop the widget to, or `null` to leave the height unchanged */
     private val height: Int? = null,
-    /** The number of characters to crop from the left before cropping or padding on the right */
-    private val horizontalOffset: Int = 0,
-    /** The number of lines to crop from the top before cropping or padding on the bottom */
-    private val verticalOffset: Int = 0,
+    /**
+     * The number of characters to crop from the left of the [content] (or from the right, if
+     * negative)
+     */
+    private val scrollRight: Int = 0,
+    /**
+     * The number of lines to crop from the top of the [content] (or from the bottom, if negative)
+     */
+    private val scrollDown: Int = 0,
 ) : Widget {
     override fun measure(t: Terminal, width: Int): WidthRange {
         return if (this.width != null) {
@@ -40,8 +71,8 @@ class Crop(
         return lines.setSize(
             newWidth = this.width ?: lines.width,
             newHeight = this.height ?: lines.lines.size,
-            horizontalOffset = horizontalOffset,
-            verticalOffset = verticalOffset
+            scrollRight = scrollRight,
+            scrollDown = scrollDown
         )
     }
 }

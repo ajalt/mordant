@@ -9,7 +9,7 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.widgets.Crop
+import com.github.ajalt.mordant.widgets.Viewport
 import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.Text
@@ -56,7 +56,7 @@ fun <T> ProgressLayoutScope<T>.marquee(
     align: TextAlign = TextAlign.RIGHT,
     content: ProgressState<T>.() -> Widget,
 ) = cell(width = ColumnWidth.Fixed(width), fps = fps, align = align) {
-    Crop(content(), width)
+    Viewport(content(), width)
 }
 
 // TODO: make decimal places configurable?
