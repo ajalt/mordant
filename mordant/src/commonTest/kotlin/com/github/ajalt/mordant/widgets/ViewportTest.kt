@@ -5,7 +5,7 @@ import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import kotlin.test.Test
 
-class CropTest : RenderingTest(width = 20) {
+class ViewportTest : RenderingTest(width = 20) {
     @Test
     fun crop() = forAll(
         row(null, null, "a  ␊b c"),
@@ -19,7 +19,7 @@ class CropTest : RenderingTest(width = 20) {
         row(4, 3, "a   ␊b c ␊    "),
         row(0, 0, ""),
     ) { w, h, ex ->
-        doTest(w, h, 0, 0, ex)
+        doTest(w, h, 0, 0, ex, "a\nb c")
     }
 
     @Test
@@ -40,12 +40,11 @@ class CropTest : RenderingTest(width = 20) {
         row(0, -2, "   ␊   "),
         row(-9, -9, "   ␊   "),
     ) { x, y, ex ->
-        doTest(null, null, x, y, ex)
+        doTest(null, null, x, y, ex, "a\nb c")
     }
     // TODO: test scrolling to the middle of a span with a different style than the one before
-
-    private fun doTest(w: Int?, h: Int?, x: Int, y: Int, ex: String) {
-        checkRender(Crop(Text("a\nb c"), w, h, x, y), ex, trimMargin = false) {
+    private fun doTest(w: Int?, h: Int?, x: Int, y: Int, ex: String, txt: String) {
+        checkRender(Viewport(Text(txt), w, h, x, y), ex, trimMargin = false) {
             it.replace('\n', '␊')
         }
     }
