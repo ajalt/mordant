@@ -10,6 +10,8 @@ data class Line(val spans: List<Span>, val endStyle: TextStyle) : List<Span> by 
     constructor(spans: List<Span>) : this(spans, spans.lastOrNull()?.style ?: DEFAULT_STYLE)
 }
 
+internal val Line.startStyle: TextStyle get() = firstOrNull()?.style ?: DEFAULT_STYLE
+
 /**
  * A lines, where each line is a list of [Span]s.
  *
@@ -57,6 +59,7 @@ internal fun flatLine(vararg parts: Any?): Line {
         when (part) {
             null -> {
             }
+
             is Collection<*> -> part.mapTo(line) { it as Span }
             is Span -> line.add(part)
             else -> error("not a span: $part")
@@ -72,89 +75,127 @@ internal fun flatLine(vararg parts: Any?): Line {
  * If [newWidth] is null, the width if each line will be unchanged.
  */
 internal fun Lines.setSize(
-    newWidth: Int?,
+    newWidth: Int,
     newHeight: Int = lines.size,
     verticalAlign: VerticalAlign = TOP,
     textAlign: TextAlign = NONE,
+    horizontalOffset: Int = 0,
+    verticalOffset: Int = 0,
 ): Lines {
-    if (newHeight == 0) return EMPTY_LINES
-    if (newWidth == 0) return Lines(List(newHeight) { EMPTY_LINE })
-    if (newWidth == null) {
-        return if (newHeight == lines.size) this
-        else if (newHeight < lines.size ) Lines(lines.take(newHeight))
-        else Lines(lines + List(newHeight - lines.size) { EMPTY_LINE })
+    if (newHeight <= 0) return EMPTY_LINES
+    if (newWidth <= 0) return Lines(List(newHeight) { EMPTY_LINE })
+    val emptyLine = Line(listOf(Span.space(newWidth)))
+
+    val offsetLines = when {
+        verticalOffset == 0 -> lines
+        verticalOffset > lines.lastIndex -> emptyList()
+        verticalOffset < 0 -> buildList {
+            repeat(-verticalOffset) { add(emptyLine) }
+            addAll(lines)
+        }
+
+        else -> lines.subList(verticalOffset, lines.size)
     }
 
-    val heightToAdd = (newHeight - lines.size).coerceAtLeast(0)
-
-    val emptyLine = Line(listOf(Span.space(newWidth)))
+    val heightToAdd = (newHeight - offsetLines.size).coerceAtLeast(0)
     val lines = ArrayList<Line>(newHeight)
-
     val topEmptyLines = when (verticalAlign) {
         TOP -> 0
         MIDDLE -> heightToAdd / 2 + heightToAdd % 2
         BOTTOM -> heightToAdd
     }
 
-    repeat(topEmptyLines) {
-        lines.add(emptyLine)
-    }
+    repeat(topEmptyLines) { lines.add(emptyLine) }
 
-    line@ for ((i, line) in this.lines.withIndex()) {
+    line@ for ((i, line) in offsetLines.withIndex()) {
         if (i >= newHeight) break
 
         var width = 0
-        for ((j, span) in line.withIndex()) {
+        var offset = 0
+        var offsetLine = line.spans
+        var splitOffsetSpan: Span? = null
+        if (horizontalOffset < 0) {
+            offsetLine = listOf(Span.space(-horizontalOffset, line.startStyle)) + offsetLine
+        }
+        for ((j, span) in offsetLine.withIndex()) {
             when {
+                // If we have an offset, skip spans until we reach it
+                horizontalOffset > 0 && offset + span.cellWidth < horizontalOffset -> {
+                    offset += span.cellWidth
+                    offsetLine = line.subList(j + 1, line.size)
+                }
+
+                // If we have an offset, and this span is the one that contains it, split it
+                horizontalOffset > 0 && offset < horizontalOffset -> {
+                    if (offset + span.cellWidth > horizontalOffset) {
+                        splitOffsetSpan = span.drop(horizontalOffset - offset)
+                        width += splitOffsetSpan.cellWidth
+                    }
+                    offset = horizontalOffset
+                    offsetLine = line.subList(j + 1, line.size)
+                }
+
+                // We're past the offset, so add spans until we reach the new width
                 width + span.cellWidth <= newWidth -> {
                     width += span.cellWidth
                 }
-                width == newWidth -> {
-                    lines.add(Line(line.subList(0, j)))
-                    continue@line
-                }
+
+                // We've reached the new width before the end of the line, so make a new line
                 else -> {
-                    lines.add(Line(line.subList(0, j) + span.take(newWidth - width)))
+                    val l = if (width == newWidth && splitOffsetSpan == null) {
+                        // Optimization when we don't make any new spans, use a view of the line
+                        offsetLine.subList(0, j)
+                    } else {
+                        // Otherwise build a new list
+                        buildList {
+                            if (splitOffsetSpan != null) add(splitOffsetSpan)
+                            addAll(offsetLine.subList(0, j))
+                            if (width != newWidth) add(span.take(newWidth - width))
+                        }
+                    }
+                    lines.add(Line(l))
                     continue@line
                 }
             }
         }
 
+        // We didn't truncate the line
         val remainingWidth = newWidth - width
-        if (remainingWidth > 0) {
-            val beginStyle = line.firstOrNull()?.style ?: line.endStyle
-            val endStyle = line.endStyle
 
-            when (textAlign) {
-                CENTER, JUSTIFY -> {
-                    val l = Span.space(remainingWidth / 2, beginStyle)
-                    val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
-                    lines.add(Line(listOf(listOf(l), line, listOf(r)).flatten()))
-                }
-                LEFT -> {
-                    lines.add(Line(line + Span.space(remainingWidth, endStyle)))
-                }
-                NONE -> {
-                    lines.add(Line(line + Span.space(remainingWidth))) // Spaces aren't styled in this alignment
-                }
-                RIGHT -> {
-                    lines.add(Line(listOf(Span.space(remainingWidth, beginStyle)) + line))
-                }
+        if (remainingWidth == 0) {
+            // The line is exactly the right width, just add it
+            lines.add(Line(offsetLine))
+            continue@line
+        }
+
+        val beginStyle = offsetLine.firstOrNull()?.style ?: line.endStyle
+        val endStyle = line.endStyle
+
+        // The line was too short, add spaces according to the alignment
+        when (textAlign) {
+            CENTER, JUSTIFY -> {
+                val l = Span.space(remainingWidth / 2, beginStyle)
+                val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
+                lines.add(Line(buildList { add(l); addAll(offsetLine); add(r) }))
             }
-        } else {
-            lines.add(line)
+
+            LEFT -> {
+                lines.add(Line(offsetLine + Span.space(remainingWidth, endStyle)))
+            }
+
+            NONE -> {
+                // Spaces aren't styled in this alignment
+                lines.add(Line(offsetLine + Span.space(remainingWidth)))
+            }
+
+            RIGHT -> {
+                lines.add(Line(listOf(Span.space(remainingWidth, beginStyle)) + offsetLine))
+            }
         }
     }
 
-    if (newHeight != lines.size) {
-        if (newHeight < lines.size) {
-            return Lines(lines.take(newHeight))
-        } else {
-            val line = if (newWidth == 0) EMPTY_LINE else Line(listOf(Span.space(newWidth)))
-            repeat(newHeight - lines.size) {
-                lines.add(line)
-            }
-        }
+    if (newHeight > lines.size) {
+        repeat(newHeight - lines.size) { lines.add(emptyLine) }
     }
     return Lines(lines)
 }

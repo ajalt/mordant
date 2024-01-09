@@ -12,6 +12,8 @@ import com.github.ajalt.mordant.terminal.Terminal
  *
  * If [width] or [height] are larger than the size of the [content] widget, the extra space will be
  * filled with spaces.
+ *
+ * You can specify [horizontalOffset] and [verticalOffset] to scroll the content widget.
  */
 class Crop(
     /** The widget to crop. */
@@ -20,7 +22,11 @@ class Crop(
     private val width: Int?,
     /** The height to crop the widget to, or `null` to leave the height unchanged */
     private val height: Int? = null,
-): Widget{
+    /** The number of characters to crop from the left before cropping or padding on the right */
+    private val horizontalOffset: Int = 0,
+    /** The number of lines to crop from the top before cropping or padding on the bottom */
+    private val verticalOffset: Int = 0,
+) : Widget {
     override fun measure(t: Terminal, width: Int): WidthRange {
         return if (this.width != null) {
             WidthRange(this.width, this.width)
@@ -31,6 +37,11 @@ class Crop(
 
     override fun render(t: Terminal, width: Int): Lines {
         val lines = content.render(t, width)
-        return lines.setSize(this.width, this.height ?: lines.lines.size)
+        return lines.setSize(
+            newWidth = this.width ?: lines.width,
+            newHeight = this.height ?: lines.lines.size,
+            horizontalOffset = horizontalOffset,
+            verticalOffset = verticalOffset
+        )
     }
 }

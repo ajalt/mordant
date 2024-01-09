@@ -34,12 +34,11 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
         fun space(width: Int = 1, style: TextStyle = DEFAULT_STYLE): Span {
             return Span(" ".repeat(width), style)
         }
-
-        internal fun raw(text: String): Span = Span(text, DEFAULT_STYLE)
     }
 
     internal val cellWidth: Int by lazy(PUBLICATION) { stringCellWidth(text) }
     internal fun take(n: Int): Span = Span(text.take(n), style)
+    internal fun drop(n: Int): Span = Span(text.drop(n), style)
 
     internal fun isWhitespace(): Boolean = text[0].isWhitespace()
     internal fun isTab(): Boolean = text[0] == '\t'

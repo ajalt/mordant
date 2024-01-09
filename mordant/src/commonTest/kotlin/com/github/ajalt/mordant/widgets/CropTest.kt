@@ -1,39 +1,53 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.rendering.*
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
-import kotlin.js.JsName
 import kotlin.test.Test
 
 class CropTest : RenderingTest(width = 20) {
     @Test
     fun crop() = forAll(
-        row(null, null, "a\nbb\n"),
-        row(null, 1, "a\n"),
-        row(2, 1, "a \n"),
-        row(1, null, "a\nb\n"),
-        row(2, 2, "a \nbb\n"),
-        row(3, 3, "a  \nbb \n   \n"),
+        row(null, null, "a  ␊b c"),
+        row(null, 1, "a  "),
+        row(1, 1, "a"),
+        row(2, 1, "a "),
+        row(1, null, "a␊b"),
+        row(2, null, "a ␊b "),
+        row(3, null, "a  ␊b c"),
+        row(2, 2, "a ␊b "),
+        row(4, 3, "a   ␊b c ␊    "),
         row(0, 0, ""),
     ) { w, h, ex ->
-        checkRender(Crop(W, w, h), ex)
+        doTest(w, h, 0, 0, ex)
+    }
+
+    @Test
+    fun scroll() = forAll(
+        row(0, 0, "a  ␊b c"),
+        row(1, 0, "   ␊ c "),
+        row(2, 0, "   ␊c  "),
+        row(3, 0, "   ␊   "),
+        row(4, 0, "   ␊   "),
+        row(0, 1, "b c␊   "),
+        row(0, 2, "   ␊   "),
+        row(1, 1, " c ␊   "),
+        row(9, 9, "   ␊   "),
+        row(-1, 0, " a ␊ b "),
+        row(-2, 0, "  a␊  b"),
+        row(-3, 0, "   ␊   "),
+        row(0, -1, "   ␊a  "),
+        row(0, -2, "   ␊   "),
+        row(-9, -9, "   ␊   "),
+    ) { x, y, ex ->
+        doTest(null, null, x, y, ex)
+    }
+    // TODO: test scrolling to the middle of a span with a different style than the one before
+
+    private fun doTest(w: Int?, h: Int?, x: Int, y: Int, ex: String) {
+        checkRender(Crop(Text("a\nb c"), w, h, x, y), ex, trimMargin = false) {
+            it.replace('\n', '␊')
+        }
     }
 }
 
-private object W : Widget {
-    override fun measure(t: Terminal, width: Int): WidthRange {
-        return WidthRange(2, 2)
-    }
-
-    override fun render(t: Terminal, width: Int): Lines {
-        return Lines(
-            listOf(
-                Line(listOf(Span.word("a"))),
-                Line(listOf(Span.word("bb"))),
-            )
-        )
-    }
-}
