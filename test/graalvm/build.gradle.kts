@@ -16,6 +16,8 @@ tasks.test {
 dependencies {
     implementation(project(":mordant"))
     testImplementation(kotlin("test"))
+    testImplementation(platform(libs.kotlinxCoroutines.bom))
+    testImplementation(libs.kotlinxCoroutines.test)
 }
 
 graalvmNative {

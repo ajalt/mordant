@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.markdown.Markdown
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
 
-fun main(args: Array<String>) {
+suspend fun main(args: Array<String>) {
     // make sure that the terminal detection doesn't crash.
     Terminal()
 

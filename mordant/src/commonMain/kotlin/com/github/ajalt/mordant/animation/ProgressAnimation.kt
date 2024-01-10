@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.internal.nanosToSeconds
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.terminal.Terminal
@@ -9,7 +8,11 @@ import com.github.ajalt.mordant.widgets.ProgressCell
 import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import com.github.ajalt.mordant.widgets.ProgressLayout
 import com.github.ajalt.mordant.widgets.ProgressState
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
@@ -32,32 +35,38 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder() {
     var historyLength: Float = 30f
 
     // for testing
-    internal var timeSource: () -> Long = { System.nanoTime() }
+    internal var timeSource: TimeSource = TimeSource.Monotonic
 }
 
-
-private class ProgressHistoryEntry(val timeNs: Long, val completed: Long)
-private class ProgressHistory(windowLengthSeconds: Float, private val timeSource: () -> Long) {
-    private var startTime: Long = -1
+private class ProgressHistory(
+    private val windowLength: Duration,
+    private val timeSource: TimeSource,
+) {
+    private var startTime: TimeMark? = null
     private val samples = ArrayDeque<ProgressHistoryEntry>()
-    private val windowLengthNs = (TimeUnit.SECONDS.toNanos(1) * windowLengthSeconds).toLong()
+
+    val started: Boolean get() = startTime != null
+    val completed: Long get() = samples.lastOrNull()?.completed ?: 0
+
+    private val elapsed: Duration
+        get() = startTime?.elapsedNow() ?: Duration.ZERO
 
     fun start() {
         if (!started) {
-            startTime = timeSource()
+            startTime = timeSource.markNow()
         }
     }
 
     fun clear() {
-        startTime = -1
+        startTime = null
         samples.clear()
     }
 
     fun update(completed: Long) {
         start()
-        val now = timeSource()
-        val keepTime = now - windowLengthNs
-        while (samples.firstOrNull().let { it != null && it.timeNs < keepTime }) {
+        val now = elapsed
+        val keepTime = now - windowLength
+        while (samples.firstOrNull().let { it != null && it.elapsed < keepTime }) {
             samples.removeFirst()
         }
         samples.addLast(ProgressHistoryEntry(now, completed))
@@ -67,22 +76,25 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
         completed = completed,
         total = total,
         completedPerSecond = completedPerSecond,
-        elapsedSeconds = elapsedSeconds,
+        elapsed = elapsed,
     )
-
-    val started: Boolean get() = startTime >= 0
-    val completed: Long get() = samples.lastOrNull()?.completed ?: 0
-
-    private val elapsedSeconds: Double
-        get() = if (startTime >= 0) nanosToSeconds(timeSource() - startTime) else 0.0
 
     private val completedPerSecond: Double
         get() {
-            if (startTime < 0 || samples.size < 2) return 0.0
-            val sampleTimespan = nanosToSeconds(samples.last().timeNs - samples.first().timeNs)
+            if (elapsed < Duration.ZERO || samples.size < 2) return 0.0
+            val sampleTimespan = samples.last().elapsed - samples.first().elapsed
             val complete = samples.last().completed - samples.first().completed
-            return if (complete <= 0 || sampleTimespan <= 0) 0.0 else complete / sampleTimespan
+            return if (complete <= 0 || sampleTimespan <= Duration.ZERO) {
+                0.0
+            } else {
+                complete / sampleTimespan.toDouble(DurationUnit.SECONDS)
+            }
         }
+
+    private data class ProgressHistoryEntry(
+        val elapsed: Duration,
+        val completed: Long,
+    )
 }
 
 /**
@@ -91,24 +103,26 @@ private class ProgressHistory(windowLengthSeconds: Float, private val timeSource
 class ProgressAnimation internal constructor(
     private val t: Terminal,
     private val layout: ProgressLayout,
-    historyLength: Float,
+    historyLength: Duration,
     private val ticker: Ticker,
-    timeSource: () -> Long,
+    timeSource: TimeSource,
 ) {
     private var total: Long? = null
     private var tickerStarted: Boolean = false
     private val history = ProgressHistory(historyLength, timeSource)
     private val animation = t.animation<Unit> {
         val state = history.makeState(total)
-        layout.build(state.completed, state.total, state.elapsedSeconds, state.completedPerSecond)
+        layout.build(
+            state.completed,
+            state.total,
+            state.elapsed.toDouble(DurationUnit.SECONDS),
+            state.completedPerSecond
+        )
     }
-
-    // Locking: all state is protected by this object's monitor. Tick is run on the timer thread.
 
     /**
      * Set the current progress to the [completed] value.
      */
-    @Synchronized
     fun update(completed: Long) {
         history.update(completed)
         if (!tickerStarted) {
@@ -119,7 +133,6 @@ class ProgressAnimation internal constructor(
     /**
      * Set the current progress to the [completed] value.
      */
-    @Synchronized
     fun update(completed: Int) {
         update(completed.toLong())
     }
@@ -129,7 +142,6 @@ class ProgressAnimation internal constructor(
      *
      * This will redraw the animation and update fields like the estimated time remaining.
      */
-    @Synchronized
     fun update() {
         update(history.completed)
     }
@@ -137,7 +149,6 @@ class ProgressAnimation internal constructor(
     /**
      * Set the current progress to the [completed] value, and set the total to the [total] value.
      */
-    @Synchronized
     fun update(completed: Long, total: Long?) {
         updateTotalWithoutAnimation(total)
         update(completed)
@@ -146,13 +157,11 @@ class ProgressAnimation internal constructor(
     /**
      * Set the [total] amount of work to be done, or `null` to make the progress bar indeterminate.
      */
-    @Synchronized
     fun updateTotal(total: Long?) {
         updateTotalWithoutAnimation(total)
         update()
     }
 
-    @Synchronized
     private fun updateTotalWithoutAnimation(total: Long?) {
         this.total = total?.takeIf { it > 0 }
     }
@@ -160,7 +169,6 @@ class ProgressAnimation internal constructor(
     /**
      * Advance the current completed progress by [amount] without changing the total.
      */
-    @Synchronized
     fun advance(amount: Long = 1) {
         update(history.completed + amount)
     }
@@ -168,22 +176,18 @@ class ProgressAnimation internal constructor(
     /**
      * Start the progress bar animation.
      */
-    @Synchronized
-    fun start() {
+    suspend fun start() {
         if (tickerStarted) return
         t.cursor.hide(showOnExit = true)
         tickerStarted = true
         history.start()
-        ticker.start {
-            tick()
-        }
+        ticker.start(::tick)
     }
 
-    @Synchronized
     private fun tick() {
         // Running on the timer thread.
         if (!tickerStarted)
-            return   // This can happen if we're racing with stop().
+            return    // This can happen if we're racing with stop().
         update()
         animation.update(Unit)
     }
@@ -194,7 +198,6 @@ class ProgressAnimation internal constructor(
      * The progress bar will remain on the screen until you call [clear].
      * You can call [start] again to resume the animation.
      */
-    @Synchronized
     fun stop() {
         if (!tickerStarted) return
         tickerStarted = false
@@ -209,8 +212,7 @@ class ProgressAnimation internal constructor(
     /**
      * Set the progress to 0 and restart the animation.
      */
-    @Synchronized
-    fun restart() {
+    suspend fun restart() {
         val tickerStarted = tickerStarted
         stop()
         layout.cells.forEach { (it as? CachedProgressCell)?.clear() }
@@ -223,7 +225,6 @@ class ProgressAnimation internal constructor(
      *
      * If you want to leave the animation on the screen, call [stop] instead.
      */
-    @Synchronized
     fun clear() {
         stop()
         history.clear()
@@ -231,29 +232,30 @@ class ProgressAnimation internal constructor(
     }
 }
 
-private class CachedProgressCell(private val cell: ProgressCell, frameRate: Int?) : ProgressCell {
+private class CachedProgressCell(private val cell: ProgressCell, maxFramesPerSecond: Int?) : ProgressCell {
     override val columnWidth: ColumnWidth get() = cell.columnWidth
     override val animationRate: AnimationRate get() = cell.animationRate
-    private val frameDuration = frameRate?.let { 1.0 / it }
+    /** Maximum expected duration per frame */
+    private val maxFrameDuration = maxFramesPerSecond?.let { 1.seconds / it }
 
     private var widget: Widget? = null
-    private var lastFrameTime = 0.0
+    private var lastFrame = Duration.ZERO
 
     fun clear() {
         widget = null
-        lastFrameTime = 0.0
+        lastFrame = Duration.ZERO
     }
 
-    private fun shouldSkipUpdate(elapsed: Double): Boolean {
-        if (frameDuration == null) return false
-        if ((elapsed - lastFrameTime) < frameDuration) return true
-        lastFrameTime = elapsed
+    private fun shouldSkipUpdate(elapsed: Duration): Boolean {
+        if (maxFrameDuration == null) return false
+        if ((elapsed - lastFrame) < maxFrameDuration) return true
+        lastFrame = elapsed
         return false
     }
 
     override fun ProgressState.makeWidget(): Widget {
         var r = widget
-        val shouldSkipUpdate = shouldSkipUpdate(elapsedSeconds)
+        val shouldSkipUpdate = shouldSkipUpdate(elapsed)
         if (r != null && shouldSkipUpdate) return r
         r = cell.run { makeWidget() }
         widget = r
@@ -281,7 +283,7 @@ fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): Progr
     return ProgressAnimation(
         t = this,
         layout = layout,
-        historyLength = builder.historyLength,
+        historyLength = builder.historyLength.toDouble().seconds,
         ticker = getTicker(builder.animationFrameRate),
         timeSource = builder.timeSource
     )

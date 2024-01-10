@@ -6,6 +6,8 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.horizontalLayout
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 open class ProgressBuilder internal constructor() {
     var padding: Int = 2
@@ -123,7 +125,7 @@ class ProgressLayout internal constructor(
             completed = completed,
             total = total,
             completedPerSecond = cps,
-            elapsedSeconds = elapsedSeconds,
+            elapsed = elapsedSeconds.toDuration(DurationUnit.SECONDS),
         )
         return horizontalLayout {
             spacing = paddingSize

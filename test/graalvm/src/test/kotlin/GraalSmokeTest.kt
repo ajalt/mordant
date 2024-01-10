@@ -6,12 +6,13 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextStyles.bold
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class GraalSmokeTest {
     @Test
-    fun `progress animation test`() {
+    fun `progress animation test`() = runTest {
         // Just make sure it doesn't crash, exact output is verified in the normal test suite
         val t = Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR)
         val animation = t.progressAnimation { progressBar() }

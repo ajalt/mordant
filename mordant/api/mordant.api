@@ -18,8 +18,8 @@ public final class com/github/ajalt/mordant/animation/ProgressAnimation {
 	public final fun advance (J)V
 	public static synthetic fun advance$default (Lcom/github/ajalt/mordant/animation/ProgressAnimation;JILjava/lang/Object;)V
 	public final fun clear ()V
-	public final fun restart ()V
-	public final fun start ()V
+	public final fun restart (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun start (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun stop ()V
 	public final fun update ()V
 	public final fun update (I)V

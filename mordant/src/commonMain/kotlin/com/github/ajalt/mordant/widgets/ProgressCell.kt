@@ -9,22 +9,25 @@ import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.widgets.ProgressCell.AnimationRate
 import kotlin.math.roundToInt
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 
 internal data class ProgressState(
     val completed: Long,
     val total: Long?,
     val completedPerSecond: Double, // 0 if [completed] == 0
-    val elapsedSeconds: Double,
+    val elapsed: Duration,
 ) {
     init {
         require(completed >= 0) { "completed cannot be negative" }
         require(total == null || total >= 0) { "total cannot be negative" }
-        require(elapsedSeconds >= 0) { "elapsedSeconds cannot be negative" }
+        require(elapsed >= Duration.ZERO) { "elapsed cannot be negative" }
         require(completedPerSecond >= 0) { "completedPerSecond cannot be negative" }
     }
 
     val indeterminate: Boolean get() = total == null
+    val elapsedSeconds: Double = elapsed.toDouble(DurationUnit.SECONDS)
 }
 
 internal interface ProgressCell {

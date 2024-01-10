@@ -1,10 +1,15 @@
 [versions]
 kotlin = "1.9.21"
+kotlinxCoroutines = "1.7.3"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
 markdown = "org.jetbrains:markdown:0.5.2"
 jna-core = "net.java.dev.jna:jna:5.13.0"
+
+kotlinxCoroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "kotlinxCoroutines" }
+kotlinxCoroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core" }
+kotlinxCoroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test" }
 
 # compileOnly
 graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"

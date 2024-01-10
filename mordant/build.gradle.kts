@@ -10,12 +10,16 @@ kotlin {
                 api(libs.colormath)
                 implementation(libs.markdown)
                 implementation(libs.jna.core)
+                implementation(project.dependencies.platform(libs.kotlinxCoroutines.bom))
+                implementation(libs.kotlinxCoroutines.core)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotest)
+
+                implementation(libs.kotlinxCoroutines.test)
             }
         }
 
