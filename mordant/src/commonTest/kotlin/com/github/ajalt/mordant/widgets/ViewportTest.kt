@@ -1,8 +1,10 @@
 package com.github.ajalt.mordant.widgets
 
+import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.test.RenderingTest
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class ViewportTest : RenderingTest(width = 20) {
@@ -42,7 +44,13 @@ class ViewportTest : RenderingTest(width = 20) {
     ) { x, y, ex ->
         doTest(null, null, x, y, ex, "a\nb c")
     }
-    // TODO: test scrolling to the middle of a span with a different style than the one before
+
+    @Test
+    @JsName("scrolling_splits_span")
+    fun `scrolling splits span`() {
+        doTest(1, 1, 2, 0, red("b"), "a${red("bb")}")
+    }
+
     private fun doTest(w: Int?, h: Int?, x: Int, y: Int, ex: String, txt: String) {
         checkRender(Viewport(Text(txt), w, h, x, y), ex, trimMargin = false) {
             it.replace('\n', '␊')
