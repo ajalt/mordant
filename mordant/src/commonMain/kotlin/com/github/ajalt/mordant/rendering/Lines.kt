@@ -118,66 +118,79 @@ private fun resizeLine(
 ): List<Span> {
     var width = 0
     var offset = 0
-    var offsetLine = line.spans
-    if (scrollRight < 0) {
-        offsetLine = listOf(Span.space(-scrollRight, line.startStyle)) + offsetLine
+    val inputLine = when {
+        scrollRight < 0 -> listOf(Span.space(-scrollRight, line.startStyle)) + line.spans
+        else -> line.spans
     }
-    for ((j, span) in offsetLine.withIndex()) {
+    var startIndex = 0
+    var endIndex = inputLine.size
+    var startSpan: Span? = null
+    var endSpan: Span? = null
+    for ((j, span) in inputLine.withIndex()) {
         when {
-            // If we have an offset, skip spans until we reach it
+            // If we have a right scroll offset, skip spans until we reach it
             scrollRight > 0 && offset + span.cellWidth < scrollRight -> {
                 offset += span.cellWidth
-                offsetLine = line.subList(j + 1, line.size)
+                startIndex = j + 1
             }
 
-            // If we have an offset, and this span is the one that contains it, split it
+            // If we have a right scroll offset, and this span is the one that contains it, split it
             scrollRight > 0 && offset < scrollRight -> {
-                offsetLine = line.subList(j + 1, line.size)
                 if (offset + span.cellWidth > scrollRight) {
-                    val splitSpan = span.drop(scrollRight - offset)
-                    offsetLine = listOf(splitSpan) + offsetLine
-                    width += splitSpan.cellWidth
+                    startSpan = span.drop(scrollRight - offset).take(newWidth - width)
+                    startIndex = j
+                    width += startSpan.cellWidth
                 }
                 offset = scrollRight
+                startIndex = j + 1
             }
 
             // We're past the offset, so add spans until we reach the new width
             width + span.cellWidth <= newWidth -> {
                 width += span.cellWidth
+                endIndex = j + 1
             }
 
             // We've reached the new width before the end of the line, so make a new line
             else -> {
-                val l = when {
-                    width == newWidth -> offsetLine.subList(0, j)
-                    else -> offsetLine.subList(0, j) + span.take(newWidth - width)
+                endIndex = j
+                if (width < newWidth) {
+                    endSpan = span.take(newWidth - width)
                 }
-                return l
+                break
             }
         }
     }
 
-    // We didn't truncate the line
+    // Truncate the line if necessary
+    val outputLine = when {
+        startSpan == null && endSpan == null -> inputLine.subList(startIndex, endIndex)
+        else -> buildList {
+            if (startSpan != null) add(startSpan)
+            addAll(inputLine.subList(startIndex, endIndex))
+            if (endSpan != null) add(endSpan)
+        }
+    }
+
     val remainingWidth = newWidth - width
 
     if (remainingWidth == 0) {
         // The line is exactly the right width
-        return offsetLine
+        return outputLine
     }
 
-    val beginStyle = offsetLine.firstOrNull()?.style ?: line.endStyle
+    val beginStyle = outputLine.firstOrNull()?.style ?: line.endStyle
     val endStyle = line.endStyle
 
     // The line was too short, add spaces according to the alignment
     return when (textAlign) {
+        LEFT -> outputLine + Span.space(remainingWidth, endStyle)
+        NONE -> outputLine + Span.space(remainingWidth) // Spaces aren't styled in this alignment
+        RIGHT -> listOf(Span.space(remainingWidth, beginStyle)) + outputLine
         CENTER, JUSTIFY -> {
             val l = Span.space(remainingWidth / 2, beginStyle)
             val r = Span.space(remainingWidth / 2 + remainingWidth % 2, endStyle)
-            buildList(offsetLine.size + 2) { add(l); addAll(offsetLine); add(r) }
+            buildList(outputLine.size + 2) { add(l); addAll(outputLine); add(r) }
         }
-
-        LEFT -> offsetLine + Span.space(remainingWidth, endStyle)
-        NONE -> offsetLine + Span.space(remainingWidth) // Spaces aren't styled in this alignment
-        RIGHT -> listOf(Span.space(remainingWidth, beginStyle)) + offsetLine
     }
 }

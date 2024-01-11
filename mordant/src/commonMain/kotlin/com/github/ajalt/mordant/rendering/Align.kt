@@ -7,7 +7,11 @@ enum class TextAlign {
     RIGHT,
     /** Align text to the center of the widget */
     CENTER,
-    /** Align text to both sides of the widget, adding spaces between words */
+    /**
+     * Align text to both sides of the widget, adding spaces between words.
+     *
+     * For Widgets other than `Text`, this is treated the same as [CENTER].
+     */
     JUSTIFY,
     /** Align text to the left side of the widget, and don't include trailing whitespace */
     NONE
