@@ -95,8 +95,6 @@ class TerminalColorsTest {
         color.color!!.toAnsi16().code shouldBe code
     }
 
-    // Disabled due to codegen bug on JS/IR
-    @Ignore
     @Test
     @JsName("all_24bit_colors")
     fun `all 24bit colors`() = forAll(

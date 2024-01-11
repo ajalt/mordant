@@ -14,31 +14,38 @@ import com.github.ajalt.mordant.terminal.Terminal
  * If [width] or [height] are larger than the size of the [content] widget, the extra space will be
  * filled with spaces.
  *
- * You can specify [scrollRight] and [scrollDown] to scroll the content widget. Negative values will
- * scroll the widget to the right or up, respectively.
+ * You can specify [scrollRight] and [scrollDown] to scroll the viewport across the content.
+ * Negative values will scroll the widget to the right or up, respectively.
  *
  * ### Example
  *
- * If you have text content
- *
  * ```
- * 123
- * 456
- * 7890
- * ```
+ * val text = Text(
+ *     """
+ *     123
+ *     456
+ *     7890
+ *     """.trimIndent()
+ * )
  *
- * A viewport with `width=2, height=2, scrollRight=1, scrollDown=1` will render as
+ * val viewport1 = Viewport(text, width = 2, height = 2, scrollRight = 1, scrollDown = 1)
+ * terminal.println(Panel(viewport1))
  *
- * ```
- * 56
- * 89
- * ```
- *
- * A viewport with `width=2, height=2, scrollRight=-1, scrollDown=-1` will render as
- *
+ * val viewport2 = Viewport(text, width = 2, height = 2, scrollRight = -1, scrollDown = -1)
+ * terminal.println(Panel(viewport2))
  * ```
  *
- *  1
+ * Will print the following:
+ *
+ * ```
+ * ╭──╮
+ * │56│
+ * │89│
+ * ╰──╯
+ * ╭──╮
+ * │  │
+ * │ 1│
+ * ╰──╯
  * ```
  */
 class Viewport(

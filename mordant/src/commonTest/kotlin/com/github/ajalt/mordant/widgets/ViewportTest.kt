@@ -48,7 +48,8 @@ class ViewportTest : RenderingTest(width = 20) {
     @Test
     @JsName("scrolling_splits_span")
     fun `scrolling splits span`() {
-        doTest(1, 1, 2, 0, red("b"), "a${red("bb")}")
+        doTest(1, 1, 2, 0, red("Z"), "X${red("YZ")}")
+        doTest(2, 1, 1, 0, "56", "4567")
     }
 
     private fun doTest(w: Int?, h: Int?, x: Int, y: Int, ex: String, txt: String) {
