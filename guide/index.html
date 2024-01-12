@@ -290,6 +290,40 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#text-wrapping-and-alignment" class="md-nav__link">
+    Text Wrapping and Alignment
+  </a>
+  
+    <nav class="md-nav" aria-label="Text Wrapping and Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#text-wrapping" class="md-nav__link">
+    Text Wrapping
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-alignment" class="md-nav__link">
+    Text Alignment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-overflow" class="md-nav__link">
+    Text Overflow
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tables" class="md-nav__link">
     Tables
   </a>
@@ -410,6 +444,40 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#text-wrapping-and-alignment" class="md-nav__link">
+    Text Wrapping and Alignment
+  </a>
+  
+    <nav class="md-nav" aria-label="Text Wrapping and Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#text-wrapping" class="md-nav__link">
+    Text Wrapping
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-alignment" class="md-nav__link">
+    Text Alignment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-overflow" class="md-nav__link">
+    Text Overflow
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tables" class="md-nav__link">
     Tables
   </a>
@@ -496,7 +564,8 @@ combine a foreground and background.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre>
 <span style="color: #e74856">You</span><span style="color: #e74856"> </span><span style="color: #e74856">can</span><span style="color: #e74856"> </span><span style="color: #e74856">use</span><span style="color: #e74856"> </span><span style="color: #e74856">any</span><span style="color: #e74856"> </span><span style="color: #e74856">of</span><span style="color: #e74856"> </span><span style="color: #e74856">the</span><span style="color: #e74856"> </span><span style="color: #e74856">standard</span><span style="color: #e74856"> </span><span style="color: #e74856">ANSI</span><span style="color: #e74856"> </span><span style="color: #e74856">colors</span>
 <span style="color: #3a96dd">You</span><span style="color: #3a96dd"> </span><span style="color: #2fb479; background-color: #c0c0c0">can</span><span style="color: #2fb479; background-color: #c0c0c0"> </span><span style="color: #767676; background-color: #c0c0c0; font-weight: bold; text-decoration: line-through">nest</span><span style="color: #2fb479; background-color: #c0c0c0"> </span><span style="color: #2fb479; background-color: #c0c0c0">styles</span><span style="color: #3a96dd"> </span><span style="color: #3a96dd">arbitrarily</span>
@@ -513,9 +582,153 @@ like to override the detection, you can pass a specific value to the <a href="..
 you can do this:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Terminal</span><span class="p">(</span><span class="n">AnsiLevel</span><span class="p">.</span><span class="na">TRUECOLOR</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="text-wrapping-and-alignment">Text Wrapping and Alignment<a class="headerlink" href="#text-wrapping-and-alignment" title="Permanent link">&para;</a></h2>
+<p><code>Terminal.println</code> will preserve whitespace by default, but you can use the <a href="../api/mordant/com.github.ajalt.mordant.widgets/-text/"><code>Text</code></a> widget
+for more advanced formatting. You can use the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-whitespace/">Whitespace</a>, <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-align/">TextAlign</a>, and <a href="../api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/">OverflowWrap</a> enums to
+format text. They behave similar to the CSS properties of the same names.</p>
+<h3 id="text-wrapping">Text Wrapping<a class="headerlink" href="#text-wrapping" title="Permanent link">&para;</a></h3>
+<p>Pass one of the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-whitespace/">Whitespace</a> values to the <code>Text</code> constructor to control how whitespace is handled.
+You can also set a <code>width</code> to wrap the text to a specific width rather than the terminal width.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Code</label><label for="__tabbed_2_2">Output</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">This is a long line {</span>
+<span class="s">    This line is indented</span>
+<span class="s">}</span>
+<span class="s">&quot;&quot;&quot;</span><span class="p">.</span><span class="na">trimIndent</span><span class="p">()</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Whitespace</span><span class="p">.</span><span class="na">entries</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">println</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Panel</span><span class="p">(</span>
+<span class="w">            </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="w"> </span><span class="n">whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17</span><span class="p">),</span>
+<span class="w">            </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="na">name</span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span>&lt;span style=&rdquo;color: #ffbd2e; fonbsp;</span><span style="color: #27c93f; font-siz/span></div>
+<pre style="font-family: monospace">
+<span>╭──── NORMAL ────╮</span>
+<span>│This is a long  │</span>
+<span>│line { This line│</span>
+<span>│is indented }   │</span>
+<span>╰────────────────╯</span>
+<span>╭────────────────── NOWRAP ───────────────────╮</span>
+<span>│This is a long line { This line is indented }│</span>
+<span>╰─────────────────────────────────────────────╯</span>
+<span>╭────────── PRE ──────────╮</span>
+<span>│This is a long line {    │</span>
+<span>│    This line is indented│</span>
+<span>│}                        │</span>
+<span>╰─────────────────────────╯</span>
+<span>╭─── PRE_WRAP ───╮</span>
+<span>│This is a long  │</span>
+<span>│line {          │</span>
+<span>│    This line is│</span>
+<span>│indented        │</span>
+<span>│}               │</span>
+<span>╰────────────────╯</span>
+<span>╭── PRE_LINE ──╮</span>
+<span>│This is a long│</span>
+<span>│line {        │</span>
+<span>│This line is  │</span>
+<span>│indented      │</span>
+<span>│}             │</span>
+<span>╰──────────────╯</span>
+</pre>
+</div></p>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can format styled text too.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Text</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NORMAL</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<h3 id="text-alignment">Text Alignment<a class="headerlink" href="#text-alignment" title="Permanent link">&para;</a></h3>
+<p>You can use the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-align/">TextAlign</a> values to align or justify text.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Code</label><label for="__tabbed_3_2">Output</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">TextAlign</span><span class="p">.</span><span class="na">entries</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">println</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Text</span><span class="p">(</span>
+<span class="w">            </span><span class="p">(</span><span class="n">black</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">blue</span><span class="p">)(</span><span class="s">&quot;align = </span><span class="si">${</span><span class="n">entry</span><span class="p">.</span><span class="na">name</span><span class="si">}</span><span class="s">&quot;</span><span class="p">),</span>
+<span class="w">            </span><span class="n">align</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
+<pre style="font-family: monospace">
+<span style="color: #000000; background-color: #61afef">align = LEFT        </span>
+<span style="color: #000000; background-color: #61afef">       align = RIGHT</span>
+<span style="color: #000000; background-color: #61afef">   align = CENTER   </span>
+<span style="color: #000000; background-color: #61afef">align   =    JUSTIFY</span>
+<span style="color: #000000; background-color: #61afef">align = NONE</span>
+</pre>
+</div></p>
+</div>
+</div>
+</div>
+<h3 id="text-overflow">Text Overflow<a class="headerlink" href="#text-overflow" title="Permanent link">&para;</a></h3>
+<p>If you are wrapping text that has long words that exceed the line length by themselves, you can use
+the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/">OverflowWrap</a> enum to control how they are handled.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Code</label><label for="__tabbed_4_2">Output</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">OverflowWrap</span><span class="p">.</span><span class="na">entries</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">println</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Panel</span><span class="p">(</span>
+<span class="w">            </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span>
+<span class="w">                </span><span class="s">&quot;overflow_wrap&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="n">whitespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Whitespace</span><span class="p">.</span><span class="na">NORMAL</span><span class="p">,</span>
+<span class="w">                </span><span class="n">overflowWrap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">,</span>
+<span class="w">                </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span>
+<span class="w">            </span><span class="p">),</span>
+<span class="w">            </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="na">name</span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
+<pre style="font-family: monospace">
+<span>╭── NORMAL ───╮</span>
+<span>│overflow_wrap│</span>
+<span>╰─────────────╯</span>
+<span>╭ BREAK_WORD ─╮</span>
+<span>│overflow     │</span>
+<span>│_wrap        │</span>
+<span>╰─────────────╯</span>
+<span>╭─ TRUNCATE ──╮</span>
+<span>│overflow     │</span>
+<span>╰─────────────╯</span>
+<span>╭─ ELLIPSES ──╮</span>
+<span>│overflo…     │</span>
+<span>╰─────────────╯</span>
+</pre>
+</div></p>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>OverflowWrap</code> has no effect when used with <code>Whitespace.PRE</code> or <code>Whitespace.NOWRAP</code>.</p>
+</div>
 <h2 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h2>
 <p>Use the <a href="../api/mordant/com.github.ajalt.mordant.table/table.html">table</a> DSL to define table widgets.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Code</label><label for="__tabbed_2_2">Output</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Code</label><label for="__tabbed_5_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">t</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">table</span><span class="w"> </span><span class="p">{</span>
@@ -525,7 +738,8 @@ you can do this:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre style="font-family: monospace;line-height: 1.1;">
 <span>┌──────────┬──────────┐</span>
 <span>│</span><span> </span><span>Column</span><span> </span><span>1</span><span> </span><span>│</span><span> </span><span>Column</span><span> </span><span>2</span><span> </span><span>│</span>
@@ -539,10 +753,11 @@ you can do this:</p>
 </div>
 <p>Mordant gives you lots of customization for your tables, including striped row styles, row and
 column spans, and different border styles.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Output</label><label for="__tabbed_3_2">Code</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Output</label><label for="__tabbed_6_2">Code</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre style="font-family: monospace;line-height: 1.1;">
 <span>                                                            </span><span style="color: #e74856; font-weight: bold">  </span><span style="color: #e74856; font-weight: bold">Percent</span><span style="color: #e74856; font-weight: bold"> </span><span style="color: #e74856; font-weight: bold">Change</span><span style="color: #e74856; font-weight: bold">  </span>
 <span>                              </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2020</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2021</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2022</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold"> </span><span style="color: #e74856; font-weight: bold">2020-21</span><span style="color: #e74856; font-weight: bold">  </span><span style="color: #e74856; font-weight: bold">2021-21</span><span style="color: #e74856; font-weight: bold"> </span>
@@ -628,8 +843,8 @@ column spans, and different border styles.</p>
 </div>
 <h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h2>
 <p>If you need to lay out multiple widgets or strings, you can use the <a href="../api/mordant/com.github.ajalt.mordant.table/grid.html">grid</a> builder, which has an API
-similar to <code>table</code>, but doesn&rsquo;t apply styling by default. </p>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Code</label><label for="__tabbed_4_2">Output</label></div>
+similar to <code>table</code>, but doesn&rsquo;t apply styling by default</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Code</label><label for="__tabbed_7_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">grid</span><span class="w"> </span><span class="p">{</span>
@@ -643,7 +858,8 @@ similar to <code>table</code>, but doesn&rsquo;t apply styling by default. </p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre style="font-family: monospace">
 <span>Grid</span><span> </span><span>Builder</span><span> </span><span>Supports</span><span> </span><span>Alignment</span>
 <span>Left</span><span>          </span><span>Center</span><span>      </span><span>Right</span>
@@ -653,7 +869,7 @@ similar to <code>table</code>, but doesn&rsquo;t apply styling by default. </p>
 </div>
 </div>
 <p>There are also the <a href="../api/mordant/com.github.ajalt.mordant.table/horizontal-layout.html">horizontalLayout</a> and <a href="../api/mordant/com.github.ajalt.mordant.table/vertical-layout.html">verticalLayout</a> builders if you don&rsquo;t need a full grid.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Code</label><label for="__tabbed_5_2">Output</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Code</label><label for="__tabbed_8_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">horizontalLayout</span><span class="w"> </span><span class="p">{</span>
@@ -663,7 +879,8 @@ similar to <code>table</code>, but doesn&rsquo;t apply styling by default. </p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre style="font-family: monospace">
 <span>Spinner:</span><span> </span><span>⠹</span>
 </pre>
@@ -686,7 +903,7 @@ redirected to a file) these commands are no-ops.</p>
 <h2 id="animations">Animations<a class="headerlink" href="#animations" title="Permanent link">&para;</a></h2>
 <p>You can animate any widget like a table with <a href="../api/mordant/com.github.ajalt.mordant.animation/animation.html">Terminal.animation</a>, or any regular
 string with <a href="../api/mordant/com.github.ajalt.mordant.animation/text-animation.html">Terminal.textAnimation</a>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Code</label><label for="__tabbed_6_2">Output</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Code</label><label for="__tabbed_9_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Terminal</span><span class="p">()</span>
@@ -711,7 +928,7 @@ string with <a href="../api/mordant/com.github.ajalt.mordant.animation/text-anim
 </div>
 <h2 id="progress-bars">Progress bars<a class="headerlink" href="#progress-bars" title="Permanent link">&para;</a></h2>
 <p>You can create customizable progress bars that automatically compute speed and time remaining.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Code</label><label for="__tabbed_7_2">Output</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Code</label><label for="__tabbed_10_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Terminal</span><span class="p">()</span>
@@ -726,7 +943,8 @@ string with <a href="../api/mordant/com.github.ajalt.mordant.animation/text-anim
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+<p><div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+<div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
 <pre style="font-family: monospace">
 <span>my-file.iso</span><span> </span><span>83%</span><span> </span><span style="color: #61afef">━━━━━━</span><span style="color: #68b2f0">━</span><span style="color: #88c2f4">━</span><span style="color: #b9dbf9">━</span><span style="color: #e5f2fd">━</span><span style="color: #fcfeff">━━</span><span style="color: #e5f2fd">━</span><span style="color: #b9dbf9">━</span><span style="color: #88c2f4">━</span><span style="color: #68b2f0">━</span><span style="color: #61afef">━━</span><span> </span><span style="color: #5c6370">━━━</span><span> </span><span>25.0/30.0G</span><span> </span><span>71.2MB/s</span><span>  </span><span>eta</span><span> </span><span>0:01:10</span>
 </pre>
@@ -744,7 +962,7 @@ task completes.</p>
 </div>
 <h2 id="prompting-for-input">Prompting for input<a class="headerlink" href="#prompting-for-input" title="Permanent link">&para;</a></h2>
 <p>You can ask the user to enter text and wait for a response with <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html">Terminal.prompt</a>:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Code</label><label for="__tabbed_8_2">Output</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Code</label><label for="__tabbed_11_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Terminal</span><span class="p">()</span>
