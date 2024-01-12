@@ -29,7 +29,8 @@ combine a foreground and background.
     ```
 
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre>
     <span style="color: #e74856">You</span><span style="color: #e74856"> </span><span style="color: #e74856">can</span><span style="color: #e74856"> </span><span style="color: #e74856">use</span><span style="color: #e74856"> </span><span style="color: #e74856">any</span><span style="color: #e74856"> </span><span style="color: #e74856">of</span><span style="color: #e74856"> </span><span style="color: #e74856">the</span><span style="color: #e74856"> </span><span style="color: #e74856">standard</span><span style="color: #e74856"> </span><span style="color: #e74856">ANSI</span><span style="color: #e74856"> </span><span style="color: #e74856">colors</span>
     <span style="color: #3a96dd">You</span><span style="color: #3a96dd"> </span><span style="color: #2fb479; background-color: #c0c0c0">can</span><span style="color: #2fb479; background-color: #c0c0c0"> </span><span style="color: #767676; background-color: #c0c0c0; font-weight: bold; text-decoration: line-through">nest</span><span style="color: #2fb479; background-color: #c0c0c0"> </span><span style="color: #2fb479; background-color: #c0c0c0">styles</span><span style="color: #3a96dd"> </span><span style="color: #3a96dd">arbitrarily</span>
@@ -49,6 +50,151 @@ you can do this:
 Terminal(AnsiLevel.TRUECOLOR)
 ```
 
+## Text Wrapping and Alignment
+
+`Terminal.println` will preserve whitespace by default, but you can use the [`Text`][Text] widget
+for more advanced formatting. You can use the [Whitespace], [TextAlign], and [OverflowWrap] enums to
+format text. They behave similar to the CSS properties of the same names.
+
+### Text Wrapping
+
+Pass one of the [Whitespace] values to the `Text` constructor to control how whitespace is handled.
+You can also set a `width` to wrap the text to a specific width rather than the terminal width.
+
+=== "Code"
+    ```kotlin
+    val text = """
+    This is a long line {
+        This line is indented
+    }
+    """.trimIndent()
+
+    for (entry in Whitespace.entries) {
+        terminal.println(
+            Panel(
+                content = Text(text, whitespace = entry, width = 17),
+                title = Text(entry.name)
+            )
+        )
+    }
+    ```
+
+=== "Output"
+
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
+    <pre style="font-family: monospace">
+    <span>╭──── NORMAL ────╮</span>
+    <span>│This is a long  │</span>
+    <span>│line { This line│</span>
+    <span>│is indented }   │</span>
+    <span>╰────────────────╯</span>
+    <span>╭────────────────── NOWRAP ───────────────────╮</span>
+    <span>│This is a long line { This line is indented }│</span>
+    <span>╰─────────────────────────────────────────────╯</span>
+    <span>╭────────── PRE ──────────╮</span>
+    <span>│This is a long line {    │</span>
+    <span>│    This line is indented│</span>
+    <span>│}                        │</span>
+    <span>╰─────────────────────────╯</span>
+    <span>╭─── PRE_WRAP ───╮</span>
+    <span>│This is a long  │</span>
+    <span>│line {          │</span>
+    <span>│    This line is│</span>
+    <span>│indented        │</span>
+    <span>│}               │</span>
+    <span>╰────────────────╯</span>
+    <span>╭── PRE_LINE ──╮</span>
+    <span>│This is a long│</span>
+    <span>│line {        │</span>
+    <span>│This line is  │</span>
+    <span>│indented      │</span>
+    <span>│}             │</span>
+    <span>╰──────────────╯</span>
+    </pre>
+    </div>
+
+!!! tip
+    You can format styled text too.
+
+    ```kotlin
+    Text(red("Hello, world!"), whitespace = NORMAL)
+    ```
+
+### Text Alignment
+
+You can use the [TextAlign] values to align or justify text.
+
+=== "Code"
+    ```kotlin
+    for (entry in TextAlign.entries) {
+        terminal.println(
+            Text(
+                (black on blue)("align = ${entry.name}"),
+                align = entry, width = 20
+            ),
+        )
+    }
+    ```
+
+=== "Output"
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
+    <pre style="font-family: monospace">
+    <span style="color: #000000; background-color: #61afef">align = LEFT        </span>
+    <span style="color: #000000; background-color: #61afef">       align = RIGHT</span>
+    <span style="color: #000000; background-color: #61afef">   align = CENTER   </span>
+    <span style="color: #000000; background-color: #61afef">align   =    JUSTIFY</span>
+    <span style="color: #000000; background-color: #61afef">align = NONE</span>
+    </pre>
+    </div>
+
+
+### Text Overflow
+
+If you are wrapping text that has long words that exceed the line length by themselves, you can use
+the [OverflowWrap] enum to control how they are handled.
+
+=== "Code"
+    ```kotlin
+    for (entry in OverflowWrap.entries) {
+        terminal.println(
+            Panel(
+                content = Text(
+                    "overflow_wrap",
+                    whitespace = Whitespace.NORMAL,
+                    overflowWrap = entry,
+                    width = 8
+                ),
+                title = Text(entry.name)
+            )
+        )
+    }
+    ```
+
+=== "Output"
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
+    <pre style="font-family: monospace">
+    <span>╭── NORMAL ───╮</span>
+    <span>│overflow_wrap│</span>
+    <span>╰─────────────╯</span>
+    <span>╭ BREAK_WORD ─╮</span>
+    <span>│overflow     │</span>
+    <span>│_wrap        │</span>
+    <span>╰─────────────╯</span>
+    <span>╭─ TRUNCATE ──╮</span>
+    <span>│overflow     │</span>
+    <span>╰─────────────╯</span>
+    <span>╭─ ELLIPSES ──╮</span>
+    <span>│overflo…     │</span>
+    <span>╰─────────────╯</span>
+    </pre>
+    </div>
+
+!!! note
+    `OverflowWrap` has no effect when used with `Whitespace.PRE` or `Whitespace.NOWRAP`.
+
 ## Tables
 
 Use the [table] DSL to define table widgets.
@@ -62,7 +208,8 @@ Use the [table] DSL to define table widgets.
     ```
 
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre style="font-family: monospace;line-height: 1.1;">
     <span>┌──────────┬──────────┐</span>
     <span>│</span><span> </span><span>Column</span><span> </span><span>1</span><span> </span><span>│</span><span> </span><span>Column</span><span> </span><span>2</span><span> </span><span>│</span>
@@ -76,7 +223,8 @@ Mordant gives you lots of customization for your tables, including striped row s
 column spans, and different border styles.
 
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre style="font-family: monospace;line-height: 1.1;">
     <span>                                                            </span><span style="color: #e74856; font-weight: bold">  </span><span style="color: #e74856; font-weight: bold">Percent</span><span style="color: #e74856; font-weight: bold"> </span><span style="color: #e74856; font-weight: bold">Change</span><span style="color: #e74856; font-weight: bold">  </span>
     <span>                              </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2020</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2021</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold">    </span><span style="color: #e74856; font-weight: bold">2022</span><span style="color: #e74856; font-weight: bold"> </span><span> </span><span style="color: #e74856; font-weight: bold"> </span><span style="color: #e74856; font-weight: bold">2020-21</span><span style="color: #e74856; font-weight: bold">  </span><span style="color: #e74856; font-weight: bold">2021-21</span><span style="color: #e74856; font-weight: bold"> </span>
@@ -157,13 +305,12 @@ column spans, and different border styles.
         }
         captionBottom(dim("via U.S. Bureau of Labor Statistics"))
     }
-    ``` 
+    ```
 
 ## Layout
 
 If you need to lay out multiple widgets or strings, you can use the [grid] builder, which has an API
-similar to `table`, but doesn't apply styling by default. 
-
+similar to `table`, but doesn't apply styling by default
 === "Code"
     ```kotlin
     grid {
@@ -177,7 +324,8 @@ similar to `table`, but doesn't apply styling by default.
     ```
 
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre style="font-family: monospace">
     <span>Grid</span><span> </span><span>Builder</span><span> </span><span>Supports</span><span> </span><span>Alignment</span>
     <span>Left</span><span>          </span><span>Center</span><span>      </span><span>Right</span>
@@ -196,7 +344,8 @@ There are also the [horizontalLayout] and [verticalLayout] builders if you don't
     ```
 
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre style="font-family: monospace">
     <span>Spinner:</span><span> </span><span>⠹</span>
     </pre>
@@ -238,7 +387,7 @@ string with [Terminal.textAnimation].
         a.update(it)
         Thread.sleep(25)
     }
-    ``` 
+    ```
 
 === "Output"
     ![](img/animation.svg)
@@ -261,7 +410,8 @@ You can create customizable progress bars that automatically compute speed and t
     }
     ```
 === "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);"><span style="color: #ff5f56;">⏺&nbsp;</span><span style="color: #ffbd2e;">⏺&nbsp;</span><span style="color: #27c93f;">⏺&nbsp;</span>
+    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
+    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
     <pre style="font-family: monospace">
     <span>my-file.iso</span><span> </span><span>83%</span><span> </span><span style="color: #61afef">━━━━━━</span><span style="color: #68b2f0">━</span><span style="color: #88c2f4">━</span><span style="color: #b9dbf9">━</span><span style="color: #e5f2fd">━</span><span style="color: #fcfeff">━━</span><span style="color: #e5f2fd">━</span><span style="color: #b9dbf9">━</span><span style="color: #88c2f4">━</span><span style="color: #68b2f0">━</span><span style="color: #61afef">━━</span><span> </span><span style="color: #5c6370">━━━</span><span> </span><span>25.0/30.0G</span><span> </span><span>71.2MB/s</span><span>  </span><span>eta</span><span> </span><span>0:01:10</span>
     </pre>
@@ -300,6 +450,7 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 
 
 [ConfirmationPrompt]:       api/mordant/com.github.ajalt.mordant.terminal/-confirmation-prompt/index.html
+[OverflowWrap]:             api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index.html
 [Prompt]:                   api/mordant/com.github.ajalt.mordant.terminal/-prompt/index.html
 [README]:                   https://github.com/ajalt/clikt
 [StringPrompt]:             api/mordant/com.github.ajalt.mordant.terminal/-string-prompt/index.html
@@ -307,8 +458,11 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [Terminal.prompt]:          api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html
 [Terminal.textAnimation]:   api/mordant/com.github.ajalt.mordant.animation/text-animation.html
 [Terminal]:                 api/mordant/com.github.ajalt.mordant.terminal/-terminal/index.html
+[TextAlign]:                api/mordant/com.github.ajalt.mordant.rendering/-text-align/index.html
 [TextColors]:               api/mordant/com.github.ajalt.mordant.rendering/-text-colors/index.html
 [TextStyles]:               api/mordant/com.github.ajalt.mordant.rendering/-text-styles/index.html
+[Text]:                     api/mordant/com.github.ajalt.mordant.widgets/-text/index.html
+[Whitespace]:               api/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html
 [YesNoPrompt]:              api/mordant/com.github.ajalt.mordant.terminal/-yes-no-prompt/index.html
 [color.bg]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html
 [color.on]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html
