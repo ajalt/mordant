@@ -9,6 +9,8 @@ import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -165,15 +167,14 @@ class ProgressLayoutTest : RenderingTest() {
         row(10.hours, 10.hours, "10:00:00|  eta --:--"),
         row(100.hours, 100.hours, "100:00:00|  eta --:--"),
     ) { elapsed, remaining, expected ->
-        val t = TestTimeSource()
-        val now = t.markNow()
         val speed = remaining?.let { if (it == ZERO) 0.0 else 100.0 / it.inWholeSeconds }
-        if (elapsed != null) t += elapsed
+        val start = setTime(elapsed ?: 0.seconds)
+        val status = if (elapsed == null) NotStarted else Running(start)
         val layout = progressBarLayout(spacing = 0) {
             timeElapsed(compact = true)
             text("|")
             timeRemaining(compact = true)
-        }.build(100, 0, now, if (elapsed == null) NotStarted else Running(now), speed = speed)
+        }.build(100, 0, start, status, speed = speed)
         checkRender(layout, expected)
     }
 
@@ -219,7 +220,7 @@ class ProgressLayoutTest : RenderingTest() {
     }
 
     @Test
-    fun spinner()  = forAll(
+    fun spinner() = forAll(
         row(0, "1"),
         row(1, "2"),
         row(2, "3"),
@@ -228,10 +229,41 @@ class ProgressLayoutTest : RenderingTest() {
         row(5, "3"),
     ) { elapsed, expected ->
         val layout = progressBarLayout { spinner(Spinner("123"), fps = 1) }
-        val t = TestTimeSource()
-        val start = t.markNow()
-        t += elapsed.seconds
+        val start = setTime(elapsed.seconds)
         checkRender(layout.build(null, 0, start), expected)
+    }
+
+    @Test
+    fun marquee() = forAll(
+        row(0, "   "),
+        row(1, "  1"),
+        row(2, " 12"),
+        row(3, "123"),
+        row(4, "234"),
+        row(5, "345"),
+        row(6, "45 "),
+        row(7, "5  "),
+        row(8, "   "),
+        row(9, "  1"),
+    ) { elapsed, expected ->
+        val layout = progressBarLayout { marquee("12345", width = 3, fps = 1) }
+        val start = setTime(elapsed.seconds)
+        checkRender(layout.build(null, 0, start), expected, trimMargin = false)
+    }
+
+    @Test
+    @JsName("marquee_scrollWhenContentFits_false")
+    fun `marquee scrollWhenContentFits=false`() {
+        val layout = progressBarLayout { marquee("123", width = 5) }
+        checkRender(layout.build(null, 0, start), "  123", trimMargin = false)
+    }
+
+    @Test
+    @JsName("marquee_scrollWhenContentFits_true")
+    fun `marquee scrollWhenContentFits=true`() {
+        val start = setTime(2.seconds)
+        val layout = progressBarLayout { marquee("123", width = 5, scrollWhenContentFits = true) }
+        checkRender(layout.build(null, 0, start), "23   ", trimMargin = false)
     }
 
     private fun doTest(
@@ -272,5 +304,13 @@ class ProgressLayoutTest : RenderingTest() {
             text("|")
             timeRemaining(elapsedWhenFinished = elapsedWhenFinished)
         }
+    }
+
+    // this is separate from [t] for use in forAll, which doesn't reset the state between rows
+    private fun setTime(elapsed: Duration = 0.seconds): ComparableTimeMark {
+        val t = TestTimeSource()
+        val start = t.markNow()
+        t += elapsed
+        return start
     }
 }

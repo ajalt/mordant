@@ -9,6 +9,7 @@
   - Any widget can be added to a progress layout, not just the built-in cell types
   - TODO New cell: timeElapsed
   - Added `compact` style to `timeRemaining` cells.
+  - Added `marquee` cell that can scroll text that is larger than a fixed width. 
 - Added `Viewport` widget that can crop or pad another widget to a fixed size, and scroll it within that size.
 
 ### Changed

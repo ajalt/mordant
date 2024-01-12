@@ -1,18 +1,14 @@
 package com.github.ajalt.mordant.widgets.progress
 
-import com.github.ajalt.mordant.internal.BlankWidgetWrapper
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
-import com.github.ajalt.mordant.internal.formatMultipleWithSiSuffixes
-import com.github.ajalt.mordant.internal.formatWithSiSuffix
+import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Whitespace
-import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.widgets.Viewport
 import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.Text
+import com.github.ajalt.mordant.widgets.Viewport
 import kotlin.math.max
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -21,6 +17,8 @@ import kotlin.time.DurationUnit
 /**
  * Add a fixed text cell to this layout.
  *
+ * The cell is always the same size as the [content]. For a fixed-width text cell, use [marquee].
+ *
  * @param content The text to display in this cell.
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  */
@@ -28,10 +26,13 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RI
     cell(align = align, fps = 0) { Text(content) }
 }
 
+// TODO: test if the context changes that this updates
 /**
  * Add a dynamic text cell to this layout.
  *
  * The [content] lambda will be called with the current progress state as its receiver.
+ *
+ * The cell is always the same size as the [content]. For a fixed-width text cell, use [marquee].
  *
  * ### Example
  * ```
@@ -40,7 +41,6 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RI
  *
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  * @param content A lambda returning the text to display in this cell.
- *
  */
 fun <T> ProgressLayoutScope<T>.text(
     align: TextAlign = TextAlign.RIGHT,
@@ -49,15 +49,59 @@ fun <T> ProgressLayoutScope<T>.text(
     cell(align = align, fps = 0) { Text(content()) }
 }
 
-// TODO: finish and test this
+/**
+ * Add a fixed width text cell that scrolls its contents horizontally so that long text can be
+ * displayed in a fixed width.
+ *
+ * @param width The width of the cell in characters.
+ * @param fps The number of times per second to update the displayed text.
+ * @param align The text alignment for this cell when [scrollWhenContentFits] is `false` and the
+ *   [content] fits in the [width].
+ * @param scrollWhenContentFits If `true`, the text will always scroll, even if it fits in the
+ *   [width].
+ * @param content The text to display in this cell.
+ */
 fun <T> ProgressLayoutScope<T>.marquee(
     width: Int,
-    fps: Int = 1,
+    fps: Int = 3,
     align: TextAlign = TextAlign.RIGHT,
-    content: ProgressState<T>.() -> Widget,
-) = cell(width = ColumnWidth.Fixed(width), fps = fps, align = align) {
-    Viewport(content(), width)
+    scrollWhenContentFits: Boolean = false,
+    content: ProgressState<T>.() -> String,
+) {
+    require(width > 0) { "width must be greater than zero" }
+    cell(width = ColumnWidth.Fixed(width), fps = fps, align = align) {
+        val text = content()
+        val cellWidth = stringCellWidth(text)
+        when {
+            !scrollWhenContentFits && cellWidth <= width -> Text(text)
+            else -> {
+                val period = cellWidth + width
+                val scrollRight = frameCount(fps) % period - width
+                Viewport(Text(text), width, scrollRight = scrollRight)
+            }
+        }
+    }
 }
+
+/**
+ * Add a fixed width text cell that scrolls its contents horizontally so that long text can be
+ * displayed in a fixed width.
+ *
+ * @param content The text to display in this cell.
+ * @param width The width of the cell in characters.
+ * @param fps The number of times per second to update the displayed text.
+ * @param align The text alignment for this cell when [scrollWhenContentFits] is `false` and the
+ *   [content] fits in the [width].
+ * @param scrollWhenContentFits If `true`, the text will always scroll, even if it fits in the
+ *   [width].
+ */
+fun ProgressLayoutScope<*>.marquee(
+    content: String,
+    width: Int,
+    fps: Int = 3,
+    align: TextAlign = TextAlign.RIGHT,
+    scrollWhenContentFits: Boolean = false,
+) = marquee(width, fps, align, scrollWhenContentFits) { content }
 
 // TODO: make decimal places configurable?
 /**
