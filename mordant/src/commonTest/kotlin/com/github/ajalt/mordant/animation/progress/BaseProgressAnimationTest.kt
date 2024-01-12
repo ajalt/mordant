@@ -145,6 +145,25 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.normalizedOutput() shouldBe "Task 1\nTask 2"
     }
 
+    @Test
+    @JsName("changing_text_cell")
+    fun `changing text cell`() {
+        val l = progressBarContextLayout<Int>(textFps = 1, animationFps = 1) {
+            text { "Task $context" }
+        }
+        val a = BaseProgressBarAnimation(t, l.cache(now))
+        val t1 = a.addTask(1)
+
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 1"
+
+        vt.clearOutput()
+        t1.update { context = 2 }
+        now += 1.seconds
+        a.refresh()
+        vt.normalizedOutput() shouldBe "Task 2"
+    }
+
     private fun TerminalRecorder.normalizedOutput(): String {
         return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimStart('\r')
             .trimEnd()
