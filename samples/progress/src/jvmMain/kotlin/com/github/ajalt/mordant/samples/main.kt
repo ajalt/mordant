@@ -14,7 +14,7 @@ fun main() {
 
     val progress = progressBarLayout {
         spinner(Spinner.Dots(brightBlue))
-        text("my-file.bin")
+        marquee("my-file-download.bin", width = 10)
         percentage()
         progressBar()
         completed()

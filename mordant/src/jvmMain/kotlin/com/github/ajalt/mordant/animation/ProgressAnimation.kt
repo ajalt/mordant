@@ -41,7 +41,6 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
  * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
  */
 class ProgressAnimation internal constructor(
-    private val terminal: Terminal,
     private val inner: BlockingProgressBarAnimation<Unit>,
 ) {
     private val task = inner.addTask()
@@ -168,7 +167,6 @@ internal fun Terminal.progressAnimation(
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
     return ProgressAnimation(
-        this,
         definition.animateOnThread(
             this,
             timeSource = timeSource,
