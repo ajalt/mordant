@@ -26,7 +26,6 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RI
     cell(align = align, fps = 0) { Text(content) }
 }
 
-// TODO: test if the context changes that this updates
 /**
  * Add a dynamic text cell to this layout.
  *
@@ -44,9 +43,10 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RI
  */
 fun <T> ProgressLayoutScope<T>.text(
     align: TextAlign = TextAlign.RIGHT,
+    fps: Int = textFps,
     content: ProgressState<T>.() -> String,
 ) {
-    cell(align = align, fps = 0) { Text(content()) }
+    cell(align = align, fps = fps) { Text(content()) }
 }
 
 /**
@@ -82,7 +82,7 @@ fun <T> ProgressLayoutScope<T>.marquee(
         }
     }
 }
-
+// TODO: progress animation doesn't show as finished in the sample
 /**
  * Add a fixed width text cell that scrolls its contents horizontally so that long text can be
  * displayed in a fixed width.
