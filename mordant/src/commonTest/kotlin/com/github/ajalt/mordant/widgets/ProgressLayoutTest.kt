@@ -230,7 +230,7 @@ class ProgressLayoutTest : RenderingTest() {
     ) { elapsed, expected ->
         val layout = progressBarLayout { spinner(Spinner("123"), fps = 1) }
         val start = setTime(elapsed.seconds)
-        checkRender(layout.build(null, 0, start), expected)
+        checkRender(layout.build(null, 0, start, Running(start)), expected)
     }
 
     @Test

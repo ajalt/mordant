@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation.progress
 
+import com.github.ajalt.mordant.widgets.progress.ProgressBarCell
 import com.github.ajalt.mordant.widgets.progress.ProgressState
 import com.github.ajalt.mordant.widgets.progress.TaskId
 
@@ -38,10 +39,14 @@ interface ProgressTask<T> {
     fun makeState(): ProgressState<T>
 
     val finished: Boolean
+    val id: TaskId
+
+    val context: T
+    val completed: Long
+    val total: Long?
+    val visible: Boolean
     val started: Boolean
     val paused: Boolean
-    val id: TaskId
-    val visible: Boolean
 }
 
 /**
@@ -95,8 +100,10 @@ interface ProgressBarAnimation<T> {
      *
      * This is called automatically when the animation is running, so you don't usually need to call
      * it manually.
+     *
+     * @param refreshAll If `true`, refresh all cells, ignoring their [fps][ProgressBarCell.fps].
      */
-    fun refresh()
+    fun refresh(refreshAll:Boolean = false)
 
     /**
      * Set to `false` to remove the animation from the screen.
