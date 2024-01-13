@@ -37,6 +37,7 @@ class BlockingProgressBarAnimation<T> private constructor(
                 base.refresh()
                 Thread.sleep(rate)
             }
+            base.refresh(refreshAll = true) // final refresh to show finished state
         } finally {
             terminal.cursor.show()
         }

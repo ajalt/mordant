@@ -53,9 +53,10 @@ class BaseProgressBarAnimation<T>(
         return old.tasks.any { it.id == task.id }
     }
 
-    override fun refresh() {
+    override fun refresh(refreshAll: Boolean) {
         val s = state.value
         if (!s.visible) return
+        if (refreshAll) maker.invalidateCache()
         animation.update(s.tasks.filter { it.visible }.map { it.makeState() })
     }
 
@@ -208,6 +209,9 @@ private class ProgressTaskImpl<T>(
     override val started: Boolean get() = state.value.status !is Status.NotStarted
     override val paused: Boolean get() = state.value.status is Status.Paused
     override val visible: Boolean get() = state.value.visible
+    override val context: T get() = state.value.context
+    override val completed: Long get() = state.value.completed
+    override val total: Long? get() = state.value.total
 }
 
 private fun estimateSpeed(

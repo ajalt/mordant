@@ -35,6 +35,7 @@ class CoroutineProgressBarAnimation<T> private constructor(
                 base.refresh()
                 delay(rate)
             }
+            base.refresh(refreshAll = true) // final refresh to show finished state
         } finally {
             terminal.cursor.show()
         }

@@ -76,13 +76,12 @@ fun <T> ProgressLayoutScope<T>.marquee(
             !scrollWhenContentFits && cellWidth <= width -> Text(text)
             else -> {
                 val period = cellWidth + width
-                val scrollRight = frameCount(fps) % period - width
+                val scrollRight = if(isFinished) 0 else frameCount(fps) % period - width
                 Viewport(Text(text), width, scrollRight = scrollRight)
             }
         }
     }
 }
-// TODO: progress animation doesn't show as finished in the sample
 /**
  * Add a fixed width text cell that scrolls its contents horizontally so that long text can be
  * displayed in a fixed width.
@@ -251,8 +250,7 @@ fun ProgressLayoutScope<*>.timeElapsed(
  */
 fun ProgressLayoutScope<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
     spinner.tick = frameCount(fps)
-    if (isPaused) BlankWidgetWrapper(spinner)
-    else spinner
+    if (isRunning) spinner else BlankWidgetWrapper(spinner)
 }
 
 /**
