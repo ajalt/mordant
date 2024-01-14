@@ -84,6 +84,7 @@ fun <T> BlockingProgressBarAnimation<T>.execute(
 
 private class DaemonThreadFactory: ThreadFactory {
     override fun newThread(r: Runnable): Thread = Thread(r).also {
+        it.name = "${it.name}-mordant-progress"
         it.isDaemon = true
     }
 }
