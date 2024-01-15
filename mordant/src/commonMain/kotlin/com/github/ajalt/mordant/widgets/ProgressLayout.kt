@@ -77,7 +77,7 @@ open class ProgressBuilder internal constructor(
         includeTotal: Boolean = true,
         style: TextStyle = DEFAULT_STYLE,
     ) {
-        builder.completed(suffix, includeTotal, style)
+        builder.completed(suffix, includeTotal, style=style)
     }
 
     /**

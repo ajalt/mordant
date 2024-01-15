@@ -6,7 +6,6 @@ import kotlin.time.DurationUnit
 
 // TODO: docs
 // TODO: make total and completed `Double`?
-// TODO: sealed class for all the time combos?
 data class ProgressState<T>(
     /** The context object passed to the progress task. */
     val context: T,

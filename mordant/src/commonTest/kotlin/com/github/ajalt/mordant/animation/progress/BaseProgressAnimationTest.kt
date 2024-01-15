@@ -75,29 +75,29 @@ class BaseProgressAnimationTest : RenderingTest() {
         val pt = a.addTask(total = 100)
 
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt|  0%|......|   0.0/100.0| ---.-it/s|eta -:--:--"
+        vt.normalizedOutput() shouldBe "text.txt|  0%|......|       0/100| ---.-it/s|eta -:--:--"
 
         now += 10.0.seconds
         vt.clearOutput()
         pt.update(40)
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|  40.0/100.0|   4.0it/s|eta 0:00:15"
+        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|      40/100|   4.0it/s|eta 0:00:15"
 
         now += 10.0.seconds
         vt.clearOutput()
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|  40.0/100.0|   2.0it/s|eta 0:00:30"
+        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|      40/100|   2.0it/s|eta 0:00:30"
 
         now += 10.0.seconds
         vt.clearOutput()
         pt.update { total = 200 }
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 20%|#>....|  40.0/200.0|   1.3it/s|eta 0:02:00"
+        vt.normalizedOutput() shouldBe "text.txt| 20%|#>....|      40/200|   1.3it/s|eta 0:02:00"
 
         vt.clearOutput()
         pt.reset()
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt|  0%|......|   0.0/200.0| ---.-it/s|eta -:--:--"
+        vt.normalizedOutput() shouldBe "text.txt|  0%|......|       0/200| ---.-it/s|eta -:--:--"
 
         vt.clearOutput()
         a.visible = false
