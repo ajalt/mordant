@@ -142,17 +142,16 @@ fun ProgressLayoutScope<*>.completed(
     Text(style(nums[0] + formattedTotal + suffix), whitespace = Whitespace.PRE)
 }
 
-//TODO: change suffix to "/s"?
 /**
  * Add a cell that displays the current speed to this layout.
  *
- * @param suffix A string to append to the end of the displayed speed, such as "B/s" if you are tracking bytes. "it/s" by default.
+ * @param suffix A string to append to the end of the displayed speed, such as "B/s" if you are tracking bytes. "/s" by default.
  * @param style The style to use for the displayed speed.
  * @param fps The number of times per second to update the displayed speed. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.speed(
-    suffix: String = "it/s",
+    suffix: String = "/s",
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = textFps,
 ) = cell(

@@ -17,8 +17,8 @@ class MultiProgressLayoutTest : RenderingTest() {
         completed1 = 0, total1 = null, elapsed1 = null, speed1 = null,
         completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         expected = """
-        ░Task 1  |  0%|##############|     0/---.-| ---.-it/s|eta -:--:--
-        ░Task Two|  0%|##############|     0/---.-| ---.-it/s|eta -:--:--
+        ░Task 1  |  0%|##############|     0/---.-| ---.-/s|eta -:--:--
+        ░Task Two|  0%|##############|     0/---.-| ---.-/s|eta -:--:--
         """
     )
 
@@ -29,8 +29,8 @@ class MultiProgressLayoutTest : RenderingTest() {
         completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         alignColumns = false,
         expected = """
-        ░Task 1|  0%|################|     0/---.-| ---.-it/s|eta -:--:--
-        ░Task Two|  0%|##############|     0/---.-| ---.-it/s|eta -:--:--
+        ░Task 1|  0%|################|     0/---.-| ---.-/s|eta -:--:--
+        ░Task Two|  0%|##############|     0/---.-| ---.-/s|eta -:--:--
         """
     )
 
@@ -40,8 +40,8 @@ class MultiProgressLayoutTest : RenderingTest() {
         completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
         completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
         expected = """
-        ░Task 1  | 50%|#######>......|        5/10|   1.0it/s|eta 0:00:05
-        ░Task Two|  0%|##############|     0/---.-| ---.-it/s|eta -:--:--
+        ░Task 1  | 50%|#######>......|        5/10|   1.0/s|eta 0:00:05
+        ░Task Two|  0%|##############|     0/---.-| ---.-/s|eta -:--:--
         """
     )
 
@@ -51,8 +51,8 @@ class MultiProgressLayoutTest : RenderingTest() {
         completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
         completed2 = 20, total2 = 20, elapsed2 = 10.0, speed2 = 2.0,
         expected = """
-        ░Task 1  | 50%|#######>......|        5/10|   1.0it/s|eta 0:00:05
-        ░Task Two|100%|##############|       20/20|   2.0it/s|eta 0:00:00
+        ░Task 1  | 50%|#######>......|        5/10|   1.0/s|eta 0:00:05
+        ░Task Two|100%|##############|       20/20|   2.0/s|eta 0:00:00
         """
     )
 
@@ -109,7 +109,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         checkRender(
             widget,
             expected,
-            width = 64,
+            width = 62,
             theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
         )
     }
