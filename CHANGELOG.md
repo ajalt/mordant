@@ -11,6 +11,7 @@
   - Added `compact` style to `timeRemaining` cells.
   - Added `marquee` cell that can scroll text that is larger than a fixed width. 
 - Added `Viewport` widget that can crop or pad another widget to a fixed size, and scroll it within that size.
+-Added `precision` parameter to `completed` progress cell that controlls the number of decimal places shown.
 
 ### Changed
 - When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 

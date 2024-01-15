@@ -76,12 +76,13 @@ fun <T> ProgressLayoutScope<T>.marquee(
             !scrollWhenContentFits && cellWidth <= width -> Text(text)
             else -> {
                 val period = cellWidth + width
-                val scrollRight = if(isFinished) 0 else frameCount(fps) % period - width
+                val scrollRight = if (isFinished) 0 else frameCount(fps) % period - width
                 Viewport(Text(text), width, scrollRight = scrollRight)
             }
         }
     }
 }
+
 /**
  * Add a fixed width text cell that scrolls its contents horizontally so that long text can be
  * displayed in a fixed width.
@@ -102,12 +103,12 @@ fun ProgressLayoutScope<*>.marquee(
     scrollWhenContentFits: Boolean = false,
 ) = marquee(width, fps, align, scrollWhenContentFits) { content }
 
-// TODO: make decimal places configurable?
 /**
  * Add a cell that displays the current completed count to this layout.
  *
  * @param suffix A string to append to the end of the displayed count, such as "B" if you are tracking bytes. Empty by default.
  * @param includeTotal If true, the total count will be displayed after the completed count, separated by a slash. True by default.
+ * @param precision The number of decimal places to display. 1 by default.
  * @param style The style to use for the displayed count.
  * @param fps The number of times per second to update the displayed count. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
@@ -115,17 +116,23 @@ fun ProgressLayoutScope<*>.marquee(
 fun ProgressLayoutScope<*>.completed(
     suffix: String = "",
     includeTotal: Boolean = true,
+    precision: Int = 1,
     style: TextStyle = DEFAULT_STYLE,
     fps: Int = textFps,
 ) = cell(
-    // " 100.0M"
-    // " 100.0/200.0M"
-    ColumnWidth.Fixed((if (includeTotal) 12 else 6) + suffix.length),
+    // "1000"
+    // "100.0M"
+    // "100.0/200.0M"
+    width = ColumnWidth.Fixed(
+        (3 + precision + if (precision > 0) 1 else 0).let {
+            (if (includeTotal) it * 2 + 1 else it) + suffix.length + 1
+        }
+    ),
     fps = fps,
 ) {
     val complete = completed.toDouble()
     val total = total?.toDouble()
-    val (nums, unit) = formatMultipleWithSiSuffixes(1, complete, total ?: 0.0)
+    val (nums, unit) = formatMultipleWithSiSuffixes(precision, true, complete, total ?: 0.0)
 
     val formattedTotal = when {
         includeTotal && total != null && total >= 0 -> "/${nums[1]}$unit"

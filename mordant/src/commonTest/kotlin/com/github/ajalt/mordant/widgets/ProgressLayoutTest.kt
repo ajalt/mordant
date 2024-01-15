@@ -26,21 +26,21 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("indeterminate_not_started")
     fun `indeterminate not started`() = doTest(
-        "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|-:--:--",
+        "text.txt|  0%|#########|     0/---.-B| ---.-it/s|eta -:--:--|-:--:--",
         0, started = false
     )
 
     @Test
     @JsName("indeterminate_started")
     fun `indeterminate started`() = doTest(
-        "text.txt|  0%|#########|   0.0/---.-B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|  0%|#########|     0/---.-B| ---.-it/s|eta -:--:--|0:00:00",
         0
     )
 
     @Test
     @JsName("no_progress")
     fun `no progress`() = doTest(
-        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|  0%|.........|         0/0B| ---.-it/s|eta -:--:--|0:00:00",
         0, 0
     )
 
@@ -54,7 +54,7 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("short_eta")
     fun `short eta`() = doTest(
-        "text.txt| 50%|####>....|     1.0/2.0B|   4.0it/s|eta 0:00:00|0:00:03",
+        "text.txt| 50%|####>....|         1/2B|   4.0it/s|eta 0:00:00|0:00:03",
         1, 2, 3.0, 4.0
     )
 
@@ -68,21 +68,21 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("zero_total")
     fun `zero total`() = doTest(
-        "text.txt|  0%|.........|     0.0/0.0B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|  0%|.........|         0/0B| ---.-it/s|eta -:--:--|0:00:00",
         0, 0
     )
 
     @Test
     @JsName("negative_completed_value")
     fun `negative completed value`() = doTest(
-        "text.txt|-50%|.........|    -1.0/2.0B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|-50%|.........|        -1/2B| ---.-it/s|eta -:--:--|0:00:00",
         -1, 2
     )
 
     @Test
     @JsName("completed_greater_than_total")
     fun `completed value greater than total`() = doTest(
-        "text.txt|200%|#########|    10.0/5.0B| ---.-it/s|eta -:--:--|0:00:00",
+        "text.txt|200%|#########|        10/5B| ---.-it/s|eta -:--:--|0:00:00",
         10, 5
     )
 
@@ -249,6 +249,32 @@ class ProgressLayoutTest : RenderingTest() {
         val layout = progressBarLayout { marquee("12345", width = 3, fps = 1) }
         val start = setTime(elapsed.seconds)
         checkRender(layout.build(null, 0, start), expected, trimMargin = false)
+    }
+
+    @Test
+    @JsName("completed_decimal_format")
+    fun `completed decimal format`() = forAll(
+        row(0, 0, null,/*      */" 0/---.-"),
+        row(0, 1e1, 1e2,/*     */"  10/100"),
+        row(0, 1e2, 1e3,/*     */"    0/1K"),
+        row(0, 1e9 - 1, 1e9 - 1, "999/999M"),
+        row(1, 0, null,/*      */"     0/---.-"),
+        row(1, 1e1, 1e2,/*     */"      10/100"),
+        row(1, 1e2, 1e3,/*     */"    0.1/1.0K"),
+        row(1, 1e2, 1e6,/*     */"    0.0/1.0M"),
+        row(1, 9e5, 1e6,/*     */"    0.9/1.0M"),
+        row(1, 9e6, 1e7,/*     */"   9.0/10.0M"),
+        row(1, 9e7, 1e8,/*     */" 90.0/100.0M"),
+        row(1, 9e8, 1e9,/*     */"    0.9/1.0G"),
+        row(1, 1e9 - 1, 1e9 - 1, "999.9/999.9M"),
+        row(2, 1e1, 1e2,/*     */"        10/100"),
+        row(2, 1e2, 1e3,/*     */"    0.10/1.00K"),
+        row(2, 1e2, 1e3,/*     */"    0.10/1.00K"),
+        row(2, 1e9 - 1, 1e9 - 1, "999.99/999.99M"),
+    ) { precision, completed, total, expected ->
+        val layout = progressBarLayout { completed(precision = precision) }
+        val widget = layout.build(total?.toLong(), completed.toLong(), start)
+        checkRender(widget, expected, trimMargin = false)
     }
 
     @Test

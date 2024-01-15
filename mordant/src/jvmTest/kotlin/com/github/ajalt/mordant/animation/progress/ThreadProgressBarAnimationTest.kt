@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 
@@ -28,13 +29,13 @@ class ThreadProgressBarAnimationTest {
             Thread.sleep(20)
             vt.clearOutput()
             Thread.sleep(20)
-            vt.normalizedOutput() shouldBe "    5.0/10.0"
+            vt.normalizedOutput() shouldBe "        5/10"
 
             Thread.sleep(20)
             future.isDone shouldBe false
 
             t.update(10)
-            Thread.sleep(20)
+            future.get(100, TimeUnit.MILLISECONDS)
             future.isDone shouldBe true
         } finally {
             service.shutdownNow()
