@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.Finished
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.Running
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
@@ -66,7 +67,7 @@ open class ProgressBuilder internal constructor(
             completeStyle,
             finishedStyle,
             indeterminateStyle,
-            showPulse,
+            if (showPulse == false) ZERO else 2.seconds,
         )
     }
 

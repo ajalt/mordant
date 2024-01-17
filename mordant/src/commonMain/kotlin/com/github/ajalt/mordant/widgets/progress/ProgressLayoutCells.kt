@@ -295,7 +295,8 @@ fun ProgressLayoutScope<*>.spinner(
  * @param completeStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when completed < total
  * @param finishedStyle (theme style: "progressbar.complete") The style to use for the [completeChar] when total <= completed
  * @param indeterminateStyle e (theme style: "progressbar.separator") The style to use when the state us indeterminate
- * @param showPulse (theme flag: "progressbar.pulse") If false, never draw the pulse animation in the indeterminate state.
+ * @param pulsePeriod (theme flag: "progressbar.pulse") The time that it takes for one cycle of the
+ *   pulse animation. 2 seconds by default. Set this to 0 or the theme flag to `false` to disable the pulse.
  * @param fps The number of times per second to update the displayed bar.  Uses the
  *  [animation fps][ProgressLayoutScope.animationFps] by default.
  */
@@ -309,7 +310,7 @@ fun ProgressLayoutScope<*>.progressBar(
     completeStyle: TextStyle? = null,
     finishedStyle: TextStyle? = null,
     indeterminateStyle: TextStyle? = null,
-    showPulse: Boolean? = null, // TODO replace with `pulseDuration: Duration?`
+    pulsePeriod: Duration = 2.seconds,
     verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = animationFps,
 ) = cell(
@@ -317,9 +318,10 @@ fun ProgressLayoutScope<*>.progressBar(
     fps = fps,
     verticalAlign = verticalAlign,
 ) {
-    val period = 2 // this could be configurable
     val elapsedSeconds = animationTime.elapsedNow().toDouble(DurationUnit.SECONDS)
-    val pulsePosition = ((elapsedSeconds % period) / period)
+    val period = pulsePeriod.toDouble(DurationUnit.SECONDS)
+    val showPulse = isRunning && period > 0
+    val pulsePosition = if (showPulse) ((elapsedSeconds % period) / period) else 0
 
     ProgressBar(
         total = total ?: 0,
@@ -327,7 +329,7 @@ fun ProgressLayoutScope<*>.progressBar(
         indeterminate = isIndeterminate,
         width = width,
         pulsePosition = pulsePosition.toFloat(),
-        showPulse = if (isRunning) showPulse else false,
+        showPulse = if (showPulse) null else false, // null defaults to theme flag
         pendingChar = pendingChar,
         separatorChar = separatorChar,
         completeChar = completeChar,
