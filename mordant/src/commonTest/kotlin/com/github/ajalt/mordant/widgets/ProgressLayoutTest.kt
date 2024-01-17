@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.VerticalAlign
 import com.github.ajalt.mordant.test.RenderingTest
@@ -248,6 +249,25 @@ class ProgressLayoutTest : RenderingTest() {
         row(9, "  1"),
     ) { elapsed, expected ->
         val layout = progressBarLayout { marquee("12345", width = 3, fps = 1) }
+        val start = setTime(elapsed.seconds)
+        checkRender(layout.build(null, 0, start), expected, trimMargin = false)
+    }
+
+    @Test
+    @JsName("styled_marquee")
+    fun `styled marquee`() = forAll(
+        row(0, red("   ")),
+        row(1, red("  1")),
+        row(2, red(" 12")),
+        row(3, red("123")),
+        row(4, red("234")),
+        row(5, red("345")),
+        row(6, red("45") + " "),
+        row(7, red("5") + "  "),
+        row(8, red("   ")),
+        row(9, red("  1")),
+    ) { elapsed, expected ->
+        val layout = progressBarLayout { marquee(red("12345"), width = 3, fps = 1) }
         val start = setTime(elapsed.seconds)
         checkRender(layout.build(null, 0, start), expected, trimMargin = false)
     }

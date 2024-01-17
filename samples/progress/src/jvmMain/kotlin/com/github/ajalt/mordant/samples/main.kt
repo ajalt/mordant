@@ -16,11 +16,11 @@ fun main() {
     val progress = progressBarLayout {
         spinner(Spinner.Dots(brightBlue))
         marquee(terminal.theme.warning("my-file-download.bin"), width = 15)
-        percentage(style = magenta)
+        percentage()
         progressBar()
         completed(style = terminal.theme.success)
         speed("B/s", style = terminal.theme.info)
-        timeRemaining()
+        timeRemaining(style = magenta)
     }.animateOnThread(terminal)
     val task = progress.addTask()
 

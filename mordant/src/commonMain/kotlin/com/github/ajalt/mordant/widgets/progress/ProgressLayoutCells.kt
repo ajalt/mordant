@@ -78,7 +78,7 @@ fun <T> ProgressLayoutScope<T>.marquee(
     require(width > 0) { "width must be greater than zero" }
     cell(ColumnWidth.Fixed(width), fps, align, verticalAlign) {
         val text = content()
-        val cellWidth = stringCellWidth(text)
+        val cellWidth = parseText(text, DEFAULT_STYLE).width
         when {
             !scrollWhenContentFits && cellWidth <= width -> Text(text)
             else -> {
