@@ -184,7 +184,9 @@ fun ProgressLayoutScope<*>.speed(
  *  [text fps][ProgressLayoutScope.textFps] by default.
  */
 fun ProgressLayoutScope<*>.percentage(
-    fps: Int = textFps, verticalAlign: VerticalAlign = this.verticalAlign,
+    fps: Int = textFps,
+    style: TextStyle = DEFAULT_STYLE,
+    verticalAlign: VerticalAlign = this.verticalAlign,
 ) = cell(
     ColumnWidth.Fixed(4),  // " 100%"
     fps = fps,
@@ -194,7 +196,7 @@ fun ProgressLayoutScope<*>.percentage(
         total == null || total <= 0 -> 0
         else -> (100.0 * completed / total).toInt()
     }
-    Text("$percent%")
+    Text(style("$percent%"))
 }
 
 /**
