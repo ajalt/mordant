@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.widgets.progress
 
 import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.VerticalAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.ColumnWidth
 import kotlin.time.ComparableTimeMark
@@ -12,6 +13,19 @@ class TaskId
 
 // TODO: docs on all of these
 interface ProgressLayoutScope<T> {
+
+    /** The default framerate for text based cells */
+    val textFps: Int
+
+    /** The default framerate for animation cells */
+    val animationFps: Int
+
+    /** The default text alignment for cells */
+    val align: TextAlign
+
+    /** The default vertical alignment for cells */
+    val verticalAlign: VerticalAlign
+
     /**
      * Add a cell to this layout.
      *
@@ -19,28 +33,28 @@ interface ProgressLayoutScope<T> {
      * animations, that will be at its [fps].
      *
      * @param width The width of the cell.
-     * @param fps The number of times per second to refresh the cell when animated. If 0, the cell will not be refreshed.
-     * @param align The text alignment for the cell when multiple tasks are present and cells are aligned.
+     * @param fps The number of times per second to refresh the cell when animated. If 0, the cell
+     *   will not be refreshed.
+     * @param align The text alignment for the cell when multiple tasks are present and cells are
+     *   aligned, or `null` to use [the default][ProgressLayoutScope.align].
+     * @param verticalAlign The vertical alignment for the cell if there are other taller cells in
+     *   the layout, or `null` to use [the default][ProgressLayoutScope.verticalAlign].
      * @param content A lambda returning the widget to display in this cell.
      */
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
         fps: Int = TEXT_FPS,
-        align: TextAlign = TextAlign.RIGHT,
+        align: TextAlign? = null,
+        verticalAlign: VerticalAlign? = null,
         content: ProgressState<T>.() -> Widget,
     )
-
-    /** The default framerate for text based cells */
-    val textFps: Int
-
-    /** The default framerate for animation cells */
-    val animationFps: Int
 }
 
 data class ProgressBarCell<T>(
     val columnWidth: ColumnWidth = ColumnWidth.Auto,
     val fps: Int = TEXT_FPS,
     val align: TextAlign = TextAlign.RIGHT,
+    val verticalAlign: VerticalAlign = VerticalAlign.BOTTOM,
     val content: ProgressState<T>.() -> Widget,
 ) {
     init {
@@ -99,10 +113,7 @@ fun ProgressBarDefinition<Unit>.build(
     speed: Double? = null,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
 ): Widget {
-    val state = ProgressState(
-        Unit, total, completed, displayedTime, status, speed
-    )
-    return build(state, maker = maker)
+    return build(Unit, total, completed, displayedTime, status, speed, maker)
 }
 
 // TODO: docs
@@ -125,23 +136,28 @@ fun progressBarLayout(
     animationFps: Int = ANIMATION_FPS,
     init: ProgressLayoutScope<Unit>.() -> Unit,
 ): ProgressBarDefinition<Unit> {
-    return progressBarContextLayout(spacing, alignColumns,textFps, animationFps, init)
+    return progressBarContextLayout(spacing, alignColumns, textFps, animationFps, init)
 }
 
 
 class BaseProgressLayoutScope<T>(
     override val textFps: Int = TEXT_FPS,
     override val animationFps: Int = ANIMATION_FPS,
+    override val align: TextAlign = TextAlign.RIGHT,
+    override val verticalAlign: VerticalAlign = VerticalAlign.BOTTOM,
 ) : ProgressLayoutScope<T> {
     private val cells: MutableList<ProgressBarCell<T>> = mutableListOf()
 
     override fun cell(
         width: ColumnWidth,
         fps: Int,
-        align: TextAlign,
+        align: TextAlign?,
+        verticalAlign: VerticalAlign?,
         content: ProgressState<T>.() -> Widget,
     ) {
-        cells += ProgressBarCell(width, fps, align, content)
+        cells += ProgressBarCell(
+            width, fps, align ?: this.align, verticalAlign ?: this.verticalAlign, content
+        )
     }
 
     fun build(spacing: Int, alignColumns: Boolean): ProgressBarDefinition<T> {
