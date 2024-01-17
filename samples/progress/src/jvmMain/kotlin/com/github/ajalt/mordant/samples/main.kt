@@ -5,8 +5,9 @@ import com.github.ajalt.mordant.animation.progress.advance
 import com.github.ajalt.mordant.animation.progress.animateOnThread
 import com.github.ajalt.mordant.animation.progress.execute
 import com.github.ajalt.mordant.rendering.TextColors.brightBlue
+import com.github.ajalt.mordant.rendering.TextColors.magenta
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.*
+import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.progress.*
 
 fun main() {
@@ -14,11 +15,11 @@ fun main() {
 
     val progress = progressBarLayout {
         spinner(Spinner.Dots(brightBlue))
-        marquee("my-file-download.bin", width = 15)
-        percentage()
+        marquee(terminal.theme.warning("my-file-download.bin"), width = 15)
+        percentage(style = magenta)
         progressBar()
-        completed()
-        speed("B/s")
+        completed(style = terminal.theme.success)
+        speed("B/s", style = terminal.theme.info)
         timeRemaining()
     }.animateOnThread(terminal)
     val task = progress.addTask()
@@ -30,7 +31,7 @@ fun main() {
 
     // Update the progress as the download progresses
     task.update { total = 3_000_000_000 }
-    while(!progress.finished) {
+    while (!progress.finished) {
         task.advance(15_000_000)
         Thread.sleep(100)
     }
