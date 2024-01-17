@@ -39,6 +39,35 @@ interface CachedProgressBarWidgetMaker<T> {
 val CachedProgressBarWidgetMaker<*>.refreshPeriod: Duration
     get() = (1.0 / refreshRate).seconds
 
+// TODO: docs
+fun <T> CachedProgressBarWidgetMaker<T>.build(vararg states: ProgressState<T>): Widget {
+    return build(states.asList())
+}
+
+fun <T> CachedProgressBarWidgetMaker<T>.build(
+    context: T,
+    total: Long?,
+    completed: Long,
+    displayedTime: ComparableTimeMark,
+    status: ProgressState.Status = ProgressState.Status.NotStarted,
+    speed: Double? = null,
+): Widget {
+    val state = ProgressState(
+        context, total, completed, displayedTime, status, speed
+    )
+    return build(state)
+}
+
+fun CachedProgressBarWidgetMaker<Unit>.build(
+    total: Long?,
+    completed: Long,
+    displayedTime: ComparableTimeMark,
+    status: ProgressState.Status = ProgressState.Status.NotStarted,
+    speed: Double? = null,
+): Widget {
+    return build(Unit, total, completed, displayedTime, status, speed)
+}
+
 fun <T> ProgressBarDefinition<T>.cache(
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
@@ -72,7 +101,7 @@ private class CachedProgressBarWidgetMakerImpl<T>(
     ): ProgressBarCell<T> {
         // Wrap the cell builder in a block that caches the widget
         val cachedWidgets = MppAtomicRef(mapOf<TaskId, Pair<ComparableTimeMark, Widget>>())
-        return ProgressBarCell(cell.columnWidth, cell.fps, cell.align) {
+        return ProgressBarCell(cell.columnWidth, cell.fps, cell.align, cell.verticalAlign) {
             val (_, new) = cachedWidgets.update {
                 when {
                     isCacheValid(cell, this) -> this
