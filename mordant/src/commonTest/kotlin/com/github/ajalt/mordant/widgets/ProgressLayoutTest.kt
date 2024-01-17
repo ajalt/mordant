@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.Theme
+import com.github.ajalt.mordant.rendering.VerticalAlign
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
@@ -290,6 +291,26 @@ class ProgressLayoutTest : RenderingTest() {
         val start = setTime(2.seconds)
         val layout = progressBarLayout { marquee("123", width = 5, scrollWhenContentFits = true) }
         checkRender(layout.build(null, 0, start), "23   ", trimMargin = false)
+    }
+
+
+    @Test
+    fun verticalAlign() {
+        val layout = progressBarLayout {
+            text("|\n|\n|")
+            text("1")
+            text("2", verticalAlign = VerticalAlign.TOP)
+            text("3", verticalAlign = VerticalAlign.MIDDLE)
+            text("4", verticalAlign = VerticalAlign.BOTTOM)
+            text("|\n|\n|")
+        }
+        checkRender(
+            layout.build(null, 0, start), """
+            ░|     2        |
+            ░|        3     |
+            ░|  1        4  |
+            """
+        )
     }
 
     private fun doTest(

@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets.progress
 
-import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.widgets.EmptyWidget
@@ -29,31 +28,39 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
         d: ProgressBarDefinition<T>,
         states: List<ProgressState<T>>,
     ): Widget {
-        return verticalLayout {
-            for (state in states) {
-                cell(horizontalLayout {
-                    this.spacing = d.spacing
-                    d.cells.forEachIndexed { i, cell ->
-                        column(i) {
-                            align = cell.align
-                            width = cell.columnWidth
-                        }
-                    }
-                    cellsFrom(makeWidgets(d.cells, state))
-                })
+        return when {
+            states.size == 1 -> makeHorizontalLayout(d, states.single())
+            else -> verticalLayout {
+                for (state in states) {
+                    cell(makeHorizontalLayout(d, state))
+                }
+            }
+        }
+    }
+
+    private fun <T> makeHorizontalLayout(
+        d: ProgressBarDefinition<T>, state: ProgressState<T>,
+    ): Widget = horizontalLayout {
+        spacing = d.spacing
+        for ((i, barCell) in d.cells.withIndex()) {
+            cell(barCell.content(state))
+            column(i) {
+                width = barCell.columnWidth
+                align = barCell.align
+                verticalAlign = barCell.verticalAlign
             }
         }
     }
 
     private fun <T> makeTable(d: ProgressBarDefinition<T>, states: List<ProgressState<T>>): Table {
         return table {
-            //TODO  verticalAlign = verticalAlign
             cellBorders = Borders.NONE
             padding = Padding { left = d.spacing }
             column(0) { padding = Padding(0) }
             d.cells.forEachIndexed { i, cell ->
                 column(i) {
                     align = cell.align
+                    verticalAlign = cell.verticalAlign
                     val w = cell.columnWidth
                     width = when {
                         // The fixed width cells don't include padding, so add it here
@@ -64,16 +71,9 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
             }
             body {
                 for (state in states) {
-                    rowFrom(makeWidgets(d.cells, state))
+                    rowFrom(d.cells.map { it.content(state) })
                 }
             }
         }
-    }
-
-    private fun <T> makeWidgets(
-        cells: List<ProgressBarCell<T>>,
-        state: ProgressState<T>,
-    ): List<Widget> {
-        return cells.map { it.content(state) }
     }
 }

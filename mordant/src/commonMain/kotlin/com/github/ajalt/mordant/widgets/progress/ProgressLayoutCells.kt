@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.widgets.progress
 import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.VerticalAlign
 import com.github.ajalt.mordant.rendering.Whitespace
 import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.widgets.ProgressBar
@@ -22,8 +23,12 @@ import kotlin.time.DurationUnit
  * @param content The text to display in this cell.
  * @param align The text alignment for this cell. Cells are right-aligned by default.
  */
-fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RIGHT) {
-    cell(align = align, fps = 0) { Text(content) }
+fun ProgressLayoutScope<*>.text(
+    content: String,
+    align: TextAlign = this.align,
+    verticalAlign: VerticalAlign = this.verticalAlign,
+) {
+    cell(fps = 0, align = align, verticalAlign = verticalAlign) { Text(content) }
 }
 
 /**
@@ -42,11 +47,12 @@ fun ProgressLayoutScope<*>.text(content: String, align: TextAlign = TextAlign.RI
  * @param content A lambda returning the text to display in this cell.
  */
 fun <T> ProgressLayoutScope<T>.text(
-    align: TextAlign = TextAlign.RIGHT,
+    align: TextAlign = this.align,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
     content: ProgressState<T>.() -> String,
 ) {
-    cell(align = align, fps = fps) { Text(content()) }
+    cell(fps = fps, align = align, verticalAlign = verticalAlign) { Text(content()) }
 }
 
 /**
@@ -64,12 +70,13 @@ fun <T> ProgressLayoutScope<T>.text(
 fun <T> ProgressLayoutScope<T>.marquee(
     width: Int,
     fps: Int = 3,
-    align: TextAlign = TextAlign.RIGHT,
+    align: TextAlign = this.align,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     scrollWhenContentFits: Boolean = false,
     content: ProgressState<T>.() -> String,
 ) {
     require(width > 0) { "width must be greater than zero" }
-    cell(width = ColumnWidth.Fixed(width), fps = fps, align = align) {
+    cell(ColumnWidth.Fixed(width), fps, align, verticalAlign) {
         val text = content()
         val cellWidth = stringCellWidth(text)
         when {
@@ -99,9 +106,10 @@ fun ProgressLayoutScope<*>.marquee(
     content: String,
     width: Int,
     fps: Int = 3,
-    align: TextAlign = TextAlign.RIGHT,
+    align: TextAlign = this.align,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     scrollWhenContentFits: Boolean = false,
-) = marquee(width, fps, align, scrollWhenContentFits) { content }
+) = marquee(width, fps, align, verticalAlign, scrollWhenContentFits) { content }
 
 /**
  * Add a cell that displays the current completed count to this layout.
@@ -118,6 +126,7 @@ fun ProgressLayoutScope<*>.completed(
     includeTotal: Boolean = true,
     precision: Int = 1,
     style: TextStyle = DEFAULT_STYLE,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
 ) = cell(
     // "1000"
@@ -129,6 +138,7 @@ fun ProgressLayoutScope<*>.completed(
         }
     ),
     fps = fps,
+    verticalAlign = verticalAlign,
 ) {
     val complete = completed.toDouble()
     val total = total?.toDouble()
@@ -153,10 +163,12 @@ fun ProgressLayoutScope<*>.completed(
 fun ProgressLayoutScope<*>.speed(
     suffix: String = "/s",
     style: TextStyle = DEFAULT_STYLE,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
 ) = cell(
     ColumnWidth.Fixed(6 + suffix.length), // " 100.0M"
-    fps = fps
+    fps = fps,
+    verticalAlign = verticalAlign,
 ) {
     val t = when {
         speed == null || speed < 0 -> "---.-"
@@ -171,9 +183,12 @@ fun ProgressLayoutScope<*>.speed(
  * @param fps The number of times per second to update the displayed percentage. Uses the
  *  [text fps][ProgressLayoutScope.textFps] by default.
  */
-fun ProgressLayoutScope<*>.percentage(fps: Int = textFps) = cell(
+fun ProgressLayoutScope<*>.percentage(
+    fps: Int = textFps, verticalAlign: VerticalAlign = this.verticalAlign,
+) = cell(
     ColumnWidth.Fixed(4),  // " 100%"
-    fps = fps
+    fps = fps,
+    verticalAlign = verticalAlign,
 ) {
     val percent = when {
         total == null || total <= 0 -> 0
@@ -199,10 +214,12 @@ fun ProgressLayoutScope<*>.timeRemaining(
     elapsedWhenFinished: Boolean = false,
     elapsedPrefix: String = " in ",
     style: TextStyle = DEFAULT_STYLE,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
 ) = cell(
     ColumnWidth.Fixed(7 + max(prefix.length, elapsedPrefix.length)), // "0:00:02"
-    fps = fps
+    fps = fps,
+    verticalAlign = verticalAlign,
 ) {
     val eta = when {
         status is ProgressState.Status.Finished && elapsedWhenFinished -> {
@@ -232,8 +249,9 @@ fun ProgressLayoutScope<*>.timeRemaining(
 fun ProgressLayoutScope<*>.timeElapsed(
     compact: Boolean = false,
     style: TextStyle = DEFAULT_STYLE,
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
-) = cell(ColumnWidth.Auto, fps = fps) {
+) = cell(ColumnWidth.Auto, fps = fps, verticalAlign = verticalAlign) {
     val elapsed = when (status) {
         ProgressState.Status.NotStarted -> null
         is ProgressState.Status.Finished -> status.finishTime - status.startTime
@@ -254,7 +272,11 @@ fun ProgressLayoutScope<*>.timeElapsed(
  * @param spinner The spinner to display
  * @param fps The number of times per second to advance the spinner's displayed frame. 8 by default.
  */
-fun ProgressLayoutScope<*>.spinner(spinner: Spinner, fps: Int = 8) = cell(fps = fps) {
+fun ProgressLayoutScope<*>.spinner(
+    spinner: Spinner,
+    verticalAlign: VerticalAlign = this.verticalAlign,
+    fps: Int = 8,
+) = cell(fps = fps, verticalAlign = verticalAlign) {
     spinner.tick = frameCount(fps)
     if (isRunning) spinner else BlankWidgetWrapper(spinner)
 }
@@ -286,10 +308,12 @@ fun ProgressLayoutScope<*>.progressBar(
     finishedStyle: TextStyle? = null,
     indeterminateStyle: TextStyle? = null,
     showPulse: Boolean? = null, // TODO replace with `pulseDuration: Duration?`
+    verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = animationFps,
 ) = cell(
     width?.let { ColumnWidth.Fixed(it) } ?: ColumnWidth.Expand(),
-    fps = fps
+    fps = fps,
+    verticalAlign = verticalAlign,
 ) {
     val period = 2 // this could be configurable
     val elapsedSeconds = animationTime.elapsedNow().toDouble(DurationUnit.SECONDS)

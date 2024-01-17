@@ -4,7 +4,8 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.widgets.progress.*
-import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.Finished
+import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.Running
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -77,7 +78,7 @@ open class ProgressBuilder internal constructor(
         includeTotal: Boolean = true,
         style: TextStyle = DEFAULT_STYLE,
     ) {
-        builder.completed(suffix, includeTotal, style=style)
+        builder.completed(suffix, includeTotal, style = style)
     }
 
     /**
@@ -101,7 +102,7 @@ open class ProgressBuilder internal constructor(
      * @param frameRate The number of times per second to advance the spinner's displayed frame
      */
     fun spinner(spinner: Spinner, frameRate: Int = 8) {
-        builder.spinner(spinner, frameRate)
+        builder.spinner(spinner, fps = frameRate)
     }
 }
 
