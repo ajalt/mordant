@@ -53,6 +53,7 @@ abstract class Animation<T>(
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
         val (old, new) = state.update { copy(firstDraw = false) }
         val t = old.text ?: return@TerminalInterceptor req
+        // TODO: this seems to add an extra newline at the end of the animation
         val newText = buildString {
             if (!old.firstDraw) {
                 val moves = getCursorMoves(old.needsClear || req.text.isNotEmpty(), new.size)

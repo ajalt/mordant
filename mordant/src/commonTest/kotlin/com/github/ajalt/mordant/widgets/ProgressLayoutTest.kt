@@ -114,12 +114,25 @@ class ProgressLayoutTest : RenderingTest() {
     }
 
     @Test
+    @JsName("custom_pulse_duration")
+    fun `custom pulse duration`() {
+        t += 0.5.seconds
+        checkRender(
+            progressBarLayout {
+                progressBar(pulsePeriod = 1.seconds)
+            }.build(null, 0, start, Running(start)),
+            indetermStyle("━${TextColors.rgb(1, 1, 1)("━")}━"),
+            width = 3,
+        )
+    }
+
+    @Test
     @JsName("no_pulse")
     fun `no pulse`() {
         t += 1.seconds
         checkRender(
             progressBarLayout {
-                progressBar(showPulse = false)
+                progressBar(pulsePeriod = ZERO)
             }.build(null, 0, start, Running(start)),
             indetermStyle("━━━"),
             width = 3,
