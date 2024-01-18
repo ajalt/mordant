@@ -421,9 +421,9 @@ Call [progress.start] to animate the progress, and [progress.update] or [progres
 task completes.
 
 !!! note
-    The [progressAnimation] builder is currently JVM-only. On other platforms, you can still use
-    `t.animation { progressLayout { ... } }` which will render the same widget, you'll just need to call
-    [progress.build] manually.
+    The [progressAnimation] builder is currently JVM-only - see [issue #148](https://github.com/ajalt/mordant/issues/148).
+    On other platforms, you can still use `t.animation { progressLayout { ... } }` which will render the same widget, 
+    you'll just need to call [progress.build] manually.
 
 
 ## Prompting for input
