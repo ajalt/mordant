@@ -2,25 +2,32 @@ package com.github.ajalt.mordant.animation.progress
 
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
-import java.util.concurrent.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.ThreadFactory
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 class BlockingProgressBarAnimation<T> private constructor(
     private val terminal: Terminal,
-    private val base: ProgressBarAnimation<T>,
+    private val base: BaseProgressBarAnimation<T>,
     private val rate: Long,
 ) : ProgressBarAnimation<T> by base {
     constructor(
         terminal: Terminal,
         factory: CachedProgressBarWidgetMaker<T>,
+        clearWhenFinished: Boolean = false,
         speedEstimateDuration: Duration = 30.seconds,
     ) : this(
         terminal,
-        BaseProgressBarAnimation(terminal, factory, speedEstimateDuration),
+        BaseProgressBarAnimation(terminal, factory, clearWhenFinished, speedEstimateDuration),
         factory.refreshPeriod.inWholeMilliseconds
     )
+
+    private var stopped = false
+    private val lock = Any()
 
     /**
      * Start the animation and refresh it until all its tasks are finished.
@@ -31,17 +38,40 @@ class BlockingProgressBarAnimation<T> private constructor(
      * @see execute
      */
     fun runBlocking() {
-        terminal.cursor.hide(showOnExit = true)
+        synchronized(lock) {
+            stopped = false
+            terminal.cursor.hide(showOnExit = true)
+        }
         try {
-            while (!base.finished) {
-                base.refresh()
+            while (synchronized(lock) { !stopped && !base.finished }) {
+                synchronized(lock) { base.refresh() }
                 Thread.sleep(rate)
             }
-            base.refresh(refreshAll = true) // final refresh to show finished state
+            synchronized(lock) {
+                // final refresh to show finished state
+                if (!stopped) base.refresh(refreshAll = true)
+            }
         } finally {
-            terminal.cursor.show()
+            synchronized(lock) { terminal.cursor.show() }
         }
     }
+
+    /**
+     * Stop the animation, but leave it on the screen.
+     */
+    fun stop(): Unit = synchronized(lock) {
+        stopped = true
+        base.stop()
+    }
+
+    /**
+     * Stop the animation and remove it from the screen.
+     */
+    fun clear(): Unit = synchronized(lock) {
+        stopped = true
+        base.clear()
+    }
+
 }
 
 /**
@@ -61,12 +91,14 @@ class BlockingProgressBarAnimation<T> private constructor(
 fun <T> ProgressBarDefinition<T>.animateOnThread(
     terminal: Terminal,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+    clearWhenFinished: Boolean = false,
     speedEstimateDuration: Duration = 30.seconds,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
 ): BlockingProgressBarAnimation<T> {
     return BlockingProgressBarAnimation(
         terminal,
         cache(timeSource, maker),
+        clearWhenFinished,
         speedEstimateDuration,
     )
 }
@@ -82,7 +114,7 @@ fun <T> BlockingProgressBarAnimation<T>.execute(
     return executor.submit(::runBlocking)
 }
 
-private class DaemonThreadFactory: ThreadFactory {
+private class DaemonThreadFactory : ThreadFactory {
     override fun newThread(r: Runnable): Thread = Thread(r).also {
         it.name = "${it.name}-mordant-progress"
         it.isDaemon = true

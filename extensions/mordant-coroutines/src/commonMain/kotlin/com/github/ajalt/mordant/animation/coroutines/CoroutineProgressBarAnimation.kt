@@ -5,6 +5,8 @@ import com.github.ajalt.mordant.animation.progress.ProgressBarAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -12,33 +14,59 @@ import kotlin.time.TimeSource
 
 class CoroutineProgressBarAnimation<T> private constructor(
     private val terminal: Terminal,
-    private val base: ProgressBarAnimation<T>,
+    private val base: BaseProgressBarAnimation<T>,
     private val rate: Long,
 ) : ProgressBarAnimation<T> by base {
     constructor(
         terminal: Terminal,
         factory: CachedProgressBarWidgetMaker<T>,
+        clearWhenFinished: Boolean = false,
         speedEstimateDuration: Duration = 30.seconds,
     ) : this(
         terminal,
-        BaseProgressBarAnimation(terminal, factory, speedEstimateDuration),
+        BaseProgressBarAnimation(terminal, factory, clearWhenFinished, speedEstimateDuration),
         factory.refreshPeriod.inWholeMilliseconds
     )
+
+    private var stopped = false
+    private val mutex = Mutex()
 
     /**
      * Start the animation and refresh it until all its tasks are finished.
      */
     suspend fun run() {
-        terminal.cursor.hide(showOnExit = true)
+        mutex.withLock {
+            stopped = false
+            terminal.cursor.hide(showOnExit = true)
+        }
         try {
-            while (!base.finished) {
-                base.refresh()
+            while (mutex.withLock { !stopped && !base.finished}) {
+                mutex.withLock { base.refresh() }
                 delay(rate)
             }
-            base.refresh(refreshAll = true) // final refresh to show finished state
+            mutex.withLock {
+                // final refresh to show finished state
+                if (!stopped) base.refresh(refreshAll = true)
+            }
         } finally {
-            terminal.cursor.show()
+            mutex.withLock { terminal.cursor.show() }
         }
+    }
+
+    /**
+     * Stop the animation, but leave it on the screen.
+     */
+    suspend fun stop(): Unit = mutex.withLock {
+        stopped = true
+        base.stop()
+    }
+
+    /**
+     * Stop the animation and remove it from the screen.
+     */
+    suspend fun clear(): Unit = mutex.withLock {
+        stopped = true
+        base.clear()
     }
 }
 
@@ -57,12 +85,14 @@ class CoroutineProgressBarAnimation<T> private constructor(
 fun <T> ProgressBarDefinition<T>.animateInCoroutine(
     terminal: Terminal,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
+    clearWhenFinished: Boolean = false,
     speedEstimateDuration: Duration = 30.seconds,
     maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
 ): CoroutineProgressBarAnimation<T> {
     return CoroutineProgressBarAnimation(
         terminal,
         cache(timeSource, maker),
+        clearWhenFinished,
         speedEstimateDuration,
     )
 }
