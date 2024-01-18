@@ -956,9 +956,9 @@ string with <a href="../api/mordant/com.github.ajalt.mordant.animation/text-anim
 task completes.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <a href="../api/mordant/com.github.ajalt.mordant.animation/progress-animation.html">progressAnimation</a> builder is currently JVM-only. On other platforms, you can still use
-<code>t.animation { progressLayout { ... } }</code> which will render the same widget, you&rsquo;ll just need to call
-<a href="../api/mordant/com.github.ajalt.mordant.widgets/-progress-layout/build.html">progress.build</a> manually.</p>
+<p>The <a href="../api/mordant/com.github.ajalt.mordant.animation/progress-animation.html">progressAnimation</a> builder is currently JVM-only - see <a href="https://github.com/ajalt/mordant/issues/148">issue #148</a>.
+On other platforms, you can still use <code>t.animation { progressLayout { ... } }</code> which will render the same widget, 
+you&rsquo;ll just need to call <a href="../api/mordant/com.github.ajalt.mordant.widgets/-progress-layout/build.html">progress.build</a> manually.</p>
 </div>
 <h2 id="prompting-for-input">Prompting for input<a class="headerlink" href="#prompting-for-input" title="Permanent link">&para;</a></h2>
 <p>You can ask the user to enter text and wait for a response with <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html">Terminal.prompt</a>:</p>
