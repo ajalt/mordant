@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
+import kotlin.jvm.Transient
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -16,6 +17,7 @@ class BaseProgressBarAnimation<T>(
     // TODO: param docs
     terminal: Terminal,
     private val maker: CachedProgressBarWidgetMaker<T>,
+    private val clearWhenFinished: Boolean = false,
     private val speedEstimateDuration: Duration = 30.seconds,
 ) : ProgressBarAnimation<T> {
     private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
@@ -58,6 +60,23 @@ class BaseProgressBarAnimation<T>(
         if (!s.visible) return
         if (refreshAll) maker.invalidateCache()
         animation.update(s.tasks.filter { it.visible }.map { it.makeState() })
+        if (finished) {
+            if (clearWhenFinished) animation.clear() else animation.stop()
+        }
+    }
+
+    /**
+     * Stop the animation, but leave it on the screen.
+     */
+    fun stop() {
+        animation.stop()
+    }
+
+    /**
+     * Stop the animation and remove it from the screen.
+     */
+    fun clear() {
+        animation.clear()
     }
 
     override var visible: Boolean
