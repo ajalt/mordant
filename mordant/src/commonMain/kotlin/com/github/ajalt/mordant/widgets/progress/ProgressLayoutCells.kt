@@ -223,17 +223,7 @@ fun ProgressLayoutScope<*>.timeRemaining(
     fps = fps,
     verticalAlign = verticalAlign,
 ) {
-    val eta = when {
-        status is ProgressState.Status.Finished && elapsedWhenFinished -> {
-            status.finishTime - status.startTime
-        }
-
-        status is ProgressState.Status.Running && speed != null && total != null -> {
-            ((total - completed) / speed).seconds
-        }
-
-        else -> null
-    }
+    val eta = calculateTimeRemaining(elapsedWhenFinished)
     val p = if (isFinished && elapsedWhenFinished) elapsedPrefix else prefix
     val maxEta = 35_999.seconds // 9:59:59
     val duration = if (eta != null && eta <= maxEta) eta else null
@@ -254,13 +244,7 @@ fun ProgressLayoutScope<*>.timeElapsed(
     verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
 ) = cell(ColumnWidth.Auto, fps = fps, verticalAlign = verticalAlign) {
-    val elapsed = when (status) {
-        ProgressState.Status.NotStarted -> null
-        is ProgressState.Status.Finished -> status.finishTime - status.startTime
-        is ProgressState.Status.Paused -> status.pauseTime - status.startTime
-        is ProgressState.Status.Running -> status.startTime.elapsedNow()
-    }
-    Text(style(renderDuration(elapsed, compact)), whitespace = Whitespace.PRE)
+    Text(style(renderDuration(calculateTimeElapsed(), compact)), whitespace = Whitespace.PRE)
 }
 
 /**

@@ -2,10 +2,11 @@ package com.github.ajalt.mordant.widgets.progress
 
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
 import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
 // TODO: docs
-// TODO: make total and completed `Double`?
 data class ProgressState<T>(
     /** The context object passed to the progress task. */
     val context: T,
@@ -70,36 +71,65 @@ val <T> ProgressState<T>.isFinished: Boolean get() = status is Status.Finished
  * The time that this task started, or `null` if it hasn't started.
  */
 val Status.startTime: ComparableTimeMark?
-    get() {
-        return when (this) {
-            is Status.NotStarted -> null
-            is Status.Running -> startTime
-            is Status.Paused -> startTime
-            is Status.Finished -> startTime
-        }
+    get() = when (this) {
+        is Status.NotStarted -> null
+        is Status.Running -> startTime
+        is Status.Paused -> startTime
+        is Status.Finished -> startTime
     }
 
 /**
  * The time that this task was paused, or `null` if it isn't paused.
  */
 val Status.pauseTime: ComparableTimeMark?
-    get() {
-        return when (this) {
-            is Status.Paused -> pauseTime
-            else -> null
-        }
+    get() = when (this) {
+        is Status.Paused -> pauseTime
+        else -> null
     }
 
 /**
  * The time that this task finished, or `null` if it isn't finished.
  */
 val Status.finishTime: ComparableTimeMark?
-    get() {
-        return when (this) {
-            is Status.Finished -> finishTime
-            else -> null
-        }
+    get() = when (this) {
+        is Status.Finished -> finishTime
+        else -> null
     }
+
+/**
+ * Calculate the estimated time remaining for this task, or `null` if the time cannot be estimated.
+ *
+ * @param elapsedWhenFinished If `true`, return the total elapsed time when the task is finished.
+ */
+fun ProgressState<*>.calculateTimeRemaining(elapsedWhenFinished: Boolean = true): Duration? {
+    return when {
+        status is Status.Finished && elapsedWhenFinished -> {
+            status.finishTime - status.startTime
+        }
+
+        status is Status.Running && speed != null && speed > 0 && total != null -> {
+            ((total - completed) / speed).seconds
+        }
+
+        else -> null
+    }
+}
+
+/**
+ * Calculate the time elapsed for this task, or `null` if the task hasn't started.
+ *
+ * If the task is finished or paused, the elapsed time is the time between the start and
+ * finish/pause times. If the task is running, the elapsed time is the time between the start and
+ * now.
+ */
+fun ProgressState<*>.calculateTimeElapsed(): Duration? {
+    return when (status) {
+        Status.NotStarted -> null
+        is Status.Finished -> status.finishTime - status.startTime
+        is Status.Paused -> status.pauseTime - status.startTime
+        is Status.Running -> status.startTime.elapsedNow()
+    }
+}
 
 /**
  * Return the number of frames that have elapsed at the given [fps] since the start of the
