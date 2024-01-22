@@ -43,7 +43,7 @@ interface ProgressLayoutScope<T> {
      */
     fun cell(
         width: ColumnWidth = ColumnWidth.Auto,
-        fps: Int = TEXT_FPS,
+        fps: Int = textFps,
         align: TextAlign? = null,
         verticalAlign: VerticalAlign? = null,
         content: ProgressState<T>.() -> Widget,

@@ -74,8 +74,9 @@ interface CellStyleBuilder : CellStyleBuilderBase {
 }
 
 sealed class ColumnWidth {
-    // TODO: this is a separate class for backwards compatibility; make other ColumnWidth subclasses
+    // TODO(3.0): this is a separate class for backwards compatibility; make other ColumnWidth subclasses
     //  instances of this in 3.0
+    // TODO(3.0): add a `minimumWidth?` field and use it for progress cells like timeRemaining
     /**
      * A column width with custom behavior.
      */
