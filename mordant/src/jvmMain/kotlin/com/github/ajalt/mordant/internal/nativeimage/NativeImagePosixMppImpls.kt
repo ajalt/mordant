@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.nativeimage
 
 import com.github.ajalt.mordant.internal.MppImpls
+import com.github.ajalt.mordant.internal.Size
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.Platforms
 import org.graalvm.nativeimage.StackValue
@@ -57,12 +58,12 @@ internal class NativeImagePosixMppImpls : MppImpls {
     override fun stdinInteractive() = PosixLibC.isatty(PosixLibC.STDIN_FILENO())
     override fun stderrInteractive() = PosixLibC.isatty(PosixLibC.STDERR_FILENO())
 
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         val size = StackValue.get(PosixLibC.winsize::class.java)
         return if (PosixLibC.ioctl(0, PosixLibC.TIOCGWINSZ(), size) < 0) {
             null
         } else {
-            size.ws_col.toInt() to size.ws_row.toInt()
+            Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
         }
     }
 }

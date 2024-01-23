@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.jna
 
 import com.github.ajalt.mordant.internal.MppImpls
+import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.Library
 import com.sun.jna.Native
@@ -20,6 +21,7 @@ private interface WinKernel32Lib : Library {
         const val STD_OUTPUT_HANDLE = -11
         const val STD_ERROR_HANDLE = -12
     }
+
     class HANDLE : PointerType()
 
     @Structure.FieldOrder("X", "Y")
@@ -46,7 +48,13 @@ private interface WinKernel32Lib : Library {
         var Bottom: Short = 0
     }
 
-    @Structure.FieldOrder("dwSize", "dwCursorPosition", "wAttributes", "srWindow", "dwMaximumWindowSize")
+    @Structure.FieldOrder(
+        "dwSize",
+        "dwCursorPosition",
+        "wAttributes",
+        "srWindow",
+        "dwMaximumWindowSize"
+    )
     class CONSOLE_SCREEN_BUFFER_INFO : Structure() {
         @JvmField
         var dwSize: COORD? = null
@@ -74,7 +82,8 @@ private interface WinKernel32Lib : Library {
 
 @Delete
 internal class JnaWin32MppImpls : MppImpls {
-    private val kernel = Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
+    private val kernel =
+        Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS);
     private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)
     private val stderrHandle = kernel.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE)
@@ -90,11 +99,11 @@ internal class JnaWin32MppImpls : MppImpls {
         return kernel.GetConsoleMode(stderrHandle, IntByReference())
     }
 
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         val csbi = WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO()
         if (!kernel.GetConsoleScreenBufferInfo(stdoutHandle, csbi)) {
             return null
         }
-        return csbi.srWindow?.run { Right - Left + 1 to Bottom - Top + 1 }
+        return csbi.srWindow?.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 }

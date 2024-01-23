@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.jna
 
 import com.github.ajalt.mordant.internal.MppImpls
+import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 import java.io.IOException
@@ -53,7 +54,7 @@ internal class JnaMacosMppImpls : MppImpls {
     override fun stderrInteractive(): Boolean = libC.isatty(STDERR_FILENO) == 1
 
     override fun fastIsTty(): Boolean = false
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         // TODO: this seems to fail on macosArm64, use stty on mac for now
 //        val size = MacosLibC.winsize()
 //        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
@@ -65,11 +66,10 @@ internal class JnaMacosMppImpls : MppImpls {
     }
 
 
-
 }
 
 @Suppress("SameParameterValue")
-private fun getSttySize(timeoutMs: Long): Pair<Int, Int>? {
+private fun getSttySize(timeoutMs: Long): Size? {
     val process = when {
         // Try running stty both directly and via env, since neither one works on all systems
         else -> runCommand("stty", "size") ?: runCommand("/usr/bin/env", "stty", "size")
@@ -98,8 +98,8 @@ private fun runCommand(vararg args: String): Process? {
     }
 }
 
-private fun parseSttySize(output: String): Pair<Int, Int>? {
+private fun parseSttySize(output: String): Size? {
     val dimens = output.split(" ").mapNotNull { it.toIntOrNull() }
     if (dimens.size != 2) return null
-    return dimens[1] to dimens[0]
+    return Size(width = dimens[1], height = dimens[0])
 }

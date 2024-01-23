@@ -45,7 +45,7 @@ private interface JsMppImpls {
     fun stdoutInteractive(): Boolean
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
-    fun getTerminalSize(): Pair<Int, Int>?
+    fun getTerminalSize(): Size?
     fun printStderr(message: String, newline: Boolean)
     fun readLineOrNull(): String?
 }
@@ -55,7 +55,7 @@ private object BrowserMppImpls : JsMppImpls {
     override fun stdoutInteractive(): Boolean = false
     override fun stdinInteractive(): Boolean = false
     override fun stderrInteractive(): Boolean = false
-    override fun getTerminalSize(): Pair<Int, Int>? = null
+    override fun getTerminalSize(): Size? = null
     override fun printStderr(message: String, newline: Boolean) {
         // No way to avoid the newline on browsers
         console.error(message)
@@ -70,12 +70,12 @@ private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
     override fun stderrInteractive(): Boolean = js("Boolean(process.stderr.isTTY)") as Boolean
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         // For some undocumented reason, getWindowSize is undefined sometimes, presumably when isTTY
         // is false
         if (process.stdout.getWindowSize == undefined) return null
         val s = process.stdout.getWindowSize()
-        return s[0] as Int to s[1] as Int
+        return Size(width = s[0] as Int, height =  s[1] as Int)
     }
 
     override fun printStderr(message: String, newline: Boolean) {
@@ -108,7 +108,7 @@ private val impls: JsMppImpls = try {
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
-internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
+internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()

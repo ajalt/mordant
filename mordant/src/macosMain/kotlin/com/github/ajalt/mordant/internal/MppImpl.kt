@@ -9,13 +9,13 @@ import platform.posix.ioctl
 import platform.posix.winsize
 
 @OptIn(ExperimentalForeignApi::class)
-internal actual fun getTerminalSize(): Pair<Int, Int>? {
+internal actual fun getTerminalSize(): Size? {
     return memScoped {
         val size = alloc<winsize>()
         if (ioctl(STDIN_FILENO, TIOCGWINSZ, size) < 0) {
             null
         } else {
-            size.ws_col.toInt() to size.ws_row.toInt()
+            Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
         }
     }
 }
