@@ -138,5 +138,5 @@ private val impls: MppImpls = System.getProperty("os.name").let { os ->
 
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
-internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
+internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual val FAST_ISATTY: Boolean = true

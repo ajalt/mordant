@@ -7,7 +7,7 @@ import platform.windows.*
 
 
 // https://docs.microsoft.com/en-us/windows/console/getconsolescreenbufferinfo
-internal actual fun getTerminalSize(): Pair<Int, Int>? = memScoped {
+internal actual fun getTerminalSize(): Size? = memScoped {
     val csbi = alloc<CONSOLE_SCREEN_BUFFER_INFO>()
     val stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE)
     if (stdoutHandle == INVALID_HANDLE_VALUE) {
@@ -17,7 +17,7 @@ internal actual fun getTerminalSize(): Pair<Int, Int>? = memScoped {
     if (GetConsoleScreenBufferInfo(stdoutHandle, csbi.ptr) == 0) {
         return@memScoped null
     }
-    csbi.srWindow.run { Right - Left + 1 to Bottom - Top + 1 }
+    csbi.srWindow.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
 }
 
 // https://docs.microsoft.com/en-us/windows/console/setconsolemode

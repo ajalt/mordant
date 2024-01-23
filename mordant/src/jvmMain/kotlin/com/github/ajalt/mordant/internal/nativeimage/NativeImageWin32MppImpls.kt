@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.nativeimage
 
 import com.github.ajalt.mordant.internal.MppImpls
+import com.github.ajalt.mordant.internal.Size
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.Platforms
 import org.graalvm.nativeimage.StackValue
@@ -79,13 +80,13 @@ internal class NativeImageWin32MppImpls : MppImpls {
         return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
     }
 
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         val csbi = StackValue.get(WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO::class.java)
         val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
         return if (!WinKernel32Lib.GetConsoleScreenBufferInfo(handle, csbi.rawValue())) {
             null
         } else {
-            csbi.Right - csbi.Left + 1 to csbi.Bottom - csbi.Top + 1
+            Size(width = csbi.Right - csbi.Left + 1, height = csbi.Bottom - csbi.Top + 1)
         }
     }
 

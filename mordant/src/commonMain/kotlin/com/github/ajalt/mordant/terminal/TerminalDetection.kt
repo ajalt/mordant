@@ -30,13 +30,13 @@ internal object TerminalDetection {
         )
     }
 
-    /** Returns a pair of `[width, height]`, or `null` if the size can't be detected */
-    fun detectSize(): Pair<Int, Int>? = getTerminalSize()
+    /** Returns the size, or `null` if the size can't be detected */
+    fun detectSize(): Size? = getTerminalSize()
 
-    private fun detectInitialSize(): Pair<Int, Int> {
-        return getTerminalSize() ?: Pair(
-            (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
-            (getEnv("LINES")?.toIntOrNull() ?: 24)
+    private fun detectInitialSize(): Size {
+        return getTerminalSize() ?: Size(
+            width = (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
+            height = (getEnv("LINES")?.toIntOrNull() ?: 24)
         )
     }
 

@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.MppAtomicRef
+import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.rendering.OverflowWrap
 import com.github.ajalt.mordant.rendering.TextAlign
@@ -40,7 +41,7 @@ abstract class Animation<T>(
     private val terminal: Terminal,
 ) {
     private data class State(
-        var size: Pair<Int, Int>? = null,
+        var size: Size? = null,
         var text: String? = null,
         var needsClear: Boolean = false,
         var interceptorInstalled: Boolean = false,
@@ -128,7 +129,7 @@ abstract class Animation<T>(
             copy(
                 // To avoid flickering don't clear the screen if the render will completely cover
                 // the last frame
-                needsClear = size?.let { (h, w) -> height < h || width < w } ?: false,
+                needsClear = size?.let { (w, h) -> height < h || width < w } ?: false,
                 interceptorInstalled = true,
                 text = terminal.render(rendered)
             )
@@ -139,11 +140,11 @@ abstract class Animation<T>(
         // Print an empty renderable to trigger our interceptor, which will add the rendered text
         terminal.print(EmptyWidget)
         // Update the size now that the old frame has been cleared
-        state.update { copy(size = height to width) }
+        state.update { copy(size = Size(width, height)) }
     }
 
-    private fun getCursorMoves(clearScreen: Boolean, size: Pair<Int, Int>?): String? {
-        val (height, _) = size ?: return null
+    private fun getCursorMoves(clearScreen: Boolean, size: Size?): String? {
+        val (_, height) = size ?: return null
         return terminal.cursor.getMoves {
             startOfLine()
             up(if (trailingLinebreak && !terminal.info.crClearsLine) height else height - 1)

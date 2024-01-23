@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.jna
 
 import com.github.ajalt.mordant.internal.MppImpls
+import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.Library
 import com.sun.jna.Native
@@ -50,12 +51,12 @@ internal class JnaLinuxMppImpls : MppImpls {
     override fun stdinInteractive(): Boolean = libC.isatty(STDIN_FILENO) == 1
     override fun stderrInteractive(): Boolean = libC.isatty(STDERR_FILENO) == 1
 
-    override fun getTerminalSize(): Pair<Int, Int>? {
+    override fun getTerminalSize(): Size? {
         val size = PosixLibC.winsize()
         return if (libC.ioctl(STDIN_FILENO, TIOCGWINSZ, size) < 0) {
             null
         } else {
-            size.ws_col.toInt() to size.ws_row.toInt()
+            Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
         }
     }
 }

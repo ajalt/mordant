@@ -31,7 +31,7 @@ internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
 internal expect fun getEnv(key: String): String?
 
 /** Return a pair of [width, height], or null if it can't be detected */
-internal expect fun getTerminalSize(): Pair<Int, Int>?
+internal expect fun getTerminalSize(): Size?
 
 internal expect fun runningInIdeaJavaAgent(): Boolean
 
