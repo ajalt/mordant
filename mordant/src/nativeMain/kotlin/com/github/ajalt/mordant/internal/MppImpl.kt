@@ -134,13 +134,23 @@ private class NativeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(ter
     }
 }
 
+private val printRequestLock = AtomicInt(0)
 
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
 ) {
-    terminalInterface.completePrintRequest(
-        interceptors.fold(request) { acc, it -> it.intercept(acc) }
-    )
+    while(printRequestLock.compareAndSet(0, 1)) {
+        // spin until we get the lock
+    }
+    try {
+        terminalInterface.completePrintRequest(
+            interceptors.fold(request) { acc, it -> it.intercept(acc) }
+        )
+    } finally {
+        printRequestLock.value = 0
+    }
 }
+
+internal actual val FAST_ISATTY: Boolean = true

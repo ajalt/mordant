@@ -154,3 +154,5 @@ internal actual fun sendInterceptedPrintRequest(
         interceptors.fold(request) { acc, it -> it.intercept(acc) }
     )
 }
+
+internal actual val FAST_ISATTY: Boolean = true

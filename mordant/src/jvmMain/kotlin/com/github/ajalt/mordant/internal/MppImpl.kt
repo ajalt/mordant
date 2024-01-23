@@ -24,7 +24,7 @@ private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     }
 }
 
-private class JvmAtomicInt(initial: Int): MppAtomicInt {
+private class JvmAtomicInt(initial: Int) : MppAtomicInt {
     private val backing = AtomicInteger(initial)
     override fun getAndIncrement(): Int {
         return backing.getAndIncrement()
@@ -76,14 +76,16 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
     return readlnOrNull()
 }
 
-internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = JvmTerminalCursor(terminal)
+internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor {
+    return JvmTerminalCursor(terminal)
+}
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
     private var shutdownHook: Thread? = null
-    private val lock = Any()
+    private val cursorLock = Any()
 
     override fun show() {
-        synchronized(lock) {
+        synchronized(cursorLock) {
             shutdownHook?.let { hook ->
                 Runtime.getRuntime().removeShutdownHook(hook)
             }
@@ -93,7 +95,7 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
 
     override fun hide(showOnExit: Boolean) {
         if (showOnExit) {
-            synchronized(lock) {
+            synchronized(cursorLock) {
                 if (shutdownHook == null) {
                     shutdownHook = Thread { super.show() }
                     Runtime.getRuntime().addShutdownHook(shutdownHook)
@@ -104,12 +106,16 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
     }
 }
 
+private val printRequestLock = Any()
+
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
-) {
-    terminalInterface.completePrintRequest(interceptors.fold(request) { acc, it -> it.intercept(acc) })
+) = synchronized(printRequestLock) {
+    terminalInterface.completePrintRequest(interceptors.fold(request) { acc, it ->
+        it.intercept(acc)
+    })
 }
 
 private val impls: MppImpls = System.getProperty("os.name").let { os ->
@@ -119,7 +125,7 @@ private val impls: MppImpls = System.getProperty("os.name").let { os ->
         val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
         when {
             isNativeImage && os.startsWith("Windows") -> NativeImageWin32MppImpls()
-            isNativeImage && (os == "Linux"  || os == "Mac OS X") -> NativeImagePosixMppImpls()
+            isNativeImage && (os == "Linux" || os == "Mac OS X") -> NativeImagePosixMppImpls()
             os.startsWith("Windows") -> JnaWin32MppImpls()
             os == "Linux" -> JnaLinuxMppImpls()
             os == "Mac OS X" -> JnaMacosMppImpls()
@@ -133,3 +139,4 @@ private val impls: MppImpls = System.getProperty("os.name").let { os ->
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun getTerminalSize(): Pair<Int, Int>? = impls.getTerminalSize()
+internal actual val FAST_ISATTY: Boolean = true
