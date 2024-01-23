@@ -52,3 +52,5 @@ internal expect fun sendInterceptedPrintRequest(
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
 )
+
+internal expect val FAST_ISATTY: Boolean

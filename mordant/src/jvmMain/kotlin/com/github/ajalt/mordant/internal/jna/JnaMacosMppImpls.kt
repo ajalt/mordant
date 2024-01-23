@@ -52,6 +52,7 @@ internal class JnaMacosMppImpls : MppImpls {
     override fun stdinInteractive(): Boolean = libC.isatty(STDIN_FILENO) == 1
     override fun stderrInteractive(): Boolean = libC.isatty(STDERR_FILENO) == 1
 
+    override fun fastIsTty(): Boolean = false
     override fun getTerminalSize(): Pair<Int, Int>? {
         // TODO: this seems to fail on macosArm64, use stty on mac for now
 //        val size = MacosLibC.winsize()

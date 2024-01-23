@@ -6,6 +6,7 @@ internal interface MppImpls {
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
     fun getTerminalSize(): Pair<Int, Int>?
+    fun fastIsTty(): Boolean = true
 }
 
 
@@ -15,4 +16,5 @@ internal class FallbackMppImpls : MppImpls {
     override fun stdinInteractive(): Boolean = System.console() != null
     override fun stderrInteractive(): Boolean = System.console() != null
     override fun getTerminalSize(): Pair<Int, Int>? = null
+    override fun fastIsTty(): Boolean = false
 }
