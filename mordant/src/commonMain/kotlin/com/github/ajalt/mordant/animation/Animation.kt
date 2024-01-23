@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.FAST_ISATTY
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.update
@@ -41,33 +42,49 @@ abstract class Animation<T>(
     private val terminal: Terminal,
 ) {
     private data class State(
-        var size: Size? = null,
-        var text: String? = null,
-        var needsClear: Boolean = false,
-        var interceptorInstalled: Boolean = false,
-        // Don't move the cursor the first time the animation is drawn
-        var firstDraw: Boolean = true,
+        val size: Size? = null,
+        val lastSize: Size? = null,
+        val lastTerminalSize: Size? = null,
+        val text: String? = null,
+        val interceptorInstalled: Boolean = false,
+        val firstDraw: Boolean = true,
     )
 
     private val state = MppAtomicRef(State())
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        val (old, new) = state.update { copy(firstDraw = false) }
-        val t = old.text ?: return@TerminalInterceptor req
-        // TODO: this seems to add an extra newline at the end of the animation
+        val terminalSize = Size(terminal.info.width, terminal.info.height)
+        val (st, _) = state.update {
+            copy(
+                firstDraw = false,
+                lastTerminalSize = terminalSize,
+            )
+        }
+        val t = st.text ?: return@TerminalInterceptor req
+        // To avoid flickering don't clear the screen if the render will completely cover
+        // the last frame
+        val clearScreen = st.lastSize != st.size
+                || st.lastTerminalSize != terminalSize
+                || req.text.isNotEmpty()
         val newText = buildString {
-            if (!old.firstDraw) {
-                val moves = getCursorMoves(old.needsClear || req.text.isNotEmpty(), new.size)
-                moves?.let { append(it) }
-            }
-            if (req.text.isNotEmpty()) {
-                appendLine(req.text)
+            getCursorMoves(
+                firstDraw = st.firstDraw,
+                clearScreen = clearScreen,
+                lastSize = st.lastSize,
+                size = st.size,
+                terminalSize = terminalSize,
+                lastTerminalSize = st.lastTerminalSize,
+            )?.let { append(it) }
+            when {
+                req.text.endsWith("\n") -> append(req.text)
+                req.text.isNotEmpty() -> appendLine(req.text)
             }
             append(t)
         }
+
         PrintRequest(
             text = newText,
-            trailingLinebreak = trailingLinebreak && !terminal.info.crClearsLine,
+            trailingLinebreak = false,
             stderr = req.stderr
         )
     }
@@ -81,7 +98,14 @@ abstract class Animation<T>(
      */
     fun clear() {
         val (old, _) = doStop(true)
-        getCursorMoves(clearScreen = true, old.size)?.let { terminal.rawPrint(it) }
+        getCursorMoves(
+            firstDraw = false,
+            clearScreen = true,
+            lastSize = old.size,
+            size = null,
+            terminalSize = Size(terminal.info.width, terminal.info.height),
+            lastTerminalSize = old.lastTerminalSize,
+        )?.let { terminal.rawPrint(it) }
     }
 
     /**
@@ -111,7 +135,10 @@ abstract class Animation<T>(
                 size = if (clearSize) null else size,
             )
         }
-        if (old.interceptorInstalled) terminal.removeInterceptor(interceptor)
+        if (old.interceptorInstalled) {
+            terminal.removeInterceptor(interceptor)
+            terminal.println()
+        }
         return old to new
     }
 
@@ -122,14 +149,15 @@ abstract class Animation<T>(
      * place.
      */
     fun update(data: T) {
+        if (FAST_ISATTY) terminal.info.updateTerminalSize()
+
         val rendered = renderData(data).render(terminal)
         val height = rendered.height
         val width = rendered.width
         val (old, _) = state.update {
             copy(
-                // To avoid flickering don't clear the screen if the render will completely cover
-                // the last frame
-                needsClear = size?.let { (w, h) -> height < h || width < w } ?: false,
+                size = Size(width, height),
+                lastSize = size,
                 interceptorInstalled = true,
                 text = terminal.render(rendered)
             )
@@ -137,20 +165,44 @@ abstract class Animation<T>(
         if (!old.interceptorInstalled && terminal.info.outputInteractive) {
             terminal.addInterceptor(interceptor)
         }
-        // Print an empty renderable to trigger our interceptor, which will add the rendered text
+        // Print an empty widget to trigger our interceptor, which will add the rendered text
         terminal.print(EmptyWidget)
-        // Update the size now that the old frame has been cleared
-        state.update { copy(size = Size(width, height)) }
     }
 
-    private fun getCursorMoves(clearScreen: Boolean, size: Size?): String? {
-        val (_, height) = size ?: return null
+    private fun getCursorMoves(
+        firstDraw: Boolean,
+        clearScreen: Boolean,
+        lastSize: Size?,
+        size: Size?,
+        terminalSize: Size,
+        lastTerminalSize: Size?,
+    ): String? {
+        if (firstDraw || lastSize == null) return null
         return terminal.cursor.getMoves {
             startOfLine()
-            up(if (trailingLinebreak && !terminal.info.crClearsLine) height else height - 1)
-            if (clearScreen && (height > 1 || !terminal.info.crClearsLine)) {
-                clearScreenAfterCursor()
+
+            if (terminal.info.crClearsLine) {
+                // IntelliJ doesn't support cursor moves, so this is all we can do
+                return@getMoves
             }
+
+            val terminalShrank = lastTerminalSize != null
+                    && terminalSize.width < lastTerminalSize.width
+                    && terminalSize.width < lastSize.width
+            val widgetShrank = size != null && (
+                    size.width < lastSize.width
+                            || size.height < lastSize.height
+                    )
+            val up = if (terminalShrank) {
+                // The terminal shrank and caused the text to wrap, we need to move back to the
+                // start of the text
+                lastSize.height * (lastSize.width.toDouble() / terminalSize.width).toInt()
+            } else {
+                lastSize.height - 1
+            }
+
+            up(up)
+            if (terminalShrank || widgetShrank || clearScreen) clearScreenAfterCursor()
         }
     }
 }
