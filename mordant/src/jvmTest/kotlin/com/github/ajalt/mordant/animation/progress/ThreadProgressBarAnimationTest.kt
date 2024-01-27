@@ -65,7 +65,7 @@ class ThreadProgressBarAnimationTest {
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfterLast("${CSI}1A").trimEnd()
+        return output().substringAfterLast("\r").trimEnd()
     }
 }
 
