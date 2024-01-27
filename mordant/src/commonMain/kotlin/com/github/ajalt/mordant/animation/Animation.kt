@@ -34,10 +34,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBarLayout
  * cause garbled output, so usage of this class should be serialized.
  */
 abstract class Animation<T>(
-    /**
-     * By default, the animation will include a trailing linebreak. If you set this to false, you
-     * won't be able to use multiple animations simultaneously.
-     */
+    @Deprecated("This parameter is ignored; animations never print a trailing linebreak.")
     private val trailingLinebreak: Boolean = true,
     private val terminal: Terminal,
 ) {
@@ -57,29 +54,28 @@ abstract class Animation<T>(
         val (st, _) = state.update {
             copy(
                 firstDraw = false,
+                lastSize = size,
                 lastTerminalSize = terminalSize,
             )
         }
-        val t = st.text ?: return@TerminalInterceptor req
-        // To avoid flickering don't clear the screen if the render will completely cover
-        // the last frame
-        val clearScreen = st.lastSize != st.size
-                || st.lastTerminalSize != terminalSize
-                || req.text.isNotEmpty()
+        val animationText = st.text ?: return@TerminalInterceptor req
         val newText = buildString {
+            // move the cursor to the start of the widget, then append the request (which might
+            // start with moves if it's an animation), then our text
             getCursorMoves(
                 firstDraw = st.firstDraw,
-                clearScreen = clearScreen,
+                clearScreen = req.text.isNotEmpty(),
                 lastSize = st.lastSize,
                 size = st.size,
                 terminalSize = terminalSize,
                 lastTerminalSize = st.lastTerminalSize,
+                extraUp = if (req.text.startsWith("\r")) 1 else 0, // it's another animation
             )?.let { append(it) }
             when {
                 req.text.endsWith("\n") -> append(req.text)
                 req.text.isNotEmpty() -> appendLine(req.text)
             }
-            append(t)
+            append(animationText)
         }
 
         PrintRequest(
@@ -97,7 +93,7 @@ abstract class Animation<T>(
      * Future calls to [update] will cause the animation to resume.
      */
     fun clear() {
-        val (old, _) = doStop(true)
+        val (old, _) = doStop(clearSize = true, newline = false)
         getCursorMoves(
             firstDraw = false,
             clearScreen = true,
@@ -105,6 +101,8 @@ abstract class Animation<T>(
             size = null,
             terminalSize = Size(terminal.info.width, terminal.info.height),
             lastTerminalSize = old.lastTerminalSize,
+            // if we previously stopped, we need to move up past the final newline we added
+            extraUp = if (old.firstDraw && old.size != null) 1 else 0,
         )?.let { terminal.rawPrint(it) }
     }
 
@@ -123,10 +121,10 @@ abstract class Animation<T>(
      * animation.
      */
     fun stop() {
-        doStop(false)
+        doStop(clearSize = false, newline = true)
     }
 
-    private fun doStop(clearSize: Boolean): Pair<State, State> {
+    private fun doStop(clearSize: Boolean, newline: Boolean): Pair<State, State> {
         val (old, new) = state.update {
             copy(
                 interceptorInstalled = false,
@@ -137,7 +135,7 @@ abstract class Animation<T>(
         }
         if (old.interceptorInstalled) {
             terminal.removeInterceptor(interceptor)
-            terminal.println()
+            if (newline) terminal.println()
         }
         return old to new
     }
@@ -176,6 +174,7 @@ abstract class Animation<T>(
         size: Size?,
         terminalSize: Size,
         lastTerminalSize: Size?,
+        extraUp: Int = 0,
     ): String? {
         if (firstDraw || lastSize == null) return null
         return terminal.cursor.getMoves {
@@ -198,10 +197,13 @@ abstract class Animation<T>(
                 // start of the text
                 lastSize.height * (lastSize.width.toDouble() / terminalSize.width).toInt()
             } else {
-                lastSize.height - 1
+                (lastSize.height - 1).coerceAtLeast(0)
             }
 
-            up(up)
+            up(up + extraUp)
+
+            // To avoid flickering don't clear the screen if the render will completely cover
+            // the last frame
             if (terminalShrank || widgetShrank || clearScreen) clearScreenAfterCursor()
         }
     }
@@ -210,8 +212,6 @@ abstract class Animation<T>(
 /**
  * Create an [Animation] that uses the [draw] function to render objects of type [T].
  *
- * @param trailingLinebreak By default, the animation will include a trailing linebreak. If you set
- *   this to false, you won't be able to use multiple animations simultaneously.
  * @see Animation
  */
 inline fun <T> Terminal.animation(
@@ -226,9 +226,6 @@ inline fun <T> Terminal.animation(
 /**
  * Create an [Animation] that wraps the result of the [draw] function into a [Text] widget and
  * renders it.
- *
- * @param trailingLinebreak By default, the animation will include a trailing linebreak. If you set
- *   this to false, you won't be able to use multiple animations simultaneously.
  */
 inline fun <T> Terminal.textAnimation(
     whitespace: Whitespace = Whitespace.PRE,
