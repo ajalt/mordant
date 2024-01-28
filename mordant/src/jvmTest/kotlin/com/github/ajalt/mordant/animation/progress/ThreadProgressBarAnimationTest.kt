@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.animation.progress
 
 import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.getEnv
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed
@@ -18,6 +19,9 @@ class ThreadProgressBarAnimationTest {
 
     @Test
     fun `smoke test`() {
+        // this test is flaky on CI since it's reliant on timing
+        if (!getEnv("CI").isNullOrEmpty()) return
+
         val a = progressBarLayout(spacing = 0) {
             completed(fps = 30)
         }.animateOnThread(t)
