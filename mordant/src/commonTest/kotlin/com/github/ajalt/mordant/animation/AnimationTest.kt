@@ -137,6 +137,14 @@ class AnimationTest {
             startOfLine(); up(1); clearScreenAfterCursor(); startOfLine()
         }
         rec.output().normalize() shouldBe "${moves}<a1>\n<b3>".normalize()
+
+        rec.clearOutput()
+        a.stop()
+        rec.output().normalize() shouldBe "\r<b3>".normalize()
+
+        rec.clearOutput()
+        b.stop()
+        rec.output().normalize() shouldBe "\n".normalize()
     }
 
 
