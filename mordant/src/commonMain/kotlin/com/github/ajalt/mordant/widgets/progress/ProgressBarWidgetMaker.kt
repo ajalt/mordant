@@ -6,10 +6,25 @@ import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 
 interface ProgressBarWidgetMaker {
+    /**
+     * Build a progress widget from the given [definition] and [states].
+     */
     fun <T> build(
         definition: ProgressBarDefinition<T>,
         states: List<ProgressState<T>>,
     ): Widget
+
+    /**
+     * Build the widgets for each cell in the progress bar.
+     *
+     * This can be used if you want to include the individual cells in a larger layout like a table.
+     *
+     * @return A list of rows, where each row is a list of widgets for the cells in that row.
+     */
+    fun <T> buildCells(
+        definition: ProgressBarDefinition<T>,
+        states: List<ProgressState<T>>,
+    ): List<List<Widget>>
 }
 
 object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
@@ -21,6 +36,15 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
             states.isEmpty() -> EmptyWidget
             definition.alignColumns -> makeTable(definition, states)
             else -> makeLinearLayout(definition, states)
+        }
+    }
+
+    override fun <T> buildCells(
+        definition: ProgressBarDefinition<T>,
+        states: List<ProgressState<T>>,
+    ): List<List<Widget>> {
+        return states.map {
+            definition.cells.map { cell -> cell.content(it) }
         }
     }
 

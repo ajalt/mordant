@@ -4,11 +4,13 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextColors.red
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.rendering.VerticalAlign
+import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
+import io.kotest.data.table
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.ComparableTimeMark
@@ -342,6 +344,34 @@ class ProgressLayoutTest : RenderingTest() {
             ░|     2        |
             ░|        3     |
             ░|  1        4  |
+            """
+        )
+    }
+
+    @Test
+    fun buildCells() {
+        val layout = progressBarContextLayout<Int> {
+            text { "a$context" }
+            text { "b$context" }
+        }
+        val cells = layout.cache().buildCells(
+            listOf(
+                ProgressState(1, 1, 1, start, Running(start)),
+                ProgressState(2, 2, 2, start, Running(start)),
+            )
+        )
+        val widget = table {
+            body {
+                cells.forEach { rowFrom(it) }
+            }
+        }
+        checkRender(
+            widget, """
+            ░┌────┬────┐
+            ░│ a1 │ b1 │
+            ░├────┼────┤
+            ░│ a2 │ b2 │
+            ░└────┴────┘
             """
         )
     }

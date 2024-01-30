@@ -21,6 +21,13 @@ interface CachedProgressBarWidgetMaker<T> {
     fun build(states: List<ProgressState<T>>): Widget
 
     /**
+     * Build the widgets for each cell in the progress bar.
+     *
+     * @return A list of rows, where each row is a list of widgets for the cells in that row.
+     */
+    fun buildCells(states: List<ProgressState<T>>): List<List<Widget>>
+
+    /**
      * Invalidate the cache for the task with id [taskId], or all tasks if [taskId] is null.
      */
     fun invalidateCache(taskId: TaskId? = null)
@@ -141,6 +148,10 @@ private class CachedProgressBarWidgetMakerImpl<T>(
 
     override fun build(states: List<ProgressState<T>>): Widget {
         return maker.build(d, states)
+    }
+
+    override fun buildCells(states: List<ProgressState<T>>): List<List<Widget>> {
+        return maker.buildCells(d, states)
     }
 
     override val refreshRate: Int get() = d.cells.maxOfOrNull { it.fps } ?: 0
