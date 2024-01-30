@@ -77,6 +77,11 @@ fun ProgressTask<*>.update(completed: Long) = update { this.completed = complete
  */
 fun ProgressTask<*>.update(completed: Number) = update(completed.toLong())
 
+// This isn't a RefreshableAnimation because the coroutine animator needs its methods to be
+// suspending
+/**
+ * An animation that can draw one or more progress [tasks][addTask] to the screen.
+ */
 interface ProgressBarAnimation<T> {
     fun addTask(
         context: T,
@@ -99,11 +104,11 @@ interface ProgressBarAnimation<T> {
      * If [visible] is `false`, this call has no effect.
      *
      * This is called automatically when the animation is running, so you don't usually need to call
-     * it manually.
+     * it yourself.
      *
      * @param refreshAll If `true`, refresh all cells, ignoring their [fps][ProgressBarCell.fps].
      */
-    fun refresh(refreshAll:Boolean = false)
+    fun refresh(refreshAll: Boolean = false)
 
     /**
      * Set to `false` to remove the animation from the screen.
