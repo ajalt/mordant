@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.animation.progress
 
+import com.github.ajalt.mordant.animation.RefreshableAnimation
 import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status
-import kotlin.jvm.Transient
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -19,7 +19,7 @@ class BaseProgressBarAnimation<T>(
     private val maker: CachedProgressBarWidgetMaker<T>,
     private val clearWhenFinished: Boolean = false,
     private val speedEstimateDuration: Duration = 30.seconds,
-) : ProgressBarAnimation<T> {
+) : RefreshableAnimation, ProgressBarAnimation<T> {
     private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
 
     private val state = MppAtomicRef(State(true, listOf<ProgressTaskImpl<T>>()))
@@ -65,17 +65,11 @@ class BaseProgressBarAnimation<T>(
         }
     }
 
-    /**
-     * Stop the animation, but leave it on the screen.
-     */
-    fun stop() {
+    override fun stop() {
         animation.stop()
     }
 
-    /**
-     * Stop the animation and remove it from the screen.
-     */
-    fun clear() {
+    override fun clear() {
         animation.clear()
     }
 

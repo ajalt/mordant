@@ -147,7 +147,6 @@ class AnimationTest {
         rec.output().normalize() shouldBe "\n".normalize()
     }
 
-
     private fun String.normalize(): String {
         return replace("\r", "␍").replace("\n", "␊").replace(CSI, "␛")
     }

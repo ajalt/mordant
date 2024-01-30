@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation.progress
 
+import com.github.ajalt.mordant.animation.textAnimation
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.getEnv
 import com.github.ajalt.mordant.terminal.Terminal
@@ -11,12 +12,21 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
+private const val HIDE_CURSOR = "$CSI?25l"
 private const val SHOW_CURSOR = "$CSI?25h"
+private const val CLEAR_SCREEN = "${CSI}0J"
 
-class ThreadProgressBarAnimationTest {
+class ThreadAnimatorTest {
     private val vt = TerminalRecorder(width = 56)
     private val t = Terminal(terminalInterface = vt)
 
+    @Test
+    fun `unit animator`() {
+        var i = 1
+        val a = t.textAnimation<Unit> { "${i++}" }.animateOnThread(fps=10000) { i >2 }
+        a.runBlocking()
+        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3\r$CLEAR_SCREEN${SHOW_CURSOR}\n3"
+    }
     @Test
     fun `smoke test`() {
         // this test is flaky on CI since it's reliant on timing

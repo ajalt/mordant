@@ -36,7 +36,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 abstract class Animation<T>(
     @Deprecated("This parameter is ignored; animations never print a trailing linebreak.")
     private val trailingLinebreak: Boolean = true,
-    private val terminal: Terminal,
+    val terminal: Terminal,
 ) {
     private data class State(
         val size: Size? = null,
@@ -113,12 +113,6 @@ abstract class Animation<T>(
      * this animation.
      *
      * Future calls to [update] will cause the animation to start again.
-     *
-     * ### Note
-     *
-     * If running on JVM when [TerminalInfo.crClearsLine] is true (such as on the IntelliJ built-in
-     * console), this will not print a trailing newline, leaving the cursor on the same line as the
-     * animation.
      */
     fun stop() {
         doStop(clearSize = false, newline = true)

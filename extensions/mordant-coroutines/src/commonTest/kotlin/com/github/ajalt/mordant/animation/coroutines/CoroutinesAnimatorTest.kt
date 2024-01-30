@@ -2,11 +2,11 @@ package com.github.ajalt.mordant.animation.coroutines
 
 import com.github.ajalt.mordant.animation.progress.addTask
 import com.github.ajalt.mordant.animation.progress.update
+import com.github.ajalt.mordant.animation.textAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
-import com.github.ajalt.mordant.widgets.progress.text
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ private const val HIDE_CURSOR = "$CSI?25l"
 private const val SHOW_CURSOR = "$CSI?25h"
 
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
-class CoroutinesProgressBarAnimationTest {
+class CoroutinesAnimatorTest {
     private val vt = TerminalRecorder(width = 56)
     private val t = Terminal(terminalInterface = vt)
 
@@ -39,7 +39,7 @@ class CoroutinesProgressBarAnimationTest {
         val job = backgroundScope.launch { a.run() }
 
         advanceTimeBy(0.1.seconds)
-        vt.normalizedOutput() shouldBe "$CSI?25l    0.0/10.0a    0.0/10.0b" // hide cursor
+        vt.normalizedOutput() shouldBe "$CSI?25l        0/10a        0/10b" // hide cursor
         vt.clearOutput()
 
         t.update(5)
@@ -47,11 +47,11 @@ class CoroutinesProgressBarAnimationTest {
         vt.output() shouldBe ""
 
         advanceTimeBy(0.4.seconds)
-        vt.normalizedOutput() shouldBe "    0.0/10.0a    5.0/10.0b"
+        vt.normalizedOutput() shouldBe "        0/10a        5/10b"
 
         vt.clearOutput()
         advanceTimeBy(0.5.seconds)
-        vt.normalizedOutput() shouldBe "    5.0/10.0a    5.0/10.0b"
+        vt.normalizedOutput() shouldBe "        5/10a        5/10b"
 
         advanceTimeBy(10.seconds)
 
@@ -63,12 +63,12 @@ class CoroutinesProgressBarAnimationTest {
     }
 
     @Test
-    @JsName("test_stop_and_clear")
-    fun `test stop and clear`() = runTest {
+    @JsName("stop_and_clear")
+    fun `stop and clear`() = runTest {
         val a = progressBarLayout(spacing = 0, textFps = 1) {
             completed()
         }.animateInCoroutine(t, testTimeSource)
-        val t = a.addTask(total = 10)
+        a.addTask(total = 10)
         var job = backgroundScope.launch { a.run() }
         advanceTimeBy(0.1.seconds)
         a.stop()
@@ -82,10 +82,35 @@ class CoroutinesProgressBarAnimationTest {
         a.clear()
         advanceTimeBy(1.0.seconds)
         job.isActive shouldBe false
-        vt.output() shouldBe "$HIDE_CURSOR        0/10\n\r${CSI}1A${CSI}0J$SHOW_CURSOR"
+        vt.output() shouldBe "$HIDE_CURSOR        0/10\r${CSI}0J$SHOW_CURSOR"
+    }
+
+    @Test
+    @JsName("unit_animation")
+    fun `unit animation`() = runTest {
+        var i = 1
+        var fin = false
+        val a = t.textAnimation<Unit> { "$i" }.animateInCoroutine(fps = 1) { fin }
+        val job = backgroundScope.launch { a.run() }
+        advanceTimeBy(0.1.seconds)
+        vt.normalizedOutput() shouldBe "$CSI?25l1" // hide cursor
+        vt.clearOutput()
+
+        i=2
+        advanceTimeBy(0.1.seconds)
+        vt.output() shouldBe ""
+
+        advanceTimeBy(1.0.seconds)
+        vt.normalizedOutput() shouldBe "2"
+
+        job.isActive shouldBe true
+        fin = true
+
+        advanceTimeBy(1.seconds)
+        job.isActive shouldBe false
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimEnd()
+        return output().substringAfter("\r").trimEnd()
     }
 }
