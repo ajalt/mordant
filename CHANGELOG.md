@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.3.0
 ### Added
 - Vararg constructors for `UnorderedList` and `OrderedList`
 - `UnorderedList` and `OrderedList` now support being empty 
@@ -8,6 +8,9 @@
 
 ### Changed
 - When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 
+
+### Fixed
+- Updated bundled proguard rules [(#130)](https://github.com/ajalt/mordant/issues/130)
 
 ## 2.2.0
 ### Added

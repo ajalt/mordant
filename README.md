@@ -22,7 +22,7 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-   implementation("com.github.ajalt.mordant:mordant:2.2.0")
+   implementation("com.github.ajalt.mordant:mordant:2.3.0")
 }
 ```
 
