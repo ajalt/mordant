@@ -17,12 +17,6 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
-      - name: Cache Kotlin Native Compiler
-        uses: actions/cache@v3
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-konan-
       - uses: graalvm/setup-graalvm@v1
         with:
           java-version: 17
