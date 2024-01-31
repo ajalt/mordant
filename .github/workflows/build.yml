@@ -10,23 +10,13 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [macos-latest,  windows-latest, ubuntu-latest]
+        os: [macos-latest, macos-14, windows-latest, ubuntu-latest]
         include:
-          - os: macos-latest
-            NATIVE_TEST_TASK: :mordant:linkDebugTestMacosArm64 :mordant:macosX64Test
-          - os: windows-latest
-            NATIVE_TEST_TASK: :mordant:mingwX64Test
           - os: ubuntu-latest
-            NATIVE_TEST_TASK: :mordant:linuxX64Test apiCheck
+            EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest apiCheck
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
-      - name: Cache Kotlin Native Compiler
-        uses: actions/cache@v3
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-konan-
       - uses: graalvm/setup-graalvm@v1
         with:
           java-version: 17
@@ -39,11 +29,9 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: |
-            :mordant:jvmTest
-            :mordant:jsTest
-            :test:graalvm:nativeTest
+            :mordant:check
             :test:proguard:r8jar
-            ${{matrix.NATIVE_TEST_TASK}}
+            ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
       - name: Run R8 Jar
         run: java -jar test/proguard/build/libs/main-r8.jar
@@ -56,6 +44,21 @@ jobs:
         with:
           name: error-report
           path: build-reports.zip
-
+  publish:
+    needs: test
+    runs-on: macos-14
+    if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Fetch git tags
+        run: git fetch origin +refs/tags/*:refs/tags/*
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Deploy to sonatype
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :mordant:publish -PinferVersion=true
 env:
   GRADLE_OPTS: -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true -Dorg.gradle.jvmargs="-Xmx256m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
