@@ -50,28 +50,28 @@ class BaseBlockingAnimator(
             stopped = false
             terminal.cursor.hide(showOnExit = true)
         }
-        try {
-            while (synchronized(lock) { !stopped && !animation.finished }) {
-                synchronized(lock) { animation.refresh(refreshAll = false) }
-                Thread.sleep(rate.inWholeMilliseconds)
-            }
-            synchronized(lock) {
-                // final refresh to show finished state
-                if (!stopped) animation.refresh(refreshAll = true)
-            }
-        } finally {
-            synchronized(lock) { terminal.cursor.show() }
+        while (synchronized(lock) { !stopped && !animation.finished }) {
+            synchronized(lock) { animation.refresh(refreshAll = false) }
+            Thread.sleep(rate.inWholeMilliseconds)
+        }
+        synchronized(lock) {
+            // final refresh to show finished state
+            if (!stopped) animation.refresh(refreshAll = true)
         }
     }
 
     override fun stop(): Unit = synchronized(lock) {
-        stopped = true
+        if (stopped) return@synchronized
         animation.stop()
+        terminal.cursor.show()
+        stopped = true
     }
 
     override fun clear(): Unit = synchronized(lock) {
-        stopped = true
+        if (stopped) return@synchronized
         animation.clear()
+        terminal.cursor.show()
+        stopped = true
     }
 
 }
