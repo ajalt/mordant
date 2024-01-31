@@ -1,11 +1,18 @@
-name: Test
+name: Test and Publish
 
 on:
   pull_request:
     paths-ignore:
       - 'docs/**'
+      - 'samples/**'
       - '*.md'
-
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - 'docs/**'
+      - 'samples/**'
+      - '*.md'
 jobs:
   test:
     strategy:
@@ -16,7 +23,7 @@ jobs:
             EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest apiCheck
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: graalvm/setup-graalvm@v1
         with:
           java-version: 17
@@ -49,7 +56,7 @@ jobs:
     runs-on: macos-14
     if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Fetch git tags
         run: git fetch origin +refs/tags/*:refs/tags/*
       - uses: actions/setup-java@v3

@@ -1,15 +1,15 @@
 name: "Validate Gradle Wrapper"
 on:
-  push:
-    paths:
-      - 'gradle/**'
   pull_request:
     paths:
-      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'gradle/wrapper/'
+
 jobs:
   validation:
     name: "Validation"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v4
+      - uses: gradle/wrapper-validation-action@v2
