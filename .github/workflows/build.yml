@@ -13,7 +13,7 @@ jobs:
         os: [macos-latest, macos-14, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            EXTRA_GRADLE_ARGS: apiCheck
+            EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest apiCheck
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +36,6 @@ jobs:
         with:
           arguments: |
             :mordant:check
-            :test:graalvm:nativeTest
             :test:proguard:r8jar
             ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
