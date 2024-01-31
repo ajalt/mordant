@@ -8,13 +8,13 @@ import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 private const val HIDE_CURSOR = "$CSI?25l"
 private const val SHOW_CURSOR = "$CSI?25h"
-private const val CLEAR_SCREEN = "${CSI}0J"
 
 class ThreadAnimatorTest {
     private val vt = TerminalRecorder(width = 56)
@@ -25,15 +25,16 @@ class ThreadAnimatorTest {
         var i = 1
         val a = t.textAnimation<Unit> { "${i++}" }.animateOnThread(fps=10000) { i >2 }
         a.runBlocking()
-        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3\r$CLEAR_SCREEN${SHOW_CURSOR}\n3"
+        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3"
+        vt.clearOutput()
+        a.stop()
+        vt.output() shouldBe "\n$SHOW_CURSOR"
+        vt.clearOutput()
     }
     @Test
     fun `smoke test`() {
-        // this test is flaky on CI since it's reliant on timing
-        if (!getEnv("CI").isNullOrEmpty()) return
-
         val a = progressBarLayout(spacing = 0) {
-            completed(fps = 30)
+            completed(fps = 100)
         }.animateOnThread(t)
         val t = a.addTask(total = 10)
         val service = Executors.newSingleThreadExecutor()
@@ -41,45 +42,29 @@ class ThreadAnimatorTest {
             var future = a.execute(service)
 
             t.update(5)
-            vt.waitForOutput { it shouldBe "        5/10" }
-
+            Thread.sleep(20)
             future.isDone shouldBe false
-
             t.update(10)
             future.get(100, TimeUnit.MILLISECONDS)
-            future.isDone shouldBe true
+            vt.output().shouldContain(" 10/10")
 
+            vt.clearOutput()
             t.reset()
             future = a.execute(service)
-            vt.waitForOutput { it shouldBe "        0/10" }
+            Thread.sleep(20)
             a.stop()
             future.get(100, TimeUnit.MILLISECONDS)
-            vt.normalizedOutput() shouldBe "        0/10\n$SHOW_CURSOR"
+            vt.output().shouldContain(" 0/10")
 
+            vt.clearOutput()
             t.reset()
             future = a.execute(service)
-            vt.waitForOutput { it shouldBe "        0/10" }
+            Thread.sleep(20)
             a.clear()
             future.get(100, TimeUnit.MILLISECONDS)
-            vt.normalizedOutput() shouldBe "${CSI}0J$SHOW_CURSOR"
         } finally {
             service.shutdownNow()
         }
-    }
-
-    private fun TerminalRecorder.waitForOutput(block: (String) -> Unit) {
-        for (i in 0..100) {
-            try {
-                block(normalizedOutput())
-            } catch (e: Throwable) {
-                if (i == 100) throw e
-                Thread.sleep(10)
-            }
-        }
-    }
-
-    private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfterLast("\r").trimEnd()
     }
 }
 

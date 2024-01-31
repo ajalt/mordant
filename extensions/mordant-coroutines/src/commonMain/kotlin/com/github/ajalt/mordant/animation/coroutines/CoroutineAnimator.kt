@@ -44,28 +44,28 @@ class BaseCoroutineAnimator(
             stopped = false
             terminal.cursor.hide(showOnExit = true)
         }
-        try {
-            while (mutex.withLock { !stopped && !animation.finished }) {
-                mutex.withLock { animation.refresh(refreshAll = false) }
-                delay(rate)
-            }
-            mutex.withLock {
-                // final refresh to show finished state
-                if (!stopped) animation.refresh(refreshAll = true)
-            }
-        } finally {
-            mutex.withLock { terminal.cursor.show() }
+        while (mutex.withLock { !stopped && !animation.finished }) {
+            mutex.withLock { animation.refresh(refreshAll = false) }
+            delay(rate)
+        }
+        mutex.withLock {
+            // final refresh to show finished state
+            if (!stopped) animation.refresh(refreshAll = true)
         }
     }
 
     override suspend fun stop(): Unit = mutex.withLock {
-        stopped = true
+        if (stopped) return@withLock
         animation.stop()
+        terminal.cursor.show()
+        stopped = true
     }
 
     override suspend fun clear(): Unit = mutex.withLock {
-        stopped = true
+        if (stopped) return@withLock
         animation.clear()
+        terminal.cursor.show()
+        stopped = true
     }
 }
 
