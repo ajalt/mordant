@@ -2,6 +2,7 @@ public abstract class com/github/ajalt/mordant/animation/Animation {
 	public fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;)V
 	public synthetic fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clear ()V
+	public final fun getTerminal ()Lcom/github/ajalt/mordant/terminal/Terminal;
 	protected abstract fun renderData (Ljava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
 	public final fun stop ()V
 	public final fun update (Ljava/lang/Object;)V
@@ -39,6 +40,124 @@ public final class com/github/ajalt/mordant/animation/ProgressAnimationBuilder :
 
 public final class com/github/ajalt/mordant/animation/ProgressAnimationKt {
 	public static final fun progressAnimation (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/animation/ProgressAnimation;
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation {
+	public abstract fun clear ()V
+	public abstract fun getFinished ()Z
+	public abstract fun refresh (Z)V
+	public abstract fun stop ()V
+}
+
+public final class com/github/ajalt/mordant/animation/RefreshableAnimationKt {
+	public static final fun asRefreshable (Lcom/github/ajalt/mordant/animation/Animation;Lkotlin/jvm/functions/Function0;)Lcom/github/ajalt/mordant/animation/RefreshableAnimation;
+	public static synthetic fun asRefreshable$default (Lcom/github/ajalt/mordant/animation/Animation;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/RefreshableAnimation;
+}
+
+public final class com/github/ajalt/mordant/animation/progress/BaseBlockingAnimator : com/github/ajalt/mordant/animation/progress/BlockingAnimator {
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/animation/RefreshableAnimation;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun clear ()V
+	public fun runBlocking ()V
+	public fun stop ()V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/BaseProgressBarAnimation : com/github/ajalt/mordant/animation/RefreshableAnimation, com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addTask (Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public fun clear ()V
+	public fun getFinished ()Z
+	public fun getVisible ()Z
+	public fun refresh (Z)V
+	public fun removeTask (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;)Z
+	public fun setVisible (Z)V
+	public fun stop ()V
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/progress/BlockingAnimator {
+	public abstract fun clear ()V
+	public abstract fun runBlocking ()V
+	public abstract fun stop ()V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/BlockingProgressBarAnimation : com/github/ajalt/mordant/animation/progress/BlockingAnimator, com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addTask (Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public fun clear ()V
+	public fun getFinished ()Z
+	public fun getVisible ()Z
+	public fun refresh (Z)V
+	public fun removeTask (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;)Z
+	public fun runBlocking ()V
+	public fun setVisible (Z)V
+	public fun stop ()V
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
+	public abstract fun addTask (Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public abstract fun getFinished ()Z
+	public abstract fun getVisible ()Z
+	public abstract fun refresh (Z)V
+	public abstract fun removeTask (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;)Z
+	public abstract fun setVisible (Z)V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation$DefaultImpls {
+	public static synthetic fun addTask$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;Ljava/lang/Object;Ljava/lang/Long;JZZILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public static synthetic fun refresh$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;ZILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/ProgressBarAnimationKt {
+	public static final fun addTask (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public static synthetic fun addTask$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;Ljava/lang/Long;JZZILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public static final fun advance (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;J)V
+	public static final fun advance (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;Ljava/lang/Number;)V
+	public static synthetic fun advance$default (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;JILjava/lang/Object;)V
+	public static final fun update (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;J)V
+	public static final fun update (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;Ljava/lang/Number;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressTask {
+	public abstract fun getCompleted ()J
+	public abstract fun getContext ()Ljava/lang/Object;
+	public abstract fun getFinished ()Z
+	public abstract fun getId ()Lcom/github/ajalt/mordant/widgets/progress/TaskId;
+	public abstract fun getPaused ()Z
+	public abstract fun getStarted ()Z
+	public abstract fun getTotal ()Ljava/lang/Long;
+	public abstract fun getVisible ()Z
+	public abstract fun makeState ()Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
+	public abstract fun reset (ZLkotlin/jvm/functions/Function1;)V
+	public abstract fun update (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/ProgressTask$DefaultImpls {
+	public static synthetic fun reset$default (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressTaskUpdateScope {
+	public abstract fun getCompleted ()J
+	public abstract fun getContext ()Ljava/lang/Object;
+	public abstract fun getPaused ()Z
+	public abstract fun getStarted ()Z
+	public abstract fun getTotal ()Ljava/lang/Long;
+	public abstract fun getVisible ()Z
+	public abstract fun setCompleted (J)V
+	public abstract fun setContext (Ljava/lang/Object;)V
+	public abstract fun setPaused (Z)V
+	public abstract fun setStarted (Z)V
+	public abstract fun setTotal (Ljava/lang/Long;)V
+	public abstract fun setVisible (Z)V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/ThreadAnimatorKt {
+	public static final fun animateOnThread (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;)Lcom/github/ajalt/mordant/animation/progress/BlockingAnimator;
+	public static synthetic fun animateOnThread$default (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/BlockingAnimator;
+	public static final fun animateOnThread-myKFqkg (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/time/TimeSource$WithComparableMarks;ZJLcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/animation/progress/BlockingProgressBarAnimation;
+	public static synthetic fun animateOnThread-myKFqkg$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/time/TimeSource$WithComparableMarks;ZJLcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/BlockingProgressBarAnimation;
+	public static final fun execute (Lcom/github/ajalt/mordant/animation/progress/BlockingAnimator;Ljava/util/concurrent/ExecutorService;)Ljava/util/concurrent/Future;
+	public static synthetic fun execute$default (Lcom/github/ajalt/mordant/animation/progress/BlockingAnimator;Ljava/util/concurrent/ExecutorService;ILjava/lang/Object;)Ljava/util/concurrent/Future;
 }
 
 public final class com/github/ajalt/mordant/markdown/Markdown : com/github/ajalt/mordant/rendering/Widget {
@@ -1135,6 +1254,7 @@ public final class com/github/ajalt/mordant/widgets/Spinner : com/github/ajalt/m
 	public fun <init> (Ljava/util/List;II)V
 	public synthetic fun <init> (Ljava/util/List;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun advanceTick ()I
+	public final fun getCurrentFrame ()Lcom/github/ajalt/mordant/rendering/Widget;
 	public final fun getTick ()I
 	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
 	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
@@ -1168,5 +1288,226 @@ public final class com/github/ajalt/mordant/widgets/UnorderedListKt {
 	public static final fun UnorderedList ([Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
 	public static synthetic fun UnorderedList$default ([Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
 	public static synthetic fun UnorderedList$default ([Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/UnorderedList;
+}
+
+public final class com/github/ajalt/mordant/widgets/Viewport : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/Integer;Ljava/lang/Integer;II)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/Widget;Ljava/lang/Integer;Ljava/lang/Integer;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/BaseProgressBarWidgetMaker : com/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/widgets/progress/BaseProgressBarWidgetMaker;
+	public fun build (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/util/List;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public fun buildCells (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/util/List;)Ljava/util/List;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/BaseProgressLayoutScope : com/github/ajalt/mordant/widgets/progress/ProgressLayoutScope {
+	public fun <init> ()V
+	public fun <init> (IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
+	public synthetic fun <init> (IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun build (IZ)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;
+	public fun cell (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;)V
+	public fun getAlign ()Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public fun getAnimationFps ()I
+	public fun getTextFps ()I
+	public fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+}
+
+public abstract interface class com/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker {
+	public abstract fun build (Ljava/util/List;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public abstract fun buildCells (Ljava/util/List;)Ljava/util/List;
+	public abstract fun getRefreshRate ()I
+	public abstract fun getTimeSource ()Lkotlin/time/TimeSource$WithComparableMarks;
+	public abstract fun invalidateCache (Lcom/github/ajalt/mordant/widgets/progress/TaskId;)V
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker$DefaultImpls {
+	public static synthetic fun invalidateCache$default (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;Lcom/github/ajalt/mordant/widgets/progress/TaskId;ILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMakerKt {
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;[Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun cache (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lkotlin/time/TimeSource$WithComparableMarks;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;
+	public static synthetic fun cache$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lkotlin/time/TimeSource$WithComparableMarks;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;
+	public static final fun getRefreshPeriod (Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;)J
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressBarCell {
+	public fun <init> (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/github/ajalt/mordant/table/ColumnWidth;
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public final fun component4 ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public final fun component5 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarCell;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarCell;Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarCell;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlign ()Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public final fun getColumnWidth ()Lcom/github/ajalt/mordant/table/ColumnWidth;
+	public final fun getContent ()Lkotlin/jvm/functions/Function1;
+	public final fun getFps ()I
+	public final fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressBarDefinition {
+	public fun <init> (Ljava/util/List;IZ)V
+	public final fun getAlignColumns ()Z
+	public final fun getCells ()Ljava/util/List;
+	public final fun getSpacing ()I
+}
+
+public abstract interface class com/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker {
+	public abstract fun build (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/util/List;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public abstract fun buildCells (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/util/List;)Ljava/util/List;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressLayoutCellsKt {
+	public static final fun completed (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;ZILcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun completed$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;ZILcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+	public static final fun marquee (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ZLkotlin/jvm/functions/Function1;)V
+	public static final fun marquee (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Z)V
+	public static synthetic fun marquee$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun marquee$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;IILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ZILjava/lang/Object;)V
+	public static final fun percentage (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;ILcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
+	public static synthetic fun percentage$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;ILcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ILjava/lang/Object;)V
+	public static final fun progressBar-vXyW-Bk (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;JLcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun progressBar-vXyW-Bk$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;JLcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+	public static final fun speed (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun speed$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+	public static final fun spinner (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/widgets/Spinner;Lcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun spinner$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/widgets/Spinner;Lcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+	public static final fun text (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ILkotlin/jvm/functions/Function1;)V
+	public static final fun text (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
+	public static synthetic fun text$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static synthetic fun text$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;ILjava/lang/Object;)V
+	public static final fun timeElapsed (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;ZLcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun timeElapsed$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;ZLcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+	public static final fun timeRemaining (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;ZZLjava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;I)V
+	public static synthetic fun timeRemaining$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Ljava/lang/String;ZZLjava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/VerticalAlign;IILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/widgets/progress/ProgressLayoutScope {
+	public abstract fun cell (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;)V
+	public abstract fun getAlign ()Lcom/github/ajalt/mordant/rendering/TextAlign;
+	public abstract fun getAnimationFps ()I
+	public abstract fun getTextFps ()I
+	public abstract fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressLayoutScope$DefaultImpls {
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressLayoutScopeKt {
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun build (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;[Lcom/github/ajalt/mordant/widgets/progress/ProgressState;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static synthetic fun build$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;[Lcom/github/ajalt/mordant/widgets/progress/ProgressState;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Widget;
+	public static final fun progressBarContextLayout (IZIILkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;
+	public static synthetic fun progressBarContextLayout$default (IZIILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;
+	public static final fun progressBarLayout (IZIILkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;
+	public static synthetic fun progressBarLayout$default (IZIILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressState {
+	public fun <init> (Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/TaskId;)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/TaskId;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()J
+	public final fun component4 ()Lkotlin/time/ComparableTimeMark;
+	public final fun component5 ()Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;
+	public final fun component6 ()Ljava/lang/Double;
+	public final fun component7 ()Lcom/github/ajalt/mordant/widgets/progress/TaskId;
+	public final fun copy (Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/TaskId;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;Ljava/lang/Object;Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;Lcom/github/ajalt/mordant/widgets/progress/TaskId;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAnimationTime ()Lkotlin/time/ComparableTimeMark;
+	public final fun getCompleted ()J
+	public final fun getContext ()Ljava/lang/Object;
+	public final fun getSpeed ()Ljava/lang/Double;
+	public final fun getStatus ()Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;
+	public final fun getTaskId ()Lcom/github/ajalt/mordant/widgets/progress/TaskId;
+	public final fun getTotal ()Ljava/lang/Long;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/github/ajalt/mordant/widgets/progress/ProgressState$Status {
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressState$Status$Finished : com/github/ajalt/mordant/widgets/progress/ProgressState$Status {
+	public fun <init> (Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;)V
+	public final fun component1 ()Lkotlin/time/ComparableTimeMark;
+	public final fun component2 ()Lkotlin/time/ComparableTimeMark;
+	public final fun copy (Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Finished;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Finished;Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Finished;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFinishTime ()Lkotlin/time/ComparableTimeMark;
+	public final fun getStartTime ()Lkotlin/time/ComparableTimeMark;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressState$Status$NotStarted : com/github/ajalt/mordant/widgets/progress/ProgressState$Status {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$NotStarted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressState$Status$Paused : com/github/ajalt/mordant/widgets/progress/ProgressState$Status {
+	public fun <init> (Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;)V
+	public final fun component1 ()Lkotlin/time/ComparableTimeMark;
+	public final fun component2 ()Lkotlin/time/ComparableTimeMark;
+	public final fun copy (Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Paused;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Paused;Lkotlin/time/ComparableTimeMark;Lkotlin/time/ComparableTimeMark;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Paused;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPauseTime ()Lkotlin/time/ComparableTimeMark;
+	public final fun getStartTime ()Lkotlin/time/ComparableTimeMark;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressState$Status$Running : com/github/ajalt/mordant/widgets/progress/ProgressState$Status {
+	public fun <init> (Lkotlin/time/ComparableTimeMark;)V
+	public final fun component1 ()Lkotlin/time/ComparableTimeMark;
+	public final fun copy (Lkotlin/time/ComparableTimeMark;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Running;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Running;Lkotlin/time/ComparableTimeMark;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status$Running;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStartTime ()Lkotlin/time/ComparableTimeMark;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/ProgressStateKt {
+	public static final fun ProgressState (Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
+	public static synthetic fun ProgressState$default (Ljava/lang/Long;JLkotlin/time/ComparableTimeMark;Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;Ljava/lang/Double;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
+	public static final fun calculateTimeElapsed (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Lkotlin/time/Duration;
+	public static final fun calculateTimeRemaining (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;Z)Lkotlin/time/Duration;
+	public static synthetic fun calculateTimeRemaining$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;ZILjava/lang/Object;)Lkotlin/time/Duration;
+	public static final fun frameCount (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;I)I
+	public static final fun getFinishTime (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;)Lkotlin/time/ComparableTimeMark;
+	public static final fun getPauseTime (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;)Lkotlin/time/ComparableTimeMark;
+	public static final fun getStartTime (Lcom/github/ajalt/mordant/widgets/progress/ProgressState$Status;)Lkotlin/time/ComparableTimeMark;
+	public static final fun isFinished (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Z
+	public static final fun isIndeterminate (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Z
+	public static final fun isPaused (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Z
+	public static final fun isRunning (Lcom/github/ajalt/mordant/widgets/progress/ProgressState;)Z
+}
+
+public final class com/github/ajalt/mordant/widgets/progress/TaskId {
+	public fun <init> ()V
 }
 

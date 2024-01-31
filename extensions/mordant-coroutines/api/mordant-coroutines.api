@@ -1,0 +1,34 @@
+public final class com/github/ajalt/mordant/animation/coroutines/BaseCoroutineAnimator : com/github/ajalt/mordant/animation/coroutines/CoroutineAnimator {
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/animation/RefreshableAnimation;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun run (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/coroutines/CoroutineAnimator {
+	public abstract fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun run (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/github/ajalt/mordant/animation/coroutines/CoroutineAnimatorKt {
+	public static final fun animateInCoroutine (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineAnimator;
+	public static synthetic fun animateInCoroutine$default (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineAnimator;
+	public static final fun animateInCoroutine-myKFqkg (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/time/TimeSource$WithComparableMarks;ZJLcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressBarAnimation;
+	public static synthetic fun animateInCoroutine-myKFqkg$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/time/TimeSource$WithComparableMarks;ZJLcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressBarAnimation;
+}
+
+public final class com/github/ajalt/mordant/animation/coroutines/CoroutineProgressBarAnimation : com/github/ajalt/mordant/animation/coroutines/CoroutineAnimator, com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/widgets/progress/CachedProgressBarWidgetMaker;ZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addTask (Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public fun clear (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getFinished ()Z
+	public fun getVisible ()Z
+	public fun refresh (Z)V
+	public fun removeTask (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;)Z
+	public fun run (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun setVisible (Z)V
+	public fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
