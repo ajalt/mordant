@@ -145,7 +145,6 @@ private fun calcHz(completed: Long, elapsed: Duration): Double = when {
     else -> completed / elapsed.toDouble(DurationUnit.SECONDS)
 }
 
-// TODO: make a ProgressBuilder() function so that the DSL is optional
 /**
  * Build a [ProgressLayout]
  */
