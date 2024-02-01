@@ -21,8 +21,7 @@ import com.github.ajalt.mordant.terminal.Terminal
  * @param initial the starting tick value.
  */
 class Spinner(
-    // TODO: make private
-    internal val frames: List<Widget>,
+    private val frames: List<Widget>,
     private val duration: Int = 1,
     initial: Int = 0,
 ) : Widget {

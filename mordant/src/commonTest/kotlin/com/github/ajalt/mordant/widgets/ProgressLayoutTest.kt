@@ -376,6 +376,20 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
+    @Test
+    @JsName("use_as_builder")
+    fun `use as builder`() {
+        val builder = BaseProgressLayoutScope<Int>()
+        builder.text { "a$context" }
+        builder.text { "b$context" }
+        val layout = builder.build()
+        checkRender(
+            layout.build(ProgressState(1, 2, 3, start, Running(start))), """
+            ░a1  b1
+            """
+        )
+    }
+
     private fun doTest(
         expected: String,
         completed: Long,

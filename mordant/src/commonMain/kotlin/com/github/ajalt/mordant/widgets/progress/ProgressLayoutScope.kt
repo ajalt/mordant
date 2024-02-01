@@ -139,7 +139,12 @@ fun progressBarLayout(
     return progressBarContextLayout(spacing, alignColumns, textFps, animationFps, init)
 }
 
-
+/**
+ * A builder for creating a progress bar layout.
+ *
+ * If you don't want to use the [progressBarLayout] DSL, you can use this builder instead, and call
+ * [build] when you're done adding cells.
+ */
 class BaseProgressLayoutScope<T>(
     override val textFps: Int = TEXT_FPS,
     override val animationFps: Int = ANIMATION_FPS,
@@ -160,7 +165,7 @@ class BaseProgressLayoutScope<T>(
         )
     }
 
-    fun build(spacing: Int, alignColumns: Boolean): ProgressBarDefinition<T> {
+    fun build(spacing: Int = 2, alignColumns: Boolean = true): ProgressBarDefinition<T> {
         return ProgressBarDefinition(cells, spacing, alignColumns)
     }
 }
