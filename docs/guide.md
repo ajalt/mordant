@@ -452,7 +452,7 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [ConfirmationPrompt]:       api/mordant/com.github.ajalt.mordant.terminal/-confirmation-prompt/index.html
 [OverflowWrap]:             api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index.html
 [Prompt]:                   api/mordant/com.github.ajalt.mordant.terminal/-prompt/index.html
-[README]:                   https://github.com/ajalt/clikt
+[README]:                   https://github.com/ajalt/mordant
 [StringPrompt]:             api/mordant/com.github.ajalt.mordant.terminal/-string-prompt/index.html
 [Terminal.animation]:       api/mordant/com.github.ajalt.mordant.animation/animation.html
 [Terminal.prompt]:          api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html
