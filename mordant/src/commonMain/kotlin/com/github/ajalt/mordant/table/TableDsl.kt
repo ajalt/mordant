@@ -387,3 +387,18 @@ internal fun ColumnWidth?.toCustom(): ColumnWidth.Custom {
         is ColumnWidth.Custom -> this
     }
 }
+
+internal val ColumnWidth.isAuto: Boolean
+    get() {
+        return this is ColumnWidth.Auto || this is ColumnWidth.Custom && this.width == null
+    }
+
+internal val ColumnWidth.isExpand: Boolean
+    get() {
+        return this is ColumnWidth.Expand || this is ColumnWidth.Custom && this.expandWeight != null
+    }
+
+internal val ColumnWidth.isFixed: Boolean
+    get() {
+        return this is ColumnWidth.Fixed || this is ColumnWidth.Custom && this.width != null
+    }

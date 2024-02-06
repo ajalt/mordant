@@ -13,7 +13,7 @@ import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
 open class ProgressBuilder internal constructor(
-    internal val builder: BaseProgressLayoutScope<Unit>,
+    internal val builder: ProgressLayoutBuilder<Unit>,
 ) {
     var padding: Int = 2
 
@@ -149,6 +149,6 @@ private fun calcHz(completed: Long, elapsed: Duration): Double = when {
  * Build a [ProgressLayout]
  */
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
-    val builder = ProgressBuilder(BaseProgressLayoutScope()).apply(init)
+    val builder = ProgressBuilder(ProgressLayoutBuilder()).apply(init)
     return ProgressLayout(builder.builder.build(builder.padding, true))
 }
