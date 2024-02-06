@@ -22,7 +22,6 @@ fun main() {
         speed("B/s", style = terminal.theme.info)
         timeRemaining(style = magenta)
     }.animateOnThread(terminal)
-    val task = progress.addTask()
 
     progress.execute()
 
@@ -30,9 +29,9 @@ fun main() {
     Thread.sleep(5000)
 
     // Update the progress as the download progresses
-    task.update { total = 3_000_000_000 }
+    progress.update { total = 3_000_000_000 }
     while (!progress.finished) {
-        task.advance(15_000_000)
+        progress.advance(15_000_000)
         Thread.sleep(100)
     }
 }

@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
 import com.github.ajalt.mordant.widgets.progress.ANIMATION_FPS
-import com.github.ajalt.mordant.widgets.progress.BaseProgressLayoutScope
+import com.github.ajalt.mordant.widgets.progress.ProgressLayoutBuilder
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import com.github.ajalt.mordant.widgets.progress.TEXT_FPS
 import java.util.concurrent.ExecutorService
@@ -16,7 +16,7 @@ import kotlin.time.TimeSource
 
 
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
-    BaseProgressLayoutScope()
+    ProgressLayoutBuilder()
 ) {
     /**
      * The maximum number of times per second to update idle animations like the progress bar pulse
@@ -42,8 +42,8 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
  */
 class ProgressAnimation internal constructor(
     private val inner: BlockingProgressBarAnimation<Unit>,
+    private val task: ProgressTask<Unit>,
 ) {
-    private val task = inner.addTask()
     private val executor = defaultExecutor()
     private val lock = Any()
     private var future: Future<*>? = null
@@ -103,7 +103,7 @@ class ProgressAnimation internal constructor(
      * Start the progress bar animation.
      */
     fun start() = synchronized(lock) {
-        inner.visible = true
+//        inner.visible = true
         if (future != null) return
         future = inner.execute(executor)
     }
@@ -124,7 +124,7 @@ class ProgressAnimation internal constructor(
      */
     fun restart() = synchronized(lock) {
         task.reset()
-        inner.visible = true
+//        inner.visible = true
         if (future == null) update()
     }
 
@@ -135,7 +135,7 @@ class ProgressAnimation internal constructor(
      */
     fun clear() = synchronized(lock) {
         stop()
-        inner.visible = false
+//        inner.visible = false
     }
 }
 
@@ -148,7 +148,7 @@ fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): Progr
     return progressAnimation(TimeSource.Monotonic, init)
 }
 
-// for testing
+// internal for testing
 internal fun Terminal.progressAnimation(
     timeSource: TimeSource.WithComparableMarks,
     init: ProgressAnimationBuilder.() -> Unit,
@@ -166,13 +166,12 @@ internal fun Terminal.progressAnimation(
         )
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
-    return ProgressAnimation(
-        definition.animateOnThread(
-            this,
-            timeSource = timeSource,
-            speedEstimateDuration = builder.historyLength.toDouble().seconds
-        )
+    val inner =  BlockingProgressBarAnimation<Unit>(
+        this,
+        timeSource = timeSource,
+        speedEstimateDuration = builder.historyLength.toDouble().seconds
     )
+    return ProgressAnimation(inner, inner.addTask(definition))
 }
 
 private fun defaultExecutor(): ExecutorService {

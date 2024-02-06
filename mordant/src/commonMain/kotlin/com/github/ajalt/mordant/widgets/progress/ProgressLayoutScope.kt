@@ -65,28 +65,44 @@ data class ProgressBarCell<T>(
 /**
  * The cells and configuration for a progress bar layout.
  */
-class ProgressBarDefinition<T>(
+interface ProgressBarDefinition<T> {
     /**
      * The cells in this layout.
      */
-    val cells: List<ProgressBarCell<T>>,
+    val cells: List<ProgressBarCell<T>>
 
     /**
      * The spacing between cells in this layout.
      */
-    val spacing: Int,
+    val spacing: Int
 
     /**
      * How to align the columns of the progress bar when multiple tasks are present.
      */
-    val alignColumns: Boolean,
-)
+    val alignColumns: Boolean
+}
 
+private class ProgressBarDefinitionImpl<T>(
+    override val cells: List<ProgressBarCell<T>>,
+    override val spacing: Int,
+    override val alignColumns: Boolean,
+) : ProgressBarDefinition<T>
+
+/** Create a new progress bar layout definition. */
+fun <T> ProgressBarDefinition(
+    cells: List<ProgressBarCell<T>>,
+    spacing: Int,
+    alignColumns: Boolean,
+): ProgressBarDefinition<T> {
+    return ProgressBarDefinitionImpl(cells, spacing, alignColumns)
+}
+
+// TODO: remove these states list builder?
 fun <T> ProgressBarDefinition<T>.build(
     vararg states: ProgressState<T>,
-    maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
+    maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
 ): Widget {
-    return maker.build(this, states.asList())
+    return maker.build(states.map { this to it })
 }
 
 fun <T> ProgressBarDefinition<T>.build(
@@ -96,7 +112,7 @@ fun <T> ProgressBarDefinition<T>.build(
     displayedTime: ComparableTimeMark,
     status: ProgressState.Status = ProgressState.Status.NotStarted,
     speed: Double? = null,
-    maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
+    maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
 ): Widget {
     val state = ProgressState(
         context, total, completed, displayedTime, status, speed
@@ -111,7 +127,7 @@ fun ProgressBarDefinition<Unit>.build(
     displayedTime: ComparableTimeMark,
     status: ProgressState.Status = ProgressState.Status.NotStarted,
     speed: Double? = null,
-    maker: ProgressBarWidgetMaker = BaseProgressBarWidgetMaker,
+    maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
 ): Widget {
     return build(Unit, total, completed, displayedTime, status, speed, maker)
 }
@@ -124,7 +140,7 @@ fun <T> progressBarContextLayout(
     animationFps: Int = ANIMATION_FPS,
     init: ProgressLayoutScope<T>.() -> Unit,
 ): ProgressBarDefinition<T> {
-    return BaseProgressLayoutScope<T>(textFps, animationFps)
+    return ProgressLayoutBuilder<T>(textFps, animationFps)
         .apply(init)
         .build(spacing, alignColumns)
 }
@@ -145,7 +161,7 @@ fun progressBarLayout(
  * If you don't want to use the [progressBarLayout] DSL, you can use this builder instead, and call
  * [build] when you're done adding cells.
  */
-class BaseProgressLayoutScope<T>(
+class ProgressLayoutBuilder<T>(
     override val textFps: Int = TEXT_FPS,
     override val animationFps: Int = ANIMATION_FPS,
     override val align: TextAlign = TextAlign.RIGHT,

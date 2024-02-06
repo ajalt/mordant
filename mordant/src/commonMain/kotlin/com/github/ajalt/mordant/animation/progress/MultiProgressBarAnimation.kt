@@ -13,21 +13,24 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
-class BaseProgressBarAnimation<T>(
+class MultiProgressBarAnimation<T>(
     // TODO: param docs
     terminal: Terminal,
-    private val maker: CachedProgressBarWidgetMaker<T>,
     private val clearWhenFinished: Boolean = false,
     private val speedEstimateDuration: Duration = 30.seconds,
+    private val maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
+    private val timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
 ) : RefreshableAnimation, ProgressBarAnimation<T> {
     private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
 
     private val state = MppAtomicRef(State(true, listOf<ProgressTaskImpl<T>>()))
-    private val timeSource get() = maker.timeSource
     private val animationTime = timeSource.markNow()
-    private val animation = terminal.animation<List<ProgressState<T>>> { maker.build(it) }
+    private val animation = terminal.animation<
+            List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>
+            > { maker.build(it) }
 
     override fun addTask(
+        definition: ProgressBarDefinition<T>,
         context: T,
         total: Long?,
         completed: Long,
@@ -41,7 +44,7 @@ class BaseProgressBarAnimation<T>(
             visible = visible,
             now = timeSource.markNow(),
             start = start,
-            maker = maker,
+            definition = definition.cache(timeSource),
             animationTime = animationTime,
             timeSource = timeSource,
             speedEstimateDuration = speedEstimateDuration
@@ -58,8 +61,8 @@ class BaseProgressBarAnimation<T>(
     override fun refresh(refreshAll: Boolean) {
         val s = state.value
         if (!s.visible) return
-        if (refreshAll) maker.invalidateCache()
-        animation.update(s.tasks.filter { it.visible }.map { it.makeState() })
+        if (refreshAll) invalidateAllCaches()
+        animation.update(s.tasks.filter { it.visible }.map { it.definition to it.makeState() })
         if (finished) {
             if (clearWhenFinished) animation.clear() else animation.stop()
         }
@@ -73,16 +76,24 @@ class BaseProgressBarAnimation<T>(
         animation.clear()
     }
 
-    override var visible: Boolean
-        get() = state.value.visible
-        set(value) {
-            state.update { copy(visible = value) }
-            if (!value) animation.clear()
-            maker.invalidateCache()
-        }
+    // TODO: remove or implement
+//    override var visible: Boolean
+//        get() = state.value.visible
+//        set(value) {
+//            state.update { copy(visible = value) }
+//            if (!value) animation.clear()
+//            invalidateAllCaches()
+//        }
 
     override val finished: Boolean
         get() = state.value.tasks.all { it.finished }
+
+    override val fps: Int
+        get() = state.value.tasks.maxOf { it.definition.fps }
+
+    private fun invalidateAllCaches() {
+        state.value.tasks.forEach { it.definition.invalidateCache() }
+    }
 }
 
 private class HistoryEntry(val time: ComparableTimeMark, val completed: Long)
@@ -130,7 +141,7 @@ private class ProgressTaskImpl<T>(
     visible: Boolean,
     now: ComparableTimeMark,
     start: Boolean,
-    private val maker: CachedProgressBarWidgetMaker<T>,
+    val definition: CachedProgressBarDefinition<T>,
     private val animationTime: ComparableTimeMark,
     private val timeSource: TimeSource.WithComparableMarks,
     private val speedEstimateDuration: Duration,
@@ -201,7 +212,7 @@ private class ProgressTaskImpl<T>(
                 start = scope.started,
             )
         }
-        maker.invalidateCache(id)
+        definition.invalidateCache()
     }
 
     override fun makeState(): ProgressState<T> {

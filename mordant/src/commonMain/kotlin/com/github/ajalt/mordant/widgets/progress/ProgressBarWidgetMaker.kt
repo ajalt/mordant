@@ -4,58 +4,55 @@ import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
+import kotlin.math.max
 
 interface ProgressBarWidgetMaker {
     /**
-     * Build a progress widget from the given [definition] and [states].
+     * Build a progress widget with the given [rows].
      */
     fun <T> build(
-        definition: ProgressBarDefinition<T>,
-        states: List<ProgressState<T>>,
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget
 
     /**
      * Build the widgets for each cell in the progress bar.
      *
-     * This can be used if you want to include the individual cells in a larger layout like a table.
+     * This can be used if you want to manually include the individual cells in a layout like
+     * a table.
      *
      * @return A list of rows, where each row is a list of widgets for the cells in that row.
      */
     fun <T> buildCells(
-        definition: ProgressBarDefinition<T>,
-        states: List<ProgressState<T>>,
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): List<List<Widget>>
 }
 
-object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
+object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
     override fun <T> build(
-        definition: ProgressBarDefinition<T>,
-        states: List<ProgressState<T>>,
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget {
         return when {
-            states.isEmpty() -> EmptyWidget
-            definition.alignColumns -> makeTable(definition, states)
-            else -> makeLinearLayout(definition, states)
+            rows.isEmpty() -> EmptyWidget
+            rows.count { (d, _) -> d.alignColumns } > 1 -> makeTable(rows)
+            else -> makeVerticalLayout(rows)
         }
     }
 
     override fun <T> buildCells(
-        definition: ProgressBarDefinition<T>,
-        states: List<ProgressState<T>>,
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): List<List<Widget>> {
-        return states.map {
-            definition.cells.map { cell -> cell.content(it) }
+        return rows.map { (definition, state) ->
+            definition.cells.map { cell -> cell.content(state) }
         }
     }
 
-    private fun <T> makeLinearLayout(
-        d: ProgressBarDefinition<T>,
-        states: List<ProgressState<T>>,
+    private fun <T> makeVerticalLayout(
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget {
         return when {
-            states.size == 1 -> makeHorizontalLayout(d, states.single())
+            rows.size == 1 -> makeHorizontalLayout(rows[0].first, rows[0].second)
             else -> verticalLayout {
-                for (state in states) {
+                for ((d, state) in rows) {
                     cell(makeHorizontalLayout(d, state))
                 }
             }
@@ -75,11 +72,8 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
             }
         }
     }
-
-    private fun <T> makeTable(d: ProgressBarDefinition<T>, states: List<ProgressState<T>>): Table {
-        return table {
-            cellBorders = Borders.NONE
-            padding = Padding { left = d.spacing }
+/*
+ padding = Padding { left = d.spacing }
             column(0) { padding = Padding(0) }
             d.cells.forEachIndexed { i, cell ->
                 column(i) {
@@ -93,11 +87,68 @@ object BaseProgressBarWidgetMaker : ProgressBarWidgetMaker {
                     }
                 }
             }
+ */
+    private fun <T> makeTable(
+        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
+    ): Table {
+        return table {
+            cellBorders = Borders.NONE
+            val columnCount = rows.maxOf { (d, _) -> if (d.alignColumns) d.cells.size else 0 }
+            for (i in 0..<columnCount) {
+                column(i) {
+                    for ((j, row) in rows.withIndex()) {
+                        val (d, _) = row
+                        if (!d.alignColumns) continue // only aligned rows affect the column
+                        val w1 = width.toCustom()
+                        val w2 = d.cells.getOrNull(i)?.columnWidth?.toCustom() ?: continue
+                        width = when {
+                            w1.isExpand || w2.isExpand -> {
+                                ColumnWidth.Expand(nullMax(w1.expandWeight, w2.expandWeight) ?: 1f)
+                            }
+                            // If we had a MinWidth type, we'd use it here instead of Auto
+                            (j > 0 && w1.isAuto) || w2.isAuto -> ColumnWidth.Auto
+                            else -> ColumnWidth.Fixed(nullMax(w1.width, w2.width)!!)
+                        }
+                    }
+                }
+            }
             body {
-                for (state in states) {
-                    rowFrom(d.cells.map { it.content(state) })
+                for ((d, state) in rows) {
+                    row {
+                        if (d.alignColumns) {
+                            for ((i, c) in d.cells.withIndex()) {
+                                cell(c.content(state)) {
+                                    align = c.align
+                                    verticalAlign = c.verticalAlign
+                                    padding = Padding { left = if (i == 0) 0 else d.spacing }
+                                }
+                            }
+                        } else {
+                            cell(makeHorizontalLayout(d, state)) {
+                                columnSpan = Int.MAX_VALUE
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+fun <T> ProgressBarWidgetMaker.build(
+    vararg rows: Pair<ProgressBarDefinition<T>, ProgressState<T>>,
+): Widget {
+    return build(rows.asList())
+}
+
+fun <T> ProgressBarWidgetMaker.buildCells(
+    vararg rows: Pair<ProgressBarDefinition<T>, ProgressState<T>>,
+): List<List<Widget>> {
+    return buildCells(rows.asList())
+}
+
+private fun nullMax(a: Int?, b: Int?): Int? =
+    if (a == null) b else if (b == null) a else max(a, b)
+
+private fun nullMax(a: Float?, b: Float?): Float? =
+    if (a == null) b else if (b == null) a else max(a, b)

@@ -10,7 +10,6 @@ import com.github.ajalt.mordant.widgets.progress.*
 import com.github.ajalt.mordant.widgets.progress.ProgressState.Status.*
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
-import io.kotest.data.table
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.ComparableTimeMark
@@ -354,11 +353,9 @@ class ProgressLayoutTest : RenderingTest() {
             text { "a$context" }
             text { "b$context" }
         }
-        val cells = layout.cache().buildCells(
-            listOf(
-                ProgressState(1, 1, 1, start, Running(start)),
-                ProgressState(2, 2, 2, start, Running(start)),
-            )
+        val cells = MultiProgressBarWidgetMaker.buildCells(
+                layout to ProgressState(1, 1, 1, start, Running(start)),
+                layout to ProgressState(2, 2, 2, start, Running(start)),
         )
         val widget = table {
             body {
@@ -379,7 +376,7 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("use_as_builder")
     fun `use as builder`() {
-        val builder = BaseProgressLayoutScope<Int>()
+        val builder = ProgressLayoutBuilder<Int>()
         builder.text { "a$context" }
         builder.text { "b$context" }
         val layout = builder.build()

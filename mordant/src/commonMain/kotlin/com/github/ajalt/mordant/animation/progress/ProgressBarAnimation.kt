@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.animation.progress
 
 import com.github.ajalt.mordant.widgets.progress.ProgressBarCell
+import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import com.github.ajalt.mordant.widgets.progress.ProgressState
 import com.github.ajalt.mordant.widgets.progress.TaskId
 
@@ -83,7 +84,9 @@ fun ProgressTask<*>.update(completed: Number) = update(completed.toLong())
  * An animation that can draw one or more progress [tasks][addTask] to the screen.
  */
 interface ProgressBarAnimation<T> {
+    // TODO docs
     fun addTask(
+        definition: ProgressBarDefinition<T>,
         context: T,
         total: Long? = null,
         completed: Long = 0,
@@ -111,22 +114,18 @@ interface ProgressBarAnimation<T> {
     fun refresh(refreshAll: Boolean = false)
 
     /**
-     * Set to `false` to remove the animation from the screen.
-     */
-    var visible: Boolean
-
-    /**
      * Return `true` if all tasks are [finished][ProgressTask.finished].
      */
     val finished: Boolean
 }
 
 fun ProgressBarAnimation<Unit>.addTask(
+    definition: ProgressBarDefinition<Unit>,
     total: Long? = null,
     completed: Long = 0,
     start: Boolean = true,
     visible: Boolean = true,
 ): ProgressTask<Unit> {
-    return addTask(Unit, total, completed, start, visible)
+    return addTask(definition, Unit, total, completed, start, visible)
 }
 

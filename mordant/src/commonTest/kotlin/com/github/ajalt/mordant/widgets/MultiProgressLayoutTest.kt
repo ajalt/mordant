@@ -72,10 +72,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         val animTime = t.markNow()
         t += max(elapsed1 ?: 0.0, elapsed2 ?: 0.0).seconds
         val now = t.markNow()
-        val factory: ProgressBarDefinition<String> = progressBarContextLayout(
-            spacing = 0,
-            alignColumns = alignColumns,
-        ) {
+        val definition = progressBarContextLayout(spacing = 0, alignColumns = alignColumns) {
             text(TextAlign.LEFT) { context }
             text("|")
             percentage()
@@ -88,8 +85,8 @@ class MultiProgressLayoutTest : RenderingTest() {
             text("|")
             timeRemaining()
         }
-        val widget = factory.build(
-            ProgressState(
+        val widget = MultiProgressBarWidgetMaker.build(
+            definition to ProgressState(
                 context = "Task 1",
                 total = total1,
                 completed = completed1,
@@ -97,7 +94,7 @@ class MultiProgressLayoutTest : RenderingTest() {
                 status = if (elapsed1 == null) NotStarted else Running(now - elapsed1.seconds),
                 speed = speed1,
             ),
-            ProgressState(
+            definition to ProgressState(
                 context = "Task Two",
                 total = total2,
                 completed = completed2,
