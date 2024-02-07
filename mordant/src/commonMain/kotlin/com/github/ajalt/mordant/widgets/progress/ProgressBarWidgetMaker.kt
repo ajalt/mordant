@@ -72,26 +72,12 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
             }
         }
     }
-/*
- padding = Padding { left = d.spacing }
-            column(0) { padding = Padding(0) }
-            d.cells.forEachIndexed { i, cell ->
-                column(i) {
-                    align = cell.align
-                    verticalAlign = cell.verticalAlign
-                    val w = cell.columnWidth
-                    width = when {
-                        // The fixed width cells don't include padding, so add it here
-                        i > 0 && w is ColumnWidth.Fixed -> ColumnWidth.Fixed(w.width + d.spacing)
-                        else -> w
-                    }
-                }
-            }
- */
+
     private fun <T> makeTable(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Table {
         return table {
+            addPaddingWidthToFixedWidth = true
             cellBorders = Borders.NONE
             val columnCount = rows.maxOf { (d, _) -> if (d.alignColumns) d.cells.size else 0 }
             for (i in 0..<columnCount) {

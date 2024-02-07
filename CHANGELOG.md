@@ -13,6 +13,7 @@
 - Added `Viewport` widget that can crop or pad another widget to a fixed size, and scroll it within that size.
 - Added `precision` parameter to `completed` progress cell that controls the number of decimal places shown.
 - Animation now handle terminal resizing, although on some terminals, partially drawn frames may be visible. Due to a bug in JNI, the terminal size isn't automatically updated on JVM on macOS.
+- Added `TableBuilder.addPaddingWidthToFixedWidth` option to control how padding is added to fixed width columns.
 
 ### Changed
 - When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 

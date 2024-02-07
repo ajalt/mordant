@@ -35,7 +35,8 @@ internal class TableLayout(private val table: TableBuilderInstance) {
                 borderBottom = b.bottom,
                 style = null,
                 textAlign = TextAlign.LEFT,
-                verticalAlign = VerticalAlign.TOP
+                verticalAlign = VerticalAlign.TOP,
+                paddingWidth = 0,
             )
             listOf(listOf(cell))
         }
@@ -51,7 +52,8 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             headerRowCount = header.size,
             footerRowCount = footer.size,
             columnWidths = columnWidths,
-            tableBorders = table.tableBorders
+            tableBorders = table.tableBorders,
+            addPaddingWidthToFixedWidth = table.addPaddingWidthToFixedWidth,
         )
     }
 
@@ -136,7 +138,8 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             borderBottom = borders.bottom.takeIf { rowSpan == 1 },
             style = style,
             textAlign = textAlign,
-            verticalAlign = verticalAlign
+            verticalAlign = verticalAlign,
+            paddingWidth = padding.left + padding.right,
         )
 
         val lastX = startingX + columnSpan - 1

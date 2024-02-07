@@ -33,6 +33,7 @@ internal class TableBuilderInstance : TableBuilder, CellStyleBuilder by CellStyl
     override var borderType: BorderType = BorderType.SQUARE
     override var borderStyle: TextStyle = DEFAULT_STYLE
     override var tableBorders: Borders? = null
+    override var addPaddingWidthToFixedWidth: Boolean = true
 
     val columns = mutableMapOf<Int, ColumnBuilder>()
     val headerSection = SectionBuilderInstance()
@@ -176,17 +177,11 @@ internal class HorizontalLayoutBuilderInstance(
     override fun column(i: Int, init: ColumnBuilder.() -> Unit) = tableBuilder.column(i, init)
 
     fun build(): Widget {
-        if (spacing > 0) {
-            for ((i, cell) in row.cells.withIndex()) {
-                if (i == 0) continue
-                cell.padding = cell.padding?.let { it.copy(left = it.left + spacing) } ?: Padding {
-                    left = spacing
-                }
-            }
-        }
+        tableBuilder.addPaddingWidthToFixedWidth = true
         tableBuilder.verticalAlign = verticalAlign
         tableBuilder.cellBorders = Borders.NONE
-        tableBuilder.padding = Padding(0)
+        tableBuilder.padding = Padding { left = spacing }
+        row.cells.getOrNull(0)?.padding(0)
         tableBuilder.bodySection.rows += row
         return TableLayout(tableBuilder).buildTable()
     }
