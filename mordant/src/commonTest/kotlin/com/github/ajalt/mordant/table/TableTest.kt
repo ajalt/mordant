@@ -530,7 +530,8 @@ class TableTest : RenderingTest() {
     ) {
         val r = object : Widget {
             override fun measure(t: Terminal, width: Int) = WidthRange(1, 1)
-            override fun render(t: Terminal, width: Int) = Lines(listOf(Line(listOf(Span.word("!")))))
+            override fun render(t: Terminal, width: Int) =
+                Lines(listOf(Line(listOf(Span.word("!")))))
         }
         captionTop(r)
         captionBottom(r)
@@ -548,6 +549,22 @@ class TableTest : RenderingTest() {
         ░4   5   6░
         """
     )
+
+    @Test
+    fun fixedWidthIncludesPadding() = doTest(
+        """
+    ░┌──────┬────┬───┐
+    ░│ 111  │ 222│ 33│
+    ░└──────┴────┴───┘
+    """
+    ) {
+        addPaddingWidthToFixedWidth = true
+        padding = Padding { horizontal = 1 }
+        column(0) { width = ColumnWidth.Fixed(4) }
+        column(1) { width = ColumnWidth.Fixed(2) }
+        column(2) { width = ColumnWidth.Fixed(1) }
+        body { row(111, 222, 333) }
+    }
 
     private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
         checkRender(table(builder), expected)

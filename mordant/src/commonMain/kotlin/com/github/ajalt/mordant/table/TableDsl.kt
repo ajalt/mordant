@@ -167,6 +167,16 @@ interface TableBuilder : CellStyleBuilder {
      */
     var tableBorders: Borders?
 
+    /**
+     * If false, (the default) [padding][CellStyleBuilder.padding] in
+     * [fixed width][ColumnWidth.Fixed] columns will reduce the content width so
+     * that the total width is always exactly the specified width.
+     *
+     * If true, padding will be added to the specified width so padding never reduces the content
+     * width.
+     */
+    var addPaddingWidthToFixedWidth: Boolean
+
     /** Add a [widget] as a caption oto the top of this table. */
     fun captionTop(widget: Widget)
 

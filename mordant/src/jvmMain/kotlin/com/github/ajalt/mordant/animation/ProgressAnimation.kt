@@ -103,7 +103,6 @@ class ProgressAnimation internal constructor(
      * Start the progress bar animation.
      */
     fun start() = synchronized(lock) {
-//        inner.visible = true
         if (future != null) return
         future = inner.execute(executor)
     }
@@ -124,7 +123,6 @@ class ProgressAnimation internal constructor(
      */
     fun restart() = synchronized(lock) {
         task.reset()
-//        inner.visible = true
         if (future == null) update()
     }
 
@@ -135,7 +133,7 @@ class ProgressAnimation internal constructor(
      */
     fun clear() = synchronized(lock) {
         stop()
-//        inner.visible = false
+        inner.clear()
     }
 }
 

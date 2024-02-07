@@ -43,6 +43,7 @@ internal sealed class Cell {
         val style: TextStyle?,
         val textAlign: TextAlign,
         val verticalAlign: VerticalAlign,
+        val paddingWidth: Int,
     ) : Cell() {
         init {
             require(rowSpan > 0) { "rowSpan must be greater than 0" }
@@ -75,6 +76,7 @@ internal class TableImpl(
     val footerRowCount: Int,
     val columnWidths: List<ColumnWidth.Custom>,
     val tableBorders: Borders?,
+    val addPaddingWidthToFixedWidth: Boolean,
 ) : Table() {
     init {
         require(rows.isNotEmpty()) { "Table cannot be empty" }
@@ -134,8 +136,13 @@ internal class TableImpl(
     }
 
     private fun measureColumn(x: Int, t: Terminal, width: Int): WidthRange {
-        columnWidths[x].width?.let {
-            return WidthRange(it, it)
+        columnWidths[x].width?.let { // Fixed width
+            val paddingWidth = if (!addPaddingWidthToFixedWidth) 0 else {
+                rows.maxOfOrNull { row ->
+                    (row.getOrNull(x) as? Cell.Content)?.paddingWidth ?: 0
+                } ?: 0
+            }
+            return WidthRange(it + paddingWidth, it + paddingWidth)
         }
         val range = rows.maxWidthRange { row ->
             when (val cell = row.getOrNull(x)) {
