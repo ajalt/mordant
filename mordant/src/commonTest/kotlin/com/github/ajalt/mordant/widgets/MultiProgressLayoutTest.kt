@@ -56,6 +56,85 @@ class MultiProgressLayoutTest : RenderingTest() {
         """
     )
 
+    @Test
+    @JsName("different_layouts")
+    fun `different layouts`() {
+        val t = TestTimeSource()
+        val animTime = t.markNow()
+        t += 5.seconds
+        val now = t.markNow()
+        val definition1 = progressBarContextLayout(spacing = 0) {
+            text(TextAlign.LEFT) { context }
+            text("|")
+            percentage()
+            text("|")
+            progressBar()
+            text("|")
+            completed()
+            text("|")
+            speed()
+            text("|")
+            timeRemaining()
+        }
+        val definition2 = progressBarContextLayout(spacing = 0) {
+            text("b")
+            text("|")
+            text { context }
+            text("|")
+            progressBar()
+        }
+        val definition3 = progressBarContextLayout(spacing = 0, alignColumns = false) {
+            text("cc")
+            text("|")
+            text { context }
+            text("|")
+            progressBar()
+        }
+        val widget = MultiProgressBarWidgetMaker.build(
+            definition1 to ProgressState(
+                context = "Task 1",
+                total = 10,
+                completed = 5,
+                animationTime = animTime,
+                status = Running(now - 5.seconds),
+                speed = 1.0,
+            ),
+            definition1 to ProgressState(
+                context = "Task 2",
+                total = 10,
+                completed = 5,
+                animationTime = animTime,
+                status = NotStarted,
+                speed = 1.0,
+            ),
+            definition2 to ProgressState(
+                context = "Task 3",
+                total = 2,
+                completed = 1,
+                animationTime = animTime,
+                status = Running(now - 10.seconds),
+            ),
+            definition3 to ProgressState(
+                context = "Task 4",
+                total = 2,
+                completed = 1,
+                animationTime = animTime,
+                status = Running(now - 10.seconds),
+            ),
+        )
+        checkRender(
+            widget,
+            """
+            ░Task 1|   50%|#######>......|        5/10|   1.0/s|eta 0:00:05░
+            ░Task 2|   50%|#######>......|        5/10|   1.0/s|eta -:--:--░
+            ░     b|Task 3|#######>......                                  ░
+            ░cc|Task 4|##########################>.........................░
+            """,
+            width = 62,
+            theme = Theme(Theme.PlainAscii) { strings["progressbar.pending"] = "." },
+        )
+    }
+
     private fun doTest(
         completed1: Long,
         total1: Long?,

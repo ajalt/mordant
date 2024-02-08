@@ -110,6 +110,15 @@ sealed class ColumnWidth {
                 "Cannot set both width and expandWeight"
             }
         }
+
+        override fun toString(): String {
+            return when {
+                isAuto -> "Auto"
+                isExpand -> "Expand($expandWeight)"
+                isFixed -> "Fixed($width)"
+                else -> "Custom(width=$width, expandWeight=$expandWeight, priority=$priority)"
+            }
+        }
     }
 
     /** The column will fit to the size of its content */
@@ -400,7 +409,8 @@ internal fun ColumnWidth?.toCustom(): ColumnWidth.Custom {
 
 internal val ColumnWidth.isAuto: Boolean
     get() {
-        return this is ColumnWidth.Auto || this is ColumnWidth.Custom && this.width == null
+        return this is ColumnWidth.Auto ||
+                this is ColumnWidth.Custom && this.width == null && this.expandWeight == null
     }
 
 internal val ColumnWidth.isExpand: Boolean
