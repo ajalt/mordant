@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.animation.coroutines
 
-import com.github.ajalt.mordant.animation.progress.addTask
 import com.github.ajalt.mordant.animation.progress.update
 import com.github.ajalt.mordant.animation.textAnimation
 import com.github.ajalt.mordant.terminal.Terminal
@@ -33,16 +32,15 @@ class CoroutinesAnimatorTest {
         val a = progressBarLayout(spacing = 0, textFps = 1) {
             completed(suffix = "a")
             completed(suffix = "b", fps = 2)
-        }.animateInCoroutine(t, testTimeSource)
-        val t = a.addTask(total = 10)
+        }.animateInCoroutine(t, total = 10, timeSource = testTimeSource)
 
         val job = backgroundScope.launch { a.run() }
 
         advanceTimeBy(0.1.seconds)
-        vt.normalizedOutput() shouldBe "$CSI?25l        0/10a        0/10b" // hide cursor
+        vt.normalizedOutput() shouldBe "$HIDE_CURSOR        0/10a        0/10b"
         vt.clearOutput()
 
-        t.update(5)
+        a.update(5)
         advanceTimeBy(0.1.seconds)
         vt.output() shouldBe ""
 
@@ -56,7 +54,7 @@ class CoroutinesAnimatorTest {
         advanceTimeBy(10.seconds)
 
         job.isActive shouldBe true
-        t.update(10)
+        a.update(10)
 
         advanceTimeBy(1.seconds)
         job.isActive shouldBe false
@@ -67,8 +65,7 @@ class CoroutinesAnimatorTest {
     fun `stop and clear`() = runTest {
         val a = progressBarLayout(spacing = 0, textFps = 1) {
             completed()
-        }.animateInCoroutine(t, testTimeSource)
-        a.addTask(total = 10)
+        }.animateInCoroutine(t, total = 10, timeSource = testTimeSource)
         var job = backgroundScope.launch { a.run() }
         advanceTimeBy(0.1.seconds)
         a.stop()
@@ -96,7 +93,7 @@ class CoroutinesAnimatorTest {
         vt.normalizedOutput() shouldBe "$CSI?25l1" // hide cursor
         vt.clearOutput()
 
-        i=2
+        i = 2
         advanceTimeBy(0.1.seconds)
         vt.output() shouldBe ""
 
