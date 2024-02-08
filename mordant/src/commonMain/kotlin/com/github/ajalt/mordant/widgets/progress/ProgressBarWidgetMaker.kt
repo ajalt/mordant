@@ -27,13 +27,15 @@ interface ProgressBarWidgetMaker {
     ): List<List<Widget>>
 }
 
+//TODO: docs
 object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
     override fun <T> build(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget {
         return when {
             rows.isEmpty() -> EmptyWidget
-            rows.count { (d, _) -> d.alignColumns } > 1 -> makeTable(rows)
+            rows.size == 1 -> makeHorizontalLayout(rows[0].first, rows[0].second)
+            rows.none { (d, _) -> !d.alignColumns } -> makeTable(rows)
             else -> makeVerticalLayout(rows)
         }
     }
@@ -49,12 +51,26 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
     private fun <T> makeVerticalLayout(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget {
-        return when {
-            rows.size == 1 -> makeHorizontalLayout(rows[0].first, rows[0].second)
-            else -> verticalLayout {
-                for ((d, state) in rows) {
+        return verticalLayout {
+            var alignStart = -1
+            for ((i, row) in rows.withIndex()) {
+                val (d, state) = row
+                // render contiguous aligned rows as a table.
+                // we can't just throw the whole thing in one table, since the unaligned rows will
+                // mess up the column widths for the aligned rows since spanned columns have their
+                // width divided evenly between the columns they span
+                if (!d.alignColumns) {
+                    if (alignStart >= 0) {
+                        cell(makeTable(rows.subList(alignStart, i)))
+                        alignStart = -1
+                    }
                     cell(makeHorizontalLayout(d, state))
+                } else if (alignStart < 0) {
+                    alignStart = i
                 }
+            }
+            if (alignStart >= 0) {
+                cell(makeTable(rows.subList(alignStart, rows.size)))
             }
         }
     }
@@ -121,6 +137,7 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
     }
 }
 
+//TODO: docs
 fun <T> ProgressBarWidgetMaker.build(
     vararg rows: Pair<ProgressBarDefinition<T>, ProgressState<T>>,
 ): Widget {
