@@ -167,7 +167,7 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("layout_no_states")
     fun `layout with no states`() {
-        val layout = progressBarLayout { completed() }.build()
+        val layout = MultiProgressBarWidgetMaker.build<Unit>(emptyList())
         checkRender(layout, "")
     }
 
@@ -381,7 +381,7 @@ class ProgressLayoutTest : RenderingTest() {
         builder.text { "b$context" }
         val layout = builder.build()
         checkRender(
-            layout.build(ProgressState(1, 2, 3, start, Running(start))), """
+            layout.build(1, 2, 3, start, Running(start)), """
             ░a1  b1
             """
         )

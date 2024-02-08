@@ -97,14 +97,7 @@ fun <T> ProgressBarDefinition(
     return ProgressBarDefinitionImpl(cells, spacing, alignColumns)
 }
 
-// TODO: remove these states list builder?
-fun <T> ProgressBarDefinition<T>.build(
-    vararg states: ProgressState<T>,
-    maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
-): Widget {
-    return maker.build(states.map { this to it })
-}
-
+// TODO add docs
 fun <T> ProgressBarDefinition<T>.build(
     context: T,
     total: Long?,
@@ -117,10 +110,9 @@ fun <T> ProgressBarDefinition<T>.build(
     val state = ProgressState(
         context, total, completed, displayedTime, status, speed
     )
-    return build(state, maker = maker)
+    return maker.build(listOf(this to state))
 }
 
-// TODO add docs
 fun ProgressBarDefinition<Unit>.build(
     total: Long?,
     completed: Long,
@@ -138,9 +130,11 @@ fun <T> progressBarContextLayout(
     alignColumns: Boolean = true,
     textFps: Int = TEXT_FPS,
     animationFps: Int = ANIMATION_FPS,
+    align: TextAlign = TextAlign.RIGHT,
+    verticalAlign: VerticalAlign = VerticalAlign.BOTTOM,
     init: ProgressLayoutScope<T>.() -> Unit,
 ): ProgressBarDefinition<T> {
-    return ProgressLayoutBuilder<T>(textFps, animationFps)
+    return ProgressLayoutBuilder<T>(textFps, animationFps, align, verticalAlign)
         .apply(init)
         .build(spacing, alignColumns)
 }
@@ -150,9 +144,13 @@ fun progressBarLayout(
     alignColumns: Boolean = true,
     textFps: Int = TEXT_FPS,
     animationFps: Int = ANIMATION_FPS,
+    align: TextAlign = TextAlign.RIGHT,
+    verticalAlign: VerticalAlign = VerticalAlign.BOTTOM,
     init: ProgressLayoutScope<Unit>.() -> Unit,
 ): ProgressBarDefinition<Unit> {
-    return progressBarContextLayout(spacing, alignColumns, textFps, animationFps, init)
+    return progressBarContextLayout(
+        spacing, alignColumns, textFps, animationFps, align, verticalAlign, init
+    )
 }
 
 /**

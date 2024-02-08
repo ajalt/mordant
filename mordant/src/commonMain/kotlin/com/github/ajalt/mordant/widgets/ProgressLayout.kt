@@ -129,13 +129,11 @@ class ProgressLayout internal constructor(
             else -> Running(displayedTime)
         }
         return factory.build(
-            ProgressState(
                 total,
                 completed,
                 displayedTime,
                 status,
                 speed = speed
-            )
         )
     }
 }

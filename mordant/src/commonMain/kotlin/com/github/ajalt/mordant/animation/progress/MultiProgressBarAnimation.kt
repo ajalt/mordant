@@ -76,15 +76,6 @@ class MultiProgressBarAnimation<T>(
         animation.clear()
     }
 
-    // TODO: remove or implement
-//    override var visible: Boolean
-//        get() = state.value.visible
-//        set(value) {
-//            state.update { copy(visible = value) }
-//            if (!value) animation.clear()
-//            invalidateAllCaches()
-//        }
-
     override val finished: Boolean
         get() = state.value.tasks.all { it.finished }
 

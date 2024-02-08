@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
@@ -92,7 +93,8 @@ class DeprecatedProgressAnimationTest : RenderingTest() {
 
         vt.clearOutput()
         pt.clear()
-        vt.normalizedOutput() shouldBe t.cursor.getMoves { clearScreenAfterCursor() }
+        val moves = t.cursor.getMoves { clearScreenAfterCursor() }
+        vt.normalizedOutput() shouldBe "$moves$CSI?25h"
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
