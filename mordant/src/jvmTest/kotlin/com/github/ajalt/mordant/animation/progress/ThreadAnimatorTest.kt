@@ -32,6 +32,18 @@ class ThreadAnimatorTest {
     }
 
     @Test
+    fun `multi progress animator`() {
+        val layout = progressBarLayout { completed(fps = 100) }
+        val animation = MultiProgressBarAnimation<Unit>(t).animateOnThread(t)
+        val task1 = animation.addTask(layout, total = 10)
+        val task2 = animation.addTask(layout, total = 10)
+        task1.advance(10)
+        task2.advance(10)
+        animation.runBlocking()
+        vt.output().shouldContain(" 10/10\n       10/10")
+    }
+
+    @Test
     fun `smoke test`() {
         val a = progressBarLayout(spacing = 0) {
             completed(fps = 100)
