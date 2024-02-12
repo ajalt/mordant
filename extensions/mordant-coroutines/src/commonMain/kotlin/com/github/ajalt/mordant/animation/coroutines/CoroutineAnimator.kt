@@ -39,7 +39,13 @@ interface CoroutineAnimator {
 /**
  * A [CoroutineAnimator] for a single [task][ProgressTask].
  */
-interface CoroutineTaskAnimator<T> : CoroutineAnimator, ProgressTask<T>
+interface CoroutineProgressTaskAnimator<T> : CoroutineAnimator, ProgressTask<T>
+
+/**
+ * A [CoroutineAnimator] for a [ProgressBarAnimation].
+ */
+interface CoroutineProgressAnimator<T> : CoroutineAnimator, ProgressBarAnimation<T>
+
 
 class BaseCoroutineAnimator(
     private val terminal: Terminal,
@@ -128,7 +134,7 @@ fun <T> ProgressBarDefinition<T>.animateInCoroutine(
     speedEstimateDuration: Duration = 30.seconds,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
-): CoroutineTaskAnimator<T> {
+): CoroutineProgressTaskAnimator<T> {
     val animation = CoroutineProgressBarAnimation<T>(
         terminal,
         maker,
@@ -137,7 +143,7 @@ fun <T> ProgressBarDefinition<T>.animateInCoroutine(
         timeSource
     )
     val task = animation.addTask(this, context, total, completed, start, visible)
-    return CoroutineTaskAnimatorImpl(task, animation)
+    return CoroutineProgressTaskAnimatorImpl(task, animation)
 }
 
 /**
@@ -162,7 +168,7 @@ fun ProgressBarDefinition<Unit>.animateInCoroutine(
     speedEstimateDuration: Duration = 30.seconds,
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
-): CoroutineTaskAnimator<Unit> {
+): CoroutineProgressTaskAnimator<Unit> {
     return animateInCoroutine(
         terminal = terminal,
         context = Unit,
@@ -190,10 +196,50 @@ inline fun Animation<Unit>.animateInCoroutine(
     fps: Int = 30,
     crossinline finished: () -> Boolean = { false },
 ): CoroutineAnimator {
-    return BaseCoroutineAnimator(terminal, asRefreshable(fps, finished))
+    return asRefreshable(fps, finished).animateInCoroutine(terminal)
 }
 
-private class CoroutineTaskAnimatorImpl<T>(
+/**
+ * Create an animator that runs this animation in a coroutine.
+ *
+ * ### Example
+ *
+ * ```
+ * val animator = animation.animateInCoroutine(terminal)
+ * launch { animator.run() }
+ * ```
+ */
+fun RefreshableAnimation.animateInCoroutine(terminal: Terminal): CoroutineAnimator {
+    return BaseCoroutineAnimator(terminal, this)
+}
+
+
+/**
+ * Create an animator that runs this animation in a coroutine.
+ *
+ * ### Example
+ *
+ * ```
+ * val animator = animation.animateInCoroutine(terminal)
+ * launch { animator.run() }
+ * ```
+ */
+fun <T, U> T.animateInCoroutine(terminal: Terminal): CoroutineProgressAnimator<U>
+        where T : RefreshableAnimation, T : ProgressBarAnimation<U> {
+    val animator = (this as RefreshableAnimation).animateInCoroutine(terminal)
+    return CoroutineProgressAnimatorImpl(this, animator)
+}
+
+private class CoroutineProgressTaskAnimatorImpl<T>(
     private val task: ProgressTask<T>,
     private val animator: CoroutineAnimator,
-) : CoroutineTaskAnimator<T>, CoroutineAnimator by animator, ProgressTask<T> by task
+) : CoroutineProgressTaskAnimator<T>,
+    CoroutineAnimator by animator,
+    ProgressTask<T> by task
+
+private class CoroutineProgressAnimatorImpl<T>(
+    private val animation: ProgressBarAnimation<T>,
+    private val animator: CoroutineAnimator,
+) : CoroutineProgressAnimator<T>,
+    ProgressBarAnimation<T> by animation,
+    CoroutineAnimator by animator

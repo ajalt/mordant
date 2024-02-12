@@ -243,8 +243,8 @@ fun ProgressLayoutScope<*>.timeElapsed(
     style: TextStyle = DEFAULT_STYLE,
     verticalAlign: VerticalAlign = this.verticalAlign,
     fps: Int = textFps,
-) = cell(ColumnWidth.Auto, fps = fps, verticalAlign = verticalAlign) {
-    Text(style(renderDuration(calculateTimeElapsed(), compact)), whitespace = Whitespace.PRE)
+) = text(fps = fps, verticalAlign = verticalAlign) {
+    style(renderDuration(calculateTimeElapsed(), compact))
 }
 
 /**

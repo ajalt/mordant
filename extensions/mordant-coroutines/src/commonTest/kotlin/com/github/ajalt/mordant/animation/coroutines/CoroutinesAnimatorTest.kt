@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.animation.coroutines
 
+import com.github.ajalt.mordant.animation.progress.MultiProgressBarAnimation
+import com.github.ajalt.mordant.animation.progress.addTask
+import com.github.ajalt.mordant.animation.progress.advance
 import com.github.ajalt.mordant.animation.progress.update
 import com.github.ajalt.mordant.animation.textAnimation
 import com.github.ajalt.mordant.terminal.Terminal
@@ -7,6 +10,7 @@ import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
@@ -105,6 +109,20 @@ class CoroutinesAnimatorTest {
 
         advanceTimeBy(1.seconds)
         job.isActive shouldBe false
+    }
+
+    @Test
+    @JsName("multi_progress_animation")
+    fun `multi progress animation`() = runTest {
+        val layout = progressBarLayout { completed(fps = 1) }
+        val animation = MultiProgressBarAnimation<Unit>(t).animateInCoroutine(t)
+        val task1 = animation.addTask(layout, total = 10)
+        val task2 = animation.addTask(layout, total = 10)
+        backgroundScope.launch { animation.run() }
+        task1.advance(10)
+        task2.advance(10)
+        advanceTimeBy(1.1.seconds)
+        vt.output().shouldContain(" 10/10\n       10/10")
     }
 
     private fun TerminalRecorder.normalizedOutput(): String {
