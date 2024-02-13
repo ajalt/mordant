@@ -38,7 +38,7 @@ class CoroutinesAnimatorTest {
             completed(suffix = "b", fps = 2)
         }.animateInCoroutine(t, total = 10, timeSource = testTimeSource)
 
-        val job = backgroundScope.launch { a.run() }
+        val job = backgroundScope.launch { a.execute() }
 
         advanceTimeBy(0.1.seconds)
         vt.normalizedOutput() shouldBe "$HIDE_CURSOR        0/10a        0/10b"
@@ -70,7 +70,7 @@ class CoroutinesAnimatorTest {
         val a = progressBarLayout(spacing = 0, textFps = 1) {
             completed()
         }.animateInCoroutine(t, total = 10, timeSource = testTimeSource)
-        var job = backgroundScope.launch { a.run() }
+        var job = backgroundScope.launch { a.execute() }
         advanceTimeBy(0.1.seconds)
         a.stop()
         advanceTimeBy(1.0.seconds)
@@ -78,7 +78,7 @@ class CoroutinesAnimatorTest {
         vt.output() shouldBe "$HIDE_CURSOR        0/10\n$SHOW_CURSOR"
 
         vt.clearOutput()
-        job = backgroundScope.launch { a.run() }
+        job = backgroundScope.launch { a.execute() }
         advanceTimeBy(0.1.seconds)
         a.clear()
         advanceTimeBy(1.0.seconds)
@@ -92,7 +92,7 @@ class CoroutinesAnimatorTest {
         var i = 1
         var fin = false
         val a = t.textAnimation<Unit> { "$i" }.animateInCoroutine(fps = 1) { fin }
-        val job = backgroundScope.launch { a.run() }
+        val job = backgroundScope.launch { a.execute() }
         advanceTimeBy(0.1.seconds)
         vt.normalizedOutput() shouldBe "$CSI?25l1" // hide cursor
         vt.clearOutput()
@@ -118,7 +118,7 @@ class CoroutinesAnimatorTest {
         val animation = MultiProgressBarAnimation<Unit>(t).animateInCoroutine(t)
         val task1 = animation.addTask(layout, total = 10)
         val task2 = animation.addTask(layout, total = 10)
-        backgroundScope.launch { animation.run() }
+        backgroundScope.launch { animation.execute() }
         task1.advance(10)
         task2.advance(10)
         advanceTimeBy(1.1.seconds)

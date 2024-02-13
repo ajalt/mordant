@@ -22,7 +22,7 @@ interface CoroutineAnimator {
     /**
      * Start the animation and refresh it until all its tasks are finished.
      */
-    suspend fun run()
+    suspend fun execute()
 
     /**
      * Stop the animation, but leave it on the screen.
@@ -54,7 +54,7 @@ class BaseCoroutineAnimator(
     private var stopped = false
     private val mutex = Mutex()
 
-    override suspend fun run() {
+    override suspend fun execute() {
         mutex.withLock {
             stopped = false
             terminal.cursor.hide(showOnExit = true)
@@ -118,7 +118,7 @@ class CoroutineProgressBarAnimation<T> private constructor(
  *
  * ```
  * val animation = progressBarContextLayout<String> { ... }.animateInCoroutine(terminal, "context")
- * launch { animation.run() }
+ * launch { animation.execute() }
  * animation.update { ... }
  * ```
  */
@@ -153,7 +153,7 @@ fun <T> ProgressBarDefinition<T>.animateInCoroutine(
  *
  * ```
  * val animation = progressBarLayout { ... }.animateInCoroutine(terminal)
- * launch { animation.run() }
+ * launch { animation.execute() }
  * animation.update { ... }
  * ```
  */
@@ -189,7 +189,7 @@ fun ProgressBarDefinition<Unit>.animateInCoroutine(
  * ### Example
  * ```
  * val animation = terminal.animation<Unit> { ... }.animateInCoroutine(terminal)
- * launch { animation.run() }
+ * launch { animation.execute() }
  * ```
  */
 inline fun Animation<Unit>.animateInCoroutine(
@@ -206,7 +206,7 @@ inline fun Animation<Unit>.animateInCoroutine(
  *
  * ```
  * val animator = animation.animateInCoroutine(terminal)
- * launch { animator.run() }
+ * launch { animator.execute() }
  * ```
  */
 fun RefreshableAnimation.animateInCoroutine(terminal: Terminal): CoroutineAnimator {
@@ -221,7 +221,7 @@ fun RefreshableAnimation.animateInCoroutine(terminal: Terminal): CoroutineAnimat
  *
  * ```
  * val animator = animation.animateInCoroutine(terminal)
- * launch { animator.run() }
+ * launch { animator.execute() }
  * ```
  */
 fun <T, U> T.animateInCoroutine(terminal: Terminal): CoroutineProgressAnimator<U>

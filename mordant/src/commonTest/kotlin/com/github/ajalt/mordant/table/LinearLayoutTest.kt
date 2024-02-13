@@ -1,8 +1,7 @@
 package com.github.ajalt.mordant.table
 
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.ProgressBar
 import com.github.ajalt.mordant.widgets.Text
@@ -116,21 +115,47 @@ class LinearLayoutTest : RenderingTest() {
     )
 
     @Test
-    fun verticalLayoutLeftAlign() = checkRender(
+    @JsName("verticalLayout_justify")
+    fun `verticalLayout justify`() = checkRender(
         verticalLayout {
-            align = TextAlign.LEFT
+            align = TextAlign.JUSTIFY
             spacing = 1
             cell("1")
-            cell("2")
-            cell("33")
+            cell("2 2")
+            cell("3333")
         }, """
-        ░1 ░
-        ░  ░
-        ░2 ░
-        ░  ░
-        ░33░
+        ░ 1  ░
+        ░    ░
+        ░2  2░
+        ░    ░
+        ░3333░
         """
     )
+
+    @Test
+    @JsName("verticalLayout_left_align")
+    fun `verticalLayout left align`() {
+        class W(val w: Int) : Widget {
+            override fun measure(t: Terminal, width: Int): WidthRange {
+                return WidthRange(w, w)
+            }
+
+            override fun render(t: Terminal, width: Int): Lines {
+                return Lines(listOf(Line(listOf(Span.word("=".repeat(w))))))
+            }
+        }
+
+        checkRender(
+            verticalLayout {
+                align = TextAlign.LEFT
+                cell(W(2))
+                cell(W(4))
+            }, """
+            ░==  ░
+            ░====░
+            """
+        )
+    }
 
     @Test
     fun verticalLayoutFixedTruncation() = checkRender(

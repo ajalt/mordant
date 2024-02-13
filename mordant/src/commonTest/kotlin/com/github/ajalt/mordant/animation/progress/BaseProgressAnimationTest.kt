@@ -1,10 +1,12 @@
 package com.github.ajalt.mordant.animation.progress
 
-import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.test.normalizedOutput
+import com.github.ajalt.mordant.test.replaceCrLf
 import com.github.ajalt.mordant.widgets.progress.*
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
@@ -127,41 +129,25 @@ class BaseProgressAnimationTest : RenderingTest() {
         t1.update { visible = true }
         a.refresh()
         vt.normalizedOutput() shouldBe "Task 1"
-
-        // TODO: uncomment if visible is implemented
-//        vt.clearOutput()
-//        t2.update { visible = true }
-//        a.visible = false
-//        a.refresh()
-//        vt.normalizedOutput() shouldBe ""
-//
-//        vt.clearOutput()
-//        a.visible = true
-//        a.refresh()
-//        vt.normalizedOutput() shouldBe "Task 1\nTask 2"
     }
 
     @Test
     @JsName("changing_text_cell")
     fun `changing text cell`() {
-        val l = progressBarContextLayout<Int>(textFps = 1, animationFps = 1) {
-            text { "Task $context" }
+        val l = progressBarContextLayout(
+            textFps = 1, animationFps = 1, alignColumns = false
+        ) {
+            text(align = TextAlign.LEFT) { context }
         }
-        val a = MultiProgressBarAnimation<Int>(t, timeSource = now)
-        val t1 = a.addTask(l, 1)
+        val a = MultiProgressBarAnimation<String>(t, timeSource = now)
+        a.addTask(l, "====")
+        val t1 = a.addTask(l, "1111")
 
         a.refresh()
-        vt.normalizedOutput() shouldBe "Task 1"
-
-        vt.clearOutput()
-        t1.update { context = 2 }
+        t1.update { context = "22" }
         now += 1.seconds
         a.refresh()
-        vt.normalizedOutput() shouldBe "Task 2"
-    }
-
-    private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfter("${CSI}0J").substringAfter("${CSI}1A").trimStart('\r')
-            .trimEnd()
+        val moves = t.cursor.getMoves { startOfLine(); up(1) }
+        vt.output().replaceCrLf() shouldBe "====\n1111${moves}====\n22  ".replaceCrLf()
     }
 }

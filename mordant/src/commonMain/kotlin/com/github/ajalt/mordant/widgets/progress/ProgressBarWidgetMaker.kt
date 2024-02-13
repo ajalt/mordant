@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.widgets.progress
 
+import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.widgets.EmptyWidget
@@ -35,7 +36,7 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
         return when {
             rows.isEmpty() -> EmptyWidget
             rows.size == 1 -> makeHorizontalLayout(rows[0].first, rows[0].second)
-            rows.none { (d, _) -> !d.alignColumns } -> makeTable(rows)
+            rows.all { it.first.alignColumns } -> makeTable(rows)
             else -> makeVerticalLayout(rows)
         }
     }
@@ -52,6 +53,7 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget {
         return verticalLayout {
+            align = TextAlign.LEFT // LEFT instead of NONE so that the widget isn't jagged
             var alignStart = -1
             for ((i, row) in rows.withIndex()) {
                 val (d, state) = row

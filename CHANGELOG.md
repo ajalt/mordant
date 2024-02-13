@@ -1,10 +1,7 @@
 # Changelog
 
-## 2.3.0
+## Unreleased
 ### Added
-- Vararg constructors for `UnorderedList` and `OrderedList`
-- `UnorderedList` and `OrderedList` now support being empty 
-- Added optional terminal frame to `TerminalRecorder.outputAsHtml`
 - New implementation of progress bars with a number of improvements:
   - Any widget can be added to a progress layout, not just the built-in cell types
   - TODO New cell: timeElapsed
@@ -16,8 +13,19 @@
 - Added `TableBuilder.addPaddingWidthToFixedWidth` option to control how padding is added to fixed width columns.
 
 ### Changed
-- When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used). 
 - Animations now never add a trailing newline while they're running. They always add one once the animation is stopped. The `trailNewline` parameter is deprecated. This allows full screen animations without a blank line at the bottom. 
+
+### Fixed
+- Vertical layout now correctly pads non-text cells when `align` is set to `TextAlign.LEFT`
+
+## 2.3.0
+### Added
+- Vararg constructors for `UnorderedList` and `OrderedList`
+- `UnorderedList` and `OrderedList` now support being empty
+- Added optional terminal frame to `TerminalRecorder.outputAsHtml`
+
+### Changed
+- When setting conflicting styles on a `Table` or its cells, the innermost style now takes precedence (i.e. if you set different styles on the whole table and a cell, the style applied to the cell will be used).
 
 ### Fixed
 - Updated bundled proguard rules [(#130)](https://github.com/ajalt/mordant/issues/130)

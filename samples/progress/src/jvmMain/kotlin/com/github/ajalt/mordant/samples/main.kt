@@ -9,7 +9,6 @@ import com.github.ajalt.mordant.rendering.TextColors.magenta
 import com.github.ajalt.mordant.rendering.TextStyles.bold
 import com.github.ajalt.mordant.rendering.TextStyles.dim
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.HorizontalRule
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.coroutineScope
@@ -36,12 +35,12 @@ suspend fun main() = coroutineScope {
         timeElapsed(compact = false)
     }
     val taskLayout = progressBarContextLayout<String> {
-        text(align = TextAlign.LEFT) { "〉$context" }
+        text(fps = animationFps, align = TextAlign.LEFT) { "〉$context" }
     }
 
     val progress = MultiProgressBarAnimation<String>(terminal).animateInCoroutine(terminal)
     val overall = progress.addTask(overallLayout, "INITIALIZING", total = 100)
-    launch { progress.run() }
+    launch { progress.execute() }
     val task1 = progress.addTask(taskLayout, bold("Evaluate settings"))
     delay(200)
 
@@ -54,10 +53,12 @@ suspend fun main() = coroutineScope {
     delay(200)
 
     overall.update { context = "EXECUTING" }
-    for (module in modules + modules + modules) {
-        tasks[Random.nextInt(tasks.size)].update { context = module }
-        overall.advance()
-        delay(75)
+    repeat(5) {
+        for (module in modules) {
+            tasks[Random.nextInt(tasks.size)].update { context = module }
+            overall.advance()
+            delay(100)
+        }
     }
 
     overall.update { context = "EXECUTING" }

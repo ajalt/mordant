@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.test.normalizedOutput
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
@@ -93,11 +94,7 @@ class DeprecatedProgressAnimationTest : RenderingTest() {
 
         vt.clearOutput()
         pt.clear()
-        val moves = t.cursor.getMoves { clearScreenAfterCursor() }
-        vt.normalizedOutput() shouldBe "$moves$CSI?25h"
-    }
-
-    private fun TerminalRecorder.normalizedOutput(): String {
-        return output().trimStart('\r')
+        val moves = t.cursor.getMoves { startOfLine(); clearScreenAfterCursor() }
+        vt.output() shouldBe "$moves$CSI?25h"
     }
 }
