@@ -69,6 +69,10 @@ class TerminalTest {
         vt.stdout() shouldBe t.cursor.getMoves { left(1); right(1) }
         vt.stderr() shouldBe t.cursor.getMoves { up(1) }
         vt.output() shouldBe t.cursor.getMoves { left(1); up(1); right(1) }
+
+        vt.clearOutput()
+        t.rawPrint("\t")
+        vt.output() shouldBe "\t"
     }
 
     @Test

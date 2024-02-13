@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
+import com.github.ajalt.mordant.test.replaceCrLf
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -124,30 +124,27 @@ class AnimationTest {
         val b = t.textAnimation<Int> { "<b$it>" }
 
         a.update(1)
-        rec.output().normalize() shouldBe "<a1>"
+        rec.output().replaceCrLf() shouldBe "<a1>"
         rec.clearOutput()
 
         b.update(2)
         var moves = t.cursor.getMoves { startOfLine() }
-        rec.output().normalize() shouldBe "${moves}<a1>\n<b2>".normalize()
+        rec.output().replaceCrLf() shouldBe "${moves}<a1>\n<b2>".replaceCrLf()
         rec.clearOutput()
 
         b.update(3)
         moves = t.cursor.getMoves {
             startOfLine(); up(1); clearScreenAfterCursor(); startOfLine()
         }
-        rec.output().normalize() shouldBe "${moves}<a1>\n<b3>".normalize()
+        rec.output().replaceCrLf() shouldBe "${moves}<a1>\n<b3>".replaceCrLf()
 
         rec.clearOutput()
         a.stop()
-        rec.output().normalize() shouldBe "\r<b3>".normalize()
+        rec.output().replaceCrLf() shouldBe "\r<b3>".replaceCrLf()
 
         rec.clearOutput()
         b.stop()
-        rec.output().normalize() shouldBe "\n".normalize()
+        rec.output().replaceCrLf() shouldBe "\n".replaceCrLf()
     }
 
-    private fun String.normalize(): String {
-        return replace("\r", "␍").replace("\n", "␊").replace(CSI, "␛")
-    }
 }

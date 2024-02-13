@@ -71,6 +71,7 @@ internal class VerticalLayout private constructor(
             rendered = when {
                 w.expandWeight != null -> rendered.setSize(width, textAlign = cell.textAlign)
                 w.width != null -> rendered.setSize(w.width, textAlign = cell.textAlign)
+                hasAlignedCells -> rendered.setSize(renderWidth, textAlign = cell.textAlign)
                 else -> rendered
             }
             // Cells always take up a line, even if empty
