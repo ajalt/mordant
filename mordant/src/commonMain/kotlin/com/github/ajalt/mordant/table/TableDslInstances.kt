@@ -116,32 +116,15 @@ internal class SectionBuilderInstance : SectionBuilder,
 @MordantDsl
 internal class GridBuilderInstance(
     private val tableBuilder: TableBuilderInstance = TableBuilderInstance(),
-) : GridBuilder, CellStyleBuilder by tableBuilder {
-    private val section = tableBuilder.bodySection
-
+) : GridBuilder,
+    CellStyleBuilder by tableBuilder,
+    ColumnHolderBuilder by tableBuilder,
+    RowHolderBuilder by tableBuilder.bodySection {
     init {
         tableBuilder.cellBorders = Borders.LEFT_RIGHT
         tableBuilder.tableBorders = Borders.NONE
         tableBuilder.borderType = BorderType.BLANK
         tableBuilder.padding = Padding(0)
-    }
-
-    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = tableBuilder.column(i, init)
-
-    override fun rowStyles(style1: TextStyle, style2: TextStyle, vararg styles: TextStyle) {
-        section.rowStyles(style1, style2, *styles)
-    }
-
-    override fun rowFrom(cells: Iterable<Any?>, init: RowBuilder.() -> Unit) {
-        section.rowFrom(cells, init)
-    }
-
-    override fun row(vararg cells: Any?, init: RowBuilder.() -> Unit) {
-        section.row(*cells, init = init)
-    }
-
-    override fun row(init: RowBuilder.() -> Unit) {
-        section.row(init)
     }
 
     fun build(): Widget {
@@ -152,8 +135,10 @@ internal class GridBuilderInstance(
 @MordantDsl
 internal class HorizontalLayoutBuilderInstance(
     private val tableBuilder: TableBuilderInstance = TableBuilderInstance(),
-) : HorizontalLayoutBuilder, CellStyleBuilderBase by tableBuilder {
-    private val row = RowBuilderInstance(mutableListOf())
+    private val row: RowBuilderInstance = RowBuilderInstance(mutableListOf()),
+) : HorizontalLayoutBuilder,
+    CellStyleBuilderBase by tableBuilder,
+    ColumnHolderBuilder by tableBuilder {
     override var spacing: Int = 1
     override var verticalAlign: VerticalAlign? = null
 
@@ -173,8 +158,6 @@ internal class HorizontalLayoutBuilderInstance(
     override fun cell(content: Any?, init: CellStyleBuilderBase.() -> Unit) {
         row.cell(content, init)
     }
-
-    override fun column(i: Int, init: ColumnBuilder.() -> Unit) = tableBuilder.column(i, init)
 
     fun build(): Widget {
         tableBuilder.addPaddingWidthToFixedWidth = true

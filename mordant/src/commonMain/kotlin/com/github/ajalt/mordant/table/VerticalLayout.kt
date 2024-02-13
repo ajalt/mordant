@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.table
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.TextAlign.NONE
 import com.github.ajalt.mordant.terminal.Terminal
 
 private class VerticalLayoutCell(
@@ -31,14 +32,14 @@ internal class VerticalLayout private constructor(
             val cells = TableLayout(builder).buildTable().rows.map {
                 check(it.size == 1)
                 val cell = it[0] as Cell.Content
-                aligned = aligned || (cell.textAlign !in listOf(null, TextAlign.NONE))
+                aligned = aligned || (cell.textAlign !in listOf(null, NONE))
                 VerticalLayoutCell(cell.content, cell.style, cell.textAlign)
             }
             return VerticalLayout(
                 cells,
                 spacing,
                 columnWidth,
-                builder.align ?: TextAlign.NONE,
+                builder.align ?: NONE,
                 aligned,
             )
         }
@@ -60,7 +61,7 @@ internal class VerticalLayout private constructor(
         }
         val lines = mutableListOf<Line>()
         val spacingLine = when (textAlign) {
-            TextAlign.NONE -> EMPTY_LINE
+            NONE -> EMPTY_LINE
             else -> Line(listOf(Span.space(renderWidth)), DEFAULT_STYLE)
         }
         for ((i, cell) in cells.withIndex()) {
@@ -71,7 +72,7 @@ internal class VerticalLayout private constructor(
             rendered = when {
                 w.expandWeight != null -> rendered.setSize(width, textAlign = cell.textAlign)
                 w.width != null -> rendered.setSize(w.width, textAlign = cell.textAlign)
-                hasAlignedCells -> rendered.setSize(renderWidth, textAlign = cell.textAlign)
+                cell.textAlign != NONE -> rendered.setSize(renderWidth, textAlign = cell.textAlign)
                 else -> rendered
             }
             // Cells always take up a line, even if empty

@@ -7,6 +7,11 @@ import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 import kotlin.math.max
 
+/**
+ * Instances of this interface creates widgets for progress bars.
+ *
+ * The default implementation is [MultiProgressBarWidgetMaker].
+ */
 interface ProgressBarWidgetMaker {
     /**
      * Build a progress widget with the given [rows].
@@ -28,7 +33,11 @@ interface ProgressBarWidgetMaker {
     ): List<List<Widget>>
 }
 
-//TODO: docs
+/**
+ * The default implementation of [ProgressBarWidgetMaker].
+ *
+ * It uses a [grid] or [verticalLayout] to render the progress bars.
+ */
 object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
     override fun <T> build(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
@@ -93,8 +102,8 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
 
     private fun <T> makeTable(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
-    ): Table {
-        return table {
+    ): Widget {
+        return grid {
             addPaddingWidthToFixedWidth = true
             cellBorders = Borders.NONE
             val columnCount = rows.maxOf { (d, _) -> if (d.alignColumns) d.cells.size else 0 }
@@ -116,21 +125,19 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
                     }
                 }
             }
-            body {
-                for ((d, state) in rows) {
-                    row {
-                        if (d.alignColumns) {
-                            for ((i, c) in d.cells.withIndex()) {
-                                cell(c.content(state)) {
-                                    align = c.align
-                                    verticalAlign = c.verticalAlign
-                                    padding = Padding { left = if (i == 0) 0 else d.spacing }
-                                }
+            for ((d, state) in rows) {
+                row {
+                    if (d.alignColumns) {
+                        for ((i, c) in d.cells.withIndex()) {
+                            cell(c.content(state)) {
+                                align = c.align
+                                verticalAlign = c.verticalAlign
+                                padding = Padding { left = if (i == 0) 0 else d.spacing }
                             }
-                        } else {
-                            cell(makeHorizontalLayout(d, state)) {
-                                columnSpan = Int.MAX_VALUE
-                            }
+                        }
+                    } else {
+                        cell(makeHorizontalLayout(d, state)) {
+                            columnSpan = Int.MAX_VALUE
                         }
                     }
                 }
