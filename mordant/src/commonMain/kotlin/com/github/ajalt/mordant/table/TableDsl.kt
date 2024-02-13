@@ -160,8 +160,23 @@ interface ColumnBuilder : CellStyleBuilder {
     var width: ColumnWidth
 }
 
+interface ColumnHolderBuilder {
+    /**
+     * If false, (the default) [padding][CellStyleBuilder.padding] in
+     * [fixed width][ColumnWidth.Fixed] columns will reduce the content width so
+     * that the total width is always exactly the specified width.
+     *
+     * If true, padding will be added to the specified width so padding never reduces the content
+     * width.
+     */
+    var addPaddingWidthToFixedWidth: Boolean
+
+    /** Configure a single column, which the first column at index 0. */
+    fun column(i: Int, init: ColumnBuilder.() -> Unit)
+}
+
 @MordantDsl
-interface TableBuilder : CellStyleBuilder {
+interface TableBuilder : CellStyleBuilder, ColumnHolderBuilder {
     /** The characters to use to draw cell edges */
     var borderType: BorderType
 
@@ -176,16 +191,6 @@ interface TableBuilder : CellStyleBuilder {
      */
     var tableBorders: Borders?
 
-    /**
-     * If false, (the default) [padding][CellStyleBuilder.padding] in
-     * [fixed width][ColumnWidth.Fixed] columns will reduce the content width so
-     * that the total width is always exactly the specified width.
-     *
-     * If true, padding will be added to the specified width so padding never reduces the content
-     * width.
-     */
-    var addPaddingWidthToFixedWidth: Boolean
-
     /** Add a [widget] as a caption oto the top of this table. */
     fun captionTop(widget: Widget)
 
@@ -197,9 +202,6 @@ interface TableBuilder : CellStyleBuilder {
 
     /** Add [text] as a caption to the bottom of this table. */
     fun captionBottom(text: String, align: TextAlign = TextAlign.CENTER)
-
-    /** Configure a single column, which the first column at index 0. */
-    fun column(i: Int, init: ColumnBuilder.() -> Unit)
 
     /** Configure the header section. */
     fun header(init: SectionBuilder.() -> Unit)
@@ -237,10 +239,7 @@ interface SectionBuilder : CellStyleBuilder, RowHolderBuilder {
 }
 
 @MordantDsl
-interface GridBuilder : CellStyleBuilder, RowHolderBuilder {
-    /** Configure a single column, with the first column at index 0. */
-    fun column(i: Int, init: ColumnBuilder.() -> Unit)
-}
+interface GridBuilder : CellStyleBuilder, RowHolderBuilder, ColumnHolderBuilder
 
 @MordantDsl
 interface RowBuilder : CellStyleBuilder {
@@ -283,11 +282,9 @@ interface LinearLayoutBuilder : CellStyleBuilderBase {
 }
 
 @MordantDsl
-interface HorizontalLayoutBuilder : LinearLayoutBuilder {
+interface HorizontalLayoutBuilder : LinearLayoutBuilder, ColumnHolderBuilder {
+    /** Vertical alignment of cell contents */
     var verticalAlign: VerticalAlign?
-
-    /** Configure a single column, with the first column at index 0. */
-    fun column(i: Int, init: ColumnBuilder.() -> Unit)
 }
 
 @MordantDsl
