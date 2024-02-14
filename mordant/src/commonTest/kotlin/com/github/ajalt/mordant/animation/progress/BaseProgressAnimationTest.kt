@@ -129,6 +129,11 @@ class BaseProgressAnimationTest : RenderingTest() {
         t1.update { visible = true }
         a.refresh()
         vt.normalizedOutput() shouldBe "Task 1"
+
+        vt.clearOutput()
+        a.removeTask(t1)
+        a.refresh()
+        vt.normalizedOutput() shouldBe ""
     }
 
     @Test

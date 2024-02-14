@@ -9,9 +9,9 @@ import kotlin.time.ComparableTimeMark
 internal const val TEXT_FPS = 5
 internal const val ANIMATION_FPS = 30
 
+/** A unique identifier for a task in a progress bar. */
 class TaskId
 
-// TODO: docs on all of these
 interface ProgressLayoutScope<T> {
 
     /** The default framerate for text based cells */
@@ -30,11 +30,11 @@ interface ProgressLayoutScope<T> {
      * Add a cell to this layout.
      *
      * The [content] will be called every time the cell is rendered. In the case of
-     * animations, that will be at its [fps].
+     * animations, that will usually be at its [fps].
      *
      * @param width The width of the cell.
      * @param fps The number of times per second to refresh the cell when animated. If 0, the cell
-     *   will not be refreshed.
+     *   should not be refreshed.
      * @param align The text alignment for the cell when multiple tasks are present and cells are
      *   aligned, or `null` to use [the default][ProgressLayoutScope.align].
      * @param verticalAlign The vertical alignment for the cell if there are other taller cells in
@@ -97,7 +97,7 @@ fun <T> ProgressBarDefinition(
     return ProgressBarDefinitionImpl(cells, spacing, alignColumns)
 }
 
-// TODO add docs
+/** Create a widget for this [ProgressBarDefinition] with the given state. */
 fun <T> ProgressBarDefinition<T>.build(
     context: T,
     total: Long?,
@@ -113,6 +113,7 @@ fun <T> ProgressBarDefinition<T>.build(
     return maker.build(listOf(this to state))
 }
 
+/** Create a widget for this [ProgressBarDefinition] with the given state. */
 fun ProgressBarDefinition<Unit>.build(
     total: Long?,
     completed: Long,
@@ -124,7 +125,12 @@ fun ProgressBarDefinition<Unit>.build(
     return build(Unit, total, completed, displayedTime, status, speed, maker)
 }
 
-// TODO: docs
+/**
+ * Create a progress bar layout with that has a context of type [T].
+ *
+ * If you don't need a context, you can use [progressBarLayout] instead. If you need a builder
+ * rather than a DSL, you can use [ProgressLayoutBuilder].
+ */
 fun <T> progressBarContextLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
@@ -139,6 +145,11 @@ fun <T> progressBarContextLayout(
         .build(spacing, alignColumns)
 }
 
+/**
+ * Create a progress bar layout that doesn't use a context.
+ *
+ * If you need a context, you can use [progressBarContextLayout] instead.
+ */
 fun progressBarLayout(
     spacing: Int = 2,
     alignColumns: Boolean = true,
@@ -179,6 +190,7 @@ class ProgressLayoutBuilder<T>(
         )
     }
 
+    /** Build the progress bar layout. */
     fun build(spacing: Int = 2, alignColumns: Boolean = true): ProgressBarDefinition<T> {
         return ProgressBarDefinition(cells, spacing, alignColumns)
     }

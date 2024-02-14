@@ -122,9 +122,19 @@ class BlockingProgressBarAnimation<T> private constructor(
  * animation.execute()
  * animation.update { ... }
  * ```
+ *
+ * @param terminal The terminal to draw the progress bar to
+ * @param context The context to pass to the task
+ * @param total The total number of steps needed to complete the progress task, or `null` if it is indeterminate.
+ * @param completed The number of steps currently completed in the progress task.
+ * @param start If `true`, start the task immediately.
+ * @param visible If `false`, the task will not be drawn to the screen.
+ * @param clearWhenFinished If `true`, the animation will be cleared when all tasks are finished. Otherwise, the animation will stop when all tasks are finished, but remain on the screen.
+ * @param speedEstimateDuration The duration over which to estimate the speed of the progress tasks. This estimate will be a rolling average over this duration.
+ * @param timeSource The time source to use for the animation.
+ * @param maker The widget maker to use to lay out the progress bars.
  */
 fun <T> ProgressBarDefinition<T>.animateOnThread(
-    // TODO param docs (copy from addTask)
     terminal: Terminal,
     context: T,
     total: Long? = null,
@@ -159,9 +169,17 @@ fun <T> ProgressBarDefinition<T>.animateOnThread(
  * animation.execute()
  * animation.update { ... }
  * ```
+ * @param terminal The terminal to draw the progress bar to
+ * @param total The total number of steps needed to complete the progress task, or `null` if it is indeterminate.
+ * @param completed The number of steps currently completed in the progress task.
+ * @param start If `true`, start the task immediately.
+ * @param visible If `false`, the task will not be drawn to the screen.
+ * @param clearWhenFinished If `true`, the animation will be cleared when all tasks are finished. Otherwise, the animation will stop when all tasks are finished, but remain on the screen.
+ * @param speedEstimateDuration The duration over which to estimate the speed of the progress tasks. This estimate will be a rolling average over this duration.
+ * @param timeSource The time source to use for the animation.
+ * @param maker The widget maker to use to lay out the progress bars.
  */
 fun ProgressBarDefinition<Unit>.animateOnThread(
-    // TODO param docs (copy from addTask)
     terminal: Terminal,
     total: Long? = null,
     completed: Long = 0,
