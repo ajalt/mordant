@@ -14,11 +14,27 @@ import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
 class MultiProgressBarAnimation<T>(
-    // TODO: param docs
+    /** The terminal to render the animation to */
     terminal: Terminal,
+    /**
+     * If `true`, the animation will be cleared when all tasks are finished.
+     *
+     * Otherwise, the animation will stop when all tasks are finished, but remain on the screen.
+     */
     private val clearWhenFinished: Boolean = false,
+    /**
+     * The duration over which to estimate the speed of the progress tasks.
+     *
+     * This estimate will be a rolling average over this duration.
+     */
     private val speedEstimateDuration: Duration = 30.seconds,
+    /**
+     * The widget maker to use to lay out the progress bars.
+     */
     private val maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
+    /**
+     * The time source to use for the animation.
+     */
     private val timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
 ) : RefreshableAnimation, ProgressBarAnimation<T> {
     private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
@@ -53,9 +69,9 @@ class MultiProgressBarAnimation<T>(
         return task
     }
 
-    override fun removeTask(task: ProgressTask<T>): Boolean {
-        val (old, _) = state.update { copy(tasks = tasks.filter { it.id != task.id }) }
-        return old.tasks.any { it.id == task.id }
+    override fun removeTask(taskId: TaskId): Boolean {
+        val (old, _) = state.update { copy(tasks = tasks.filter { it.id != taskId }) }
+        return old.tasks.any { it.id == taskId }
     }
 
     override fun refresh(refreshAll: Boolean) {

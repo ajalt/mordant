@@ -6,7 +6,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
-// TODO: docs
 data class ProgressState<T>(
     /** The context object passed to the progress task. */
     val context: T,
