@@ -19,18 +19,6 @@ interface ProgressBarWidgetMaker {
     fun <T> build(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): Widget
-
-    /**
-     * Build the widgets for each cell in the progress bar.
-     *
-     * This can be used if you want to manually include the individual cells in a layout like
-     * a table.
-     *
-     * @return A list of rows, where each row is a list of widgets for the cells in that row.
-     */
-    fun <T> buildCells(
-        rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
-    ): List<List<Widget>>
 }
 
 /**
@@ -50,7 +38,16 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
         }
     }
 
-    override fun <T> buildCells(
+
+    /**
+     * Build the widgets for each cell in the progress bar.
+     *
+     * This can be used if you want to manually include the individual cells in a layout like
+     * a table.
+     *
+     * @return A list of rows, where each row is a list of widgets for the cells in that row.
+     */
+    fun <T> buildCells(
         rows: List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>,
     ): List<List<Widget>> {
         return rows.map { (definition, state) ->
@@ -153,20 +150,6 @@ fun <T> ProgressBarWidgetMaker.build(
     vararg rows: Pair<ProgressBarDefinition<T>, ProgressState<T>>,
 ): Widget {
     return build(rows.asList())
-}
-
-/**
- * Build the widgets for each cell in the progress bar.
- *
- * This can be used if you want to manually include the individual cells in a layout like
- * a table.
- *
- * @return A list of rows, where each row is a list of widgets for the cells in that row.
- */
-fun <T> ProgressBarWidgetMaker.buildCells(
-    vararg rows: Pair<ProgressBarDefinition<T>, ProgressState<T>>,
-): List<List<Widget>> {
-    return buildCells(rows.asList())
 }
 
 private fun nullMax(a: Int?, b: Int?): Int? =

@@ -354,8 +354,10 @@ class ProgressLayoutTest : RenderingTest() {
             text { "b$context" }
         }
         val cells = MultiProgressBarWidgetMaker.buildCells(
+            listOf(
                 layout to ProgressState(1, 1, 1, start, Running(start)),
                 layout to ProgressState(2, 2, 2, start, Running(start)),
+            )
         )
         val widget = table {
             body {
