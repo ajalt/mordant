@@ -370,19 +370,20 @@ t.cursor.hide(showOnExit = true)
 ## Animations
 
 You can animate any widget like a table with [Terminal.animation], or any regular
-string with [Terminal.textAnimation].
+string with [Terminal.textAnimation]. For progress bar animations, see [the docs on progress
+bars](progress.md).
 
 === "Code"
     ```kotlin
-    val t = Terminal()
-    val a = t.textAnimation<Int> { frame ->
+    val terminal = Terminal()
+    val a = terminal.textAnimation<Int> { frame ->
         (1..50).joinToString("") {
             val hue = (frame + it) * 3 % 360
             TextColors.hsv(hue, 1, 1)("━")
         }
     }
     
-    t.cursor.hide(showOnExit = true)
+    terminal.cursor.hide(showOnExit = true)
     repeat(120) {
         a.update(it)
         Thread.sleep(25)
@@ -390,41 +391,8 @@ string with [Terminal.textAnimation].
     ```
 
 === "Output"
-    ![](img/animation.svg)
 
-
-## Progress bars
-
-You can create customizable progress bars that automatically compute speed and time remaining.
-
-=== "Code"
-    ```kotlin
-    val t = Terminal()
-    val progress = t.progressAnimation {
-        text("my-file.iso")
-        percentage()
-        progressBar()
-        completed()
-        speed("B/s")
-        timeRemaining()
-    }
-    ```
-=== "Output"
-    <div style="border-radius: 8px;width: fit-content;padding: 0.5em 1em;filter: drop-shadow(0.5em 0.5em 0.5em black);background-color: rgb(12 12 12);">
-    <div style="margin: -0.5em 0px;font-size: 2em"><span style="color: #ff5f56;">●&nbsp;</span><span style="color: #ffbd2e">●&nbsp;</span><span style="color: #27c93f">●&nbsp;</span></div>
-    <pre style="font-family: monospace">
-    <span>my-file.iso</span><span> </span><span>83%</span><span> </span><span style="color: #61afef">━━━━━━</span><span style="color: #68b2f0">━</span><span style="color: #88c2f4">━</span><span style="color: #b9dbf9">━</span><span style="color: #e5f2fd">━</span><span style="color: #fcfeff">━━</span><span style="color: #e5f2fd">━</span><span style="color: #b9dbf9">━</span><span style="color: #88c2f4">━</span><span style="color: #68b2f0">━</span><span style="color: #61afef">━━</span><span> </span><span style="color: #5c6370">━━━</span><span> </span><span>25.0/30.0G</span><span> </span><span>71.2MB/s</span><span>  </span><span>eta</span><span> </span><span>0:01:10</span>
-    </pre>
-    </div>
-
-Call [progress.start] to animate the progress, and [progress.update] or [progress.advance] as your
-task completes.
-
-!!! note
-    The [progressAnimation] builder is currently JVM-only - see [issue #148](https://github.com/ajalt/mordant/issues/148).
-    On other platforms, you can still use `t.animation { progressLayout { ... } }` which will render the same widget, 
-    you'll just need to call [progress.build] manually.
-
+    ![](img/animation_text.gif)
 
 ## Prompting for input
 
