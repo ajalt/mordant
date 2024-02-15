@@ -129,17 +129,17 @@ class ProgressLayout internal constructor(
             else -> Running(displayedTime)
         }
         return factory.build(
-                total,
-                completed,
-                displayedTime,
-                status,
-                speed = speed
+            total,
+            completed,
+            displayedTime,
+            status,
+            speed = speed
         )
     }
 }
 
 private fun calcHz(completed: Long, elapsed: Duration): Double = when {
-    completed <= 0 || elapsed <= Duration.ZERO -> 0.0
+    completed <= 0 || elapsed <= ZERO -> 0.0
     else -> completed / elapsed.toDouble(DurationUnit.SECONDS)
 }
 

@@ -39,7 +39,7 @@ suspend fun main() = coroutineScope {
         text(fps = animationFps, align = TextAlign.LEFT) { "〉$context" }
     }
 
-    val progress = MultiProgressBarAnimation<String>(terminal).animateInCoroutine(terminal)
+    val progress = MultiProgressBarAnimation(terminal).animateInCoroutine()
     val overall = progress.addTask(overallLayout, "INITIALIZING", total = 100)
     launch { progress.execute() }
     val task1 = progress.addTask(taskLayout, bold("Evaluate settings"))

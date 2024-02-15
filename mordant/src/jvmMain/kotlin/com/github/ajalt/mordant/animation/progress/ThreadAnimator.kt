@@ -47,7 +47,7 @@ interface ThreadProgressTaskAnimator<T> : BlockingAnimator, ProgressTask<T>
 /**
  * A [BlockingAnimator] for a [ProgressBarAnimation].
  */
-interface ThreadProgressAnimator<T> : BlockingAnimator, ProgressBarAnimation<T>
+interface ThreadProgressAnimator : BlockingAnimator, ProgressBarAnimation
 
 class BaseBlockingAnimator(
     private val terminal: Terminal,
@@ -87,13 +87,13 @@ class BaseBlockingAnimator(
 
 }
 
-class BlockingProgressBarAnimation<T> private constructor(
-    private val animation: ProgressBarAnimation<T>,
+class BlockingProgressBarAnimation private constructor(
+    private val animation: ProgressBarAnimation,
     private val animator: BlockingAnimator,
-) : ProgressBarAnimation<T> by animation, BlockingAnimator by animator {
+) : ProgressBarAnimation by animation, BlockingAnimator by animator {
     private constructor(
         terminal: Terminal,
-        animation: MultiProgressBarAnimation<T>,
+        animation: MultiProgressBarAnimation,
     ) : this(animation, BaseBlockingAnimator(terminal, animation))
 
     constructor(
@@ -146,7 +146,7 @@ fun <T> ProgressBarDefinition<T>.animateOnThread(
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
 ): ThreadProgressTaskAnimator<T> {
-    val animation = BlockingProgressBarAnimation<T>(
+    val animation = BlockingProgressBarAnimation(
         terminal,
         clearWhenFinished,
         speedEstimateDuration,
@@ -247,14 +247,12 @@ fun RefreshableAnimation.animateOnThread(terminal: Terminal): BlockingAnimator {
  * ### Example
  *
  * ```
- * val animator = animation.animateOnThread(terminal)
+ * val animator = animation.animateOnThread()
  * animator.execute()
  * ```
  */
-fun <T, U> T.animateOnThread(terminal: Terminal): ThreadProgressAnimator<U>
-        where T : RefreshableAnimation, T : ProgressBarAnimation<U> {
-    val animator = (this as RefreshableAnimation).animateOnThread(terminal)
-    return ThreadProgressAnimatorImpl(this, animator)
+fun MultiProgressBarAnimation.animateOnThread(): ThreadProgressAnimator {
+    return ThreadProgressAnimatorImpl(this, animateOnThread(terminal))
 }
 
 /**
@@ -280,7 +278,7 @@ private class ThreadProgressTaskAnimatorImpl<T>(
     private val animator: BlockingAnimator,
 ) : ThreadProgressTaskAnimator<T>, BlockingAnimator by animator, ProgressTask<T> by task
 
-private class ThreadProgressAnimatorImpl<T>(
-    private val animation: ProgressBarAnimation<T>,
+private class ThreadProgressAnimatorImpl(
+    private val animation: ProgressBarAnimation,
     private val animator: BlockingAnimator,
-) : ThreadProgressAnimator<T>, BlockingAnimator by animator, ProgressBarAnimation<T> by animation
+) : ThreadProgressAnimator, BlockingAnimator by animator, ProgressBarAnimation by animation

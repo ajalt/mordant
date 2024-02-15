@@ -108,7 +108,7 @@ fun ProgressTask<*>.update(completed: Number) = update(completed.toLong())
 /**
  * An animation that can draw one or more progress [tasks][addTask] to the screen.
  */
-interface ProgressBarAnimation<T> {
+interface ProgressBarAnimation {
     /**
      * Add a new task to the progress bar with the given [definition] and [context].
      *
@@ -119,7 +119,7 @@ interface ProgressBarAnimation<T> {
      * @param start If `true`, start the task immediately.
      * @param visible If `false`, the task will not be drawn to the screen.
      */
-    fun addTask(
+    fun <T> addTask(
         definition: ProgressBarDefinition<T>,
         context: T,
         total: Long? = null,
@@ -158,12 +158,12 @@ interface ProgressBarAnimation<T> {
  *
  * @return `true` if the task was removed, `false` if it was not found.
  */
-fun ProgressBarAnimation<*>.removeTask(task: ProgressTask<*>) = removeTask(task.id)
+fun ProgressBarAnimation.removeTask(task: ProgressTask<*>) = removeTask(task.id)
 
 /**
  * Add a new task to the progress bar with the given [definition].
  */
-fun ProgressBarAnimation<Unit>.addTask(
+fun ProgressBarAnimation.addTask(
     definition: ProgressBarDefinition<Unit>,
     total: Long? = null,
     completed: Long = 0,

@@ -110,7 +110,7 @@ fun <T> ProgressBarDefinition<T>.build(
     val state = ProgressState(
         context, total, completed, displayedTime, status, speed
     )
-    return maker.build(listOf(this to state))
+    return maker.build(ProgressBarMakerRow(this, state))
 }
 
 /** Create a widget for this [ProgressBarDefinition] with the given state. */

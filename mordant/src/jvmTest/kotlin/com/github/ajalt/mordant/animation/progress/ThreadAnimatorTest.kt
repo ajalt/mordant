@@ -34,7 +34,7 @@ class ThreadAnimatorTest {
     @Test
     fun `multi progress animator`() {
         val layout = progressBarLayout { completed(fps = 100) }
-        val animation = MultiProgressBarAnimation<Unit>(t).animateOnThread(t)
+        val animation = MultiProgressBarAnimation(t).animateOnThread()
         val task1 = animation.addTask(layout, total = 10)
         val task2 = animation.addTask(layout, total = 10)
         task1.advance(10)

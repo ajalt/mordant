@@ -115,7 +115,7 @@ class CoroutinesAnimatorTest {
     @JsName("multi_progress_animation")
     fun `multi progress animation`() = runTest {
         val layout = progressBarLayout { completed(fps = 1) }
-        val animation = MultiProgressBarAnimation<Unit>(t).animateInCoroutine(t)
+        val animation = MultiProgressBarAnimation(t).animateInCoroutine()
         val task1 = animation.addTask(layout, total = 10)
         val task2 = animation.addTask(layout, total = 10)
         backgroundScope.launch { animation.execute() }
