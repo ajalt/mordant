@@ -14,7 +14,7 @@ public abstract interface class com/github/ajalt/mordant/animation/coroutines/Co
 public final class com/github/ajalt/mordant/animation/coroutines/CoroutineAnimatorKt {
 	public static final fun animateInCoroutine (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineAnimator;
 	public static final fun animateInCoroutine (Lcom/github/ajalt/mordant/animation/RefreshableAnimation;Lcom/github/ajalt/mordant/terminal/Terminal;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineAnimator;
-	public static final fun animateInCoroutine (Lcom/github/ajalt/mordant/animation/RefreshableAnimation;Lcom/github/ajalt/mordant/terminal/Terminal;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressAnimator;
+	public static final fun animateInCoroutine (Lcom/github/ajalt/mordant/animation/progress/MultiProgressBarAnimation;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressAnimator;
 	public static synthetic fun animateInCoroutine$default (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineAnimator;
 	public static final fun animateInCoroutine-TNmY5B4 (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Ljava/lang/Long;JZZZJLkotlin/time/TimeSource$WithComparableMarks;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressTaskAnimator;
 	public static synthetic fun animateInCoroutine-TNmY5B4$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Ljava/lang/Long;JZZZJLkotlin/time/TimeSource$WithComparableMarks;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarWidgetMaker;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/coroutines/CoroutineProgressTaskAnimator;
@@ -33,7 +33,7 @@ public final class com/github/ajalt/mordant/animation/coroutines/CoroutineProgre
 	public fun execute (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getFinished ()Z
 	public fun refresh (Z)V
-	public fun removeTask (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;)Z
+	public fun removeTask (Lcom/github/ajalt/mordant/widgets/progress/TaskId;)Z
 	public fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
