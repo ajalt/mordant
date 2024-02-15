@@ -55,5 +55,6 @@ markdown_extensions:
 
 nav:
   - 'Getting Started': guide.md
+  - 'Progress Bars': progress.md
   - 'API Reference': api/index.html
   - 'Releases': changelog.md

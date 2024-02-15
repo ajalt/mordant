@@ -20,7 +20,7 @@ interface ProgressLayoutScope<T> {
     /** The default framerate for animation cells */
     val animationFps: Int
 
-    /** The default text alignment for cells */
+    /** The default horizontal alignment for cells */
     val align: TextAlign
 
     /** The default vertical alignment for cells */
@@ -130,6 +130,17 @@ fun ProgressBarDefinition<Unit>.build(
  *
  * If you don't need a context, you can use [progressBarLayout] instead. If you need a builder
  * rather than a DSL, you can use [ProgressLayoutBuilder].
+ *
+ * @param spacing The number of spaces between cells in this layout.
+ * @param alignColumns How to align the columns of the progress bar when multiple tasks are present.
+ * If `true`, the cells in each column will have the same width. Widths are only aligned for
+ * contiguous cells, so if you have a row with `alignColumns=false` between rows with
+ * `alignColumns=true`, none of the three will be aligned.
+ * @param textFps The default framerate for text based cells like `timeRemaining`
+ * @param animationFps The default framerate for animation cells like `progressBar`
+ * @param align The default horizontal alignment for cells
+ * @param verticalAlign The default vertical alignment for cells
+ * @param init A lambda that adds cells to the layout
  */
 fun <T> progressBarContextLayout(
     spacing: Int = 2,
@@ -149,6 +160,17 @@ fun <T> progressBarContextLayout(
  * Create a progress bar layout that doesn't use a context.
  *
  * If you need a context, you can use [progressBarContextLayout] instead.
+ *
+ * @param spacing The number of spaces between cells in this layout.
+ * @param alignColumns How to align the columns of the progress bar when multiple tasks are present.
+ * If `true`, the cells in each column will have the same width. Width are only aligned for
+ * contiguous cells, so if you have a row with `alignColumns=false` between rows with
+ * `alignColumns=true`, none of the three will be aligned.
+ * @param textFps The default framerate for text based cells like `timeRemaining`
+ * @param animationFps The default framerate for animation cells like `progressBar`
+ * @param align The default horizontal alignment for cells
+ * @param verticalAlign The default vertical alignment for cells
+ * @param init A lambda that adds cells to the layout
  */
 fun progressBarLayout(
     spacing: Int = 2,
