@@ -167,7 +167,7 @@ class ProgressLayoutTest : RenderingTest() {
     @Test
     @JsName("layout_no_states")
     fun `layout with no states`() {
-        val layout = MultiProgressBarWidgetMaker.build<Unit>(emptyList())
+        val layout = MultiProgressBarWidgetMaker.build(emptyList())
         checkRender(layout, "")
     }
 
@@ -355,8 +355,8 @@ class ProgressLayoutTest : RenderingTest() {
         }
         val cells = MultiProgressBarWidgetMaker.buildCells(
             listOf(
-                layout to ProgressState(1, 1, 1, start, Running(start)),
-                layout to ProgressState(2, 2, 2, start, Running(start)),
+                ProgressBarMakerRow(layout, ProgressState(1, 1, 1, start, Running(start))),
+                ProgressBarMakerRow(layout, ProgressState(2, 2, 2, start, Running(start))),
             )
         )
         val widget = table {

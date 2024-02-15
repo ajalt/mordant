@@ -44,8 +44,7 @@ interface CoroutineProgressTaskAnimator<T> : CoroutineAnimator, ProgressTask<T>
 /**
  * A [CoroutineAnimator] for a [ProgressBarAnimation].
  */
-interface CoroutineProgressAnimator<T> : CoroutineAnimator, ProgressBarAnimation<T>
-
+interface CoroutineProgressAnimator : CoroutineAnimator, ProgressBarAnimation
 
 class BaseCoroutineAnimator(
     private val terminal: Terminal,
@@ -84,13 +83,13 @@ class BaseCoroutineAnimator(
     }
 }
 
-class CoroutineProgressBarAnimation<T> private constructor(
-    private val animation: ProgressBarAnimation<T>,
+class CoroutineProgressBarAnimation private constructor(
+    private val animation: ProgressBarAnimation,
     private val animator: CoroutineAnimator,
-) : ProgressBarAnimation<T> by animation, CoroutineAnimator by animator {
+) : ProgressBarAnimation by animation, CoroutineAnimator by animator {
     private constructor(
         terminal: Terminal,
-        animation: MultiProgressBarAnimation<T>,
+        animation: MultiProgressBarAnimation,
     ) : this(animation, BaseCoroutineAnimator(terminal, animation))
 
     constructor(
@@ -145,7 +144,7 @@ fun <T> ProgressBarDefinition<T>.animateInCoroutine(
     timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
     maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
 ): CoroutineProgressTaskAnimator<T> {
-    val animation = CoroutineProgressBarAnimation<T>(
+    val animation = CoroutineProgressBarAnimation(
         terminal,
         maker,
         clearWhenFinished,
@@ -239,15 +238,14 @@ fun RefreshableAnimation.animateInCoroutine(terminal: Terminal): CoroutineAnimat
  * ### Example
  *
  * ```
- * val animator = animation.animateInCoroutine(terminal)
+ * val animator = animation.animateInCoroutine()
  * launch { animator.execute() }
  * ```
  */
-fun <T, U> T.animateInCoroutine(terminal: Terminal): CoroutineProgressAnimator<U>
-        where T : RefreshableAnimation, T : ProgressBarAnimation<U> {
-    val animator = (this as RefreshableAnimation).animateInCoroutine(terminal)
-    return CoroutineProgressAnimatorImpl(this, animator)
+fun MultiProgressBarAnimation.animateInCoroutine(): CoroutineProgressAnimator {
+    return CoroutineProgressAnimatorImpl(this, animateInCoroutine(terminal))
 }
+
 
 private class CoroutineProgressTaskAnimatorImpl<T>(
     private val task: ProgressTask<T>,
@@ -256,9 +254,9 @@ private class CoroutineProgressTaskAnimatorImpl<T>(
     CoroutineAnimator by animator,
     ProgressTask<T> by task
 
-private class CoroutineProgressAnimatorImpl<T>(
-    private val animation: ProgressBarAnimation<T>,
+private class CoroutineProgressAnimatorImpl(
+    private val animation: ProgressBarAnimation,
     private val animator: CoroutineAnimator,
-) : CoroutineProgressAnimator<T>,
-    ProgressBarAnimation<T> by animation,
+) : CoroutineProgressAnimator,
+    ProgressBarAnimation by animation,
     CoroutineAnimator by animator

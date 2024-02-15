@@ -13,9 +13,9 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
-class MultiProgressBarAnimation<T>(
+class MultiProgressBarAnimation(
     /** The terminal to render the animation to */
-    terminal: Terminal,
+    val terminal: Terminal,
     /**
      * If `true`, the animation will be cleared when all tasks are finished.
      *
@@ -36,16 +36,14 @@ class MultiProgressBarAnimation<T>(
      * The time source to use for the animation.
      */
     private val timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
-) : RefreshableAnimation, ProgressBarAnimation<T> {
-    private data class State<T>(val visible: Boolean, val tasks: List<ProgressTaskImpl<T>>)
+) : RefreshableAnimation, ProgressBarAnimation {
+    private data class State(val visible: Boolean, val tasks: List<ProgressTaskImpl<*>>)
 
-    private val state = MppAtomicRef(State(true, listOf<ProgressTaskImpl<T>>()))
+    private val state = MppAtomicRef(State(true, emptyList()))
     private val animationTime = timeSource.markNow()
-    private val animation = terminal.animation<
-            List<Pair<ProgressBarDefinition<T>, ProgressState<T>>>
-            > { maker.build(it) }
+    private val animation = terminal.animation<List<ProgressBarMakerRow<*>>> { maker.build(it) }
 
-    override fun addTask(
+    override fun <T> addTask(
         definition: ProgressBarDefinition<T>,
         context: T,
         total: Long?,
@@ -78,7 +76,7 @@ class MultiProgressBarAnimation<T>(
         val s = state.value
         if (!s.visible) return
         if (refreshAll) invalidateAllCaches()
-        animation.update(s.tasks.filter { it.visible }.map { it.definition to it.makeState() })
+        animation.update(s.tasks.filter { it.visible }.map { it.makeRow() })
         if (finished) {
             if (clearWhenFinished) animation.clear() else animation.stop()
         }
@@ -234,6 +232,10 @@ private class ProgressTaskImpl<T>(
                 taskId = id,
             )
         }
+    }
+
+    fun makeRow(): ProgressBarMakerRow<T> {
+        return ProgressBarMakerRow(definition, makeState())
     }
 
     override val finished: Boolean get() = state.value.status is Status.Finished

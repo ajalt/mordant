@@ -30,7 +30,7 @@ class BaseProgressAnimationTest : RenderingTest() {
             text("|")
             timeRemaining(fps = 1)
         }
-        val a = MultiProgressBarAnimation<Unit>(t, timeSource = now)
+        val a = MultiProgressBarAnimation(t, timeSource = now)
         val pt = a.addTask(l, total = 1000)
 
         a.refresh()
@@ -73,7 +73,7 @@ class BaseProgressAnimationTest : RenderingTest() {
             text("|")
             timeRemaining()
         }
-        val a = MultiProgressBarAnimation<Unit>(t, false, 1.minutes, timeSource = now)
+        val a = MultiProgressBarAnimation(t, false, 1.minutes, timeSource = now)
         val pt = a.addTask(l, total = 100)
 
         a.refresh()
@@ -108,7 +108,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         val l = progressBarContextLayout<Int>(textFps = 1, animationFps = 1) {
             text { "Task $context" }
         }
-        val a = MultiProgressBarAnimation<Int>(t, timeSource = now)
+        val a = MultiProgressBarAnimation(t, timeSource = now)
         val t1 = a.addTask(l, 1)
         val t2 = a.addTask(l, 2)
 
@@ -144,7 +144,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         ) {
             text(align = TextAlign.LEFT) { context }
         }
-        val a = MultiProgressBarAnimation<String>(t, timeSource = now)
+        val a = MultiProgressBarAnimation(t, timeSource = now)
         a.addTask(l, "====")
         val t1 = a.addTask(l, "1111")
 
@@ -154,5 +154,23 @@ class BaseProgressAnimationTest : RenderingTest() {
         a.refresh()
         val moves = t.cursor.getMoves { startOfLine(); up(1) }
         vt.output().replaceCrLf() shouldBe "====\n1111${moves}====\n22  ".replaceCrLf()
+    }
+
+    @Test
+    @JsName("different_context_types")
+    fun `different context types`() {
+        val l1 = progressBarContextLayout<Int> { text { "int: $context" } }
+        val l2 = progressBarContextLayout<String> { text { "string: $context" } }
+        val l3 = progressBarLayout { text { "no context" } }
+        val a = MultiProgressBarAnimation(t, timeSource = now)
+        a.addTask(l1, 11)
+        a.addTask(l2, "ss")
+        a.addTask(l3)
+        a.refresh()
+        vt.output() shouldBe """
+               int: 11
+            string: ss
+            no context
+            """.trimIndent()
     }
 }
