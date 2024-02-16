@@ -4,6 +4,7 @@ import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import java.io.ByteArrayOutputStream
 
 plugins {
@@ -35,22 +36,13 @@ fun getPublishVersion(): String {
 mavenPublishing {
     project.setProperty("VERSION_NAME", getPublishVersion())
     pomFromGradleProperties()
-    configure(KotlinMultiplatform(JavadocJar.Dokka("dokkaHtml")))
+    configure(KotlinMultiplatform(JavadocJar.Dokka("dokkaHtmlPartial")))
     publishToMavenCentral(SonatypeHost.DEFAULT)
     signAllPublications()
 }
 
-tasks.named<DokkaTask>("dokkaHtml") {
-    outputDirectory.set(rootProject.rootDir.resolve("docs/api"))
-    pluginsMapConfiguration.set(
-        mapOf(
-            "org.jetbrains.dokka.base.DokkaBase" to """{
-                "footerMessage": "Copyright &copy; 2017 AJ Alt"
-            }"""
-        )
-    )
+tasks.withType<DokkaTaskPartial>().configureEach {
     dokkaSourceSets.configureEach {
-        reportUndocumented.set(false)
         skipDeprecated.set(true)
     }
 }
