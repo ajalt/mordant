@@ -97,6 +97,14 @@ fun <T> ProgressBarDefinition(
     return ProgressBarDefinitionImpl(cells, spacing, alignColumns)
 }
 
+/** Create a widget for this [ProgressBarDefinition] with the given [state]. */
+fun <T> ProgressBarDefinition<T>.build(
+    state: ProgressState<T>,
+    maker: ProgressBarWidgetMaker = MultiProgressBarWidgetMaker,
+): Widget {
+    return maker.build(ProgressBarMakerRow(this, state))
+}
+
 /** Create a widget for this [ProgressBarDefinition] with the given state. */
 fun <T> ProgressBarDefinition<T>.build(
     context: T,
@@ -110,7 +118,7 @@ fun <T> ProgressBarDefinition<T>.build(
     val state = ProgressState(
         context, total, completed, displayedTime, status, speed
     )
-    return maker.build(ProgressBarMakerRow(this, state))
+    return build(state, maker)
 }
 
 /** Create a widget for this [ProgressBarDefinition] with the given state. */

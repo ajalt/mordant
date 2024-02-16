@@ -394,6 +394,11 @@ bars](progress.md).
 
     ![](img/animation_text.gif)
 
+!!! tip
+
+    If you have an `animation<Unit>` or `textAnimation<Unit>`, you can refresh them automatically with
+    [animateOnThread] or [animateOnCoroutine].
+
 ## Prompting for input
 
 You can ask the user to enter text and wait for a response with [Terminal.prompt]:
@@ -432,6 +437,8 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [Text]:                     api/mordant/com.github.ajalt.mordant.widgets/-text/index.html
 [Whitespace]:               api/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html
 [YesNoPrompt]:              api/mordant/com.github.ajalt.mordant.terminal/-yes-no-prompt/index.html
+[animateOnCoroutine]:       api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
+[animateOnThread]:          api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html
 [color.bg]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html
 [color.on]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html
 [cursor]:                   api/mordant/com.github.ajalt.mordant.terminal/-terminal/cursor.html

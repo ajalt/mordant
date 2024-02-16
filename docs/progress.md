@@ -94,6 +94,10 @@ dynamic text.
 
     ![](img/progress_context.gif)
 
+!!! tip
+
+    If you want a builder instead of a DSL, you can use the [ProgressLayoutBuilder]
+
 # Multiple Progress Bars
 
 You can create multiple progress bars running at the same time using [MultiProgressBarAnimation].
@@ -140,12 +144,126 @@ but you can change this by setting the `alignColumns` parameter in the layout.
     you can set all the tasks' `completed` equal to their `total`, or cancel the coroutine scope or
     future that the animation is running in.
 
+# Available Progress Bar Cell Types
 
+Mordant provides several cell types that you can use to build your progress bar layouts, or you can
+make your own with [cell] or [text].
+
+=== "Output"
+
+    ![](img/progress_cells.gif)
+
+=== "Code"
+
+    ```kotlin
+    // Use a custom maker to build render the cells in a vertical definitionList
+    object VerticalProgressBarMaker : ProgressBarWidgetMaker {
+        override fun build(rows: List<ProgressBarMakerRow<*>>): Widget {
+            return definitionList {
+                inline = true
+                val widgets = MultiProgressBarWidgetMaker.buildCells(rows)
+                for ((term, desc) in widgets.flatten().windowed(2, 2)) {
+                    entry(term, desc)
+                }
+            }
+        }
+    }
+
+    val progress = progressBarLayout {
+        text("text"); text("text")
+        text("marquee"); marquee("marquee", width = 10, scrollWhenContentFits = true)
+        text("completed"); completed()
+        text("speed"); speed()
+        text("percentage"); percentage()
+        text("timeRemaining"); timeRemaining()
+        text("timeElapsed"); timeElapsed()
+        text("spinner"); spinner(Spinner.Lines())
+        text("progressBar"); progressBar()
+    }.animateOnThread(terminal, maker = VerticalProgressBarMaker)
+
+    launch { progress.execute() }
+
+    while (!progress.finished) {
+        progress.advance()
+        delay(100)
+    }
+    ```
+
+| Cell Type       | Description                                                                                                                                                                                        |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [text]          | You can make a static text cell with `text("")`, or a dynamic one with `text {""}`                                                                                                                 |
+| [marquee]       | A fixed-width text cell that scrolls its contents when they're larger than the cell. You can make the content always scroll by setting `scrollWhenContentFits=true`                                |
+| [completed]     | A cell that shows the [completed] count and optionally the [total]. It uses SI units for amounts larger than 1000                                                                                  |
+| [speed]         | A cell that shows the speed of the progress, in bytes per second.                                                                                                                                  |
+| [percentage]    | A cell that shows the completed percentage.                                                                                                                                                        |
+| [timeRemaining] | A cell that shows the estimated time remaining, or optionally the elapsed time once a task finishes. If you want a different time format, you can do `text { myFormat(calculateTimeRemaining()) }` |
+| [timeElapsed]   | A cell that shows the elapsed time. If you want a different time format, you can do `text { myFormat(calculateTimeElapsed()) }`                                                                    |
+| [spinner]       | A cell that shows an animated [Spinner].                                                                                                                                                           |
+| [progressBar]   | A cell that shows a progress bar.                                                                                                                                                                  |
+| [cell]          | A custom cell that can show any Widget                                                                                                                                                             |
+
+# Animating on Custom Threads
+
+If you want to run an animation on your own threading infrastructure instead of a Java Executor, there 
+are a couple of ways to do it.
+
+## With `runBlocking`
+
+If you are on JVM, you can still use [animateOnThread], but call [BlockingAnimator.runBlocking] on
+you own thread instead of using [execute].
+
+For example, to run an animation with RxJava:
+
+```kotlin
+val progress = progressBarLayout { /* ... */ }.animateOnThread(terminal)
+Completable.create { progress.runBlocking() }
+    .subscribeOn(Schedulers.computation())
+    .subscribe()
+```
+
+## Calling `refresh` manually
+
+If you aren't on JVM or want even more control, you can create a [MultiProgressBarAnimation] and
+call [refresh] manually each time you want a new frame to be rendered.
+
+```kotlin
+val layout = progressBarLayout { /* ... */ }
+val animation = MultiProgressBarAnimation(terminal)
+val task = animation.addTask(layout, total = 100)
+
+while (!animation.finished) {
+    task.advance()
+    animation.refresh()
+    sleep(33)
+}
+
+// Refresh all cells to draw the final frame
+animation.refresh(refreshAll = true)
+```
+
+
+[BlockingAnimator.runBlocking]:    api/mordant/com.github.ajalt.mordant.animation.progress/-blocking-animator/run-blocking.html
+[MultiProgressBarAnimation]:       api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/index.html
+[ProgressLayoutBuilder]:           api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-builder/index.html
 [ProgressTaskUpdateScope.context]: api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task-update-scope/context.html
+[Spinner]:                         api/mordant/com.github.ajalt.mordant.widgets/-spinner/index.html
+[addTask]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html
 [advance]:                         api/mordant/com.github.ajalt.mordant.animation.progress/advance.html
+[animateOnThread]:                 api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html
+[cell]:                            api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html
+[completed]:                       api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html
+[execute]:                         api/mordant/com.github.ajalt.mordant.animation.progress/execute.html
 [finished]:                        api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/finished.html
+[marquee]:                         api/mordant/com.github.ajalt.mordant.widgets.progress/marquee.html
+[percentage]:                      api/mordant/com.github.ajalt.mordant.widgets.progress/percentage.html
 [progressBarContextLayout]:        api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-context-layout.html
 [progressBarLayout]:               api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-layout.html
+[progressBar]:                     api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar.html
+[refresh]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/refresh.html
+[speed]:                           api/mordant/com.github.ajalt.mordant.widgets.progress/speed.html
+[spinner]:                         api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html
+[text]:                            api/mordant/com.github.ajalt.mordant.widgets.progress/text.html
+[timeElapsed]:                     api/mordant/com.github.ajalt.mordant.widgets.progress/time-elapsed.html
+[timeRemaining]:                   api/mordant/com.github.ajalt.mordant.widgets.progress/time-remaining.html
+[total]:                           api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/total.html
 [update]:                          api/mordant/com.github.ajalt.mordant.animation.progress/update.html
-[MultiProgressBarAnimation]:       api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/index.html
-[addTask]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html
