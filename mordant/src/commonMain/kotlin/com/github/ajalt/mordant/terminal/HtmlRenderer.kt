@@ -29,7 +29,8 @@ fun TerminalRecorder.outputAsHtml(
         append("padding: 0.5em 1em;")
         append("filter: drop-shadow(0.5em 0.5em 0.5em black);")
         append("background-color: ${backgroundColor.formatCssString()};")
-        append("""">\n<div style="margin: -0.75em 0px;font-size: 2em">""")
+        append("\">")
+        append("""<div style="margin: -0.75em 0px;font-size: 2em">""")
         for (color in listOf(SRGB("#ff5f56"), SRGB("#ffbd2e"), SRGB("#27c93f"))) {
             append("""<span style="color: ${color.toHex()};">⏺&nbsp;</span>""")
         }
