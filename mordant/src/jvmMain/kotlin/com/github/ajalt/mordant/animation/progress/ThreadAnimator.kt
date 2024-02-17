@@ -17,7 +17,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 
-interface BlockingAnimator {
+interface BlockingAnimator : RefreshableAnimation {
     /**
      * Start the animation and refresh it until all its tasks are finished.
      *
@@ -27,16 +27,6 @@ interface BlockingAnimator {
      * @see execute
      */
     fun runBlocking()
-
-    /**
-     * Stop the animation, but leave it on the screen.
-     */
-    fun stop()
-
-    /**
-     * Stop the animation and remove it from the screen.
-     */
-    fun clear()
 }
 
 /**
@@ -85,6 +75,11 @@ class BaseBlockingAnimator(
         stopped = true
     }
 
+    override val finished: Boolean get() = animation.finished
+
+    override fun refresh(refreshAll: Boolean) {
+        animation.refresh(refreshAll)
+    }
 }
 
 class BlockingProgressBarAnimation private constructor(
@@ -108,6 +103,9 @@ class BlockingProgressBarAnimation private constructor(
             terminal, clearWhenFinished, speedEstimateDuration, maker, timeSource
         ),
     )
+
+    override fun refresh(refreshAll: Boolean) = animator.refresh(refreshAll)
+    override val finished: Boolean get() = animator.finished
 }
 
 /**
@@ -276,9 +274,14 @@ private class DaemonThreadFactory : ThreadFactory {
 private class ThreadProgressTaskAnimatorImpl<T>(
     private val task: ProgressTask<T>,
     private val animator: BlockingAnimator,
-) : ThreadProgressTaskAnimator<T>, BlockingAnimator by animator, ProgressTask<T> by task
+) : ThreadProgressTaskAnimator<T>, BlockingAnimator by animator, ProgressTask<T> by task {
+    override val finished: Boolean get() = animator.finished
+}
 
 private class ThreadProgressAnimatorImpl(
     private val animation: ProgressBarAnimation,
     private val animator: BlockingAnimator,
-) : ThreadProgressAnimator, BlockingAnimator by animator, ProgressBarAnimation by animation
+) : ThreadProgressAnimator, BlockingAnimator by animator, ProgressBarAnimation by animation {
+    override fun refresh(refreshAll: Boolean) = animator.refresh(refreshAll)
+    override val finished: Boolean get() = animator.finished
+}

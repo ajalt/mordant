@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.animation.progress.*
@@ -5,16 +7,15 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.ProgressBuilder
 import com.github.ajalt.mordant.widgets.ProgressLayout
 import com.github.ajalt.mordant.widgets.progress.ANIMATION_FPS
-import com.github.ajalt.mordant.widgets.progress.ProgressLayoutBuilder
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
+import com.github.ajalt.mordant.widgets.progress.ProgressLayoutBuilder
 import com.github.ajalt.mordant.widgets.progress.TEXT_FPS
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 
+@Deprecated("Use progressBarLayout instead")
 class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
     ProgressLayoutBuilder()
 ) {
@@ -40,11 +41,10 @@ class ProgressAnimationBuilder internal constructor() : ProgressBuilder(
 /**
  * A pretty animated progress bar. Manages a timer thread to update the progress bar, so be sure to [stop] it when you're done.
  */
+@Deprecated("Use progressBarLayout instead")
 class ProgressAnimation internal constructor(
-    private val inner: BlockingProgressBarAnimation,
-    private val task: ProgressTask<Unit>,
+    private val inner: ThreadProgressTaskAnimator<Unit>,
 ) {
-    private val executor = defaultExecutor()
     private val lock = Any()
     private var future: Future<*>? = null
 
@@ -52,7 +52,7 @@ class ProgressAnimation internal constructor(
      * Set the current progress to the [completed] value.
      */
     fun update(completed: Long) {
-        task.update(completed)
+        inner.update(completed)
         update()
     }
 
@@ -76,7 +76,7 @@ class ProgressAnimation internal constructor(
      * Set the current progress to the [completed] value, and set the total to the [total] value.
      */
     fun update(completed: Long, total: Long?) {
-        task.update {
+        inner.update {
             this.completed = completed
             this.total = total
         }
@@ -87,7 +87,7 @@ class ProgressAnimation internal constructor(
      * Set the [total] amount of work to be done, or `null` to make the progress bar indeterminate.
      */
     fun updateTotal(total: Long?) {
-        task.update { this.total = total }
+        inner.update { this.total = total }
         update()
     }
 
@@ -95,8 +95,10 @@ class ProgressAnimation internal constructor(
      * Advance the current completed progress by [amount] without changing the total.
      */
     fun advance(amount: Long = 1) {
-        task.advance(amount)
-        update()
+        inner.advance(amount)
+        if(!inner.finished) {
+            update()
+        }
     }
 
     /**
@@ -104,7 +106,7 @@ class ProgressAnimation internal constructor(
      */
     fun start() = synchronized(lock) {
         if (future != null) return
-        future = inner.execute(executor)
+        future = inner.execute()
     }
 
     /**
@@ -122,7 +124,7 @@ class ProgressAnimation internal constructor(
      * Set the progress to 0 and restart the animation.
      */
     fun restart() = synchronized(lock) {
-        task.reset()
+        inner.reset()
         if (future == null) update()
     }
 
@@ -142,6 +144,7 @@ class ProgressAnimation internal constructor(
  *
  * See [ProgressLayout] for the types of cells that can be added.
  */
+@Deprecated("Use progressBarLayout instead")
 fun Terminal.progressAnimation(init: ProgressAnimationBuilder.() -> Unit): ProgressAnimation {
     return progressAnimation(TimeSource.Monotonic, init)
 }
@@ -164,18 +167,8 @@ internal fun Terminal.progressAnimation(
         )
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
-    val inner =  BlockingProgressBarAnimation(
-        this,
+    return ProgressAnimation(definition.animateOnThread(this,
         timeSource = timeSource,
         speedEstimateDuration = builder.historyLength.toDouble().seconds
-    )
-    return ProgressAnimation(inner, inner.addTask(definition))
-}
-
-private fun defaultExecutor(): ExecutorService {
-    return Executors.newSingleThreadExecutor {
-        Thread().also {
-            it.isDaemon = true
-        }
-    }
+        ))
 }

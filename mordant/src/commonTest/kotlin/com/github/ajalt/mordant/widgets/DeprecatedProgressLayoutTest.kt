@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.test.RenderingTest
 import kotlin.js.JsName
 import kotlin.test.Test
 
+@Suppress("DEPRECATION")
 class DeprecatedProgressLayoutTest : RenderingTest() {
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
 

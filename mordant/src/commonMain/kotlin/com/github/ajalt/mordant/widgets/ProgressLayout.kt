@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.ajalt.mordant.widgets
 
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
@@ -12,6 +14,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.TestTimeSource
 
+@Deprecated("Use progressBarLayout instead")
 open class ProgressBuilder internal constructor(
     internal val builder: ProgressLayoutBuilder<Unit>,
 ) {
@@ -110,6 +113,7 @@ open class ProgressBuilder internal constructor(
 /**
  * A builder for creating an animated progress bar widget.
  */
+@Deprecated("Use progressBarLayout instead")
 class ProgressLayout internal constructor(
     private val factory: ProgressBarDefinition<Unit>,
 ) {
@@ -146,6 +150,7 @@ private fun calcHz(completed: Long, elapsed: Duration): Double = when {
 /**
  * Build a [ProgressLayout]
  */
+@Deprecated("Use progressBarLayout instead")
 fun progressLayout(init: ProgressBuilder.() -> Unit): ProgressLayout {
     val builder = ProgressBuilder(ProgressLayoutBuilder()).apply(init)
     return ProgressLayout(builder.builder.build(builder.padding, true))
