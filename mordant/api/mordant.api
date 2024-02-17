@@ -42,11 +42,18 @@ public final class com/github/ajalt/mordant/animation/ProgressAnimationKt {
 	public static final fun progressAnimation (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/animation/ProgressAnimation;
 }
 
-public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation {
-	public abstract fun clear ()V
+public abstract interface class com/github/ajalt/mordant/animation/Refreshable {
 	public abstract fun getFinished ()Z
-	public abstract fun getFps ()I
 	public abstract fun refresh (Z)V
+}
+
+public final class com/github/ajalt/mordant/animation/Refreshable$DefaultImpls {
+	public static synthetic fun refresh$default (Lcom/github/ajalt/mordant/animation/Refreshable;ZILjava/lang/Object;)V
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation : com/github/ajalt/mordant/animation/Refreshable {
+	public abstract fun clear ()V
+	public abstract fun getFps ()I
 	public abstract fun stop ()V
 }
 
@@ -63,14 +70,19 @@ public final class com/github/ajalt/mordant/animation/RefreshableAnimationKt {
 public final class com/github/ajalt/mordant/animation/progress/BaseBlockingAnimator : com/github/ajalt/mordant/animation/progress/BlockingAnimator {
 	public fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/animation/RefreshableAnimation;)V
 	public fun clear ()V
+	public fun getFinished ()Z
+	public fun getFps ()I
+	public fun refresh (Z)V
 	public fun runBlocking ()V
 	public fun stop ()V
 }
 
-public abstract interface class com/github/ajalt/mordant/animation/progress/BlockingAnimator {
-	public abstract fun clear ()V
+public abstract interface class com/github/ajalt/mordant/animation/progress/BlockingAnimator : com/github/ajalt/mordant/animation/RefreshableAnimation {
 	public abstract fun runBlocking ()V
-	public abstract fun stop ()V
+}
+
+public final class com/github/ajalt/mordant/animation/progress/BlockingAnimator$DefaultImpls {
+	public static fun getFps (Lcom/github/ajalt/mordant/animation/progress/BlockingAnimator;)I
 }
 
 public final class com/github/ajalt/mordant/animation/progress/BlockingProgressBarAnimation : com/github/ajalt/mordant/animation/progress/BlockingAnimator, com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
@@ -79,6 +91,7 @@ public final class com/github/ajalt/mordant/animation/progress/BlockingProgressB
 	public fun addTask (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
 	public fun clear ()V
 	public fun getFinished ()Z
+	public fun getFps ()I
 	public fun refresh (Z)V
 	public fun removeTask (Lcom/github/ajalt/mordant/widgets/progress/TaskId;)Z
 	public fun runBlocking ()V
@@ -98,16 +111,13 @@ public final class com/github/ajalt/mordant/animation/progress/MultiProgressBarA
 	public fun stop ()V
 }
 
-public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
+public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation : com/github/ajalt/mordant/animation/Refreshable {
 	public abstract fun addTask (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
-	public abstract fun getFinished ()Z
-	public abstract fun refresh (Z)V
 	public abstract fun removeTask (Lcom/github/ajalt/mordant/widgets/progress/TaskId;)Z
 }
 
 public final class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation$DefaultImpls {
 	public static synthetic fun addTask$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JZZILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
-	public static synthetic fun refresh$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;ZILjava/lang/Object;)V
 }
 
 public final class com/github/ajalt/mordant/animation/progress/ProgressBarAnimationKt {
@@ -170,7 +180,15 @@ public final class com/github/ajalt/mordant/animation/progress/ThreadAnimatorKt 
 public abstract interface class com/github/ajalt/mordant/animation/progress/ThreadProgressAnimator : com/github/ajalt/mordant/animation/progress/BlockingAnimator, com/github/ajalt/mordant/animation/progress/ProgressBarAnimation {
 }
 
+public final class com/github/ajalt/mordant/animation/progress/ThreadProgressAnimator$DefaultImpls {
+	public static fun getFps (Lcom/github/ajalt/mordant/animation/progress/ThreadProgressAnimator;)I
+}
+
 public abstract interface class com/github/ajalt/mordant/animation/progress/ThreadProgressTaskAnimator : com/github/ajalt/mordant/animation/progress/BlockingAnimator, com/github/ajalt/mordant/animation/progress/ProgressTask {
+}
+
+public final class com/github/ajalt/mordant/animation/progress/ThreadProgressTaskAnimator$DefaultImpls {
+	public static fun getFps (Lcom/github/ajalt/mordant/animation/progress/ThreadProgressTaskAnimator;)I
 }
 
 public final class com/github/ajalt/mordant/markdown/Markdown : com/github/ajalt/mordant/rendering/Widget {
