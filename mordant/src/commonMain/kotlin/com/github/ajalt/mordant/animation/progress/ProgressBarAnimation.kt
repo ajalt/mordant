@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation.progress
 
+import com.github.ajalt.mordant.animation.Refreshable
 import com.github.ajalt.mordant.widgets.progress.ProgressBarCell
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import com.github.ajalt.mordant.widgets.progress.ProgressState
@@ -108,7 +109,7 @@ fun ProgressTask<*>.update(completed: Number) = update(completed.toLong())
 /**
  * An animation that can draw one or more progress [tasks][addTask] to the screen.
  */
-interface ProgressBarAnimation {
+interface ProgressBarAnimation : Refreshable {
     /**
      * Add a new task to the progress bar with the given [definition] and [context].
      *
@@ -134,23 +135,6 @@ interface ProgressBarAnimation {
      * @return `true` if the task was removed, `false` if it was not found.
      */
     fun removeTask(taskId: TaskId): Boolean
-
-    /**
-     * Draw the progress bar to the screen.
-     *
-     * If [visible] is `false`, this call has no effect.
-     *
-     * This is called automatically when the animation is running, so you don't usually need to call
-     * it yourself.
-     *
-     * @param refreshAll If `true`, refresh all cells, ignoring their [fps][ProgressBarCell.fps].
-     */
-    fun refresh(refreshAll: Boolean = false)
-
-    /**
-     * Return `true` if all tasks are [finished][ProgressTask.finished].
-     */
-    val finished: Boolean
 }
 
 /**
