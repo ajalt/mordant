@@ -1,4 +1,4 @@
-name: Test and Publish
+name: Build
 
 on:
   pull_request:
