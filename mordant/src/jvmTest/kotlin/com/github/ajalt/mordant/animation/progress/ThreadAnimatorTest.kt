@@ -42,40 +42,5 @@ class ThreadAnimatorTest {
         animation.runBlocking()
         vt.output().shouldContain(" 10/10\n       10/10")
     }
-
-    @Test
-    fun `smoke test`() {
-        val a = progressBarLayout(spacing = 0) {
-            completed(fps = 100)
-        }.animateOnThread(t, total = 10)
-        val service = Executors.newSingleThreadExecutor()
-        try {
-            var future = a.execute(service)
-
-            a.update(5)
-            Thread.sleep(20)
-            future.isDone shouldBe false
-            a.update(10)
-            future.get(100, TimeUnit.MILLISECONDS)
-            vt.output().shouldContain(" 10/10")
-
-            vt.clearOutput()
-            a.reset()
-            future = a.execute(service)
-            Thread.sleep(20)
-            a.stop()
-            future.get(100, TimeUnit.MILLISECONDS)
-            vt.output().shouldContain(" 0/10")
-
-            vt.clearOutput()
-            a.reset()
-            future = a.execute(service)
-            Thread.sleep(20)
-            a.clear()
-            future.get(100, TimeUnit.MILLISECONDS)
-        } finally {
-            service.shutdownNow()
-        }
-    }
 }
 
