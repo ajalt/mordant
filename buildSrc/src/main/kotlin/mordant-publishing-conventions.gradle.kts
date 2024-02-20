@@ -3,7 +3,6 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import java.io.ByteArrayOutputStream
 
@@ -31,12 +30,11 @@ fun getPublishVersion(): String {
 }
 
 // Since we want to set the version name dynamically, we have to use the base plugin
-// https://github.com/vanniktech/gradle-maven-publish-plugin/issues/624
 @Suppress("UnstableApiUsage")
 mavenPublishing {
     project.setProperty("VERSION_NAME", getPublishVersion())
     pomFromGradleProperties()
-    configure(KotlinMultiplatform(JavadocJar.Dokka("dokkaHtmlPartial")))
+    configure(KotlinMultiplatform(JavadocJar.Empty()))
     publishToMavenCentral(SonatypeHost.DEFAULT)
     signAllPublications()
 }

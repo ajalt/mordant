@@ -22,7 +22,7 @@ coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 # build logic
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.10" }
-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.25.3" }
+publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.27.0" }
 
 [plugins]
 graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.28"
