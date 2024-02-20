@@ -37,7 +37,7 @@ jobs:
         with:
           arguments: |
             :mordant:check
-            :extensions:mordant-coroutines:jvmTest
+            :extensions:mordant-coroutines:check
             :test:proguard:r8jar
             ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace

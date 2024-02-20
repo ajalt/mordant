@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.21"
-coroutines = "1.8.0-RC"
+coroutines = "1.8.0"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.3.1"
