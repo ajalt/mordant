@@ -140,8 +140,8 @@ internal object TerminalDetection {
         else -> when (getEnv("FORCE_COLOR")?.lowercase()) {
             "0", "false", "none" -> NONE
             "1", "", "true", "16color" -> ANSI16
-            "2", "256color" -> ANSI256
-            "3", "truecolor" -> TRUECOLOR
+            "2", in TERM_256COLOR_VALUES -> ANSI256
+            "3", in COLORTERM_TRUECOLOR_VALUES -> TRUECOLOR
             else -> null
         }
     }
