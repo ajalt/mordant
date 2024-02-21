@@ -21,7 +21,7 @@ private class JsAtomicRef<T>(override var value: T) : MppAtomicRef<T> {
     }
 }
 
-private class JsAtomicInt(initial: Int) : MppAtomicInt{
+private class JsAtomicInt(initial: Int) : MppAtomicInt {
     private var backing = initial
     override fun getAndIncrement(): Int {
         return backing++
@@ -48,6 +48,7 @@ private interface JsMppImpls {
     fun getTerminalSize(): Size?
     fun printStderr(message: String, newline: Boolean)
     fun readLineOrNull(): String?
+    fun makeTerminalCursor(terminal: Terminal): TerminalCursor
 }
 
 private object BrowserMppImpls : JsMppImpls {
@@ -63,6 +64,9 @@ private object BrowserMppImpls : JsMppImpls {
 
     // readlnOrNull will just throw an exception on browsers
     override fun readLineOrNull(): String? = readlnOrNull()
+    override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
+        return BrowserTerminalCursor(terminal)
+    }
 }
 
 private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
@@ -75,7 +79,7 @@ private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
         // is false
         if (process.stdout.getWindowSize == undefined) return null
         val s = process.stdout.getWindowSize()
-        return Size(width = s[0] as Int, height =  s[1] as Int)
+        return Size(width = s[0] as Int, height = s[1] as Int)
     }
 
     override fun printStderr(message: String, newline: Boolean) {
@@ -98,6 +102,10 @@ private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
             null
         }
     }
+
+    override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
+        return NodeTerminalCursor(terminal)
+    }
 }
 
 private val impls: JsMppImpls = try {
@@ -112,7 +120,9 @@ internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
-internal actual fun printStderr(message: String, newline: Boolean) = impls.printStderr(message, newline)
+internal actual fun printStderr(message: String, newline: Boolean) {
+    impls.printStderr(message, newline)
+}
 
 // hideInput is not currently implemented
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readLineOrNull()
@@ -125,9 +135,11 @@ internal actual fun codepointSequence(string: String): Sequence<Int> {
     }
 }
 
-internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor = JsTerminalCursor(terminal)
+internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor {
+    return impls.makeTerminalCursor(terminal)
+}
 
-private class JsTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
+private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
     private var shutdownHook: (() -> Unit)? = null
 
     override fun show() {
@@ -143,6 +155,9 @@ private class JsTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termina
         super.hide(showOnExit)
     }
 }
+
+// There are no shutdown hooks on browsers, so we don't need to do anything here
+private class BrowserTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal)
 
 
 internal actual fun sendInterceptedPrintRequest(

@@ -17,6 +17,7 @@
 
 ### Fixed
 - Vertical layout now correctly pads non-text cells when `align` is set to `TextAlign.LEFT`
+- Fixed exception when hiding the cursor on browsers on JS target.
 
 ## 2.3.0
 ### Added
