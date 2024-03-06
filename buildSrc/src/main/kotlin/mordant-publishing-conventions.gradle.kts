@@ -13,18 +13,9 @@ plugins {
 
 fun getPublishVersion(): String {
     val version = project.property("VERSION_NAME").toString()
-    // Call gradle with -PinferVersion to set the dynamic version name.
+    // Call gradle with -PsnapshotVersion to set the version as a snapshot.
     // Otherwise, we skip it to save time.
-    if (!project.hasProperty("inferVersion")) return version
-
-    val stdout = ByteArrayOutputStream()
-    project.exec {
-        commandLine = listOf("git", "tag", "--points-at", "master")
-        standardOutput = stdout
-    }
-    val tag = String(stdout.toByteArray()).trim()
-    if (tag.isNotEmpty()) return tag
-
+    if (!project.hasProperty("snapshotVersion")) return version
     val buildNumber = System.getenv("GITHUB_RUN_NUMBER") ?: "0"
     return "$version.$buildNumber-SNAPSHOT"
 }
