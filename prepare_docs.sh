@@ -2,14 +2,13 @@
 
 # The website is built using MkDocs with the Material theme.
 # https://squidfunk.github.io/mkdocs-material/
-# It requires Python to run.
-# Install the packages with the following command:
-# pip install mkdocs mkdocs-material
+# Mkdocs requires Python to run.
+# Install the packages: `pip install mkdocs-material`
+# Build the api docs: `./gradlew dokkaHtmlMultiModule`
+# Then run this script to prepare the docs for the website.
+# Finally, run `mkdocs serve` to preview the site locally or `mkdocs build` to build the site.
 
 set -ex
-
-# Generate API docs
-./gradlew dokkaHtmlMultiModule
 
 # Copy the changelog into the site, omitting the unreleased section
 cat CHANGELOG.md \
@@ -26,15 +25,10 @@ hide:
 
 EOM
 
-# Copy the README into the index, omitting the license and fixing hrefs
+# Copy the README into the index, omitting the docs link, license and fixing hrefs
 cat README.md \
   | sed '/## License/Q' \
+  | sed -z 's/## Documentation[a-zA-z .\n()/:]*//g' \
   | sed 's!https://ajalt.github.io/mordant/!/!g' \
   | sed 's!docs/img!img!g' \
   >> docs/index.md
-
-# Build and deploy the new site to github pages
-mkdocs gh-deploy
-
-# Remove the file copies
-rm docs/index.md docs/changelog.md
