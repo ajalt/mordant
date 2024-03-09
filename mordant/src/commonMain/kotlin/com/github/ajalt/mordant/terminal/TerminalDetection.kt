@@ -4,6 +4,9 @@ import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 
+private val TERM_256COLOR_VALUES = setOf("256", "256color", "256colors")
+private val COLORTERM_TRUECOLOR_VALUES = setOf("24bit", "24bits", "truecolor")
+
 internal object TerminalDetection {
     fun detectTerminal(
         ansiLevel: AnsiLevel?,
@@ -72,9 +75,7 @@ internal object TerminalDetection {
 
         if (isJediTerm()) return TRUECOLOR
 
-        when (getColorTerm()) {
-            "24bit", "24bits", "truecolor" -> return TRUECOLOR
-        }
+        if (getColorTerm() in COLORTERM_TRUECOLOR_VALUES) return TRUECOLOR
 
         if (isCI()) {
             return if (ciSupportsColor()) ANSI256 else NONE
@@ -93,8 +94,8 @@ internal object TerminalDetection {
             ?: (null to null)
 
         when (level) {
-            "256", "256color", "256colors" -> return ANSI256
-            "24bit", "24bits", "direct", "truecolor" -> return TRUECOLOR
+            in TERM_256COLOR_VALUES -> return ANSI256
+            in COLORTERM_TRUECOLOR_VALUES, "direct" -> return TRUECOLOR
         }
 
 
