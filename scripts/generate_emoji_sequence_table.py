@@ -1,9 +1,14 @@
+# Downloads the latest emoji sequence definitions from unicode.org and generates a Kotlin file with
+# that stores them as a trie. To avoid the generated file being too large, the sequences are split
+# into shards. Each shard should be a separate file.
+
 import re
 
 import requests
 
 emoji_zwj_url = "https://unicode.org/Public/emoji/latest/emoji-zwj-sequences.txt"
 emoji_seq_url = "https://unicode.org/Public/emoji/latest/emoji-sequences.txt"
+SHARD_SIZE = 500
 
 
 def _parse_file(url: str, type_to_emit: str) -> list[tuple[list[int], str]]:
@@ -74,25 +79,29 @@ internal data class IntTrie(val children: MutableMap<Int, IntTrie>, val values: 
 internal val EMOJI_SEQUENCES: IntTrie = buildSeqTrie()
 
 private fun buildSeqTrie(): IntTrie {
-    val sequences = arrayOf("""
-    )
-    for s in seqs:
-        print(f'        intArrayOf({", ".join(hex(it) for it in s[0])}), // {s[1]}')
-
-    print(
-        """    )
-
     val root = IntTrie()
-    for (seq in sequences) {
-        var node = root
-        for (i in 0 until seq.lastIndex) {
-            node = node.children.getOrPut(seq[i]) { IntTrie() }
+    for (sequences in arrayOf(""", end="")
+    print(", ".join(f"sequences{i + 1}()" for i in range(0, len(seqs) // SHARD_SIZE + 1)), end="")
+    print(""")) {
+        for (seq in sequences) {
+            var node = root
+            for (i in 0..<seq.lastIndex) {
+                node = node.children.getOrPut(seq[i]) { IntTrie() }
+            }
+            node.values += seq.last()
         }
-        node.values += seq.last()
     }
     return root
-}"""
-    )
+}
+"""
+          )
+
+    for i, seq in enumerate(seqs):
+        if i % SHARD_SIZE == 0:
+            print(f"internal fun sequences{i // SHARD_SIZE + 1}(): Array<IntArray> = arrayOf(")
+        print(f"    intArrayOf({', '.join(hex(it) for it in seq[0])}), // {seq[1]}")
+        if i % SHARD_SIZE == SHARD_SIZE - 1 or i == len(seqs) - 1:
+            print(")\n")
 
 
 if __name__ == "__main__":
