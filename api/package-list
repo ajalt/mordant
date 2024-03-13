@@ -1,0 +1,14 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:mordant
+com.github.ajalt.mordant.animation
+com.github.ajalt.mordant.animation.progress
+com.github.ajalt.mordant.markdown
+com.github.ajalt.mordant.rendering
+com.github.ajalt.mordant.table
+com.github.ajalt.mordant.terminal
+com.github.ajalt.mordant.widgets
+com.github.ajalt.mordant.widgets.progress
+module:mordant-coroutines
+com.github.ajalt.mordant.animation.coroutines
