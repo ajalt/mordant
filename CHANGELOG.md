@@ -1,23 +1,33 @@
 # Changelog
 
 ## Unreleased
+## 2.4.0
+This release includes a complete rewrite of the progress bar system. The new system is more
+performant and flexible, and allows for more complex progress animations. The old progress bar APIs
+are deprecated, but will continue to work.
+
+See the [documentation website](https://ajalt.github.io/mordant/) for more information.
+
 ### Added
 - New implementation of progress bars with a number of improvements:
+  - Support for animating multiple progress bars at the same time.
+  - New `mordant-coroutines` modules with extensions for animating with coroutines instead of threads.
   - Any widget can be added to a progress layout, not just the built-in cell types
-  - TODO New cell: timeElapsed
   - Added `compact` style to `timeRemaining` cells.
   - Added `marquee` cell that can scroll text that is larger than a fixed width. 
+  - Added `timeElapsed` cell that shows the time elapsed since the start of the animation.
 - Added `Viewport` widget that can crop or pad another widget to a fixed size, and scroll it within that size.
 - Added `precision` parameter to `completed` progress cell that controls the number of decimal places shown.
-- Animation now handle terminal resizing, although on some terminals, partially drawn frames may be visible. Due to a bug in JNI, the terminal size isn't automatically updated on JVM on macOS.
+- Animations now automatically handle the terminal resizing, although on some terminals partially drawn frames may be visible. Due to a bug in JNI, the terminal size isn't automatically updated on JVM on macOS.
 - Added `TableBuilder.addPaddingWidthToFixedWidth` option to control how padding is added to fixed width columns.
 
 ### Changed
-- Animations now never add a trailing newline while they're running. They always add one once the animation is stopped. The `trailNewline` parameter is deprecated. This allows full screen animations without a blank line at the bottom. 
+- Animations now never add a trailing newline while they're running. They always add one once the animation is stopped. The `trailingLinebreak` parameter is deprecated. This allows full screen animations without a blank line at the bottom. 
 
 ### Fixed
 - Vertical layout now correctly pads non-text cells when `align` is set to `TextAlign.LEFT`
 - Fixed exception when hiding the cursor on browsers on JS target.
+- Update internal code generation to be compatible with the latest versions of R8 [(#161)](https://github.com/ajalt/mordant/issues/161)
 
 ## 2.3.0
 ### Added
