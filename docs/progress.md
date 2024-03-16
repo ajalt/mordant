@@ -249,6 +249,7 @@ animation.refresh(refreshAll = true)
 [Spinner]:                         api/mordant/com.github.ajalt.mordant.widgets/-spinner/index.html
 [addTask]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html
 [advance]:                         api/mordant/com.github.ajalt.mordant.animation.progress/advance.html
+[animateOnCoroutine]:              api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
 [animateOnThread]:                 api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html
 [cell]:                            api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html
 [completed]:                       api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html
