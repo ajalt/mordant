@@ -1,4 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 
 plugins {
     alias(libs.plugins.kotlinBinaryCompatibilityValidator)
@@ -20,4 +22,9 @@ tasks.withType<DokkaMultiModuleTask>().configureEach {
             }"""
         )
     )
+}
+
+// https://youtrack.jetbrains.com/issue/KT-63014
+tasks.withType<KotlinNpmInstallTask>().configureEach {
+    args.add("--ignore-engines")
 }

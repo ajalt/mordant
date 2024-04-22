@@ -1,0 +1,105 @@
+package com.github.ajalt.mordant.internal
+
+import com.github.ajalt.mordant.terminal.*
+
+// Since `js()` and `external` work differently in wasm and js, we need to define the functions that
+// use them twice
+internal expect fun makeNodeMppImpls(): JsMppImpls?
+internal expect fun browserPrintln(message: String)
+
+private class JsAtomicRef<T>(override var value: T) : MppAtomicRef<T> {
+    override fun compareAndSet(expected: T, newValue: T): Boolean {
+        if (value != expected) return false
+        value = newValue
+        return true
+    }
+
+    override fun getAndSet(newValue: T): T {
+        val old = value
+        value = newValue
+        return old
+    }
+}
+
+private class JsAtomicInt(initial: Int) : MppAtomicInt {
+    private var backing = initial
+    override fun getAndIncrement(): Int {
+        return backing++
+    }
+
+    override fun get(): Int {
+        return backing
+    }
+
+    override fun set(value: Int) {
+        backing = value
+    }
+}
+
+internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JsAtomicInt(initial)
+internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = JsAtomicRef(value)
+
+
+internal interface JsMppImpls {
+    fun readEnvvar(key: String): String?
+    fun stdoutInteractive(): Boolean
+    fun stdinInteractive(): Boolean
+    fun stderrInteractive(): Boolean
+    fun getTerminalSize(): Size?
+    fun printStderr(message: String, newline: Boolean)
+    fun readLineOrNull(): String?
+    fun makeTerminalCursor(terminal: Terminal): TerminalCursor
+}
+
+private object BrowserMppImpls : JsMppImpls {
+    override fun readEnvvar(key: String): String? = null
+    override fun stdoutInteractive(): Boolean = false
+    override fun stdinInteractive(): Boolean = false
+    override fun stderrInteractive(): Boolean = false
+    override fun getTerminalSize(): Size? = null
+    override fun printStderr(message: String, newline: Boolean) = browserPrintln(message)
+
+    // readlnOrNull will just throw an exception on browsers
+    override fun readLineOrNull(): String? = readlnOrNull()
+    override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
+        return BrowserTerminalCursor(terminal)
+    }
+}
+
+private val impls: JsMppImpls = makeNodeMppImpls() ?: BrowserMppImpls
+
+internal actual fun runningInIdeaJavaAgent(): Boolean = false
+
+internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
+internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
+internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
+internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
+internal actual fun printStderr(message: String, newline: Boolean) {
+    impls.printStderr(message, newline)
+}
+
+// hideInput is not currently implemented
+internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readLineOrNull()
+
+
+internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor {
+    return impls.makeTerminalCursor(terminal)
+}
+
+
+
+// There are no shutdown hooks on browsers, so we don't need to do anything here
+private class BrowserTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal)
+
+
+internal actual fun sendInterceptedPrintRequest(
+    request: PrintRequest,
+    terminalInterface: TerminalInterface,
+    interceptors: List<TerminalInterceptor>,
+) {
+    terminalInterface.completePrintRequest(
+        interceptors.fold(request) { acc, it -> it.intercept(acc) }
+    )
+}
+
+internal actual val FAST_ISATTY: Boolean = true
