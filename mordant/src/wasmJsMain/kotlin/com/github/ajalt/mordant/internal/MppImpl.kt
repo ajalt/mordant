@@ -20,7 +20,7 @@ private external object process {
     fun removeListener(event: String, listener: () -> Unit)
 }
 
-private external object fs {
+private external interface FsModule {
     fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int, position: JsAny?): Int
 }
 
@@ -35,7 +35,7 @@ private fun nodeReadEnvvar(@Suppress("UNUSED_PARAMETER") key: String): String? =
 private fun nodeWidowSizeIsDefined(): Boolean =
     js("process.stdout.getWindowSize != undefined")
 
-private class NodeMppImpls : JsMppImpls {
+private class NodeMppImpls(private val fs: FsModule) : BaseNodeMppImpls<JsAny>() {
     override fun readEnvvar(key: String): String? = nodeReadEnvvar(key)
     override fun stdoutInteractive(): Boolean = process.stdout.isTTY
     override fun stdinInteractive(): Boolean = process.stdin.isTTY
@@ -50,20 +50,10 @@ private class NodeMppImpls : JsMppImpls {
         process.stderr.write(if (newline) message + "\n" else message)
     }
 
-    override fun readLineOrNull(): String? {
-        return try {
-            buildString {
-                var char: String
-                val buf = Buffer.alloc(1)
-                do {
-                    fs.readSync(fd = 0, buffer = buf, offset = 0, len = 1, position = null)
-                    char = "$buf" // don't call toString here due to KT-55817
-                    append(char)
-                } while (char != "\n")
-            }
-        } catch (e: Exception) {
-            null
-        }
+    override fun allocBuffer(size: Int): JsAny = Buffer.alloc(size)
+
+    override fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int {
+        return fs.readSync(fd, buffer, offset, len, null)
     }
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
@@ -74,7 +64,7 @@ private class NodeMppImpls : JsMppImpls {
 internal actual fun browserPrintln(message: String): Unit = js("console.error(message)")
 
 internal actual fun makeNodeMppImpls(): JsMppImpls? {
-    return if (runningOnNode() && nodeFsModuleAvailable()) NodeMppImpls() else null
+    return if (runningOnNode()) NodeMppImpls(importNodeFsModule()) else null
 }
 
 private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
@@ -120,14 +110,5 @@ internal actual fun codepointSequence(string: String): Sequence<Int> {
 private fun runningOnNode(): Boolean =
     js("Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]'")
 
-private fun nodeFsModuleAvailable(): Boolean =
-    js(
-        """{
-            try {
-                module['' + 'require']("fs")
-                return true
-            } catch(e) {
-                return false
-            }
-        }"""
-    )
+private fun importNodeFsModule(): FsModule =
+    js("""require("fs")""")

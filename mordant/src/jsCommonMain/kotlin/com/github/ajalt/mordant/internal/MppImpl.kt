@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
 
+
 // Since `js()` and `external` work differently in wasm and js, we need to define the functions that
 // use them twice
 internal expect fun makeNodeMppImpls(): JsMppImpls?
@@ -66,6 +67,30 @@ private object BrowserMppImpls : JsMppImpls {
     }
 }
 
+internal abstract class BaseNodeMppImpls<BufferT> : JsMppImpls {
+    final override fun readLineOrNull(): String? {
+        return try {
+            buildString {
+                val buf = allocBuffer(1)
+                do {
+                    val len = readSync(
+                        fd = 0, buffer = buf, offset = 0, len = 1
+                    )
+                    if (len == 0) break
+                    val char = "$buf" // don't call toString here due to KT-55817
+                    append(char)
+                } while (char != "\n" && char != "${0.toChar()}")
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    abstract fun allocBuffer(size: Int): BufferT
+    abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
+
+}
+
 private val impls: JsMppImpls = makeNodeMppImpls() ?: BrowserMppImpls
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
@@ -85,8 +110,6 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readL
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor {
     return impls.makeTerminalCursor(terminal)
 }
-
-
 
 // There are no shutdown hooks on browsers, so we don't need to do anything here
 private class BrowserTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal)

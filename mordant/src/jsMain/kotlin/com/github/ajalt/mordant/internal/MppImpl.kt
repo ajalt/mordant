@@ -14,7 +14,7 @@ internal actual fun browserPrintln(message: String) {
     console.error(message)
 }
 
-private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
+private class NodeMppImpls(private val fs: dynamic) : BaseNodeMppImpls<dynamic>() {
     override fun readEnvvar(key: String): String? = process.env[key] as? String
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
@@ -28,24 +28,15 @@ private class NodeMppImpls(private val fs: dynamic) : JsMppImpls {
     }
 
     override fun printStderr(message: String, newline: Boolean) {
-        val s = if (newline) message + "\n" else message
-        process.stderr.write(s)
+        process.stderr.write(if (newline) message + "\n" else message)
     }
 
-    override fun readLineOrNull(): String? {
-        return try {
-            buildString {
-                var char: String
-                val buf = Buffer.alloc(1)
-                do {
-                    fs.readSync(fd = 0, buffer = buf, offset = 0, len = 1, position = null)
-                    char = "$buf" // don't call toString here due to KT-55817
-                    append(char)
-                } while (char != "\n")
-            }
-        } catch (e: Exception) {
-            null
-        }
+    override fun allocBuffer(size: Int): dynamic {
+        return Buffer.alloc(size)
+    }
+
+    override fun readSync(fd: Int, buffer: dynamic, offset: Int, len: Int): Int {
+        return fs.readSync(fd, buffer, offset, len, null) as Int
     }
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
