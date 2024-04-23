@@ -112,3 +112,6 @@ private fun runningOnNode(): Boolean =
 
 private fun importNodeFsModule(): FsModule =
     js("""require("fs")""")
+
+// For some reason, \r seems to be treated as \r\n on wasm
+internal actual val CR_IMPLIES_LF: Boolean = true

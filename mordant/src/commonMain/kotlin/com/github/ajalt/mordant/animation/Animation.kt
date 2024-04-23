@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.*
 import com.github.ajalt.mordant.internal.FAST_ISATTY
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.Size
@@ -173,6 +174,7 @@ abstract class Animation<T>(
         if (firstDraw || lastSize == null) return null
         return terminal.cursor.getMoves {
             startOfLine()
+            if (CR_IMPLIES_LF) up(1)
 
             if (terminal.info.crClearsLine) {
                 // IntelliJ doesn't support cursor moves, so this is all we can do

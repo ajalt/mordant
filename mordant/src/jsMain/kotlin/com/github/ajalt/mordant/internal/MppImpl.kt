@@ -75,3 +75,5 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
         super.hide(showOnExit)
     }
 }
+
+internal actual val CR_IMPLIES_LF: Boolean = false
