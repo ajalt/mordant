@@ -30,13 +30,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'graalvm-community'
           set-java-home: false
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 17
+          java-version: 21
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: |
