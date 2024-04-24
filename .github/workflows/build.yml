@@ -21,10 +21,6 @@ jobs:
         include:
           - os: ubuntu-latest
             EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest apiCheck
-          - os: macos-latest
-            env:
-              # macos-latest is now macos-14 and has less than half as much memory available as other runners
-              GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx6g -Dfile.encoding=UTF-8" -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
@@ -62,17 +58,15 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch git tags
-        run: git fetch origin +refs/tags/*:refs/tags/*
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 17
+          java-version: 21
       - name: Deploy to sonatype
         uses: gradle/gradle-build-action@v2
         with:
           # disable configuration cache due to https://github.com/gradle/gradle/issues/22779
-          arguments: publishToMavenCentral -PinferVersion=true --no-configuration-cache
+          arguments: publishToMavenCentral -PsnapshotVersion=true --no-configuration-cache
     env:
       ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralPassword }}
       ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKey }}
