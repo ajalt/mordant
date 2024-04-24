@@ -5,8 +5,9 @@ import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.RenderingTest
+import com.github.ajalt.mordant.test.latestOutput
 import com.github.ajalt.mordant.test.normalizedOutput
-import com.github.ajalt.mordant.test.replaceCrLf
+import com.github.ajalt.mordant.test.visibleCrLf
 import com.github.ajalt.mordant.widgets.progress.*
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
@@ -34,28 +35,28 @@ class BaseProgressAnimationTest : RenderingTest() {
         val pt = a.addTask(l, total = 1000)
 
         a.refresh()
-        vt.normalizedOutput() shouldBe " ---.-/s|eta -:--:--"
+        vt.latestOutput() shouldBe " ---.-/s|eta -:--:--"
 
         now += 0.5.seconds
         vt.clearOutput()
         pt.update(40)
         a.refresh()
-        vt.normalizedOutput() shouldBe " ---.-/s|eta -:--:--"
+        vt.latestOutput() shouldBe " ---.-/s|eta -:--:--"
 
         now += 0.1.seconds
         vt.clearOutput()
         a.refresh()
-        vt.normalizedOutput() shouldBe " ---.-/s|eta -:--:--"
+        vt.latestOutput() shouldBe " ---.-/s|eta -:--:--"
 
         now += 0.4.seconds
         vt.clearOutput()
         a.refresh()
-        vt.normalizedOutput() shouldBe "  40.0/s|eta 0:00:24"
+        vt.latestOutput() shouldBe "  40.0/s|eta 0:00:24"
 
         now += 0.9.seconds
         vt.clearOutput()
         a.refresh()
-        vt.normalizedOutput() shouldBe "  40.0/s|eta 0:00:24"
+        vt.latestOutput() shouldBe "  40.0/s|eta 0:00:24"
     }
 
     @Test
@@ -77,29 +78,29 @@ class BaseProgressAnimationTest : RenderingTest() {
         val pt = a.addTask(l, total = 100)
 
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt|  0%|......|       0/100| ---.-/s|eta -:--:--"
+        vt.latestOutput() shouldBe "text.txt|  0%|......|       0/100| ---.-/s|eta -:--:--"
 
         now += 10.0.seconds
         vt.clearOutput()
         pt.update(40)
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|      40/100|   4.0/s|eta 0:00:15"
+        vt.latestOutput() shouldBe "text.txt| 40%|##>...|      40/100|   4.0/s|eta 0:00:15"
 
         now += 10.0.seconds
         vt.clearOutput()
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 40%|##>...|      40/100|   2.0/s|eta 0:00:30"
+        vt.latestOutput() shouldBe "text.txt| 40%|##>...|      40/100|   2.0/s|eta 0:00:30"
 
         now += 10.0.seconds
         vt.clearOutput()
         pt.update { total = 200 }
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt| 20%|#>....|      40/200|   1.3/s|eta 0:02:00"
+        vt.latestOutput() shouldBe "text.txt| 20%|#>....|      40/200|   1.3/s|eta 0:02:00"
 
         vt.clearOutput()
         pt.reset()
         a.refresh()
-        vt.normalizedOutput() shouldBe "text.txt|  0%|......|       0/200| ---.-/s|eta -:--:--"
+        vt.latestOutput() shouldBe "text.txt|  0%|......|       0/200| ---.-/s|eta -:--:--"
     }
 
     @Test
@@ -113,27 +114,27 @@ class BaseProgressAnimationTest : RenderingTest() {
         val t2 = a.addTask(l, 2)
 
         a.refresh()
-        vt.normalizedOutput() shouldBe "Task 1\nTask 2"
+        vt.latestOutput() shouldBe "Task 1\nTask 2"
 
         vt.clearOutput()
         t1.update { visible = false }
         a.refresh()
-        vt.normalizedOutput() shouldBe "Task 2"
+        vt.latestOutput() shouldBe "Task 2"
 
         vt.clearOutput()
         t2.update { visible = false }
         a.refresh()
-        vt.normalizedOutput() shouldBe ""
+        vt.latestOutput() shouldBe ""
 
         vt.clearOutput()
         t1.update { visible = true }
         a.refresh()
-        vt.normalizedOutput() shouldBe "Task 1"
+        vt.latestOutput() shouldBe "Task 1"
 
         vt.clearOutput()
         a.removeTask(t1)
         a.refresh()
-        vt.normalizedOutput() shouldBe ""
+        vt.latestOutput() shouldBe ""
     }
 
     @Test
@@ -153,7 +154,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         now += 1.seconds
         a.refresh()
         val moves = t.cursor.getMoves { startOfLine(); up(1) }
-        vt.output().replaceCrLf() shouldBe "====\n1111${moves}====\n22  ".replaceCrLf()
+        vt.normalizedOutput().visibleCrLf() shouldBe "====\n1111${moves}====\n22  ".visibleCrLf()
     }
 
     @Test

@@ -75,7 +75,7 @@ class CoroutinesAnimatorTest {
         a.stop()
         advanceTimeBy(1.0.seconds)
         job.isActive shouldBe false
-        vt.output() shouldBe "$HIDE_CURSOR        0/10\n$SHOW_CURSOR"
+        vt.fullNormalizedOutput() shouldBe "$HIDE_CURSOR        0/10\n$SHOW_CURSOR"
 
         vt.clearOutput()
         job = backgroundScope.launch { a.execute() }
@@ -83,7 +83,7 @@ class CoroutinesAnimatorTest {
         a.clear()
         advanceTimeBy(1.0.seconds)
         job.isActive shouldBe false
-        vt.output() shouldBe "$HIDE_CURSOR        0/10\r${CSI}0J$SHOW_CURSOR"
+        vt.fullNormalizedOutput() shouldBe "$HIDE_CURSOR        0/10\r${CSI}0J$SHOW_CURSOR"
     }
 
     @Test
@@ -125,7 +125,12 @@ class CoroutinesAnimatorTest {
         vt.output().shouldContain(" 10/10\n       10/10")
     }
 
+    // This handles the difference in wasm movements and the other targets
+    private fun TerminalRecorder.fullNormalizedOutput(): String {
+        return output().replace("${CSI}1A", "")
+    }
+
     private fun TerminalRecorder.normalizedOutput(): String {
-        return output().substringAfter("\r").trimEnd()
+        return output().replace("${CSI}1A", "").substringAfter("\r").trimEnd()
     }
 }
