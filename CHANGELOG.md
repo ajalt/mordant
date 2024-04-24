@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 2.5.0
 ### Added
 - Publish `linuxArm64` and `wasmJs` targets. 
 
