@@ -154,3 +154,4 @@ internal actual fun sendInterceptedPrintRequest(
 }
 
 internal actual val FAST_ISATTY: Boolean = true
+internal actual val CR_IMPLIES_LF: Boolean = false

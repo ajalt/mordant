@@ -140,3 +140,4 @@ internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual val FAST_ISATTY: Boolean = true
+internal actual val CR_IMPLIES_LF: Boolean = false

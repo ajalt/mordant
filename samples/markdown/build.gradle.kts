@@ -1,3 +1,3 @@
 plugins {
-    id("mordant-mpp-sample-conventions")
+    id("mordant-jvm-sample-conventions")
 }

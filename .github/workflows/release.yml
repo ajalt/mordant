@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 17
+          java-version: 21
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -43,3 +43,6 @@ jobs:
         with:
           branch: gh-pages
           folder: site
+env:
+  # macos-latest is now macos-14 and has less than half as much memory available as other runners
+  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx6g -Dfile.encoding=UTF-8" -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true

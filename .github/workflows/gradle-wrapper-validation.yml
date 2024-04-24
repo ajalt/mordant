@@ -6,10 +6,11 @@ on:
       - 'gradlew.bat'
       - 'gradle/wrapper/'
 
+
 jobs:
   validation:
     name: "Validation"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/actions/wrapper-validation@v3

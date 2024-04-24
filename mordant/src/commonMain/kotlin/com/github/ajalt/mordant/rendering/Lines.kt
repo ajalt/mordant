@@ -156,7 +156,7 @@ private fun resizeLine(
                 endIndex = j
                 if (width < newWidth) {
                     endSpan = span.take(newWidth - width)
-                    width += endSpan.cellWidth
+                    width = newWidth
                 }
                 break
             }

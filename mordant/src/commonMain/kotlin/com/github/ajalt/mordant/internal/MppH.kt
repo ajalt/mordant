@@ -54,3 +54,5 @@ internal expect fun sendInterceptedPrintRequest(
 )
 
 internal expect val FAST_ISATTY: Boolean
+
+internal expect val CR_IMPLIES_LF: Boolean

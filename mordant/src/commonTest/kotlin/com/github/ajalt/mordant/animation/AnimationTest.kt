@@ -1,8 +1,10 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
-import com.github.ajalt.mordant.test.replaceCrLf
+import com.github.ajalt.mordant.test.normalizedOutput
+import com.github.ajalt.mordant.test.visibleCrLf
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -16,13 +18,13 @@ class AnimationTest {
     fun `no trailing linebreak`() {
         val a = t.textAnimation<Int>(trailingLinebreak = false) { "<$it>\n===" }
         a.update(1)
-        rec.output() shouldBe "<1>\n==="
+        rec.normalizedOutput() shouldBe "<1>\n==="
 
         // update
         rec.clearOutput()
         a.update(2)
         val moves = t.cursor.getMoves { startOfLine(); up(1) }
-        rec.output() shouldBe "${moves}<2>\n==="
+        rec.normalizedOutput() shouldBe "${moves}<2>\n==="
     }
 
     @Test
@@ -30,13 +32,13 @@ class AnimationTest {
     fun `no trailing linebreak single line`() {
         val a = t.textAnimation<Int>(trailingLinebreak = false) { "<$it>" }
         a.update(1)
-        rec.output() shouldBe "<1>"
+        rec.normalizedOutput() shouldBe "<1>"
 
         // update
         rec.clearOutput()
         a.update(2)
         val moves = t.cursor.getMoves { startOfLine() }
-        rec.output() shouldBe "${moves}<2>"
+        rec.normalizedOutput() shouldBe "${moves}<2>"
     }
 
     @Test
@@ -44,13 +46,13 @@ class AnimationTest {
     fun `animation size change`() {
         val a = t.textAnimation<String> { it }
         a.update("1")
-        rec.output() shouldBe "1"
+        rec.normalizedOutput() shouldBe "1"
 
         // update
         rec.clearOutput()
         a.update("2\n3")
         val moves = t.cursor.getMoves { startOfLine() }
-        rec.output() shouldBe "${moves}2\n3"
+        rec.normalizedOutput() shouldBe "${moves}2\n3"
     }
 
     @Test
@@ -59,11 +61,11 @@ class AnimationTest {
         val t = Terminal(terminalInterface = rec)
         val a = t.textAnimation<Int> { "$it" }
         a.update(1)
-        rec.output() shouldBe "1"
+        rec.normalizedOutput() shouldBe "1"
         a.update(2)
-        rec.output() shouldBe "1\r2"
+        rec.normalizedOutput() shouldBe "1\r2"
         a.stop()
-        rec.output() shouldBe "1\r2\n"
+        rec.normalizedOutput() shouldBe "1\r2\n"
     }
 
     @Test
@@ -71,50 +73,50 @@ class AnimationTest {
     fun `print during animation`() {
         val a = t.textAnimation<Int> { "<$it>\n===" }
         a.update(1)
-        rec.output() shouldBe "<1>\n==="
+        rec.normalizedOutput() shouldBe "<1>\n==="
 
         // update
         rec.clearOutput()
         a.update(2)
         var moves = t.cursor.getMoves { startOfLine(); up(1) }
-        rec.output() shouldBe "${moves}<2>\n==="
+        rec.normalizedOutput() shouldBe "${moves}<2>\n==="
 
         // print while active
         rec.clearOutput()
         t.println("X")
         moves = t.cursor.getMoves { startOfLine(); up(1); clearScreenAfterCursor() }
-        rec.output() shouldBe "${moves}X\n<2>\n==="
+        rec.normalizedOutput() shouldBe "${moves}X\n<2>\n==="
 
         // clear
         rec.clearOutput()
         a.clear()
         moves = t.cursor.getMoves { startOfLine(); up(1); clearScreenAfterCursor() }
-        rec.output() shouldBe moves
+        rec.normalizedOutput() shouldBe moves
 
         // repeat clear
         rec.clearOutput()
         a.clear()
-        rec.output() shouldBe ""
+        rec.normalizedOutput() shouldBe ""
 
         // update after clear
         rec.clearOutput()
         a.update(3)
-        rec.output() shouldBe "<3>\n==="
+        rec.normalizedOutput() shouldBe "<3>\n==="
 
         // stop
         rec.clearOutput()
         a.stop()
-        rec.output() shouldBe "\n"
+        rec.normalizedOutput() shouldBe "\n"
 
         // print after stop
         rec.clearOutput()
         t.println("X")
-        rec.output() shouldBe "X\n"
+        rec.normalizedOutput() shouldBe "X\n"
 
         // update after stop
         rec.clearOutput()
         a.update(4)
-        rec.output() shouldBe "<4>\n==="
+        rec.normalizedOutput() shouldBe "<4>\n==="
     }
 
     @Test
@@ -124,27 +126,26 @@ class AnimationTest {
         val b = t.textAnimation<Int> { "<b$it>" }
 
         a.update(1)
-        rec.output().replaceCrLf() shouldBe "<a1>"
+        rec.normalizedOutput().visibleCrLf() shouldBe "<a1>"
         rec.clearOutput()
 
         b.update(2)
         var moves = t.cursor.getMoves { startOfLine() }
-        rec.output().replaceCrLf() shouldBe "${moves}<a1>\n<b2>".replaceCrLf()
+        rec.normalizedOutput().visibleCrLf() shouldBe "${moves}<a1>\n<b2>".visibleCrLf()
         rec.clearOutput()
 
         b.update(3)
         moves = t.cursor.getMoves {
             startOfLine(); up(1); clearScreenAfterCursor(); startOfLine()
         }
-        rec.output().replaceCrLf() shouldBe "${moves}<a1>\n<b3>".replaceCrLf()
+        rec.normalizedOutput().visibleCrLf() shouldBe "${moves}<a1>\n<b3>".visibleCrLf()
 
         rec.clearOutput()
         a.stop()
-        rec.output().replaceCrLf() shouldBe "\r<b3>".replaceCrLf()
+        rec.normalizedOutput().visibleCrLf() shouldBe "\r<b3>".visibleCrLf()
 
         rec.clearOutput()
         b.stop()
-        rec.output().replaceCrLf() shouldBe "\n".replaceCrLf()
+        rec.normalizedOutput().visibleCrLf() shouldBe "\n".visibleCrLf()
     }
-
 }

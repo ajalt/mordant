@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Publish `linuxArm64` and `wasmJs` targets. 
+
 ## 2.4.0
 This release includes a complete rewrite of the progress bar system. The new system is more
 performant and flexible, and allows for more complex progress animations. The old progress bar APIs

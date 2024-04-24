@@ -17,6 +17,11 @@ include(
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        // TODO: we can remove this once kotest releases a new version
+        maven {
+            url= uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            mavenContent { snapshotsOnly() }
+        }
     }
 }
 
