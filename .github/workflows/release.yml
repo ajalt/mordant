@@ -8,6 +8,7 @@ on:
 jobs:
   release:
     runs-on: macos-latest
+    if: ${{ github.repository == 'ajalt/mordant' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -17,32 +18,34 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: gradle/actions/setup-gradle@v3
       - run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralPassword }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKey }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralUsername }}
-      - name: Extract release notes
-        id: extract-release-notes
-        uses: ffurrer2/extract-release-notes@v2
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          body: ${{ steps.extract-release-notes.outputs.release_notes }}
-      - name: Dokka
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: dokkaHtmlMultiModule
-      - run : ./prepare_docs.sh
-      - name: Build mkdocs
-        run: |
-          pip install mkdocs-material
-          mkdocs build
-      - name: Deploy docs to website
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: site
+# Disabled due to https://github.com/ffurrer2/extract-release-notes/issues/339
+#      - name: Extract release notes
+#        id: extract-release-notes
+#        uses: ffurrer2/extract-release-notes@v2
+#      - name: Create release
+#        uses: ncipollo/release-action@v1
+#        with:
+#          body: ${{ steps.extract-release-notes.outputs.release_notes }}
+#      - name: Dokka
+#        uses: gradle/actions/setup-gradle@v3
+#        with:
+#          arguments: dokkaHtmlMultiModule
+#      - run : ./prepare_docs.sh
+#      - name: Build mkdocs
+#        run: |
+#          pip install mkdocs-material
+#          mkdocs build
+#      - name: Deploy docs to website
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          branch: gh-pages
+#          folder: site
 env:
   # macos-latest is now macos-14 and has less than half as much memory available as other runners
   GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx6g -Dfile.encoding=UTF-8" -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=false -Dkotlin.incremental=false -Dorg.gradle.project.kotlin.incremental.multiplatform=false -Dorg.gradle.project.kotlin.native.disableCompilerDaemon=true
