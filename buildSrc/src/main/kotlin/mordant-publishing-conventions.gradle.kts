@@ -14,7 +14,6 @@ plugins {
 fun getPublishVersion(): String {
     val version = project.property("VERSION_NAME").toString()
     // Call gradle with -PsnapshotVersion to set the version as a snapshot.
-    // Otherwise, we skip it to save time.
     if (!project.hasProperty("snapshotVersion")) return version
     val buildNumber = System.getenv("GITHUB_RUN_NUMBER") ?: "0"
     return "$version.$buildNumber-SNAPSHOT"
