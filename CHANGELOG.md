@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Publish `iosArm64` and `iosX64` targets.
 
 ## 2.5.0
 ### Added
