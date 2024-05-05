@@ -20,7 +20,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest apiCheck
+            EXTRA_GRADLE_ARGS: :test:graalvm:nativeTest :test:proguard:r8jar apiCheck
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
@@ -39,10 +39,10 @@ jobs:
             ./gradlew
             :mordant:check
             :extensions:mordant-coroutines:check
-            :test:proguard:r8jar
             ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
       - name: Run R8 Jar
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: java -jar test/proguard/build/libs/main-r8.jar
       - name: Bundle the build report
         if: failure()
