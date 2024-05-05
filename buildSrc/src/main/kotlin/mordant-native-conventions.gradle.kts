@@ -26,6 +26,6 @@ kotlin {
     sourceSets {
         val posixMain by creating { dependsOn(nativeMain.get()) }
         linuxMain.get().dependsOn(posixMain)
-        macosMain.get().dependsOn(posixMain)
+        appleMain.get().dependsOn(posixMain)
     }
 }
