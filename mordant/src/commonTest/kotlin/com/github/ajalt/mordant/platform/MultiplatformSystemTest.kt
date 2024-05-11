@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.platform
 
+import com.github.ajalt.mordant.internal.cwd
 import com.github.ajalt.mordant.internal.runningInBrowser
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -25,7 +26,7 @@ class MultiplatformSystemTest {
         ) ?: MultiplatformSystem.readFileAsUtf8(
             // js targets have a cwd of $projectDir/build/js/packages/mordant-mordant-test
             "../../../../mordant/src/commonTest/resources/multiplatform_system_test.txt"
-        )
+        ) ?: cwd()
         if (runningInBrowser()) return // No files in browsers
         actual shouldBe "pass\n"
     }

@@ -85,3 +85,6 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
 }
 
 internal actual val CR_IMPLIES_LF: Boolean = false
+internal actual fun cwd(): String {
+    return process.cwd() as String
+}

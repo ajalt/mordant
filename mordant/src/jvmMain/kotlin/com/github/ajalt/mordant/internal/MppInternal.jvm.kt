@@ -155,3 +155,6 @@ internal actual fun readFileIfExists(filename: String): String? {
     return file.bufferedReader().use { it.readText() }
 }
 
+internal actual fun cwd(): String {
+   return System.getProperty("user.dir")
+}

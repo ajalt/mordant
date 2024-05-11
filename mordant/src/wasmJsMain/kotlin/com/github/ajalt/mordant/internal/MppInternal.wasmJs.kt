@@ -19,6 +19,7 @@ private external object process {
     fun on(event: String, listener: () -> Unit)
     fun removeListener(event: String, listener: () -> Unit)
     fun exit(status: Int)
+    fun cwd() : String
 }
 
 private external interface FsModule {
@@ -135,3 +136,6 @@ private fun importNodeFsModule(): FsModule =
 
 // For some reason, \r seems to be treated as \r\n on wasm
 internal actual val CR_IMPLIES_LF: Boolean = true
+internal actual fun cwd(): String {
+    return process.cwd()
+}

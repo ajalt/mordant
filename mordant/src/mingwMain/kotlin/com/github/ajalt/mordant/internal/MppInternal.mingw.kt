@@ -39,3 +39,9 @@ internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     }
     SetConsoleMode(stdinHandle, newMode)
 }
+
+internal actual fun cwd(): String = memScoped {
+    val buf = allocArray<ByteVar>(4096)
+    GetCurrentDirectoryA(4096U, buf)
+    return buf.toKString()
+}
