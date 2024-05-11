@@ -20,3 +20,5 @@ internal actual fun getTerminalSize(): Size? {
         }
     }
 }
+
+internal actual fun hasFileSystem(): Boolean = true

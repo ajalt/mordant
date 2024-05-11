@@ -143,7 +143,7 @@ internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
-internal actual fun runningInBrowser(): Boolean = false
+internal actual fun hasFileSystem(): Boolean = true
 
 internal actual fun exitProcessMpp(status: Int) {
     exitProcess(status)

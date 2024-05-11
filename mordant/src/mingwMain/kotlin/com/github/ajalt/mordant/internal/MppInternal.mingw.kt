@@ -45,3 +45,5 @@ internal actual fun cwd(): String = memScoped {
     GetCurrentDirectoryA(4096U, buf)
     return buf.toKString()
 }
+
+internal actual fun hasFileSystem(): Boolean = true

@@ -177,4 +177,3 @@ internal actual fun readFileIfExists(filename: String): String? {
 internal actual fun exitProcessMpp(status: Int): Unit = exitProcess(status)
 internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
-internal actual fun runningInBrowser(): Boolean = false

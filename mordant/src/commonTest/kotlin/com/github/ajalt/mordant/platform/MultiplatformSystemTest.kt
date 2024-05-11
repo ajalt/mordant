@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.platform
 
 import com.github.ajalt.mordant.internal.cwd
-import com.github.ajalt.mordant.internal.runningInBrowser
+import com.github.ajalt.mordant.internal.hasFileSystem
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
@@ -14,7 +14,7 @@ class MultiplatformSystemTest {
         // The kotlin.test plugin doesn't provide a way to set environment variables that works on
         // all targets, so just pick a common one that should exist everywhere.
         val actual = MultiplatformSystem.readEnvironmentVariable("PATH")
-        if (runningInBrowser()) return // No env vars in browsers
+        if (!hasFileSystem()) return
         actual.shouldNotBeNull().shouldNotBeEmpty()
     }
 
@@ -27,7 +27,7 @@ class MultiplatformSystemTest {
             // js targets have a cwd of $projectDir/build/js/packages/mordant-mordant-test
             "../../../../mordant/src/commonTest/resources/multiplatform_system_test.txt"
         ) ?: cwd()
-        if (runningInBrowser()) return // No files in browsers
+        if (!hasFileSystem()) return
         actual.trim() shouldBe "pass"
     }
 }

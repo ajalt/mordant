@@ -61,6 +61,6 @@ internal expect fun exitProcessMpp(status: Int)
 
 internal expect fun readFileIfExists(filename: String): String?
 
-internal expect fun runningInBrowser(): Boolean
+internal expect fun hasFileSystem(): Boolean
 
 internal expect fun cwd() : String

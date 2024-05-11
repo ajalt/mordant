@@ -28,5 +28,9 @@ kotlin {
         val posixMain by creating { dependsOn(nativeMain.get()) }
         linuxMain.get().dependsOn(posixMain)
         appleMain.get().dependsOn(posixMain)
+        val appleNonDesktopMain by creating { dependsOn(appleMain.get()) }
+        for (target in listOf(iosMain, tvosMain, watchosMain)) {
+            target.get().dependsOn(appleNonDesktopMain)
+        }
     }
 }
