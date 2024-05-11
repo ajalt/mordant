@@ -19,6 +19,10 @@ private class NodeMppImpls(private val fs: dynamic) : BaseNodeMppImpls<dynamic>(
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
     override fun stderrInteractive(): Boolean = js("Boolean(process.stderr.isTTY)") as Boolean
+    override fun exitProcess(status: Int) {
+        process.exit(status)
+    }
+
     override fun getTerminalSize(): Size? {
         // For some undocumented reason, getWindowSize is undefined sometimes, presumably when isTTY
         // is false
@@ -41,6 +45,10 @@ private class NodeMppImpls(private val fs: dynamic) : BaseNodeMppImpls<dynamic>(
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
         return NodeTerminalCursor(terminal)
+    }
+
+    override fun readFileIfExists(filename: String): String? {
+        return fs.readFileSync(filename, "utf-8") as? String
     }
 }
 

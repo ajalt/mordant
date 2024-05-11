@@ -56,3 +56,8 @@ internal expect fun sendInterceptedPrintRequest(
 internal expect val FAST_ISATTY: Boolean
 
 internal expect val CR_IMPLIES_LF: Boolean
+
+internal expect fun exitProcessMpp(status: Int)
+
+internal expect fun readFileIfExists(filename: String): String?
+

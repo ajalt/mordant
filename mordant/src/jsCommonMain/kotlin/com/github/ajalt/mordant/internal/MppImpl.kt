@@ -50,6 +50,8 @@ internal interface JsMppImpls {
     fun printStderr(message: String, newline: Boolean)
     fun readLineOrNull(): String?
     fun makeTerminalCursor(terminal: Terminal): TerminalCursor
+    fun exitProcess(status: Int)
+    fun readFileIfExists(filename: String): String?
 }
 
 private object BrowserMppImpls : JsMppImpls {
@@ -59,12 +61,15 @@ private object BrowserMppImpls : JsMppImpls {
     override fun stderrInteractive(): Boolean = false
     override fun getTerminalSize(): Size? = null
     override fun printStderr(message: String, newline: Boolean) = browserPrintln(message)
+    override fun exitProcess(status: Int) {}
 
     // readlnOrNull will just throw an exception on browsers
     override fun readLineOrNull(): String? = readlnOrNull()
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
         return BrowserTerminalCursor(terminal)
     }
+
+    override fun readFileIfExists(filename: String): String? = null
 }
 
 internal abstract class BaseNodeMppImpls<BufferT> : JsMppImpls {
@@ -88,7 +93,6 @@ internal abstract class BaseNodeMppImpls<BufferT> : JsMppImpls {
 
     abstract fun allocBuffer(size: Int): BufferT
     abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
-
 }
 
 private val impls: JsMppImpls = makeNodeMppImpls() ?: BrowserMppImpls
@@ -103,6 +107,8 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     impls.printStderr(message, newline)
 }
 
+internal actual fun exitProcessMpp(status: Int): Unit = impls.exitProcess(status)
+
 // hideInput is not currently implemented
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readLineOrNull()
 
@@ -110,6 +116,8 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? = impls.readL
 internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCursor {
     return impls.makeTerminalCursor(terminal)
 }
+
+internal actual fun readFileIfExists(filename: String): String? = impls.readFileIfExists(filename)
 
 // There are no shutdown hooks on browsers, so we don't need to do anything here
 private class BrowserTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal)

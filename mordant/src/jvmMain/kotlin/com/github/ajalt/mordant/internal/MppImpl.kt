@@ -6,9 +6,11 @@ import com.github.ajalt.mordant.internal.jna.JnaWin32MppImpls
 import com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls
 import com.github.ajalt.mordant.internal.nativeimage.NativeImageWin32MppImpls
 import com.github.ajalt.mordant.terminal.*
+import java.io.File
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.system.exitProcess
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -141,3 +143,14 @@ internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
+
+internal actual fun exitProcessMpp(status: Int) {
+    exitProcess(status)
+}
+
+internal actual fun readFileIfExists(filename: String): String? {
+    val file = File(filename)
+    if (!file.isFile) return null
+    return file.bufferedReader().use { it.readText() }
+}
+

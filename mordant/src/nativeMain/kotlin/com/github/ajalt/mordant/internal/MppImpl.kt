@@ -8,6 +8,7 @@ import platform.posix.*
 import kotlin.concurrent.AtomicInt
 import kotlin.concurrent.AtomicReference
 import kotlin.experimental.ExperimentalNativeApi
+import kotlin.system.exitProcess
 
 private class NativeAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -141,7 +142,7 @@ internal actual fun sendInterceptedPrintRequest(
     terminalInterface: TerminalInterface,
     interceptors: List<TerminalInterceptor>,
 ) {
-    while(printRequestLock.compareAndSet(0, 1)) {
+    while (printRequestLock.compareAndSet(0, 1)) {
         // spin until we get the lock
     }
     try {
@@ -153,5 +154,26 @@ internal actual fun sendInterceptedPrintRequest(
     }
 }
 
+internal actual fun readFileIfExists(filename: String): String? {
+    val file = fopen(filename, "r") ?: return null
+    val chunks = StringBuilder()
+    try {
+        memScoped {
+            val bufferLength = 64 * 1024
+            val buffer = allocArray<ByteVar>(bufferLength)
+
+            while (true) {
+                val chunk = fgets(buffer, bufferLength, file)?.toKString()
+                if (chunk.isNullOrEmpty()) break
+                chunks.append(chunk)
+            }
+        }
+    } finally {
+        fclose(file)
+    }
+    return chunks.toString()
+}
+
+internal actual fun exitProcessMpp(status: Int): Unit = exitProcess(status)
 internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
