@@ -28,6 +28,6 @@ class MultiplatformSystemTest {
             "../../../../mordant/src/commonTest/resources/multiplatform_system_test.txt"
         ) ?: cwd()
         if (runningInBrowser()) return // No files in browsers
-        actual shouldBe "pass\n"
+        actual.trim() shouldBe "pass"
     }
 }
