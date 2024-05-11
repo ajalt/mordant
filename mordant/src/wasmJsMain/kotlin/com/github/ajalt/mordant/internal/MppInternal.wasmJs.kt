@@ -62,6 +62,9 @@ private class NodeMppImpls(private val fs: FsModule) : BaseNodeMppImpls<JsAny>()
         val jsSize = process.stdout.getWindowSize()
         return Size(width = jsSize[0]!!.toInt(), height = jsSize[1]!!.toInt())
     }
+    override fun cwd(): String {
+        return process.cwd()
+    }
 
     override fun printStderr(message: String, newline: Boolean) {
         process.stderr.write(if (newline) message + "\n" else message)
@@ -136,6 +139,3 @@ private fun importNodeFsModule(): FsModule =
 
 // For some reason, \r seems to be treated as \r\n on wasm
 internal actual val CR_IMPLIES_LF: Boolean = true
-internal actual fun cwd(): String {
-    return process.cwd()
-}

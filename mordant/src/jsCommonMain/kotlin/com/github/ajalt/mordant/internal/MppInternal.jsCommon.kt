@@ -51,6 +51,7 @@ internal interface JsMppImpls {
     fun readLineOrNull(): String?
     fun makeTerminalCursor(terminal: Terminal): TerminalCursor
     fun exitProcess(status: Int)
+    fun cwd(): String
     fun readFileIfExists(filename: String): String?
 }
 
@@ -62,6 +63,9 @@ private object BrowserMppImpls : JsMppImpls {
     override fun getTerminalSize(): Size? = null
     override fun printStderr(message: String, newline: Boolean) = browserPrintln(message)
     override fun exitProcess(status: Int) {}
+    override fun cwd(): String {
+        return "??"
+    }
 
     // readlnOrNull will just throw an exception on browsers
     override fun readLineOrNull(): String? = readlnOrNull()
@@ -135,3 +139,6 @@ internal actual fun sendInterceptedPrintRequest(
 
 internal actual val FAST_ISATTY: Boolean = true
 internal actual fun runningInBrowser(): Boolean = impls is BrowserMppImpls
+internal actual fun cwd(): String {
+    return impls.cwd()
+}

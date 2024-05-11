@@ -22,7 +22,9 @@ private class NodeMppImpls(private val fs: dynamic) : BaseNodeMppImpls<dynamic>(
     override fun exitProcess(status: Int) {
         process.exit(status)
     }
-
+    override fun cwd(): String {
+        return process.cwd() as String
+    }
     override fun getTerminalSize(): Size? {
         // For some undocumented reason, getWindowSize is undefined sometimes, presumably when isTTY
         // is false
@@ -85,6 +87,3 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
 }
 
 internal actual val CR_IMPLIES_LF: Boolean = false
-internal actual fun cwd(): String {
-    return process.cwd() as String
-}
