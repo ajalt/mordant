@@ -134,3 +134,4 @@ internal actual fun sendInterceptedPrintRequest(
 }
 
 internal actual val FAST_ISATTY: Boolean = true
+internal actual fun runningInBrowser(): Boolean = impls is BrowserMppImpls
