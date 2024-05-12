@@ -154,7 +154,3 @@ internal actual fun readFileIfExists(filename: String): String? {
     if (!file.isFile) return null
     return file.bufferedReader().use { it.readText() }
 }
-
-internal actual fun cwd(): String {
-   return System.getProperty("user.dir")
-}

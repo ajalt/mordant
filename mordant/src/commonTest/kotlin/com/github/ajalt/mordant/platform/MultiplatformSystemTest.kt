@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.platform
 
-import com.github.ajalt.mordant.internal.cwd
 import com.github.ajalt.mordant.internal.hasFileSystem
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -26,8 +25,8 @@ class MultiplatformSystemTest {
         ) ?: MultiplatformSystem.readFileAsUtf8(
             // js targets have a cwd of $projectDir/build/js/packages/mordant-mordant-test
             "../../../../mordant/src/commonTest/resources/multiplatform_system_test.txt"
-        ) ?: cwd()
+        )
         if (!hasFileSystem()) return
-        actual.trim() shouldBe "pass"
+        actual?.trim() shouldBe "pass"
     }
 }

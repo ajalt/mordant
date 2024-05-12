@@ -3,7 +3,6 @@
 package com.github.ajalt.mordant.internal
 
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.MemScope
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import platform.posix.STDIN_FILENO
