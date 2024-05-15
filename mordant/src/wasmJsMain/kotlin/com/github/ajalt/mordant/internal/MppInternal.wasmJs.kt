@@ -18,6 +18,8 @@ private external object process {
 
     fun on(event: String, listener: () -> Unit)
     fun removeListener(event: String, listener: () -> Unit)
+    fun exit(status: Int)
+    fun cwd() : String
 }
 
 private external interface FsModule {
@@ -35,15 +37,33 @@ private fun nodeReadEnvvar(@Suppress("UNUSED_PARAMETER") key: String): String? =
 private fun nodeWidowSizeIsDefined(): Boolean =
     js("process.stdout.getWindowSize != undefined")
 
+// Have to use js() instead of extern since kotlin can't catch exceptions from external wasm
+// functions
+@Suppress("RedundantNullableReturnType", "UNUSED_PARAMETER")
+private fun nodeReadFileSync(filename: String): String? =
+    js(
+        """{
+            try {
+                return require('fs').readFileSync(filename).toString()
+            } catch (e) {
+                return null
+            }
+        }"""
+    )
+
 private class NodeMppImpls(private val fs: FsModule) : BaseNodeMppImpls<JsAny>() {
     override fun readEnvvar(key: String): String? = nodeReadEnvvar(key)
     override fun stdoutInteractive(): Boolean = process.stdout.isTTY
     override fun stdinInteractive(): Boolean = process.stdin.isTTY
     override fun stderrInteractive(): Boolean = process.stderr.isTTY
+    override fun exitProcess(status: Int): Unit = process.exit(status)
     override fun getTerminalSize(): Size? {
         if (!nodeWidowSizeIsDefined()) return null
         val jsSize = process.stdout.getWindowSize()
         return Size(width = jsSize[0]!!.toInt(), height = jsSize[1]!!.toInt())
+    }
+    override fun cwd(): String {
+        return process.cwd()
     }
 
     override fun printStderr(message: String, newline: Boolean) {
@@ -58,6 +78,10 @@ private class NodeMppImpls(private val fs: FsModule) : BaseNodeMppImpls<JsAny>()
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
         return NodeTerminalCursor(terminal)
+    }
+
+    override fun readFileIfExists(filename: String): String? {
+        return nodeReadFileSync(filename)
     }
 }
 

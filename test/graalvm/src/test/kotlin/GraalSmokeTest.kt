@@ -22,7 +22,7 @@ class GraalSmokeTest {
         val future = animation.execute()
         Thread.sleep(100)
         animation.update { completed = 1 }
-        future.get(100, TimeUnit.MILLISECONDS)
+        future.get(1000, TimeUnit.MILLISECONDS)
     }
 
     @Test

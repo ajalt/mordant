@@ -198,6 +198,13 @@ public final class com/github/ajalt/mordant/markdown/Markdown : com/github/ajalt
 	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
 }
 
+public final class com/github/ajalt/mordant/platform/MultiplatformSystem {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/platform/MultiplatformSystem;
+	public final fun exitProcess (I)V
+	public final fun readEnvironmentVariable (Ljava/lang/String;)Ljava/lang/String;
+	public final fun readFileAsUtf8 (Ljava/lang/String;)Ljava/lang/String;
+}
+
 public final class com/github/ajalt/mordant/rendering/AnsiLevel : java/lang/Enum {
 	public static final field ANSI16 Lcom/github/ajalt/mordant/rendering/AnsiLevel;
 	public static final field ANSI256 Lcom/github/ajalt/mordant/rendering/AnsiLevel;

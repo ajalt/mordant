@@ -3,10 +3,11 @@
 ## Unreleased
 ### Added
 - Publish `iosArm64` and `iosX64` targets.
+- Added `MultiplatformSystem` that provides multiplatform implementations of some non-terminal functionality that commonly used for command line apps: `readEnvironmentVariable`, `exitProcess`, and `readFileAsUtf8`.
 
 ## 2.5.0
 ### Added
-- Publish `linuxArm64` and `wasmJs` targets. 
+- Publish `linuxArm64` and `wasmJs` targets.
 
 ## 2.4.0
 This release includes a complete rewrite of the progress bar system. The new system is more

@@ -39,3 +39,5 @@ internal actual fun ttySetEcho(echo: Boolean) = memScoped {
     }
     SetConsoleMode(stdinHandle, newMode)
 }
+
+internal actual fun hasFileSystem(): Boolean = true

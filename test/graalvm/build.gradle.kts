@@ -3,12 +3,6 @@ plugins {
     alias(libs.plugins.graalvm.nativeimage)
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 tasks.test {
     useJUnitPlatform()
 }

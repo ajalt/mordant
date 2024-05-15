@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.colormath.model.Oklab
-import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.colormath.model.SRGB
 import com.github.ajalt.colormath.transform.interpolator
 import com.github.ajalt.colormath.transform.sequence
@@ -16,7 +15,12 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.horizontalLayout
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.*
+import com.github.ajalt.mordant.widgets.Panel
+import com.github.ajalt.mordant.widgets.Text
+import com.github.ajalt.mordant.widgets.UnorderedList
+import com.github.ajalt.mordant.widgets.progress.*
+import com.github.ajalt.mordant.widgets.withPadding
+import kotlin.time.TimeSource
 
 private val shadowColor = rgb("#24218c")
 
@@ -114,18 +118,17 @@ private fun cjkExample(): String {
     """.trimMargin()
 }
 
-private fun progressExample() = progressLayout {
-    padding = 1
+private fun progressExample() = progressBarLayout(spacing = 1) {
     text("file.iso")
     progressBar()
     speed("B/s")
     timeRemaining()
-}.build(25000000000, 30000000000, 351.0)
+}.build(30000000000, 25000000000, TimeSource.Monotonic.markNow(), speed = 351.0)
 
 
 private const val rightArrow = """
-      │╲ 
-  ╭───┘ ╲ 
+      │╲
+  ╭───┘ ╲
   ╰───┐ ╱
       │╱
 """
