@@ -7,12 +7,6 @@ repositories {
     mavenCentral()
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 val r8: Configuration by configurations.creating
 
 dependencies {
