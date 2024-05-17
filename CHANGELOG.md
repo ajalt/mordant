@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 2.6.0
 ### Added
 - Publish `iosArm64` and `iosX64` targets.
 - Added `MultiplatformSystem` that provides multiplatform implementations of some non-terminal functionality that commonly used for command line apps: `readEnvironmentVariable`, `exitProcess`, and `readFileAsUtf8`.
