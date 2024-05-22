@@ -27,6 +27,6 @@ kotlin {
 // Need to compile using a canary version of Node due to
 // https://youtrack.jetbrains.com/issue/KT-63014
 rootProject.the<NodeJsRootExtension>().apply {
-    nodeVersion = "21.0.0-v8-canary2023091837d0630120"
-    nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
+    version = "21.0.0-v8-canary2023091837d0630120"
+    downloadBaseUrl = "https://nodejs.org/download/v8-canary"
 }
