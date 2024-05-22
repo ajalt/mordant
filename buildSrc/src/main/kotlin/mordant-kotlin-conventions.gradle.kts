@@ -6,10 +6,10 @@ plugins {
 }
 
 tasks.withType<KotlinJvmCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+        jvmTarget.set(JvmTarget.JVM_1_8)
     }
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_1_8)
 }
 
 tasks.withType<JavaCompile>().configureEach {

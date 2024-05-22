@@ -1,6 +1,6 @@
 [versions]
-kotlin = "1.9.23"
-coroutines = "1.8.0"
+kotlin = "2.0.0"
+coroutines = "1.8.1"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.5.0"
@@ -14,7 +14,7 @@ graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 # used in tests
-kotest = "io.kotest:kotest-assertions-core:5.9.0.1440-SNAPSHOT"
+kotest = "io.kotest:kotest-assertions-core:5.9.0"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 r8 = "com.android.tools:r8:8.3.37"
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
@@ -26,4 +26,4 @@ publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.
 
 [plugins]
 graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.28"
-kotlinBinaryCompatibilityValidator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.13.2"
+kotlinBinaryCompatibilityValidator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.14.0"
