@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.internal.jna
 
 import com.example.WindowsScanCodeToKeyEvent
 import com.example.WindowsVirtualKeyCodeToKeyEvent
+import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
@@ -301,6 +302,7 @@ internal class JnaWin32MppImpls : MppImpls {
 
         // only ENABLE_PROCESSED_INPUT means echo and line input modes are disabled. Could add
         // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.
+        // TODO: handle errors remove ENABLE_PROCESSED_INPUT to intercept ctrl-c
         kernel.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT)
         return originalMode.value
     }
@@ -324,21 +326,20 @@ internal class JnaWin32MppImpls : MppImpls {
         return inputEvents[0]!!.Event!!.KeyEvent!!
     }
 
-    fun readKeyEvent(timeout: Duration): KeyEvent? {
+    fun readKeyEvent(timeout: Duration): KeyboardEvent? {
         val t0 = TimeSource.Monotonic.markNow()
         while (t0.elapsedNow() < timeout) {
             val event = readRawKeyEvent(timeout - t0.elapsedNow())
             // ignore key up events
             if (event != null && event.bKeyDown) {
                 val unicodeChar = event.uChar!!.UnicodeChar
-                return KeyEvent(
+                return KeyboardEvent(
                     key = if (unicodeChar.code != 0) unicodeChar.toString()
                     else WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode),
                     code = WindowsScanCodeToKeyEvent.getName(event.wVirtualScanCode),
                     ctrl = event.dwControlKeyState and (RIGHT_CTRL_PRESSED or LEFT_CTRL_PRESSED) != 0,
                     alt = event.dwControlKeyState and (RIGHT_ALT_PRESSED or LEFT_ALT_PRESSED) != 0,
                     shift = event.dwControlKeyState and SHIFT_PRESSED != 0,
-                    meta = false, // meta key isn't delivered as an event on windows
                 )
             }
         }
@@ -346,12 +347,3 @@ internal class JnaWin32MppImpls : MppImpls {
     }
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
-data class KeyEvent(
-    val key: String,
-    val code: String,
-    val ctrl: Boolean,
-    val alt: Boolean,
-    val shift: Boolean,
-    val meta: Boolean,
-)
