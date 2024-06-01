@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.internal.jna.JnaLinuxMppImpls
 import com.github.ajalt.mordant.internal.jna.JnaMacosMppImpls
 import com.github.ajalt.mordant.internal.jna.JnaWin32MppImpls
@@ -11,6 +12,7 @@ import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
+import kotlin.time.Duration
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -141,6 +143,8 @@ private val impls: MppImpls = System.getProperty("os.name").let { os ->
 internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
 internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
+internal actual fun readKeyMpp(timeout: Duration): KeyboardEvent? = impls.readKey(timeout)
+internal actual fun enterRawModeMpp(): AutoCloseable = impls.enterRawMode()
 internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
 internal actual fun hasFileSystem(): Boolean = true
@@ -154,3 +158,4 @@ internal actual fun readFileIfExists(filename: String): String? {
     if (!file.isFile) return null
     return file.bufferedReader().use { it.readText() }
 }
+

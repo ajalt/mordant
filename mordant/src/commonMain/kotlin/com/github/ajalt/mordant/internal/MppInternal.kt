@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.terminal.*
+import kotlin.time.Duration
 
 internal interface MppAtomicInt {
     fun getAndIncrement(): Int
@@ -62,3 +64,7 @@ internal expect fun exitProcessMpp(status: Int)
 internal expect fun readFileIfExists(filename: String): String?
 
 internal expect fun hasFileSystem(): Boolean
+
+internal expect fun readKeyMpp(timeout: Duration): KeyboardEvent?
+
+internal expect fun enterRawModeMpp(): AutoCloseable
