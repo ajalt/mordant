@@ -1,8 +1,7 @@
 package com.github.ajalt.mordant.internal.jna
 
-import com.example.WindowsScanCodeToKeyEvent
-import com.example.WindowsVirtualKeyCodeToKeyEvent
 import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.internal.KeyboardInputWindows
 import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
@@ -10,7 +9,6 @@ import com.sun.jna.*
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.win32.W32APIOptions
 import kotlin.time.Duration
-import kotlin.time.TimeSource
 
 // Interface definitions from
 // https://github.com/java-native-access/jna/blob/master/contrib/platform/src/com/sun/jna/platform/win32/Kernel32.java
@@ -296,7 +294,7 @@ internal class JnaWin32MppImpls : MppImpls {
         return csbi.srWindow?.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    fun enterRawMode(): Int {
+    override fun enterRawMode(): AutoCloseable {
         val originalMode = IntByReference()
         kernel.GetConsoleMode(stdinHandle, originalMode)
 
@@ -304,15 +302,11 @@ internal class JnaWin32MppImpls : MppImpls {
         // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.
         // TODO: handle errors remove ENABLE_PROCESSED_INPUT to intercept ctrl-c
         kernel.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT)
-        return originalMode.value
+
+        return AutoCloseable { kernel.SetConsoleMode(stdinHandle, originalMode.value) }
     }
 
-    fun exitRawMode(originalMode: Int) {
-        kernel.SetConsoleMode(stdinHandle, originalMode)
-    }
-
-    private fun readRawKeyEvent(timeout: Duration): WinKernel32Lib.KEY_EVENT_RECORD? {
-        val dwMilliseconds = timeout.inWholeMilliseconds.coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
+    private fun readRawKeyEvent(dwMilliseconds: Int): KeyboardInputWindows.KeyEventRecord? {
         val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
         if (waitResult != 0) {
             return null
@@ -323,27 +317,17 @@ internal class JnaWin32MppImpls : MppImpls {
         if (eventsRead.value == 0) {
             return null
         }
-        return inputEvents[0]!!.Event!!.KeyEvent!!
+        val keyEvent = inputEvents[0]!!.Event!!.KeyEvent!!
+        return KeyboardInputWindows.KeyEventRecord(
+            bKeyDown = keyEvent.bKeyDown,
+            wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
+            uChar = keyEvent.uChar!!.UnicodeChar,
+            dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
+        )
     }
 
-    fun readKeyEvent(timeout: Duration): KeyboardEvent? {
-        val t0 = TimeSource.Monotonic.markNow()
-        while (t0.elapsedNow() < timeout) {
-            val event = readRawKeyEvent(timeout - t0.elapsedNow())
-            // ignore key up events
-            if (event != null && event.bKeyDown) {
-                val unicodeChar = event.uChar!!.UnicodeChar
-                return KeyboardEvent(
-                    key = if (unicodeChar.code != 0) unicodeChar.toString()
-                    else WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode),
-                    code = WindowsScanCodeToKeyEvent.getName(event.wVirtualScanCode),
-                    ctrl = event.dwControlKeyState and (RIGHT_CTRL_PRESSED or LEFT_CTRL_PRESSED) != 0,
-                    alt = event.dwControlKeyState and (RIGHT_ALT_PRESSED or LEFT_ALT_PRESSED) != 0,
-                    shift = event.dwControlKeyState and SHIFT_PRESSED != 0,
-                )
-            }
-        }
-        return null
+    override fun readKey(timeout: Duration): KeyboardEvent? {
+        return KeyboardInputWindows.readKeyEvent(timeout, ::readRawKeyEvent)
     }
 }
 

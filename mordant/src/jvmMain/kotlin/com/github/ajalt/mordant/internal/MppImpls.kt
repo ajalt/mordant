@@ -1,5 +1,8 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.mordant.input.KeyboardEvent
+import kotlin.time.Duration
+
 
 internal interface MppImpls {
     fun stdoutInteractive(): Boolean
@@ -7,6 +10,8 @@ internal interface MppImpls {
     fun stderrInteractive(): Boolean
     fun getTerminalSize(): Size?
     fun fastIsTty(): Boolean = true
+    fun readKey(timeout: Duration): KeyboardEvent?
+    fun enterRawMode(): AutoCloseable
 }
 
 
@@ -17,4 +22,6 @@ internal class FallbackMppImpls : MppImpls {
     override fun stderrInteractive(): Boolean = System.console() != null
     override fun getTerminalSize(): Size? = null
     override fun fastIsTty(): Boolean = false
+    override fun readKey(timeout: Duration): KeyboardEvent? = null
+    override fun enterRawMode(): AutoCloseable = AutoCloseable { }
 }
