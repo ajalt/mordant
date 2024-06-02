@@ -374,7 +374,7 @@ class Terminal private constructor(
     }
 
     private fun sendPrintRequest(request: PrintRequest) {
-        if (FAST_ISATTY) info.updateTerminalSize()
+        if (SYSCALL_HANDLER.fastIsTty()) info.updateTerminalSize()
         sendInterceptedPrintRequest(request, terminalInterface, interceptors.value)
     }
 }

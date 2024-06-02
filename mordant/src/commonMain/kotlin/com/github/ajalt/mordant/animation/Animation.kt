@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.*
-import com.github.ajalt.mordant.internal.FAST_ISATTY
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.update
@@ -142,7 +141,7 @@ abstract class Animation<T>(
      * place.
      */
     fun update(data: T) {
-        if (FAST_ISATTY) terminal.info.updateTerminalSize()
+        if (SYSCALL_HANDLER.fastIsTty()) terminal.info.updateTerminalSize()
 
         val rendered = renderData(data).render(terminal)
         val height = rendered.height

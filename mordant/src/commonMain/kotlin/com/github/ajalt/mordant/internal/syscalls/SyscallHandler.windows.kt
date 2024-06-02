@@ -1,30 +1,32 @@
-package com.github.ajalt.mordant.input.internal
+package com.github.ajalt.mordant.internal.syscalls
 
 import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.internal.WindowsVirtualKeyCodeToKeyEvent
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
-internal object KeyboardInputWindows {
-    // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
-    private const val RIGHT_ALT_PRESSED: UInt = 0x0001u
-    private const val LEFT_ALT_PRESSED: UInt = 0x0002u
-    private const val RIGHT_CTRL_PRESSED: UInt = 0x0004u
-    private const val LEFT_CTRL_PRESSED: UInt = 0x0008u
-    private const val SHIFT_PRESSED: UInt = 0x0010u
-    private val CTRL_PRESSED_MASK = (RIGHT_CTRL_PRESSED or LEFT_CTRL_PRESSED)
-    private val ALT_PRESSED_MASK = (RIGHT_ALT_PRESSED or LEFT_ALT_PRESSED)
+internal abstract class SyscallHandlerWindows: SyscallHandler {
+    private companion object {
+        // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
+        const val RIGHT_ALT_PRESSED: UInt = 0x0001u
+        const val LEFT_ALT_PRESSED: UInt = 0x0002u
+        const val RIGHT_CTRL_PRESSED: UInt = 0x0004u
+        const val LEFT_CTRL_PRESSED: UInt = 0x0008u
+        const val SHIFT_PRESSED: UInt = 0x0010u
+        val CTRL_PRESSED_MASK = (RIGHT_CTRL_PRESSED or LEFT_CTRL_PRESSED)
+        val ALT_PRESSED_MASK = (RIGHT_ALT_PRESSED or LEFT_ALT_PRESSED)
+    }
 
-    data class KeyEventRecord(
+    protected data class KeyEventRecord(
         val bKeyDown: Boolean,
         val wVirtualKeyCode: UShort,
         val uChar: Char,
         val dwControlKeyState: UInt,
     )
 
-    fun readKeyEvent(
-        timeout: Duration,
-        readRawKeyEvent: (dwMilliseconds: Int) -> KeyEventRecord?,
-    ): KeyboardEvent? {
+    protected abstract fun readRawKeyEvent(dwMilliseconds: Int): KeyEventRecord?
+
+    override fun readKeyEvent(timeout: Duration): KeyboardEvent? {
         val t0 = TimeSource.Monotonic.markNow()
         while (t0.elapsedNow() < timeout) {
             val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds

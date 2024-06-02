@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
-
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
@@ -7,7 +5,6 @@ import kotlinx.cinterop.*
 import platform.posix.*
 import kotlin.concurrent.AtomicInt
 import kotlin.concurrent.AtomicReference
-import kotlin.experimental.ExperimentalNativeApi
 import kotlin.system.exitProcess
 
 private class NativeAtomicRef<T>(value: T) : MppAtomicRef<T> {
@@ -46,10 +43,6 @@ internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
 internal actual fun getEnv(key: String): String? = getenv(key)?.toKStringFromUtf8()
 
-internal actual fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO) != 0
-
-internal actual fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
-
 internal actual fun codepointSequence(string: String): Sequence<Int> = sequence {
     var i = 0
     while (i < string.length) {
@@ -69,6 +62,7 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     fflush(stderr)
 }
 
+// TODO: use the syscall handler for this?
 internal expect fun ttySetEcho(echo: Boolean)
 
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
@@ -175,5 +169,4 @@ internal actual fun readFileIfExists(filename: String): String? {
 }
 
 internal actual fun exitProcessMpp(status: Int): Unit = exitProcess(status)
-internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false

@@ -1,8 +1,6 @@
-package com.github.ajalt.mordant.internal.jna
+package com.github.ajalt.mordant.internal.syscalls
 
 import com.github.ajalt.mordant.input.KeyboardEvent
-import com.github.ajalt.mordant.input.internal.KeyboardInputWindows
-import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
@@ -244,18 +242,10 @@ interface WinKernel32Lib : Library {
 
 
 @Delete
-internal class JnaWin32MppImpls : MppImpls {
-    private companion object {
-        // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
-        const val RIGHT_ALT_PRESSED: Int = 0x0001
-        const val LEFT_ALT_PRESSED: Int = 0x0002
-        const val RIGHT_CTRL_PRESSED: Int = 0x0004
-        const val LEFT_CTRL_PRESSED: Int = 0x0008
-        const val SHIFT_PRESSED: Int = 0x0010
-    }
-
-    private val kernel =
-        Native.load("kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS)
+internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
+    private val kernel = Native.load(
+        "kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS
+    )
     private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)
     private val stderrHandle = kernel.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE)
@@ -306,7 +296,7 @@ internal class JnaWin32MppImpls : MppImpls {
         return AutoCloseable { kernel.SetConsoleMode(stdinHandle, originalMode.value) }
     }
 
-    private fun readRawKeyEvent(dwMilliseconds: Int): KeyboardInputWindows.KeyEventRecord? {
+    override fun readRawKeyEvent(dwMilliseconds: Int): KeyEventRecord? {
         val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
         if (waitResult != 0) {
             return null
@@ -318,16 +308,12 @@ internal class JnaWin32MppImpls : MppImpls {
             return null
         }
         val keyEvent = inputEvents[0]!!.Event!!.KeyEvent!!
-        return KeyboardInputWindows.KeyEventRecord(
+        return KeyEventRecord(
             bKeyDown = keyEvent.bKeyDown,
             wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
             uChar = keyEvent.uChar!!.UnicodeChar,
             dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
         )
-    }
-
-    override fun readKey(timeout: Duration): KeyboardEvent? {
-        return KeyboardInputWindows.readKeyEvent(timeout, ::readRawKeyEvent)
     }
 }
 

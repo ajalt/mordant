@@ -5,6 +5,10 @@ plugins {
 
 kotlin {
     sourceSets {
+        all {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            languageSettings.optIn("kotlin.experimental.ExperimentalNativeApi")
+        }
         commonMain.dependencies {
             api(libs.colormath)
             implementation(libs.markdown)

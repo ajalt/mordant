@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalForeignApi::class)
-
 package com.github.ajalt.mordant.internal
 
 import kotlinx.cinterop.*
