@@ -1,11 +1,14 @@
 package com.github.ajalt.mordant.internal.jna
 
+import com.github.ajalt.mordant.input.internal.PosixRawModeHandler
 import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+
+private const val TCSANOW: Int = 0x0
 
 @Delete
 @Suppress("ClassName", "PropertyName", "MemberVisibilityCanBePrivate", "SpellCheckingInspection")
@@ -30,12 +33,47 @@ private interface MacosLibC : Library {
         }
     }
 
+    @Structure.FieldOrder(
+        "c_iflag", "c_oflag", "c_cflag", "c_lflag", "c_cc", "c_ispeed", "c_ospeed"
+    )
+    class termios : Structure() {
+        @JvmField
+        var c_iflag: NativeLong = NativeLong()
+
+        @JvmField
+        var c_oflag: NativeLong = NativeLong()
+
+        @JvmField
+        var c_cflag: NativeLong = NativeLong()
+
+        @JvmField
+        var c_lflag: NativeLong = NativeLong()
+
+        @JvmField
+        var c_line: Byte = 0
+
+        @JvmField
+        var c_cc: ByteArray = ByteArray(20)
+
+        @JvmField
+        var c_ispeed: NativeLong = NativeLong()
+
+        @JvmField
+        var c_ospeed: NativeLong = NativeLong()
+    }
+
     fun isatty(fd: Int): Int
     fun ioctl(fd: Int, cmd: NativeLong?, data: winsize?): Int
+
+    @Throws(LastErrorException::class)
+    fun tcgetattr(fd: Int, termios: termios)
+
+    @Throws(LastErrorException::class)
+    fun tcsetattr(fd: Int, cmd: Int, termios: termios)
 }
 
 @Delete
-internal class JnaMacosMppImpls : MppImpls {
+internal class JnaMacosMppImpls : MppImpls, PosixRawModeHandler() {
     @Suppress("SpellCheckingInspection")
     private companion object {
         const val STDIN_FILENO = 0
@@ -65,7 +103,33 @@ internal class JnaMacosMppImpls : MppImpls {
         return getSttySize(100)
     }
 
+    override fun getStdinTermios(): Termios {
+        val termios = MacosLibC.termios()
+        libC.tcgetattr(STDIN_FILENO, termios)
+        return Termios(
+            iflag = termios.c_iflag.toInt().toUInt(),
+            oflag = termios.c_oflag.toInt().toUInt(),
+            cflag = termios.c_cflag.toInt().toUInt(),
+            lflag = termios.c_lflag.toInt().toUInt(),
+            cline = termios.c_line,
+            cc = termios.c_cc.copyOf(),
+            ispeed = termios.c_ispeed.toInt().toUInt(),
+            ospeed = termios.c_ospeed.toInt().toUInt(),
+        )
+    }
 
+    override fun setStdinTermios(termios: Termios) {
+        val nativeTermios = MacosLibC.termios()
+        nativeTermios.c_iflag = NativeLong(termios.iflag.toLong())
+        nativeTermios.c_oflag = NativeLong(termios.oflag.toLong())
+        nativeTermios.c_cflag = NativeLong(termios.cflag.toLong())
+        nativeTermios.c_lflag = NativeLong(termios.lflag.toLong())
+        nativeTermios.c_line = termios.cline
+        termios.cc.copyInto(nativeTermios.c_cc)
+        nativeTermios.c_ispeed = NativeLong(termios.ispeed.toLong())
+        nativeTermios.c_ospeed = NativeLong(termios.ospeed.toLong())
+        libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
+    }
 }
 
 @Suppress("SameParameterValue")
