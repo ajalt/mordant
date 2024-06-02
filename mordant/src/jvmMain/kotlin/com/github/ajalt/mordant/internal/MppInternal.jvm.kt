@@ -1,18 +1,12 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.input.KeyboardEvent
-import com.github.ajalt.mordant.internal.jna.JnaLinuxMppImpls
-import com.github.ajalt.mordant.internal.jna.JnaMacosMppImpls
-import com.github.ajalt.mordant.internal.jna.JnaWin32MppImpls
-import com.github.ajalt.mordant.internal.nativeimage.NativeImagePosixMppImpls
-import com.github.ajalt.mordant.internal.nativeimage.NativeImageWin32MppImpls
+import com.github.ajalt.mordant.internal.syscalls.*
 import com.github.ajalt.mordant.terminal.*
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
-import kotlin.time.Duration
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -122,30 +116,26 @@ internal actual fun sendInterceptedPrintRequest(
     })
 }
 
-private val impls: MppImpls = System.getProperty("os.name").let { os ->
-    try {
-        // Inlined version of ImageInfo.inImageCode()
-        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
-        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
-        when {
-            isNativeImage && os.startsWith("Windows") -> NativeImageWin32MppImpls()
-            isNativeImage && (os == "Linux" || os == "Mac OS X") -> NativeImagePosixMppImpls()
-            os.startsWith("Windows") -> JnaWin32MppImpls()
-            os == "Linux" -> JnaLinuxMppImpls()
-            os == "Mac OS X" -> JnaMacosMppImpls()
-            else -> FallbackMppImpls()
+internal actual fun getSyscallHandler(): SyscallHandler {
+    return System.getProperty("os.name").let { os ->
+        try {
+            // Inlined version of ImageInfo.inImageCode()
+            val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
+            val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
+            when {
+                isNativeImage && os.startsWith("Windows") -> TODO("NativeImageWin32MppImpls()")
+                isNativeImage && (os == "Linux" || os == "Mac OS X") -> TODO("NativeImagePosixMppImpls()")
+                os.startsWith("Windows") -> SyscallHandlerJnaWindows
+                os == "Linux" -> SyscallHandlerJnaLinux
+                os == "Mac OS X" -> SyscallHandlerJnaMacos
+                else -> DumbSyscallHandler
+            }
+        } catch (e: UnsatisfiedLinkError) {
+            DumbSyscallHandler
         }
-    } catch (e: UnsatisfiedLinkError) {
-        FallbackMppImpls()
     }
 }
 
-internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
-internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
-internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
-internal actual fun readKeyMpp(timeout: Duration): KeyboardEvent? = impls.readKey(timeout)
-internal actual fun enterRawModeMpp(): AutoCloseable = impls.enterRawMode()
-internal actual val FAST_ISATTY: Boolean = true
 internal actual val CR_IMPLIES_LF: Boolean = false
 internal actual fun hasFileSystem(): Boolean = true
 
@@ -158,4 +148,3 @@ internal actual fun readFileIfExists(filename: String): String? {
     if (!file.isFile) return null
     return file.bufferedReader().use { it.readText() }
 }
-

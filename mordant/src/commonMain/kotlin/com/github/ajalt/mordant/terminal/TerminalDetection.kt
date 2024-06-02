@@ -1,6 +1,9 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.internal.*
+import com.github.ajalt.mordant.internal.SYSCALL_HANDLER
+import com.github.ajalt.mordant.internal.Size
+import com.github.ajalt.mordant.internal.getEnv
+import com.github.ajalt.mordant.internal.runningInIdeaJavaAgent
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
 
@@ -14,8 +17,8 @@ internal object TerminalDetection {
     ): TerminalInfo {
         // intellij console is interactive, even though isatty returns false
         val ij = isIntellijRunActionConsole()
-        val inputInteractive = interactive ?: (ij || stdinInteractive())
-        val outputInteractive = interactive ?: (ij || stdoutInteractive())
+        val inputInteractive = interactive ?: (ij || SYSCALL_HANDLER.stdinInteractive())
+        val outputInteractive = interactive ?: (ij || SYSCALL_HANDLER.stdoutInteractive())
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
         val (w, h) = detectInitialSize()
@@ -31,10 +34,10 @@ internal object TerminalDetection {
     }
 
     /** Returns the size, or `null` if the size can't be detected */
-    fun detectSize(): Size? = getTerminalSize()
+    fun detectSize(): Size? = SYSCALL_HANDLER.getTerminalSize()
 
     private fun detectInitialSize(): Size {
-        return getTerminalSize() ?: Size(
+        return detectSize() ?: Size(
             width = (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
             height = (getEnv("LINES")?.toIntOrNull() ?: 24)
         )

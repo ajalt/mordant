@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.nativeimage
 
-import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.Platforms
@@ -62,32 +61,32 @@ private object WinKernel32Lib {
 
 }
 
-@Platforms(Platform.WINDOWS::class)
-internal class NativeImageWin32MppImpls : MppImpls {
-
-    override fun stdoutInteractive(): Boolean {
-        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
-        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
-    }
-
-    override fun stderrInteractive(): Boolean {
-        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE())
-        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
-    }
-
-    override fun stdinInteractive(): Boolean {
-        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
-        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
-    }
-
-    override fun getTerminalSize(): Size? {
-        val csbi = StackValue.get(WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO::class.java)
-        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
-        return if (!WinKernel32Lib.GetConsoleScreenBufferInfo(handle, csbi.rawValue())) {
-            null
-        } else {
-            Size(width = csbi.Right - csbi.Left + 1, height = csbi.Bottom - csbi.Top + 1)
-        }
-    }
-
-}
+//@Platforms(Platform.WINDOWS::class)
+//internal class NativeImageWin32MppImpls : MppImpls {
+//
+//    override fun stdoutInteractive(): Boolean {
+//        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
+//        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
+//    }
+//
+//    override fun stderrInteractive(): Boolean {
+//        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE())
+//        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
+//    }
+//
+//    override fun stdinInteractive(): Boolean {
+//        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
+//        return WinKernel32Lib.GetConsoleMode(handle, StackValue.get(CIntPointer::class.java))
+//    }
+//
+//    override fun getTerminalSize(): Size? {
+//        val csbi = StackValue.get(WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO::class.java)
+//        val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
+//        return if (!WinKernel32Lib.GetConsoleScreenBufferInfo(handle, csbi.rawValue())) {
+//            null
+//        } else {
+//            Size(width = csbi.Right - csbi.Left + 1, height = csbi.Bottom - csbi.Top + 1)
+//        }
+//    }
+//
+//}

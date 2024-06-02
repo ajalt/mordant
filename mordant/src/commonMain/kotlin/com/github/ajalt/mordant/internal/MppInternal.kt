@@ -1,8 +1,7 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
 import com.github.ajalt.mordant.terminal.*
-import kotlin.time.Duration
 
 internal interface MppAtomicInt {
     fun getAndIncrement(): Int
@@ -32,14 +31,7 @@ internal expect fun MppAtomicInt(initial: Int): MppAtomicInt
 
 internal expect fun getEnv(key: String): String?
 
-/** Return a pair of [width, height], or null if it can't be detected */
-internal expect fun getTerminalSize(): Size?
-
 internal expect fun runningInIdeaJavaAgent(): Boolean
-
-internal expect fun stdoutInteractive(): Boolean
-
-internal expect fun stdinInteractive(): Boolean
 
 internal expect fun codepointSequence(string: String): Sequence<Int>
 
@@ -55,8 +47,6 @@ internal expect fun sendInterceptedPrintRequest(
     interceptors: List<TerminalInterceptor>,
 )
 
-internal expect val FAST_ISATTY: Boolean
-
 internal expect val CR_IMPLIES_LF: Boolean
 
 internal expect fun exitProcessMpp(status: Int)
@@ -65,6 +55,6 @@ internal expect fun readFileIfExists(filename: String): String?
 
 internal expect fun hasFileSystem(): Boolean
 
-internal expect fun readKeyMpp(timeout: Duration): KeyboardEvent?
+internal expect fun getSyscallHandler() : SyscallHandler
 
-internal expect fun enterRawModeMpp(): AutoCloseable
+internal val SYSCALL_HANDLER: SyscallHandler = getSyscallHandler()

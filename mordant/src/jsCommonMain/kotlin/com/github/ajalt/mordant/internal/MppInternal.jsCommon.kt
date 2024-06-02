@@ -103,10 +103,7 @@ private val impls: JsMppImpls = makeNodeMppImpls() ?: BrowserMppImpls
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
-internal actual fun getTerminalSize(): Size? = impls.getTerminalSize()
 internal actual fun getEnv(key: String): String? = impls.readEnvvar(key)
-internal actual fun stdoutInteractive(): Boolean = impls.stdoutInteractive()
-internal actual fun stdinInteractive(): Boolean = impls.stdinInteractive()
 internal actual fun printStderr(message: String, newline: Boolean) {
     impls.printStderr(message, newline)
 }
@@ -137,5 +134,4 @@ internal actual fun sendInterceptedPrintRequest(
     )
 }
 
-internal actual val FAST_ISATTY: Boolean = true
 internal actual fun hasFileSystem(): Boolean = impls !is BrowserMppImpls

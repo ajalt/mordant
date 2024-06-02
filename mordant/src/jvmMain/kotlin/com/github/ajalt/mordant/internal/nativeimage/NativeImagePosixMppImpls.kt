@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.nativeimage
 
-import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.Platforms
@@ -50,20 +49,20 @@ private object PosixLibC {
     external fun ioctl(fd: Int, cmd: Int, winSize: winsize?): Int
 
 }
-
-@Platforms(Platform.LINUX::class, Platform.MACOS::class)
-internal class NativeImagePosixMppImpls : MppImpls {
-
-    override fun stdoutInteractive() = PosixLibC.isatty(PosixLibC.STDOUT_FILENO())
-    override fun stdinInteractive() = PosixLibC.isatty(PosixLibC.STDIN_FILENO())
-    override fun stderrInteractive() = PosixLibC.isatty(PosixLibC.STDERR_FILENO())
-
-    override fun getTerminalSize(): Size? {
-        val size = StackValue.get(PosixLibC.winsize::class.java)
-        return if (PosixLibC.ioctl(0, PosixLibC.TIOCGWINSZ(), size) < 0) {
-            null
-        } else {
-            Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
-        }
-    }
-}
+//
+//@Platforms(Platform.LINUX::class, Platform.MACOS::class)
+//internal class NativeImagePosixMppImpls : MppImpls {
+//
+//    override fun stdoutInteractive() = PosixLibC.isatty(PosixLibC.STDOUT_FILENO())
+//    override fun stdinInteractive() = PosixLibC.isatty(PosixLibC.STDIN_FILENO())
+//    override fun stderrInteractive() = PosixLibC.isatty(PosixLibC.STDERR_FILENO())
+//
+//    override fun getTerminalSize(): Size? {
+//        val size = StackValue.get(PosixLibC.winsize::class.java)
+//        return if (PosixLibC.ioctl(0, PosixLibC.TIOCGWINSZ(), size) < 0) {
+//            null
+//        } else {
+//            Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
+//        }
+//    }
+//}
