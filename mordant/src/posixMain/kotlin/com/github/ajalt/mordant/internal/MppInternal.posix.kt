@@ -4,11 +4,11 @@ package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.internal.KeyboardInputLinux
+import com.github.ajalt.mordant.input.internal.PosixRawModeHandler
 import kotlinx.cinterop.*
 import platform.posix.*
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 private fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char? = memScoped {
     while (t0.elapsedNow() < timeout) {
@@ -24,29 +24,34 @@ internal actual fun readKeyMpp(timeout: Duration): KeyboardEvent? {
     return KeyboardInputLinux.readKeyEvent(timeout, ::readRawByte)
 }
 
-internal actual fun enterRawModeMpp(): AutoCloseable = memScoped {
-    val termios = alloc<termios>()
-    tcgetattr(STDIN_FILENO, termios.ptr)
+internal actual fun enterRawModeMpp(): AutoCloseable = LinuxNativeRawModeHandler.enterRawMode()
 
-    // This is clunky, but K/N doesn't seem to have a way to copy a struct, and calling tcgetattr
-    // twice here doesn't work because the kernel seems to mutate the returned values later.
-    val originalTermios = cValue<termios> {
-        repeat(NCCS) { c_cc[it] = termios.c_cc[it] }
-        c_cflag = termios.c_cflag
-        c_iflag = termios.c_iflag
-        c_ispeed = termios.c_ispeed
-        c_lflag = termios.c_lflag
-        c_line = termios.c_line
-        c_oflag = termios.c_oflag
-        c_ospeed = termios.c_ospeed
+private object LinuxNativeRawModeHandler : PosixRawModeHandler() {
+    override fun getStdinTermios(): Termios = memScoped {
+        val termios = alloc<termios>()
+        tcgetattr(STDIN_FILENO, termios.ptr)
+        return Termios(
+            iflag = termios.c_iflag,
+            oflag = termios.c_oflag,
+            cflag = termios.c_cflag,
+            lflag = termios.c_lflag,
+            cline = termios.c_line.toByte(),
+            cc = ByteArray(NCCS) { termios.c_cc[it].toByte() },
+            ispeed = termios.c_ispeed,
+            ospeed = termios.c_ospeed,
+        )
     }
 
-    // we leave OPOST on so we don't change \r\n handling
-    termios.c_iflag = termios.c_iflag and (ICRNL or INPCK or ISTRIP or IXON).inv().toUInt()
-    termios.c_cflag = termios.c_cflag or CS8.toUInt()
-    termios.c_lflag = termios.c_lflag and (ECHO or ICANON or IEXTEN or ISIG).inv().toUInt()
-    termios.c_cc[VMIN] = 0u // min wait time on read
-    termios.c_cc[VTIME] = 1u // max wait time on read, in 10ths of a second
-    tcsetattr(STDIN_FILENO, TCSADRAIN, termios.ptr)
-    return AutoCloseable { tcsetattr(STDIN_FILENO, TCSADRAIN, originalTermios.ptr) }
+    override fun setStdinTermios(termios: Termios): Unit = memScoped {
+        val nativeTermios = alloc<termios>()
+        nativeTermios.c_iflag = termios.iflag
+        nativeTermios.c_oflag = termios.oflag
+        nativeTermios.c_cflag = termios.cflag
+        nativeTermios.c_lflag = termios.lflag
+        nativeTermios.c_line = termios.cline.toUByte()
+        repeat(NCCS) { nativeTermios.c_cc[it] = termios.cc[it].toUByte() }
+        nativeTermios.c_ispeed = termios.ispeed
+        nativeTermios.c_ospeed = termios.ospeed
+        tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios.ptr)
+    }
 }

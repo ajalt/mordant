@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.internal.jna
 
 import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.internal.KeyboardInputLinux
+import com.github.ajalt.mordant.input.internal.PosixRawModeHandler
 import com.github.ajalt.mordant.internal.MppImpls
 import com.github.ajalt.mordant.internal.Size
 import com.oracle.svm.core.annotate.Delete
@@ -190,7 +191,7 @@ private interface PosixLibC : Library {
 }
 
 @Delete
-internal class JnaLinuxMppImpls : MppImpls {
+internal class JnaLinuxMppImpls : MppImpls, PosixRawModeHandler() {
     @Suppress("SpellCheckingInspection")
     private companion object {
         private const val STDIN_FILENO = 0
@@ -214,21 +215,32 @@ internal class JnaLinuxMppImpls : MppImpls {
         }
     }
 
-    // https://www.man7.org/linux/man-pages/man3/termios.3.html
-    // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
-    override fun enterRawMode(): AutoCloseable {
-        val originalTermios = PosixLibC.termios()
+    override fun getStdinTermios(): Termios {
         val termios = PosixLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, originalTermios)
         libC.tcgetattr(STDIN_FILENO, termios)
-        // we leave OPOST on so we don't change \r\n handling
-        termios.c_iflag = termios.c_iflag and (ICRNL or INPCK or ISTRIP or IXON).inv()
-        termios.c_cflag = termios.c_cflag or CS8
-        termios.c_lflag = termios.c_lflag and (ECHO or ICANON or IEXTEN or ISIG).inv()
-        termios.c_cc[VMIN] = 0 // min wait time on read
-        termios.c_cc[VTIME] = 1 // max wait time on read, in 10ths of a second
-        libC.tcsetattr(STDIN_FILENO, TCSADRAIN, termios)
-        return AutoCloseable { libC.tcsetattr(STDIN_FILENO, TCSADRAIN, originalTermios) }
+        return Termios(
+            iflag = termios.c_iflag.toUInt(),
+            oflag = termios.c_oflag.toUInt(),
+            cflag = termios.c_cflag.toUInt(),
+            lflag = termios.c_lflag.toUInt(),
+            cline = termios.c_line,
+            cc = termios.c_cc.copyOf(),
+            ispeed = termios.c_ispeed.toUInt(),
+            ospeed = termios.c_ospeed.toUInt(),
+        )
+    }
+
+    override fun setStdinTermios(termios: Termios) {
+        val nativeTermios = PosixLibC.termios()
+        nativeTermios.c_iflag = termios.iflag.toInt()
+        nativeTermios.c_oflag = termios.oflag.toInt()
+        nativeTermios.c_cflag = termios.cflag.toInt()
+        nativeTermios.c_lflag = termios.lflag.toInt()
+        nativeTermios.c_line = termios.cline
+        termios.cc.copyInto(nativeTermios.c_cc)
+        nativeTermios.c_ispeed = termios.ispeed.toInt()
+        nativeTermios.c_ospeed = termios.ospeed.toInt()
+        libC.tcsetattr(STDIN_FILENO, TCSADRAIN , nativeTermios)
     }
 
     private fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char? {
