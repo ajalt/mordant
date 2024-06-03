@@ -1,11 +1,14 @@
 package com.github.ajalt.mordant.internal
 
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerBrowser
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJsCommon
 import com.github.ajalt.mordant.terminal.*
 
 
 // Since `js()` and `external` work differently in wasm and js, we need to define the functions that
 // use them twice
-internal expect fun makeNodeMppImpls(): JsMppImpls?
+internal expect fun makeNodeSyscallHandler(): SyscallHandlerJsCommon?
 internal expect fun browserPrintln(message: String)
 
 private class JsAtomicRef<T>(override var value: T) : MppAtomicRef<T> {
@@ -41,61 +44,11 @@ internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JsAtomicInt(initi
 internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = JsAtomicRef(value)
 
 
-internal interface JsMppImpls {
-    fun readEnvvar(key: String): String?
-    fun stdoutInteractive(): Boolean
-    fun stdinInteractive(): Boolean
-    fun stderrInteractive(): Boolean
-    fun getTerminalSize(): Size?
-    fun printStderr(message: String, newline: Boolean)
-    fun readLineOrNull(): String?
-    fun makeTerminalCursor(terminal: Terminal): TerminalCursor
-    fun exitProcess(status: Int)
-    fun readFileIfExists(filename: String): String?
+internal actual fun getSyscallHandler(): SyscallHandler {
+    return makeNodeSyscallHandler() ?: SyscallHandlerBrowser
 }
 
-private object BrowserMppImpls : JsMppImpls {
-    override fun readEnvvar(key: String): String? = null
-    override fun stdoutInteractive(): Boolean = false
-    override fun stdinInteractive(): Boolean = false
-    override fun stderrInteractive(): Boolean = false
-    override fun getTerminalSize(): Size? = null
-    override fun printStderr(message: String, newline: Boolean) = browserPrintln(message)
-    override fun exitProcess(status: Int) {}
-
-    // readlnOrNull will just throw an exception on browsers
-    override fun readLineOrNull(): String? = readlnOrNull()
-    override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
-        return BrowserTerminalCursor(terminal)
-    }
-
-    override fun readFileIfExists(filename: String): String? = null
-}
-
-internal abstract class BaseNodeMppImpls<BufferT> : JsMppImpls {
-    final override fun readLineOrNull(): String? {
-        return try {
-            buildString {
-                val buf = allocBuffer(1)
-                do {
-                    val len = readSync(
-                        fd = 0, buffer = buf, offset = 0, len = 1
-                    )
-                    if (len == 0) break
-                    val char = "$buf" // don't call toString here due to KT-55817
-                    append(char)
-                } while (char != "\n" && char != "${0.toChar()}")
-            }
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    abstract fun allocBuffer(size: Int): BufferT
-    abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
-}
-
-private val impls: JsMppImpls = makeNodeMppImpls() ?: BrowserMppImpls
+private val impls get() = SYSCALL_HANDLER as SyscallHandlerJsCommon
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
@@ -130,4 +83,4 @@ internal actual fun sendInterceptedPrintRequest(
     )
 }
 
-internal actual fun hasFileSystem(): Boolean = impls !is BrowserMppImpls
+internal actual fun hasFileSystem(): Boolean = impls !is SyscallHandlerBrowser
