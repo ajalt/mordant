@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.internal.syscalls
 
 import com.github.ajalt.mordant.input.KeyboardEvent
-import com.github.ajalt.mordant.input.internal.WindowsVirtualKeyCodeToKeyEvent
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 

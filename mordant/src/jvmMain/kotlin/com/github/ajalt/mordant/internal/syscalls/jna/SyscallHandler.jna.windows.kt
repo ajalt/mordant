@@ -1,19 +1,18 @@
-package com.github.ajalt.mordant.internal.syscalls
+package com.github.ajalt.mordant.internal.syscalls.jna
 
-import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.internal.Size
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerWindows
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.win32.W32APIOptions
-import kotlin.time.Duration
 
 // Interface definitions from
 // https://github.com/java-native-access/jna/blob/master/contrib/platform/src/com/sun/jna/platform/win32/Kernel32.java
 // copied here so that we don't need the entire platform dependency
 @Delete
 @Suppress("FunctionName", "PropertyName", "ClassName", "unused")
-interface WinKernel32Lib : Library {
+private interface WinKernel32Lib : Library {
     companion object {
         const val STD_INPUT_HANDLE = -10
         const val STD_OUTPUT_HANDLE = -11

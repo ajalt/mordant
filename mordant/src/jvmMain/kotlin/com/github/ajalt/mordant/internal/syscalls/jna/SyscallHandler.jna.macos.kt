@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.internal.syscalls
+package com.github.ajalt.mordant.internal.syscalls.jna
 
 import com.github.ajalt.mordant.internal.Size
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJvmPosix
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 import java.io.IOException
@@ -70,7 +71,7 @@ private interface MacosLibC : Library {
 
 @Delete
 @Suppress("SpellCheckingInspection")
-internal object SyscallHandlerJnaMacos : SyscallHandlerJnaPosix() {
+internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
     private const val TCSANOW: Int = 0x0
     private val TIOCGWINSZ = when {
         Platform.isMIPS() || Platform.isPPC() || Platform.isSPARC() -> 0x40087468L
@@ -78,7 +79,7 @@ internal object SyscallHandlerJnaMacos : SyscallHandlerJnaPosix() {
     }
 
     private val libC: MacosLibC = Native.load(Platform.C_LIBRARY_NAME, MacosLibC::class.java)
-    override fun isatty(fd: Int): Int = libC.isatty(fd)
+    override fun isatty(fd: Int): Boolean = libC.isatty(fd) != 0
     override fun fastIsTty(): Boolean = false
     override fun getTerminalSize(): Size? {
         // TODO: JNA has a bug that causes this to fail on macosArm64, use stty on mac for now

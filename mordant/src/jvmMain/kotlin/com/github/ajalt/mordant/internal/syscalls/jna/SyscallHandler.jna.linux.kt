@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.internal.syscalls
+package com.github.ajalt.mordant.internal.syscalls.jna
 
 import com.github.ajalt.mordant.internal.Size
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJvmPosix
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 
@@ -65,11 +66,11 @@ private interface PosixLibC : Library {
 }
 
 @Delete
-internal object SyscallHandlerJnaLinux : SyscallHandlerJnaPosix() {
+internal object SyscallHandlerJnaLinux : SyscallHandlerJvmPosix() {
     private const val TIOCGWINSZ = 0x00005413
     private const val TCSADRAIN: Int = 0x1
     private val libC: PosixLibC = Native.load(Platform.C_LIBRARY_NAME, PosixLibC::class.java)
-    override fun isatty(fd: Int): Int = libC.isatty(fd)
+    override fun isatty(fd: Int): Boolean = libC.isatty(fd) != 0
 
     override fun getTerminalSize(): Size? {
         val size = PosixLibC.winsize()

@@ -145,12 +145,12 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
 
     protected abstract fun getStdinTermios(): Termios
     protected abstract fun setStdinTermios(termios: Termios)
-    protected abstract fun isatty(fd: Int): Int
+    protected abstract fun isatty(fd: Int): Boolean
     protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char?
 
-    override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO) != 0
-    override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO) != 0
-    override fun stderrInteractive(): Boolean = isatty(STDERR_FILENO) != 0
+    override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO)
+    override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO)
+    override fun stderrInteractive(): Boolean = isatty(STDERR_FILENO)
 
     // https://www.man7.org/linux/man-pages/man3/termios.3.html
     // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
