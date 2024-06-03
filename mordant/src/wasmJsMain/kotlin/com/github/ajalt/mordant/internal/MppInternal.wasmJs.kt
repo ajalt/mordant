@@ -62,9 +62,6 @@ private class NodeMppImpls(private val fs: FsModule) : BaseNodeMppImpls<JsAny>()
         val jsSize = process.stdout.getWindowSize()
         return Size(width = jsSize[0]!!.toInt(), height = jsSize[1]!!.toInt())
     }
-    override fun cwd(): String {
-        return process.cwd()
-    }
 
     override fun printStderr(message: String, newline: Boolean) {
         process.stderr.write(if (newline) message + "\n" else message)
