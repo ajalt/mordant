@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.input.internal
+package com.github.ajalt.mordant.internal.syscalls
 
 // https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values

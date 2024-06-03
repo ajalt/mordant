@@ -8,8 +8,8 @@ import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 
 internal object SyscallHandlerNativePosix: SyscallHandlerPosix() {
-    override fun isatty(fd: Int): Int {
-        return platform.posix.isatty(fd)
+    override fun isatty(fd: Int): Boolean {
+        return platform.posix.isatty(fd) != 0
     }
 
     override fun getTerminalSize(): Size? = memScoped {
