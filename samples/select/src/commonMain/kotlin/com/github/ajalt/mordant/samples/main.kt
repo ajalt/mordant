@@ -1,22 +1,38 @@
 package com.github.ajalt.mordant.samples
 
+import com.github.ajalt.mordant.input.interactiveMultiSelectList
 import com.github.ajalt.mordant.input.interactiveSelectList
-import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
-import com.github.ajalt.mordant.rendering.TextAlign.LEFT
-import com.github.ajalt.mordant.rendering.TextAlign.RIGHT
-import com.github.ajalt.mordant.rendering.TextColors.*
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles.dim
-import com.github.ajalt.mordant.table.Borders.*
-import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.widgets.SelectList
+import com.github.ajalt.mordant.widgets.SelectList.Entry
 
 
 fun main() {
     val terminal = Terminal()
-    val result = terminal.interactiveSelectList(
-        listOf("United States", "Canada", "Mexico"),
-        title = "Select a country",
+    val size = terminal.interactiveSelectList(
+        listOf("Small", "Medium", "Large"),
+        title = "Select a Pizza Size",
     )
-    terminal.info("Selected: $result")
+    if (size == null) {
+        terminal.danger("Aborted pizza order")
+        return
+    }
+    val toppings = terminal.interactiveMultiSelectList(
+        listOf(
+            Entry("Pepperoni"),
+            Entry("Sausage"),
+            Entry("Mushrooms"),
+            Entry("Olives"),
+            Entry("Pineapple"),
+            Entry("Anchovies"),
+        ),
+        title = "Select Toppings",
+        limit = 3,
+    )
+    if (toppings == null) {
+        terminal.danger("Aborted pizza order")
+        return
+    }
+    val toppingString = if (toppings.isEmpty()) "no toppings" else toppings.joinToString()
+    terminal.success("You ordered a $size pizza with $toppingString")
 }
