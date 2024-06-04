@@ -135,7 +135,7 @@ private object WinKernel32Lib {
 }
 
 @Platforms(Platform.WINDOWS::class)
-internal object NativeImageWin32MppImpls : SyscallHandlerWindows() {
+internal object SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
 
     override fun stdoutInteractive(): Boolean {
         val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())

@@ -287,10 +287,10 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
         val originalMode = IntByReference()
         kernel.GetConsoleMode(stdinHandle, originalMode)
 
-        // only ENABLE_PROCESSED_INPUT means echo and line input modes are disabled. Could add
-        // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.
-        // TODO: handle errors remove ENABLE_PROCESSED_INPUT to intercept ctrl-c
-        kernel.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT)
+        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
+        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
+        // events.
+        kernel.SetConsoleMode(stdinHandle, 0)
 
         return AutoCloseable { kernel.SetConsoleMode(stdinHandle, originalMode.value) }
     }

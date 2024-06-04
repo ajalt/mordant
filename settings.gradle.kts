@@ -7,6 +7,7 @@ include(
     "samples:hexviewer",
     "samples:markdown",
     "samples:progress",
+    "samples:select",
     "samples:table",
     "samples:tour",
     "test:graalvm",

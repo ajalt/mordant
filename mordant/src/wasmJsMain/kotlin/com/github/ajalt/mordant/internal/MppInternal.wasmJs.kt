@@ -29,7 +29,7 @@ internal actual fun codepointSequence(string: String): Sequence<Int> {
     return generateSequence { it.next().value?.codePointAt(0) }
 }
 
-// See jsMain/MppImpl.kt for the details of node detection
+// See jsMain for the details of node detection
 private fun runningOnNode(): Boolean =
     js("Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]'")
 
