@@ -58,6 +58,13 @@ sealed class Theme(
                 "markdown.h4" to TextStyle(DEFAULT_HEADER, underline = true),
                 "markdown.h5" to TextStyle(DEFAULT_HEADER, italic = true),
                 "markdown.h6" to TextStyle(DEFAULT_HEADER, dim = true),
+
+                "select.title" to TextStyle(DEFAULT_HEADER, bold = true),
+                "select.cursor" to TextStyle(DEFAULT_HIGHLIGHT),
+                "select.selected" to TextStyle(DEFAULT_GREEN),
+                "select.unselected-title" to DEFAULT_STYLE,
+                "select.unselected-marker" to TextStyle(dim = true),
+                "select.instructions" to TextStyle(dim = true)
             ),
             mapOf(
                 "list.number.separator" to ".",
@@ -76,6 +83,10 @@ sealed class Theme(
                 "markdown.h5.rule" to " ",
                 "markdown.h6.rule" to " ",
                 "markdown.blockquote.bar" to "▎",
+
+                "select.cursor" to "❯",
+                "select.selected" to "✓",
+                "select.unselected" to "•",
             ),
             mapOf(
                 "progressbar.pulse" to true,
@@ -112,6 +123,10 @@ sealed class Theme(
             strings["markdown.h2.rule"] = "-"
             strings["markdown.blockquote.bar"] = "|"
 
+            strings["select.cursor"] = ">"
+            strings["select.selected"] = "x"
+            strings["select.unselected"] = " "
+
             flags["markdown.table.ascii"] = true
         }
     }
@@ -123,7 +138,9 @@ sealed class Theme(
     val muted: TextStyle get() = style("muted")
 
     /** Return a style if defined, or [default] otherwise */
-    fun style(style: String, default: TextStyle = DEFAULT_STYLE): TextStyle = styles.getOrElse(style) { default }
+    fun style(style: String, default: TextStyle = DEFAULT_STYLE): TextStyle {
+        return styles.getOrElse(style) { default }
+    }
 
     /** Return a style if defined, or `null` otherwise */
     fun styleOrNull(style: String): TextStyle? = styles[style]
@@ -141,7 +158,9 @@ sealed class Theme(
     fun stringOrNull(string: String): String? = strings[string]
 
     /** Return a dimension if defined, or [default] otherwise */
-    fun dimension(dimension: String, default: Int = 0): Int = dimensions.getOrElse(dimension) { default }
+    fun dimension(dimension: String, default: Int = 0): Int {
+        return dimensions.getOrElse(dimension) { default }
+    }
 
     /** Return a dimension if defined, or `null` otherwise */
     fun dimensionOrNull(dimension: String): Int? = dimensions[dimension]

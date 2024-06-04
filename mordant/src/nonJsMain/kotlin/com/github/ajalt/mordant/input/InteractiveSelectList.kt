@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.input
 
 import com.github.ajalt.mordant.animation.animation
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextColors.brightWhite
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles.bold
 import com.github.ajalt.mordant.rendering.TextStyles.dim
@@ -15,13 +17,13 @@ private fun Terminal.animateSelectList(
     entries: List<SelectList.Entry>,
     title: Widget?,
     cursorIndex: Int,
-    cursorMarker: String,
-    selectedMarker: String,
-    unselectedMarker: String,
+    cursorMarker: String? = null,
+    selectedMarker: String? = null,
+    unselectedMarker: String? = null,
     captionBottom: Widget?,
-    selectedStyle: TextStyle,
-    unselectedTitleStyle: TextStyle,
-    unselectedMarkerStyle: TextStyle,
+    selectedStyle: TextStyle? = null,
+    unselectedTitleStyle: TextStyle? = null,
+    unselectedMarkerStyle: TextStyle? = null,
     clearOnExit: Boolean = true,
 ): List<SelectList.Entry>? {
     // TODO: descriptions
@@ -32,6 +34,7 @@ private fun Terminal.animateSelectList(
                 items,
                 title = title,
                 cursorIndex = i,
+                styleOnHover = singleSelect,
                 selectedMarker = selectedMarker,
                 cursorMarker = cursorMarker,
                 unselectedMarker = unselectedMarker,
@@ -51,7 +54,9 @@ private fun Terminal.animateSelectList(
                     key == null -> return null
                     key.isCtrlC() -> return null
                     key == KeyboardEvent("ArrowUp") -> cursor = (cursor - 1).coerceAtLeast(0)
-                    key == KeyboardEvent("ArrowDown") -> cursor = (cursor + 1).coerceAtMost(entries.lastIndex)
+                    key == KeyboardEvent("ArrowDown") -> cursor =
+                        (cursor + 1).coerceAtMost(entries.lastIndex)
+
                     !singleSelect && key == KeyboardEvent("x") -> {
                         if (entry.selected || items.count { it.selected } < limit) {
                             items[cursor] = entry.copy(selected = !entry.selected)
@@ -74,7 +79,8 @@ private fun Terminal.animateSelectList(
 fun Terminal.interactiveSelectList(
     entries: List<String>,
     title: String = "",
-    cursorMarker: String = "❯",
+    cursorMarker: String? = null,
+    // TODO add other style options
     startingCursorIndex: Int = 0,
     includeInstructions: Boolean = true,
     onlyShowActiveDescription: Boolean = false, // TODO
@@ -84,18 +90,18 @@ fun Terminal.interactiveSelectList(
         singleSelect = true,
         limit = 1,
         entries = entries.map { SelectList.Entry(it) },
-        title = Text(title),
+        title = Text(theme.style("select.title")(title)),
         cursorIndex = startingCursorIndex,
         cursorMarker = cursorMarker,
         selectedMarker = "",
         unselectedMarker = "",
         captionBottom = if (includeInstructions) {
-            // TODO: theme
-            Text(dim("${bold("↑")} up • ${bold("↓")} down • ${bold("enter")} select"))
+            Text(
+                theme.style("select.instructions")(
+                    " ${brightWhite("↑")} up • ${brightWhite("↓")} down • ${brightWhite("enter")} select"
+                )
+            )
         } else null,
-        selectedStyle = TextStyle(),
-        unselectedTitleStyle = TextStyle(),
-        unselectedMarkerStyle = TextStyle(),
         clearOnExit = clearOnExit,
     )?.first()?.title
 }
@@ -104,10 +110,8 @@ fun Terminal.interactiveMultiSelectList(
     entries: List<SelectList.Entry>,
     title: String = "",
     limit: Int = Int.MAX_VALUE,
-    cursorMarker: String = "❯",
-    selectedMarker: String = "✓", // may be empty
-    unselectedMarker: String = "•", // may be empty
     startingCursorIndex: Int = 0,
+    // TODO add other style options
     includeInstructions: Boolean = true,
     onlyShowActiveDescription: Boolean = false, // TODO
     clearOnExit: Boolean = true,
@@ -116,18 +120,12 @@ fun Terminal.interactiveMultiSelectList(
         singleSelect = false,
         limit = limit,
         entries = entries,
-        title = Text(title),
+        title = Text(theme.style("select.title")(title)),
         cursorIndex = startingCursorIndex,
-        cursorMarker = cursorMarker,
-        selectedMarker = selectedMarker,
-        unselectedMarker = unselectedMarker,
         captionBottom = if (includeInstructions) {
             // TODO: theme
-            Text(dim("${("x")} toggle • ${("↑")} up • ${("↓")} down • ${("enter")} confirm"))
+            Text(dim(" ${brightWhite("x")} toggle • ${brightWhite("↑")} up • ${brightWhite("↓")} down • ${brightWhite("enter")} confirm"))
         } else null,
-        selectedStyle = TextStyle(),
-        unselectedTitleStyle = TextStyle(),
-        unselectedMarkerStyle = TextStyle(),
         clearOnExit = clearOnExit,
     )?.mapNotNull { if (it.selected) it.title else null }
 }

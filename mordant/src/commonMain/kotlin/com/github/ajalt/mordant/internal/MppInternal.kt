@@ -11,6 +11,7 @@ internal interface MppAtomicInt {
 
 internal interface MppAtomicRef<T> {
     val value: T
+    /** @return true if the value was set */
     fun compareAndSet(expected: T, newValue: T): Boolean
     fun getAndSet(newValue: T): T
 }
