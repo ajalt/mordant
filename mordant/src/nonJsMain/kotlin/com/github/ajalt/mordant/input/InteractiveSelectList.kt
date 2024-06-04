@@ -49,16 +49,16 @@ private fun Terminal.animateSelectList(
                 val entry = items[cursor]
                 when {
                     key == null -> return null
-                    key.key == "c" && key.ctrl -> return null
-                    key.key == "ArrowUp" -> cursor = (cursor - 1).coerceAtLeast(0)
-                    key.key == "ArrowDown" -> cursor = (cursor + 1).coerceAtMost(entries.lastIndex)
-                    !singleSelect && key.key == "x" -> {
+                    key.isCtrlC() -> return null
+                    key == KeyboardEvent("ArrowUp") -> cursor = (cursor - 1).coerceAtLeast(0)
+                    key == KeyboardEvent("ArrowDown") -> cursor = (cursor + 1).coerceAtMost(entries.lastIndex)
+                    !singleSelect && key == KeyboardEvent("x") -> {
                         if (entry.selected || items.count { it.selected } < limit) {
                             items[cursor] = entry.copy(selected = !entry.selected)
                         }
                     }
 
-                    key.key == "Enter" -> {
+                    key == KeyboardEvent("Enter") -> {
                         if (singleSelect) return listOf(entry)
                         return items
                     }

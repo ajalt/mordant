@@ -153,7 +153,5 @@ internal object WindowsVirtualKeyCodeToKeyEvent {
         (0x5A).toUShort() to "z",
     )
 
-    fun getName(keyCode: UShort): String {
-        return map[keyCode] ?: "Unidentified"
-    }
+    fun getName(keyCode: UShort): String? = map[keyCode]
 }
