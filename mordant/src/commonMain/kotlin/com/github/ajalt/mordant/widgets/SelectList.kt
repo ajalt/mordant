@@ -21,7 +21,7 @@ class SelectList(
     private val unselectedTitleStyle: TextStyle = TextStyle(), // TODO: theme?
     private val unselectedMarkerStyle: TextStyle = TextStyle(), // TODO: theme?
     ) : Widget {
-    class Entry(
+    data class Entry(// TODO: docs
         val title: String,
         val description: Widget? = null,
         val selected: Boolean = false,
