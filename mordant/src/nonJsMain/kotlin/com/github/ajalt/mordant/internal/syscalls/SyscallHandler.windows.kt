@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.input.KeyboardEvent
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
-internal abstract class SyscallHandlerWindows: SyscallHandler {
+internal abstract class SyscallHandlerWindows : SyscallHandler {
     private companion object {
         // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
         const val RIGHT_ALT_PRESSED: UInt = 0x0001u
@@ -33,11 +33,12 @@ internal abstract class SyscallHandlerWindows: SyscallHandler {
             val event = readRawKeyEvent(dwMilliseconds)
             // ignore key up events
             if (event != null && event.bKeyDown) {
+                val virtualName = WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode)
                 return KeyboardEvent(
                     key = when {
-                        event.uChar == '\r' -> "Enter"
+                        virtualName != null -> virtualName
                         event.uChar.code != 0 -> event.uChar.toString()
-                        else -> WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode)
+                        else -> "Unidentified"
                     },
                     ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
                     alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
