@@ -177,7 +177,7 @@ class DefinitionListEntryBuilder {
 }
 
 /**
- * Build a [DefinitionList] widget.
+ * Build a definition list widget.
  *
  * Call [entry][DefinitionListBuilder.entry] to add entries
  */

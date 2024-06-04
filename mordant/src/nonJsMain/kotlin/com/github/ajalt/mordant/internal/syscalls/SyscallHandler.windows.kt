@@ -35,6 +35,7 @@ internal abstract class SyscallHandlerWindows: SyscallHandler {
             if (event != null && event.bKeyDown) {
                 return KeyboardEvent(
                     key = when {
+                        event.uChar == '\r' -> "Enter"
                         event.uChar.code != 0 -> event.uChar.toString()
                         else -> WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode)
                     },

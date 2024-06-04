@@ -57,10 +57,10 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         val originalMode = alloc<UIntVar>()
         GetConsoleMode(stdinHandle, originalMode.ptr)
 
-        // only ENABLE_PROCESSED_INPUT means echo and line input modes are disabled. Could add
-        // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.
-        // TODO: handle errors remove ENABLE_PROCESSED_INPUT to intercept ctrl-c
-        SetConsoleMode(stdinHandle, ENABLE_PROCESSED_INPUT.toUInt())
+        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
+        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
+        // events.
+        SetConsoleMode(stdinHandle, 0u)
 
         return AutoCloseable { SetConsoleMode(stdinHandle, originalMode.value) }
     }
