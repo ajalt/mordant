@@ -4,6 +4,9 @@
 ### Changed
 - Update Kotlin to 2.0.0
 
+### Fixed
+- Fix animations to correctly clear the last frame when animating a non-rectangular widget that changes size.
+
 ## 2.6.0
 ### Added
 - Publish `iosArm64` and `iosX64` targets.

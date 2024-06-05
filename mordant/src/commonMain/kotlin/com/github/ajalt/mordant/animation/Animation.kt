@@ -1,13 +1,7 @@
 package com.github.ajalt.mordant.animation
 
 import com.github.ajalt.mordant.internal.*
-import com.github.ajalt.mordant.internal.MppAtomicRef
-import com.github.ajalt.mordant.internal.Size
-import com.github.ajalt.mordant.internal.update
-import com.github.ajalt.mordant.rendering.OverflowWrap
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.rendering.Whitespace
-import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalInfo
@@ -39,8 +33,10 @@ abstract class Animation<T>(
     val terminal: Terminal,
 ) {
     private data class State(
-        val size: Size? = null,
-        val lastSize: Size? = null,
+        /** The length of each line of the last rendered widget */
+        val size: List<Int>? = null,
+        /** The length of each line of the previous rendered widget */
+        val lastSize: List<Int>? = null,
         val lastTerminalSize: Size? = null,
         val text: String? = null,
         val interceptorInstalled: Boolean = false,
@@ -144,11 +140,9 @@ abstract class Animation<T>(
         if (SYSCALL_HANDLER.fastIsTty()) terminal.info.updateTerminalSize()
 
         val rendered = renderData(data).render(terminal)
-        val height = rendered.height
-        val width = rendered.width
         val (old, _) = state.update {
             copy(
-                size = Size(width, height),
+                size = rendered.lines.map { it.lineWidth },
                 lastSize = size,
                 interceptorInstalled = true,
                 text = terminal.render(rendered)
@@ -164,8 +158,8 @@ abstract class Animation<T>(
     private fun getCursorMoves(
         firstDraw: Boolean,
         clearScreen: Boolean,
-        lastSize: Size?,
-        size: Size?,
+        lastSize: List<Int>?,
+        size: List<Int>?,
         terminalSize: Size,
         lastTerminalSize: Size?,
         extraUp: Int = 0,
@@ -180,19 +174,21 @@ abstract class Animation<T>(
                 return@getMoves
             }
 
+            val lastWidth = lastSize.max()
+            val lastHeight = lastSize.size
             val terminalShrank = lastTerminalSize != null
                     && terminalSize.width < lastTerminalSize.width
-                    && terminalSize.width < lastSize.width
+                    && terminalSize.width < lastWidth
             val widgetShrank = size != null && (
-                    size.width < lastSize.width
-                            || size.height < lastSize.height
+                    size.size < lastHeight
+                            || size.zip(lastSize).any { (a, b) -> a < b }
                     )
             val up = if (terminalShrank) {
                 // The terminal shrank and caused the text to wrap, we need to move back to the
                 // start of the text
-                lastSize.height * (lastSize.width.toDouble() / terminalSize.width).toInt()
+                lastHeight * (lastWidth.toDouble() / terminalSize.width).toInt()
             } else {
-                (lastSize.height - 1).coerceAtLeast(0)
+                (lastHeight - 1).coerceAtLeast(0)
             }
 
             up(up + extraUp)
