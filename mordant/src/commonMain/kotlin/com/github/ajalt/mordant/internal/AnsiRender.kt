@@ -66,8 +66,12 @@ internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean)
         )
 
         AnsiLevel.ANSI256 -> style.copy(
-            fg = style.color?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
-            bg = style.bgColor?.let { if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256() },
+            fg = style.color?.let {
+                if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256()
+            },
+            bg = style.bgColor?.let {
+                if (it is Ansi16 || it is Ansi256) it else it.toSRGB().clamp().toAnsi256()
+            },
             hyperlink = style.hyperlink.takeIf { hyperlinks },
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
@@ -86,25 +90,40 @@ private fun makeTag(old: TextStyle, new: TextStyle): String {
     if (old == new) return ""
     val codes = mutableListOf<Int>()
     if (old.color != new.color) codes += new.color.toAnsi(fgColorSelector, fgColorReset, 0)
-    if (old.bgColor != new.bgColor) codes += new.bgColor.toAnsi(bgColorSelector, bgColorReset, fgBgOffset)
+    if (old.bgColor != new.bgColor) {
+        codes += new.bgColor.toAnsi(bgColorSelector, bgColorReset, fgBgOffset)
+    }
 
     fun style(old: Boolean?, new: Boolean?, open: Int, close: Int) {
         if (old != true && new == true) codes += open
         else if (old == true && new != true) codes += close
     }
 
-    style(old.bold, new.bold, AnsiCodes.boldOpen, AnsiCodes.boldAndDimClose)
     style(old.italic, new.italic, AnsiCodes.italicOpen, AnsiCodes.italicClose)
     style(old.underline, new.underline, AnsiCodes.underlineOpen, AnsiCodes.underlineClose)
-    style(old.dim, new.dim, AnsiCodes.dimOpen, AnsiCodes.boldAndDimClose)
     style(old.inverse, new.inverse, AnsiCodes.inverseOpen, AnsiCodes.inverseClose)
-    style(old.strikethrough, new.strikethrough, AnsiCodes.strikethroughOpen, AnsiCodes.strikethroughClose)
+    style(
+        old.strikethrough, new.strikethrough,
+        AnsiCodes.strikethroughOpen, AnsiCodes.strikethroughClose
+    )
+
+    // Since there's only one code for closing both bold and dim at the same time, we need to reopen
+    // the other if we had both and just closed one
+    if (old.bold == true && new.bold != true || old.dim == true && new.dim != true) {
+        codes += AnsiCodes.boldAndDimClose
+        if (new.bold == true) codes += AnsiCodes.boldOpen
+        if (new.dim == true) codes += AnsiCodes.dimOpen
+    } else {
+        style(old.bold, new.bold, AnsiCodes.boldOpen, AnsiCodes.boldAndDimClose)
+        style(old.dim, new.dim, AnsiCodes.dimOpen, AnsiCodes.boldAndDimClose)
+    }
 
     val csi = if (codes.isEmpty()) "" else codes.joinToString(";", prefix = CSI, postfix = "m")
     return when {
         old.hyperlink != new.hyperlink && new.hyperlink != HYPERLINK_RESET -> {
             csi + makeHyperlinkTag(new.hyperlink, new.hyperlinkId)
         }
+
         else -> csi
     }
 }
@@ -122,6 +141,7 @@ private fun Color?.toAnsi(select: Int, reset: Int, offset: Int): List<Int> {
             fgColorReset, bgColorReset -> listOf(reset)
             else -> listOf(it.code + offset)
         }
+
         is Ansi256 -> listOf(select, selector256, it.code)
         // The ITU T.416 spec uses colons for the rgb separator as well as extra parameters for CMYK
         // and such. Most terminals only support the semicolon form, so that's what we use.

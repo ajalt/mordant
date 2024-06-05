@@ -6,6 +6,7 @@
 
 ### Fixed
 - Fix animations to correctly clear the last frame when animating a non-rectangular widget that changes size.
+- Fix closing bold and dim styles when one is nested in the other.
 
 ## 2.6.0
 ### Added

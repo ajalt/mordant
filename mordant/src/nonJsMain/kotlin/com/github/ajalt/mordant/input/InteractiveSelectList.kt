@@ -9,6 +9,8 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.SelectList
 import com.github.ajalt.mordant.widgets.Text
 
+private val keyStyle = TextStyle(brightWhite, bold = true)
+
 private fun Terminal.animateSelectList(
     singleSelect: Boolean,
     limit: Int,
@@ -107,7 +109,7 @@ fun Terminal.interactiveSelectList(
         captionBottom = if (includeInstructions) {
             Text(
                 theme.style("select.instructions")(
-                    " ${brightWhite("↑")} up • ${brightWhite("↓")} down • ${brightWhite("enter")} select"
+                    " ${keyStyle("↑")} up • ${keyStyle("↓")} down • ${keyStyle("enter")} select"
                 )
             )
         } else null,
@@ -143,11 +145,8 @@ fun Terminal.interactiveMultiSelectList(
             // TODO: theme
             Text(
                 dim(
-                    " ${brightWhite("x")} toggle • ${brightWhite("↑")} up • ${brightWhite("↓")} down • ${
-                        brightWhite(
-                            "enter"
-                        )
-                    } confirm"
+                    " ${keyStyle("x")} toggle • ${keyStyle("↑")} up • ${keyStyle("↓")} down" +
+                            " • ${keyStyle("enter")} confirm"
                 )
             )
         } else null,
