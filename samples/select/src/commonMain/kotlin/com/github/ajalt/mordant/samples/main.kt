@@ -17,18 +17,19 @@ fun main() {
         terminal.danger("Aborted pizza order")
         return
     }
-    val toppings = terminal.interactiveMultiSelectList(
-        listOf(
+    val toppings = terminal.interactiveMultiSelectList {
+        entries(
             Entry("Pepperoni", selected = true),
             Entry("Sausage", selected = true),
             Entry("Mushrooms"),
             Entry("Olives"),
             Entry("Pineapple"),
             Entry("Anchovies"),
-        ),
-        title = "Select Toppings",
-        limit = 4,
-    )
+        )
+        title("Select Toppings")
+        limit(4)
+    }
+
     if (toppings == null) {
         terminal.danger("Aborted pizza order")
         return
