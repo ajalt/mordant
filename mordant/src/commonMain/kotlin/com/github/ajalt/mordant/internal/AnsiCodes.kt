@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.internal
 
+@Suppress("ConstPropertyName")
 internal object AnsiCodes {
     val fg16Range = 30..37
     val fg16BrightRange = 90..97
