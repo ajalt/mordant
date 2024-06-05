@@ -19,15 +19,16 @@ fun main() {
     }
     val toppings = terminal.interactiveMultiSelectList(
         listOf(
-            Entry("Pepperoni"),
-            Entry("Sausage"),
-            Entry("Mushrooms"),
-            Entry("Olives"),
-            Entry("Pineapple"),
-            Entry("Anchovies"),
+            Entry("Pepperoni", selected = true, description = "Spicy"),
+            Entry("Sausage", selected = true, description = "Spicy"),
+            Entry("Mushrooms", description = "Fresh, not canned"),
+            Entry("Olives", description = "Black olives"),
+            Entry("Pineapple", description = "Fresh, not canned"),
+            Entry("Anchovies", description = "Please don't"),
         ),
         title = "Select Toppings",
         limit = 4,
+        onlyShowActiveDescription = true,
     )
     if (toppings == null) {
         terminal.danger("Aborted pizza order")
