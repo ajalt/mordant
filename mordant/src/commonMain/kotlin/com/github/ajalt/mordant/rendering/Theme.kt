@@ -64,7 +64,6 @@ sealed class Theme(
                 "select.selected" to TextStyle(DEFAULT_GREEN),
                 "select.unselected-title" to DEFAULT_STYLE,
                 "select.unselected-marker" to TextStyle(dim = true),
-                "select.instructions" to TextStyle(dim = true)
             ),
             mapOf(
                 "list.number.separator" to ".",
