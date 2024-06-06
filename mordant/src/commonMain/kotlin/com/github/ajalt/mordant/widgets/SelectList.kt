@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
@@ -12,12 +11,14 @@ import com.github.ajalt.mordant.terminal.Terminal
 
 /**
  * A list widget with selectable items.
+ *
+ * Use `interactiveSelectList` to create a list that can be interacted with.
  */
 class SelectList private constructor(
     private val entries: List<Entry>,
     private val title: Widget?,
     private val cursorIndex: Int?,
-    private val styleOnHover: Boolean ,
+    private val styleOnHover: Boolean,
     private val cursorMarker: ThemeString,
     private val selectedMarker: ThemeString,
     private val unselectedMarker: ThemeString,
@@ -55,14 +56,20 @@ class SelectList private constructor(
         unselectedMarkerStyle = ThemeStyle.of("select.unselected-marker", unselectedMarkerStyle),
     )
 
-    // TODO: docs
     data class Entry(
+        /** The title of the entry. */
         val title: String,
+        /** An optional description of the entry. */
         val description: Widget? = null,
+        /** Whether this entry is marked as selected. */
         val selected: Boolean = false,
     ) {
         constructor(title: String, description: String?, selected: Boolean = false)
-                : this(title, description?.let(::Text), selected)
+                : this(
+            title = title,
+            description = description?.let { Text(it, whitespace = Whitespace.NORMAL) },
+            selected = selected
+        )
     }
 
     private val widget: MppAtomicRef<Widget?> = MppAtomicRef(null)
@@ -75,6 +82,7 @@ class SelectList private constructor(
             tableBorders = Borders.NONE
             borderType = BorderType.BLANK
             padding = Padding(0)
+            whitespace = Whitespace.NORMAL
             val cursorBlank = " ".repeat(Span.word(cursorMarker[t].replace(" ", ".")).cellWidth)
             val cursor = cursorStyle[t](cursorMarker[t])
             val styledSelectedMarker = selectedStyle[t](selectedMarker[t])
@@ -98,7 +106,7 @@ class SelectList private constructor(
                                 cells(title, entry.description)
                             }
 
-                            else -> Text(title)
+                            else -> title
                         })
                     }
                 }

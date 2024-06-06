@@ -10,6 +10,5 @@ data class KeyboardEvent(
     // maybe add a `data` field for escape sequences?
 )
 
-fun KeyboardEvent.isCtrlC(): Boolean {
-    return key == "c" && ctrl && !alt && !shift
-}
+val KeyboardEvent.isCtrlC: Boolean
+    get() = key == "c" && ctrl && !alt && !shift
