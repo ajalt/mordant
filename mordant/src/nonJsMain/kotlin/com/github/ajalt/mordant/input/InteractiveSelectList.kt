@@ -126,7 +126,10 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     private var keyPrev: KeyboardEvent = KeyboardEvent("ArrowUp")
     private var keySubmit: KeyboardEvent = KeyboardEvent("Enter")
     private var keyToggle: KeyboardEvent = KeyboardEvent("x")
+    private var keyFilter: KeyboardEvent = KeyboardEvent("/")
+    private var keyExitFilter: KeyboardEvent = KeyboardEvent("Escape")
     private var instructions: Widget? = null
+    private var filterable: Boolean = false
 
     /** Set the list of items to select from */
     fun entries(vararg entries: SelectList.Entry): InteractiveSelectListBuilder = apply {
@@ -261,6 +264,16 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         this.keyToggle = keyToggle
     }
 
+    /** Set the key to filter the list */
+    fun keyFilter(keyFilter: KeyboardEvent): InteractiveSelectListBuilder = apply {
+        this.keyFilter = keyFilter
+    }
+
+    /** Set the key to stop filtering the list */
+    fun keyExitFilter(keyExitFilter: KeyboardEvent): InteractiveSelectListBuilder = apply {
+        this.keyExitFilter = keyExitFilter
+    }
+
     /** Set the instructions to display at the bottom of the list */
     fun instructions(instructions: Widget): InteractiveSelectListBuilder = apply {
         this.instructions = instructions
@@ -269,6 +282,11 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     /** Set the instructions to display at the bottom of the list */
     fun instructions(instructions: String): InteractiveSelectListBuilder = apply {
         this.instructions = Text(instructions)
+    }
+
+    /** Set whether the list should be filterable */
+    fun filterable(filterable: Boolean): InteractiveSelectListBuilder = apply {
+        this.filterable = filterable
     }
 
     /**
@@ -288,30 +306,66 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
             ?.mapNotNull { if (it.selected) it.title else null }
     }
 
-    private fun runAnimation(singleSelect: Boolean): List<SelectList.Entry>? {
-        require(entries.isNotEmpty()) { "Select list must have at least one entry" }
+    private fun keyName(key: KeyboardEvent): String {
+        var k = when (key.key) {
+            "Enter" -> "enter"
+            "Escape" -> "esc"
+            "ArrowUp" -> "↑"
+            "ArrowDown" -> "↓"
+            "ArrowLeft" -> "←"
+            "ArrowRight" -> "→"
+            else -> key.key
+        }
+        if (key.alt) k = "alt+$k"
+        if (key.ctrl) k = "ctrl+$k"
+        if (key.shift && key.key.length > 1) k = "shift+$k"
+        return k
+    }
 
-        val items = entries.toMutableList()
-        val caption = instructions?.let {
-            val s = TextStyle(brightWhite, bold = true)
-            val text = when {
-                singleSelect -> {
-                    " ${s("↑")} up • ${s("↓")} down • ${s("enter")} select"
-                }
-
-                else -> {
-                    " ${s("x")} toggle • ${s("↑")} up • ${s("↓")} down • ${s("enter")} confirm"
-                }
+    private fun buildInstructions(
+        singleSelect: Boolean, filtering: Boolean, hasFilter: Boolean,
+    ): String {
+        val s = TextStyle(brightWhite, bold = true)
+        val parts = buildList {
+            add(keyName(keyPrev) to "up")
+            add(keyName(keyNext) to "down")
+            if (filtering) {
+                if (!singleSelect) add(keyName(keySubmit) to "apply filter")
+            } else if (filterable) {
+                add(keyName(keyFilter) to "filter")
             }
-            Text(dim(text))
+            if (filtering || hasFilter) {
+                add(keyName(keyExitFilter) to "clear filter")
+            }
+            if (singleSelect) {
+                add(keyName(keySubmit) to "select")
+            } else {
+                add(keyName(keyToggle) to "toggle")
+                add(keyName(keySubmit) to "confirm")
+            }
         }
 
+        return dim(parts.joinToString(" • ") { "${s(it.first)} ${it.second}" })
+    }
+
+    private fun runAnimation(singleSelect: Boolean): List<SelectList.Entry>? {
+        require(entries.isNotEmpty()) { "Select list must have at least one entry" }
         terminal.enterRawMode()?.use { scope ->
-            val a = terminal.animation<Int> { i ->
+            val items = entries.toMutableList()
+            var cursor = startingCursorIndex
+            var filtering = false
+            val filter = StringBuilder()
+            val a = terminal.animation<Unit> {
+                // TODO cursorStyle, apply filter on multi select
                 SelectList(
-                    items,
-                    title = title,
-                    cursorIndex = i,
+                    entries = if (filter.isEmpty()) items else items.filter {
+                        filter.toString().lowercase() in it.title.lowercase()
+                    },
+                    title = when {
+                        filtering -> Text("${terminal.theme.style("select.cursor")("/")} $filter")
+                        else -> title
+                    },
+                    cursorIndex = cursor,
                     styleOnHover = singleSelect,
                     selectedMarker = selectedMarker,
                     cursorMarker = cursorMarker,
@@ -319,12 +373,13 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
                     selectedStyle = selectedStyle,
                     unselectedTitleStyle = unselectedTitleStyle,
                     unselectedMarkerStyle = unselectedMarkerStyle,
-                    captionBottom = caption,
+                    captionBottom = instructions
+                        ?: Text(buildInstructions(singleSelect, filtering, filter.isNotEmpty())),
                 )
             }
 
             try {
-                var cursor = startingCursorIndex
+
                 fun updateCursor(newCursor: Int) {
                     cursor = newCursor.coerceIn(0, entries.lastIndex)
                     if (onlyShowActiveDescription) {
@@ -336,14 +391,31 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
                     }
                 }
                 while (true) {
-                    a.update(cursor)
+                    a.update(Unit)
                     val key = scope.readKey()
                     val entry = items[cursor]
                     when {
                         key == null -> return null
-                        key.isCtrlC() -> return null
+                        key.isCtrlC -> return null
                         key == keyPrev -> updateCursor(cursor - 1)
                         key == keyNext -> updateCursor(cursor + 1)
+                        filterable && !filtering && key == keyFilter -> {
+                            filtering = true
+                        }
+
+                        filtering && key == keyExitFilter -> {
+                            filtering = false
+                            filter.clear()
+                        }
+
+                        filtering && !singleSelect && key == keySubmit -> {
+                            filtering = false
+                        }
+
+                        filtering && !key.alt && !key.ctrl -> {
+                            if (key.key == "Backspace") filter.deleteAt(filter.lastIndex)
+                            else if (key.key.length == 1) filter.append(key.key)
+                        }
 
                         !singleSelect && key == keyToggle -> {
                             if (entry.selected || items.count { it.selected } < limit) {
