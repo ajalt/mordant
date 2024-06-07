@@ -1,13 +1,7 @@
 package com.github.ajalt.mordant.input
 
-import com.github.ajalt.mordant.animation.animation
-import com.github.ajalt.mordant.rendering.TextColors.brightWhite
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles.dim
-import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.SelectList
-import com.github.ajalt.mordant.widgets.Text
 import kotlin.jvm.JvmName
 
 /**

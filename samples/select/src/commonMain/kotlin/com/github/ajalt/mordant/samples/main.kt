@@ -3,7 +3,6 @@ package com.github.ajalt.mordant.samples
 import com.github.ajalt.mordant.input.interactiveMultiSelectList
 import com.github.ajalt.mordant.input.interactiveSelectList
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.SelectList.Entry
 
 
 fun main() {
@@ -18,16 +17,15 @@ fun main() {
         return
     }
     val toppings = terminal.interactiveMultiSelectList {
-        entries(
-            Entry("Pepperoni", selected = true),
-            Entry("Sausage", selected = true),
-            Entry("Mushrooms"),
-            Entry("Olives"),
-            Entry("Pineapple"),
-            Entry("Anchovies"),
-        )
+        addEntry("Pepperoni", selected = true)
+        addEntry("Sausage", selected = true)
+        addEntry("Mushrooms")
+        addEntry("Olives")
+        addEntry("Pineapple")
+        addEntry("Anchovies")
         title("Select Toppings")
         limit(4)
+        filterable(true)
     }
 
     if (toppings == null) {

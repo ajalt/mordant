@@ -27,12 +27,20 @@ private class SelectConfig(
     var unselectedTitleStyle: TextStyle? = null,
     var unselectedMarkerStyle: TextStyle? = null,
     var keyNext: KeyboardEvent = KeyboardEvent("ArrowDown"),
+    var descNext: String = "down",
     var keyPrev: KeyboardEvent = KeyboardEvent("ArrowUp"),
+    var descPrev: String = "up",
     var keySubmit: KeyboardEvent = KeyboardEvent("Enter"),
+    var descSubmit: String = "select",
+    var descConfirm: String = "confirm",
+    var descApplyFilter: String = "set filter",
     var keyToggle: KeyboardEvent = KeyboardEvent("x"),
+    var descToggle: String = "toggle",
     var keyFilter: KeyboardEvent = KeyboardEvent("/"),
+    var descFilter: String = "filter",
     var keyExitFilter: KeyboardEvent = KeyboardEvent("Escape"),
-    var instructions: Widget? = null,
+    var descExitFilter: String = "clear filter",
+    var showInstructions: Boolean = true,
     var filterable: Boolean = false,
 )
 
@@ -66,6 +74,24 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     @JvmName("entriesString")
     fun entries(entries: List<String>): InteractiveSelectListBuilder = apply {
         config.entries = entries.mapTo(mutableListOf()) { SelectList.Entry(it) }
+    }
+
+    /** Add an item to the list of items to select from */
+    fun addEntry(
+        title: String,
+        description: String,
+        selected: Boolean = false,
+    ): InteractiveSelectListBuilder = apply {
+        config.entries += SelectList.Entry(title, description, selected)
+    }
+
+    /** Add an item to the list of items to select from */
+    fun addEntry(
+        title: String,
+        description: Widget? = null,
+        selected: Boolean = false,
+    ): InteractiveSelectListBuilder = apply {
+        config.entries += SelectList.Entry(title, description, selected)
     }
 
     /** Add an item to the list of items to select from */
@@ -164,9 +190,19 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         config.keyNext = keyNext
     }
 
+    /** Set the description of the key to move the cursor down */
+    fun descNext(descNext: String): InteractiveSelectListBuilder = apply {
+        config.descNext = descNext
+    }
+
     /** Set the key to move the cursor up */
     fun keyPrev(keyPrev: KeyboardEvent): InteractiveSelectListBuilder = apply {
         config.keyPrev = keyPrev
+    }
+
+    /** Set the description of the key to move the cursor up */
+    fun descPrev(descPrev: String): InteractiveSelectListBuilder = apply {
+        config.descPrev = descPrev
     }
 
     /** Set the key to submit the selection */
@@ -174,9 +210,29 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         config.keySubmit = keySubmit
     }
 
-    /** Set the key to toggle the selection of an item */
+    /** Set the description of the key to submit the selection in single select mode */
+    fun descSubmit(descSubmit: String): InteractiveSelectListBuilder = apply {
+        config.descSubmit = descSubmit
+    }
+
+    /** Set the description of the key to submit the selection in multi select mode */
+    fun descConfirm(descConfirm: String): InteractiveSelectListBuilder = apply {
+        config.descConfirm = descConfirm
+    }
+
+    /** Set the description of the key to apply the filter when filtering in multi select mode */
+    fun descApplyFilter(descApplyFilter: String): InteractiveSelectListBuilder = apply {
+        config.descApplyFilter = descApplyFilter
+    }
+
+    /** Set the key to toggle the selection of an item in multi select mode */
     fun keyToggle(keyToggle: KeyboardEvent): InteractiveSelectListBuilder = apply {
         config.keyToggle = keyToggle
+    }
+
+    /** Set the description of the key to toggle the selection of an item in multi select mode */
+    fun descToggle(descToggle: String): InteractiveSelectListBuilder = apply {
+        config.descToggle = descToggle
     }
 
     /** Set the key to filter the list */
@@ -184,19 +240,24 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         config.keyFilter = keyFilter
     }
 
+    /** Set the description of the key to filter the list */
+    fun descFilter(descFilter: String): InteractiveSelectListBuilder = apply {
+        config.descFilter = descFilter
+    }
+
     /** Set the key to stop filtering the list */
     fun keyExitFilter(keyExitFilter: KeyboardEvent): InteractiveSelectListBuilder = apply {
         config.keyExitFilter = keyExitFilter
     }
 
-    /** Set the instructions to display at the bottom of the list */
-    fun instructions(instructions: Widget): InteractiveSelectListBuilder = apply {
-        config.instructions = instructions
+    /** Set the description of the key to stop filtering the list */
+    fun descExitFilter(descExitFilter: String): InteractiveSelectListBuilder = apply {
+        config.descExitFilter = descExitFilter
     }
 
-    /** Set the instructions to display at the bottom of the list */
-    fun instructions(instructions: String): InteractiveSelectListBuilder = apply {
-        config.instructions = Text(instructions)
+    /** Whether to show instructions at the bottom of the list */
+    fun showInstructions(showInstructions: Boolean): InteractiveSelectListBuilder = apply {
+        config.showInstructions = showInstructions
     }
 
     /** Set whether the list should be filterable */
@@ -235,23 +296,31 @@ private open class SelectInputAnimation(
     private data class State(
         val items: List<SelectList.Entry>,
         val cursor: Int,
-        val filtering: Boolean,
-        val filter: String,
-        val finished: Boolean,
-        val result: List<String>?,
-    )
+        val filtering: Boolean = false,
+        val applyFilter: Boolean = false,
+        val filter: String = "",
+        val finished: Boolean = false,
+        val result: List<String>? = null,
+    ) {
+        val filteredItems: List<SelectList.Entry>
+            get() = if (!applyFilter || filter.isEmpty()) items else items.filter {
+                filter.lowercase() in it.title.lowercase()
+            }
+    }
 
-    private val state = MppAtomicRef(
-        State(
-            config.entries, config.startingCursorIndex, false, "", false, null
-        )
-    )
+    private val state = MppAtomicRef(State(config.entries, config.startingCursorIndex))
 
     private val animation = terminal.animation<State> { s ->
         with(config) {
             SelectList(
-                entries = if (s.filter.isEmpty()) s.items else s.items.filter {
-                    s.filter.lowercase() in it.title.lowercase()
+                entries = if (onlyShowActiveDescription) {
+                    s.filteredItems.mapIndexed { i, entry ->
+                        entry.copy(
+                            description = if (i == s.cursor) entry.description else null
+                        )
+                    }
+                } else {
+                    s.filteredItems
                 },
                 title = when {
                     s.filtering -> Text("${terminal.theme.style("select.cursor")("/")} ${s.filter}")
@@ -259,71 +328,62 @@ private open class SelectInputAnimation(
                 },
                 cursorIndex = s.cursor,
                 styleOnHover = singleSelect,
-                selectedMarker = selectedMarker,
-                cursorMarker = cursorMarker,
-                unselectedMarker = unselectedMarker,
+                cursorMarker = if (singleSelect || !s.filtering) cursorMarker else " ",
+                selectedMarker = if (singleSelect) "" else selectedMarker,
+                unselectedMarker = if (singleSelect) "" else unselectedMarker,
                 selectedStyle = selectedStyle,
                 unselectedTitleStyle = unselectedTitleStyle,
                 unselectedMarkerStyle = unselectedMarkerStyle,
-                captionBottom = instructions
-                    ?: Text(buildInstructions(singleSelect, s.filtering, s.filter.isNotEmpty())),
+                captionBottom = when {
+                    showInstructions -> {
+                        Text(buildInstructions(singleSelect, s.filtering, s.filter.isNotEmpty()))
+                    }
+
+                    else -> null
+                },
             )
         }
     }.apply { update(state.value) }
 
+    override fun cancel() {
+        if (config.clearOnExit) animation.clear()
+        else animation.stop()
+    }
 
     override fun onInput(event: KeyboardEvent): Status<List<String>?> {
         val (_, s) = state.update {
             with(config) {
-                fun updateCursor(newCursor: Int): State = copy(
-                    cursor = newCursor.coerceIn(0, entries.lastIndex),
-                    items = if (onlyShowActiveDescription) {
-                        items.mapIndexed { i, entry ->
-                            entry.copy(
-                                description = if (i == cursor) entries[i].description else null
-                            )
-                        }
-                    } else items
-                )
+                val filteredItems = filteredItems
+                fun updateCursor(
+                    newCursor: Int,
+                    items: List<SelectList.Entry> = filteredItems,
+                ): Int {
+                    return newCursor.coerceAtMost(items.lastIndex).coerceAtLeast(0)
+                }
 
                 val key = event
-                val entry = items[cursor]
+                val entryIndex = when {
+                    filteredItems.isEmpty() -> 0
+                    applyFilter -> items.indexOf(filteredItems[cursor])
+                    else -> cursor
+                }
+                val entry = items[entryIndex]
                 when {
                     key.isCtrlC -> copy(finished = true)
-                    key == keyPrev -> updateCursor(cursor - 1)
-                    key == keyNext -> updateCursor(cursor + 1)
+                    key == keyPrev -> copy(cursor = updateCursor(cursor - 1))
+                    key == keyNext -> copy(cursor = updateCursor(cursor + 1))
                     filterable && !filtering && key == keyFilter -> {
-                        copy(filtering = true)
+                        copy(filtering = true, applyFilter = true)
                     }
 
-                    filtering && key == keyExitFilter -> {
-                        copy(items = entries, filtering = false)
-                    }
-
-                    filtering && !singleSelect && key == keySubmit -> {
-                        copy(filtering = false)
-                    }
-
-                    filtering && !key.alt && !key.ctrl -> {
+                    key == keyExitFilter -> {
                         copy(
-                            filter = when {
-                                key.key == "Backspace" -> filter.dropLast(1)
-                                key.key.length == 1 -> filter + key.key
-                                else -> filter // ignore modifier keys
-                            }
+                            filtering = false, applyFilter = false, filter = "", cursor = entryIndex
                         )
                     }
 
-                    !singleSelect && key == keyToggle -> {
-                        if (entry.selected || items.count { it.selected } < limit) {
-                            copy(
-                                items = items.toMutableList().also {
-                                    it[cursor] = entry.copy(selected = !entry.selected)
-                                }
-                            )
-                        } else {
-                            this@update // can't select more items
-                        }
+                    filtering && key == keySubmit && !singleSelect -> {
+                        copy(filtering = false)
                     }
 
                     key == keySubmit -> {
@@ -333,12 +393,43 @@ private open class SelectInputAnimation(
                             result = items.filter { it.selected }.map { it.title })
                     }
 
+                    filtering && !key.alt && !key.ctrl -> {
+                        val s = copy(
+                            filter = when {
+                                key.key == "Backspace" -> filter.dropLast(1)
+                                key.key.length == 1 -> filter + key.key
+                                else -> filter // ignore modifier keys
+                            }
+                        )
+                        s.copy(cursor = updateCursor(s.cursor, s.filteredItems))
+                    }
+
+                    !singleSelect && key == keyToggle -> {
+                        if (entry.selected || items.count { it.selected } < limit) {
+                            copy(
+                                items = items.toMutableList().also {
+                                    it[entryIndex] = entry.copy(selected = !entry.selected)
+                                }
+                            )
+                        } else {
+                            this@update // can't select more items
+                        }
+                    }
+
                     else -> this@update // unmapped key, no state change
                 }
             }
         }
-        return if (s.finished) Status.Finished(s.result)
-        else Status.Continue
+        animation.update(s)
+        return when {
+            s.finished -> {
+                if (config.clearOnExit) animation.clear()
+                else animation.stop()
+                Status.Finished(s.result)
+            }
+
+            else -> Status.Continue
+        }
     }
 
     private fun keyName(key: KeyboardEvent): String {
@@ -362,22 +453,19 @@ private open class SelectInputAnimation(
     ): String = with(config) {
         val s = TextStyle(brightWhite, bold = true)
         val parts = buildList {
-            add(keyName(keyPrev) to "up")
-            add(keyName(keyNext) to "down")
-            if (filtering) {
-                if (!singleSelect) add(keyName(keySubmit) to "apply filter")
-            } else if (filterable) {
-                add(keyName(keyFilter) to "filter")
+            if (!singleSelect && !filtering) add(keyName(keyToggle) to descToggle)
+            if (singleSelect || !filtering) {
+                add(keyName(keyPrev) to descPrev)
+                add(keyName(keyNext) to descNext)
             }
-            if (filtering || hasFilter) {
-                add(keyName(keyExitFilter) to "clear filter")
+            if (filterable && !filtering) add(keyName(keyFilter) to descFilter)
+            if (filtering || hasFilter) add(keyName(keyExitFilter) to descExitFilter)
+            val submitDesc = when {
+                singleSelect -> descSubmit
+                filtering -> descApplyFilter
+                else -> descConfirm
             }
-            if (singleSelect) {
-                add(keyName(keySubmit) to "select")
-            } else {
-                add(keyName(keyToggle) to "toggle")
-                add(keyName(keySubmit) to "confirm")
-            }
+            add(keyName(keySubmit) to submitDesc)
         }
 
         return dim(parts.joinToString(" • ") { "${s(it.first)} ${it.second}" })
@@ -387,6 +475,7 @@ private open class SelectInputAnimation(
 private class SingleSelectInputAnimation(
     private val animation: SelectInputAnimation,
 ) : InputReceiver<String?> {
+    override fun cancel() = animation.cancel()
     override fun onInput(event: KeyboardEvent): Status<String?> {
         return when (val status = animation.onInput(event)) {
             is Status.Finished -> Status.Finished(status.result?.firstOrNull())
