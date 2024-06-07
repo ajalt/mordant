@@ -174,7 +174,7 @@ abstract class Animation<T>(
                 return@getMoves
             }
 
-            val lastWidth = lastSize.max()
+            val lastWidth = lastSize.maxOrNull() ?: 0
             val lastHeight = lastSize.size
             val terminalShrank = lastTerminalSize != null
                     && terminalSize.width < lastTerminalSize.width

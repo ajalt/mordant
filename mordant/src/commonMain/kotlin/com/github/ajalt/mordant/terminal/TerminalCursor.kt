@@ -150,10 +150,6 @@ private class AnsiMovements : CursorMovements {
         }
     }
 
-    override fun startOfLine() {
-        print("\r")
-    }
-
     override fun setPosition(x: Int, y: Int) {
         require(x >= 0) { "Invalid cursor column $x; value cannot be negative" }
         require(y >= 0) { "Invalid cursor column $y; value cannot be negative" }
@@ -162,43 +158,20 @@ private class AnsiMovements : CursorMovements {
         csi("${y + 1};${x + 1}H")
     }
 
-    override fun clearScreen() {
-        csi("2J")
-    }
+    override fun startOfLine() = print("\r")
+    override fun clearScreen() = csi("2J")
+    override fun clearScreenAfterCursor() = csi("0J")
+    override fun clearScreenBeforeCursor() = csi("1J")
+    override fun clearLineAfterCursor() = csi("0K")
+    override fun clearLineBeforeCursor() = csi("1K")
+    override fun clearLine() = csi("2K")
+    override fun savePosition() = csi("s")
+    override fun restorePosition() = csi("u")
 
-    override fun clearScreenAfterCursor() {
-        csi("0J")
+    private fun csi(command: String) = print(CSI + command)
+    private fun print(text: String) {
+        builder.append(text)
     }
-
-    override fun clearScreenBeforeCursor() {
-        csi("1J")
-    }
-
-    override fun clearLineAfterCursor() {
-        csi("0K")
-    }
-
-    override fun clearLineBeforeCursor() {
-        csi("1K")
-    }
-
-    override fun clearLine() {
-        csi("2K")
-    }
-
-    override fun savePosition() {
-        csi("s")
-    }
-
-    override fun restorePosition() {
-        csi("u")
-    }
-
-    private fun csi(command: String) {
-        print(CSI + command)
-    }
-
-    private fun print(text: String) = builder.append(text)
 }
 
 internal object DisabledTerminalCursor : TerminalCursor {

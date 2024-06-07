@@ -23,8 +23,8 @@ class SelectList private constructor(
     private val selectedMarker: ThemeString,
     private val unselectedMarker: ThemeString,
     private val captionBottom: Widget?,
-    private val cursorStyle: ThemeStyle,
     private val selectedStyle: ThemeStyle,
+    private val cursorStyle: ThemeStyle,
     private val unselectedTitleStyle: ThemeStyle,
     private val unselectedMarkerStyle: ThemeStyle,
 ) : Widget {
@@ -50,8 +50,8 @@ class SelectList private constructor(
         selectedMarker = ThemeString.of("select.selected", selectedMarker, "✓"),
         unselectedMarker = ThemeString.of("select.unselected", unselectedMarker, "•"),
         captionBottom = captionBottom,
-        cursorStyle = ThemeStyle.of("select.cursor", selectedStyle),
-        selectedStyle = ThemeStyle.of("select.selected", cursorStyle),
+        selectedStyle = ThemeStyle.of("select.selected", selectedStyle),
+        cursorStyle = ThemeStyle.of("select.cursor", cursorStyle),
         unselectedTitleStyle = ThemeStyle.of("select.unselected-title", unselectedTitleStyle),
         unselectedMarkerStyle = ThemeStyle.of("select.unselected-marker", unselectedMarkerStyle),
     )
@@ -67,7 +67,7 @@ class SelectList private constructor(
         constructor(title: String, description: String?, selected: Boolean = false)
                 : this(
             title = title,
-            description = description?.let { Text(it, whitespace = Whitespace.NORMAL) },
+            description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
             selected = selected
         )
     }
@@ -82,15 +82,18 @@ class SelectList private constructor(
             tableBorders = Borders.NONE
             borderType = BorderType.BLANK
             padding = Padding(0)
-            whitespace = Whitespace.NORMAL
-            val cursorBlank = " ".repeat(Span.word(cursorMarker[t].replace(" ", ".")).cellWidth)
+            whitespace = Whitespace.PRE_WRAP
+            val cursorBlank = when {
+                cursorMarker[t].isEmpty() -> ""
+                else -> " ".repeat(Span.word(cursorMarker[t].replace(" ", ".")).cellWidth)
+            }
             val cursor = cursorStyle[t](cursorMarker[t])
             val styledSelectedMarker = selectedStyle[t](selectedMarker[t])
             val styledUnselectedMarker = unselectedMarkerStyle[t](unselectedMarker[t])
             body {
                 for ((i, entry) in entries.withIndex()) {
                     row {
-                        if (cursorIndex != null) {
+                        if (cursorIndex != null && cursorBlank.isNotEmpty()) {
                             cell(if (i == cursorIndex) cursor else cursorBlank)
                         }
                         if (selectedMarker[t].isNotEmpty()) {
@@ -103,6 +106,7 @@ class SelectList private constructor(
                         }
                         cell(when {
                             entry.description != null -> verticalLayout {
+                                whitespace = Whitespace.PRE_WRAP
                                 cells(title, entry.description)
                             }
 

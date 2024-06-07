@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget
@@ -66,19 +65,20 @@ class SelectListTest : RenderingTest() {
     @JsName("styles_with_descriptions")
     fun `styles with descriptions`() = doTest(
         """
-    ░  ${blue("•")} ${red("foo")}    
-    ░    desc1  
+    ░  ${blue("•")} ${red("foo")}    ░
+    ░    desc1  ░
     ░      line2
     ░      line3
-    ░❯ ${green("✓")} ${green("bar")}    
-    ░    desc2  
-    ░  ${blue("•")} ${red("baz")}    
+    ░${magenta("❯")} ${green("✓")} ${green("bar")}    ░
+    ░    desc2  ░
+    ░  ${blue("•")} ${red("baz")}    ░
     """,
         Entry("foo", description = "desc1\n  line2\n  line3"),
         Entry("bar", selected = true, description = "desc2"),
         Entry("baz"),
         cursorIndex = 1,
         selectedStyle = green,
+        cursorStyle = magenta,
         unselectedTitleStyle = red,
         unselectedMarkerStyle = blue,
     )
@@ -93,6 +93,7 @@ class SelectListTest : RenderingTest() {
         unselectedMarker: String = "•",
         captionBottom: Widget? = null,
         selectedStyle: TextStyle = TextStyle(),
+        cursorStyle: TextStyle = TextStyle(),
         unselectedTitleStyle: TextStyle = TextStyle(),
         unselectedMarkerStyle: TextStyle = TextStyle(),
     ) = checkRender(
@@ -105,6 +106,7 @@ class SelectListTest : RenderingTest() {
             unselectedMarker = unselectedMarker,
             captionBottom = captionBottom,
             selectedStyle = selectedStyle,
+            cursorStyle = cursorStyle,
             unselectedTitleStyle = unselectedTitleStyle,
             unselectedMarkerStyle = unselectedMarkerStyle,
         ), expected
