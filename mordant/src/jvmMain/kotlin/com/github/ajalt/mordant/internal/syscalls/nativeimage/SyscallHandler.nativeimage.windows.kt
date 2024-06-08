@@ -162,10 +162,10 @@ internal object SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
         }
     }
 
-    override fun enterRawMode(): AutoCloseable {
+    override fun enterRawMode(): AutoCloseable? {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
         val originalMode = StackValue.get(CIntPointer::class.java)
-        WinKernel32Lib.GetConsoleMode(stdinHandle, originalMode)
+        if (!WinKernel32Lib.GetConsoleMode(stdinHandle, originalMode)) return null
 
         // only ENABLE_PROCESSED_INPUT means echo and line input modes are disabled. Could add
         // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.

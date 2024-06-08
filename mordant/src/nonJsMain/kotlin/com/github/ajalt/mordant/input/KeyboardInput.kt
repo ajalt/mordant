@@ -7,7 +7,7 @@ import kotlin.time.Duration
 // TODO: docs, tests
 fun Terminal.enterRawMode(): RawModeScope? {
     if (!info.inputInteractive) return null
-    return RawModeScope(SYSCALL_HANDLER.enterRawMode())
+    return SYSCALL_HANDLER.enterRawMode()?.let(::RawModeScope)
 }
 
 class RawModeScope internal constructor(

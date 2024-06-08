@@ -11,7 +11,7 @@ internal interface SyscallHandler {
     fun getTerminalSize(): Size?
     fun fastIsTty(): Boolean = true
     fun readKeyEvent(timeout: Duration): KeyboardEvent?
-    fun enterRawMode(): AutoCloseable
+    fun enterRawMode(): AutoCloseable?
 }
 
 internal object DumbSyscallHandler : SyscallHandler {
@@ -20,5 +20,5 @@ internal object DumbSyscallHandler : SyscallHandler {
     override fun stderrInteractive(): Boolean = false
     override fun getTerminalSize(): Size? = null
     override fun readKeyEvent(timeout: Duration): KeyboardEvent? = null
-    override fun enterRawMode(): AutoCloseable = AutoCloseable { }
+    override fun enterRawMode(): AutoCloseable? = null
 }

@@ -283,9 +283,13 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
         return csbi.srWindow?.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    override fun enterRawMode(): AutoCloseable {
+    override fun enterRawMode(): AutoCloseable? {
         val originalMode = IntByReference()
-        kernel.GetConsoleMode(stdinHandle, originalMode)
+        try {
+            kernel.GetConsoleMode(stdinHandle, originalMode)
+        } catch (e: LastErrorException) {
+            return null
+        }
 
         // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
         // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
