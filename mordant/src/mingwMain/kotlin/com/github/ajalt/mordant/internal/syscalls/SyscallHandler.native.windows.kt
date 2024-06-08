@@ -52,10 +52,10 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         )
     }
 
-    override fun enterRawMode(): AutoCloseable = memScoped {
+    override fun enterRawMode(): AutoCloseable? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val originalMode = alloc<UIntVar>()
-        GetConsoleMode(stdinHandle, originalMode.ptr)
+        if (GetConsoleMode(stdinHandle, originalMode.ptr) == 0) return null
 
         // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
         // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
