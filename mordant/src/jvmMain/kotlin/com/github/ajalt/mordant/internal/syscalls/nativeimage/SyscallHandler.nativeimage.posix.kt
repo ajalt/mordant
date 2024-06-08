@@ -9,7 +9,9 @@ import org.graalvm.nativeimage.c.CContext
 import org.graalvm.nativeimage.c.constant.CConstant
 import org.graalvm.nativeimage.c.function.CFunction
 import org.graalvm.nativeimage.c.struct.CField
+import org.graalvm.nativeimage.c.struct.CFieldAddress
 import org.graalvm.nativeimage.c.struct.CStruct
+import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.word.PointerBase
 
 @CContext(PosixLibC.Directives::class)
@@ -18,7 +20,7 @@ import org.graalvm.word.PointerBase
 private object PosixLibC {
 
     class Directives : CContext.Directives {
-        override fun getHeaderFiles() = listOf("<unistd.h>", "<sys/ioctl.h>")
+        override fun getHeaderFiles() = listOf("<unistd.h>", "<sys/ioctl.h>", "<termios.h>")
     }
 
     @CConstant("TIOCGWINSZ")
@@ -26,6 +28,9 @@ private object PosixLibC {
 
     @CConstant("TCSADRAIN")
     external fun TCSADRAIN(): Int
+
+    @CConstant("NCCS")
+    external fun NCCS(): Int
 
     @CStruct("winsize", addStructKeyword = true)
     interface winsize : PointerBase {
@@ -59,9 +64,8 @@ private object PosixLibC {
         @set:CField("c_line")
         var c_line: Byte
 
-        @get:CField("c_cc")
-        @set:CField("c_cc")
-        var c_cc: ByteArray
+        @get:CFieldAddress("c_cc")
+        val c_cc: CCharPointer
 
         @get:CField("c_ispeed")
         @set:CField("c_ispeed")
@@ -79,14 +83,14 @@ private object PosixLibC {
     external fun ioctl(fd: Int, cmd: Int, winSize: winsize?): Int
 
     @CFunction("tcgetattr")
-    external fun tcgetattr(fd: Int, termios: termios)
+    external fun tcgetattr(fd: Int, termios: termios): Int
 
     @CFunction("tcsetattr")
     external fun tcsetattr(fd: Int, cmd: Int, termios: termios)
 }
 
 @Platforms(Platform.LINUX::class, Platform.MACOS::class)
-internal object SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
+internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
     override fun isatty(fd: Int): Boolean = PosixLibC.isatty(fd)
 
     override fun getTerminalSize(): Size? {
@@ -98,31 +102,48 @@ internal object SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
         }
     }
 
-    override fun getStdinTermios(): Termios {
-        val termios = StackValue.get(PosixLibC.termios::class.java)
-        PosixLibC.tcgetattr(STDIN_FILENO, termios)
-        return Termios(
-            iflag = termios.c_iflag.toUInt(),
-            oflag = termios.c_oflag.toUInt(),
-            cflag = termios.c_cflag.toUInt(),
-            lflag = termios.c_lflag.toUInt(),
-            cline = termios.c_line,
-            cc = termios.c_cc.copyOf(),
-            ispeed = termios.c_ispeed.toUInt(),
-            ospeed = termios.c_ospeed.toUInt(),
+    override fun getStdinTermios(): Termios? {
+        throw NotImplementedError(
+            "Raw mode is not currently supported for native-image. If you are familiar with " +
+                    "GraalVM native-image and would like to contribute, see the commented out " +
+                    "code in the file SyscallHandler.nativeimage.posix"
         )
+        /*
+        This fails with the following error:
+
+        Error: Expected Object but got Word for call argument in
+        com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImagePosix.getStdinTermios(SyscallHandler.nativeimage.posix.kt:117).
+        One possible cause for this error is when word values are passed into lambdas as parameters
+        or from variables in an enclosing scope, which is not supported, but can be solved by
+        instead using explicit classes (including anonymous classes).
+
+        I've tried all the ways I can think of to declare tcgetattr and tcsetattr, but the error
+        persists.
+        */
+//        val termios = StackValue.get(PosixLibC.termios::class.java)
+//        if(PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) return null
+//        return Termios(
+//            iflag = termios.c_iflag.toUInt(),
+//            oflag = termios.c_oflag.toUInt(),
+//            cflag = termios.c_cflag.toUInt(),
+//            lflag = termios.c_lflag.toUInt(),
+//            cline = termios.c_line,
+//            cc = ByteArray(PosixLibC.NCCS()) { termios.c_cc.read(it) },
+//            ispeed = termios.c_ispeed.toUInt(),
+//            ospeed = termios.c_ospeed.toUInt(),
+//        )
     }
 
     override fun setStdinTermios(termios: Termios) {
-        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
-        nativeTermios.c_iflag = termios.iflag.toInt()
-        nativeTermios.c_oflag = termios.oflag.toInt()
-        nativeTermios.c_cflag = termios.cflag.toInt()
-        nativeTermios.c_lflag = termios.lflag.toInt()
-        nativeTermios.c_line = termios.cline
-        termios.cc.copyInto(nativeTermios.c_cc)
-        nativeTermios.c_ispeed = termios.ispeed.toInt()
-        nativeTermios.c_ospeed = termios.ospeed.toInt()
-        PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios)
+//        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
+//        nativeTermios.c_iflag = termios.iflag.toInt()
+//        nativeTermios.c_oflag = termios.oflag.toInt()
+//        nativeTermios.c_cflag = termios.cflag.toInt()
+//        nativeTermios.c_lflag = termios.lflag.toInt()
+//        nativeTermios.c_line = termios.cline
+//        termios.cc.forEachIndexed { i, b -> nativeTermios.c_cc.write(i, b) }
+//        nativeTermios.c_ispeed = termios.ispeed.toInt()
+//        nativeTermios.c_ospeed = termios.ospeed.toInt()
+//        PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios)
     }
 }

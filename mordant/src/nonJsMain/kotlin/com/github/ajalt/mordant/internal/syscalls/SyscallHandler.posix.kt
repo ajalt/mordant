@@ -143,7 +143,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val ospeed: UInt,
     )
 
-    protected abstract fun getStdinTermios(): Termios
+    protected abstract fun getStdinTermios(): Termios?
     protected abstract fun setStdinTermios(termios: Termios)
     protected abstract fun isatty(fd: Int): Boolean
     protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char?
@@ -154,8 +154,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
 
     // https://www.man7.org/linux/man-pages/man3/termios.3.html
     // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
-    override fun enterRawMode(): AutoCloseable {
-        val orig = getStdinTermios()
+    override fun enterRawMode(): AutoCloseable? {
+        val orig = getStdinTermios() ?: return null
         val new = Termios(
             iflag = orig.iflag and (ICRNL or IGNCR or INPCK or ISTRIP or IXON).inv(),
             // we leave OPOST on so we don't change \r\n handling

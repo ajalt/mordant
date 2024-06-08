@@ -21,9 +21,9 @@ internal object SyscallHandlerNativePosix: SyscallHandlerPosix() {
         }
     }
 
-    override fun getStdinTermios(): Termios = memScoped {
+    override fun getStdinTermios(): Termios? = memScoped {
         val termios = alloc<termios>()
-        tcgetattr(STDIN_FILENO, termios.ptr)
+        if (tcgetattr(STDIN_FILENO, termios.ptr) != 0) return null
         return Termios(
             iflag = termios.c_iflag,
             oflag = termios.c_oflag,
