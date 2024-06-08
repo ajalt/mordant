@@ -5,8 +5,8 @@ import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaLinux
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaMacos
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaWindows
-import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageWindows
 import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImagePosix
+import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageWindows
 import com.github.ajalt.mordant.terminal.*
 import java.io.File
 import java.lang.management.ManagementFactory
@@ -123,22 +123,21 @@ internal actual fun sendInterceptedPrintRequest(
 }
 
 internal actual fun getSyscallHandler(): SyscallHandler {
-    return System.getProperty("os.name").let { os ->
-        try {
-            // Inlined version of ImageInfo.inImageCode()
-            val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
-            val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
-            when {
-                isNativeImage && os.startsWith("Windows") -> SyscallHandlerNativeImageWindows
-                isNativeImage && (os == "Linux" || os == "Mac OS X") -> SyscallHandlerNativeImagePosix
-                os.startsWith("Windows") -> SyscallHandlerJnaWindows
-                os == "Linux" -> SyscallHandlerJnaLinux
-                os == "Mac OS X" -> SyscallHandlerJnaMacos
-                else -> DumbSyscallHandler
-            }
-        } catch (e: UnsatisfiedLinkError) {
-            DumbSyscallHandler
+    return try {
+        // Inlined version of ImageInfo.inImageCode()
+        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
+        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
+        val os = System.getProperty("os.name")
+        when {
+            isNativeImage && os.startsWith("Windows") -> SyscallHandlerNativeImageWindows()
+            isNativeImage && (os == "Linux" || os == "Mac OS X") -> SyscallHandlerNativeImagePosix()
+            os.startsWith("Windows") -> SyscallHandlerJnaWindows
+            os == "Linux" -> SyscallHandlerJnaLinux
+            os == "Mac OS X" -> SyscallHandlerJnaMacos
+            else -> DumbSyscallHandler
         }
+    } catch (e: UnsatisfiedLinkError) {
+        DumbSyscallHandler
     }
 }
 

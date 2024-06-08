@@ -92,9 +92,13 @@ internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
         return getSttySize(100)
     }
 
-    override fun getStdinTermios(): Termios {
+    override fun getStdinTermios(): Termios? {
         val termios = MacosLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, termios)
+        try {
+            libC.tcgetattr(STDIN_FILENO, termios)
+        } catch (e: LastErrorException) {
+            return null
+        }
         return Termios(
             iflag = termios.c_iflag.toInt().toUInt(),
             oflag = termios.c_oflag.toInt().toUInt(),
