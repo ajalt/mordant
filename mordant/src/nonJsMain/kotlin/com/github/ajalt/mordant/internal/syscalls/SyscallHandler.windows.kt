@@ -34,18 +34,53 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
             // ignore key up events
             if (event != null && event.bKeyDown) {
                 val virtualName = WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode)
+                val shift = event.dwControlKeyState and SHIFT_PRESSED != 0u
+                val key = when {
+                    virtualName != null && virtualName.length == 1 && shift -> {
+                        if (virtualName[0] in 'a'..'z') virtualName.uppercase()
+                        else shiftNumberKey(virtualName)
+                    }
+                    virtualName != null -> virtualName
+                    event.uChar.code != 0 -> event.uChar.toString()
+                    else -> "Unidentified"
+                }
                 return KeyboardEvent(
-                    key = when {
-                        virtualName != null -> virtualName
-                        event.uChar.code != 0 -> event.uChar.toString()
-                        else -> "Unidentified"
-                    },
+                    key = key,
                     ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
                     alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
-                    shift = event.dwControlKeyState and SHIFT_PRESSED != 0u,
+                    shift = shift,
                 )
             }
         }
         return null
+    }
+
+
+}
+
+private fun shiftNumberKey(virtualName: String): String {
+    return when (virtualName[0]) {
+        '1' -> "!"
+        '2' -> "@"
+        '3' -> "#"
+        '4' -> "$"
+        '5' -> "%"
+        '6' -> "^"
+        '7' -> "&"
+        '8' -> "*"
+        '9' -> "("
+        '0' -> ")"
+        '-' -> "_"
+        '=' -> "+"
+        '`' -> "~"
+        '[' -> "{"
+        ']' -> "}"
+        '\\' -> "|"
+        ';' -> ":"
+        '\'' -> "\""
+        ',' -> "<"
+        '.' -> ">"
+        '/' -> "?"
+        else -> virtualName
     }
 }
