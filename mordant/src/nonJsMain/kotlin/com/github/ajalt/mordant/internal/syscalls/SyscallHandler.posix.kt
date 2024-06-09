@@ -132,7 +132,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         private const val TCSAFLUSH: UInt = 0x2u
     }
 
-    protected class Termios(
+    data class Termios(
         val iflag: UInt,
         val oflag: UInt,
         val cflag: UInt,
@@ -143,8 +143,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val ospeed: UInt,
     )
 
-    protected abstract fun getStdinTermios(): Termios?
-    protected abstract fun setStdinTermios(termios: Termios)
+    abstract fun getStdinTermios(): Termios?
+    abstract fun setStdinTermios(termios: Termios)
     protected abstract fun isatty(fd: Int): Boolean
     protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char?
 
