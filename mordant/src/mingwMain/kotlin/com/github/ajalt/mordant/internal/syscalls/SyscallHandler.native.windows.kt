@@ -1,4 +1,3 @@
-
 package com.github.ajalt.mordant.internal.syscalls
 
 import com.github.ajalt.mordant.internal.Size
@@ -54,15 +53,33 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
 
     override fun enterRawMode(): AutoCloseable? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        val originalMode = alloc<UIntVar>()
-        if (GetConsoleMode(stdinHandle, originalMode.ptr) == 0) return null
+        val originalMode = getConsoleMode(stdinHandle) ?: return null
 
         // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
         // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
         // events.
         SetConsoleMode(stdinHandle, 0u)
 
-        return AutoCloseable { SetConsoleMode(stdinHandle, originalMode.value) }
+        return AutoCloseable { SetConsoleMode(stdinHandle, originalMode) }
     }
 
+    fun ttySetEcho(echo: Boolean) = memScoped {
+        val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
+        val lpMode = getConsoleMode(stdinHandle) ?: return@memScoped
+        val newMode = if (echo) {
+            lpMode or ENABLE_ECHO_INPUT.convert()
+        } else {
+            lpMode and ENABLE_ECHO_INPUT.inv().convert()
+        }
+        SetConsoleMode(stdinHandle, newMode)
+    }
+
+    // https://docs.microsoft.com/en-us/windows/console/getconsolemode
+    private fun MemScope.getConsoleMode(handle: HANDLE?): UInt? {
+        if (handle == null || handle == INVALID_HANDLE_VALUE) return null
+        val lpMode = alloc<UIntVar>()
+        // "If the function succeeds, the return value is nonzero."
+        if (GetConsoleMode(handle, lpMode.ptr) == 0) return null
+        return lpMode.value
+    }
 }

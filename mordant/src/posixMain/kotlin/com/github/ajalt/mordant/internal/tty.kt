@@ -1,21 +1,18 @@
 package com.github.ajalt.mordant.internal
 
-import kotlinx.cinterop.*
-import platform.posix.*
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerNativePosix
+import kotlinx.cinterop.UnsafeNumber
+import platform.posix.ECHO
 
 // https://www.gnu.org/software/libc/manual/html_node/getpass.html
-@OptIn(UnsafeNumber::class) // https://youtrack.jetbrains.com/issue/KT-60572
-internal actual fun ttySetEcho(echo: Boolean) = memScoped {
-    val termios = alloc<termios>()
-    if (tcgetattr(STDOUT_FILENO, termios.ptr) != 0) {
-        return@memScoped
-    }
-
-    termios.c_lflag = if (echo) {
-        termios.c_lflag or ECHO.convert()
-    } else {
-        termios.c_lflag and ECHO.inv().convert()
-    }
-
-    tcsetattr(0, TCSAFLUSH, termios.ptr)
+internal actual fun ttySetEcho(echo: Boolean) {
+    val termios = SyscallHandlerNativePosix.getStdinTermios() ?: return
+    SyscallHandlerNativePosix.setStdinTermios(
+        termios.copy(
+            lflag = when {
+                echo -> termios.lflag or ECHO.toUInt()
+                else -> termios.lflag and ECHO.inv().toUInt()
+            }
+        )
+    )
 }

@@ -167,9 +167,9 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
         val originalMode = StackValue.get(CIntPointer::class.java)
         if (!WinKernel32Lib.GetConsoleMode(stdinHandle, originalMode)) return null
 
-        // only ENABLE_PROCESSED_INPUT means echo and line input modes are disabled. Could add
-        // ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those events.
-        // TODO: handle errors remove ENABLE_PROCESSED_INPUT to intercept ctrl-c
+        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
+        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
+        // events.
         WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())
 
         return AutoCloseable { WinKernel32Lib.SetConsoleMode(stdinHandle, originalMode.read()) }
