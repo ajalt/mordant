@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.syscalls
 
-import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
 import com.github.ajalt.mordant.input.MouseTracking
@@ -137,6 +136,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         private const val TCSAFLUSH: UInt = 0x2u
     }
 
+    @Suppress("ArrayInDataClass")
     data class Termios(
         val iflag: UInt,
         val oflag: UInt,
@@ -193,7 +193,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
       Some patterns seen in terminal key escape codes, derived from combos seen
       at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
     */
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): SysInputEvent {
         val t0 = TimeSource.Monotonic.markNow()
         var ctrl = false
         var alt = false
@@ -209,18 +209,20 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             return false
         }
 
-        if (readTimeout()) return null
+        if (readTimeout()) return SysInputEvent.Fail
 
         if (ch == ESC) {
             escaped = true
-            if (readTimeout()) return KeyboardEvent(
-                key = "Escape",
-                ctrl = false,
-                alt = false,
-                shift = false
+            if (readTimeout()) return SysInputEvent.Success(
+                KeyboardEvent(
+                    key = "Escape",
+                    ctrl = false,
+                    alt = false,
+                    shift = false
+                )
             )
             if (ch == ESC) {
-                if (readTimeout()) return null
+                if (readTimeout()) return SysInputEvent.Fail
             }
         }
 
@@ -232,11 +234,11 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             if (ch == 'O') {
                 // ESC O letter
                 // ESC O modifier letter
-                if (readTimeout()) return null
+                if (readTimeout()) return SysInputEvent.Fail
 
                 if (ch in '0'..'9') {
                     modifier = ch.code - 1
-                    if (readTimeout()) return null
+                    if (readTimeout()) return SysInputEvent.Fail
                 }
 
                 code.append(ch)
@@ -247,12 +249,12 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 // ESC [ [ num char
                 // For mouse events:
                 // ESC [ M byte byte byte
-                if (readTimeout()) return null
+                if (readTimeout()) return SysInputEvent.Fail
 
                 if (ch == '[') {
                     // escape codes might have a second bracket
                     code.append(ch)
-                    if (readTimeout()) return null
+                    if (readTimeout()) return SysInputEvent.Fail
                 } else if (ch == 'M') {
                     // mouse event
                     return processMouseEvent(t0, timeout)
@@ -263,16 +265,16 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 // leading digits
                 repeat(3) {
                     if (ch in '0'..'9') {
-                        if (readTimeout()) return null
+                        if (readTimeout()) return SysInputEvent.Fail
                     }
                 }
 
                 // modifier
                 if (ch == ';') {
-                    if (readTimeout()) return null
+                    if (readTimeout()) return SysInputEvent.Fail
 
                     if (ch in '0'..'9') {
-                        if (readTimeout()) return null
+                        if (readTimeout()) return SysInputEvent.Fail
                     }
                 }
 
@@ -506,36 +508,41 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             alt = true
         }
 
-        return KeyboardEvent(
-            key = name ?: ch.toString(),
-            ctrl = ctrl,
-            alt = alt,
-            shift = shift,
+        return SysInputEvent.Success(
+            KeyboardEvent(
+                key = name ?: ch.toString(),
+                ctrl = ctrl,
+                alt = alt,
+                shift = shift,
+            )
         )
     }
 
-    private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): MouseEvent? {
+    private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): SysInputEvent {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
-        val cb = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code
-        val cx = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code - 1
-        val cy = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code - 1
+        val cb = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code
+        val cx = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code - 1
+        val cy = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code - 1
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
+        // TODO: mouse wheel events
         val buttons = when (cb and 3) {
             0 -> 1
             1 -> 2
             2 -> 4
             else -> 0
         }
-        return MouseEvent(
-            x = cx,
-            y = cy,
-            buttons = buttons,
-            ctrl = ctrl,
-            alt = alt,
-            shift = shift,
+        return SysInputEvent.Success(
+            MouseEvent(
+                x = cx,
+                y = cy,
+                buttons = buttons,
+                ctrl = ctrl,
+                alt = alt,
+                shift = shift,
+            )
         )
     }
 

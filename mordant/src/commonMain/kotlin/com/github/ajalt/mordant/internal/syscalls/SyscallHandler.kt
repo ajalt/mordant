@@ -5,13 +5,19 @@ import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.internal.Size
 import kotlin.time.Duration
 
+internal sealed class SysInputEvent {
+    data class Success(val event: InputEvent) : SysInputEvent()
+    data object Fail : SysInputEvent()
+    data object Retry: SysInputEvent()
+}
+
 internal interface SyscallHandler {
     fun stdoutInteractive(): Boolean
     fun stdinInteractive(): Boolean
     fun stderrInteractive(): Boolean
     fun getTerminalSize(): Size?
     fun fastIsTty(): Boolean = true
-    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent?
+    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): SysInputEvent
     fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable?
 }
 
@@ -20,6 +26,8 @@ internal object DumbSyscallHandler : SyscallHandler {
     override fun stdinInteractive(): Boolean = false
     override fun stderrInteractive(): Boolean = false
     override fun getTerminalSize(): Size? = null
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? = null
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable? = null
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): SysInputEvent {
+        return SysInputEvent.Fail
+    }
 }
