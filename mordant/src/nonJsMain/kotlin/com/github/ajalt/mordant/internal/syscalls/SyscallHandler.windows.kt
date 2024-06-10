@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.syscalls
 
-import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
 import com.github.ajalt.mordant.input.MouseTracking
@@ -71,64 +70,66 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         return AutoCloseable { setStdinConsoleMode(originalMode) }
     }
 
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): SysInputEvent {
         val t0 = TimeSource.Monotonic.markNow()
-        while (t0.elapsedNow() < timeout) {
-            val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds
-                .coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
-            val event = readRawEvent(dwMilliseconds) ?: return null
-            return when (event) {
-                is EventRecord.Key -> processKeyEvent(event)
-                is EventRecord.Mouse -> processMouseEvent(event, mouseTracking)
-            } ?: continue // skip events that don't match the tracking mode etc.
+        val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds
+            .coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
+        return when (val event = readRawEvent(dwMilliseconds)) {
+            null -> SysInputEvent.Fail
+            is EventRecord.Key -> processKeyEvent(event)
+            is EventRecord.Mouse -> processMouseEvent(event, mouseTracking)
         }
-        return null
     }
 
-    private fun processKeyEvent(event: EventRecord.Key): KeyboardEvent? {
-        if (!event.bKeyDown) return null // ignore key up events
+    private fun processKeyEvent(event: EventRecord.Key): SysInputEvent {
+        if (!event.bKeyDown) return SysInputEvent.Retry // ignore key up events
         val virtualName = WindowsVirtualKeyCodeToKeyEvent.getName(event.wVirtualKeyCode)
         val shift = event.dwControlKeyState and SHIFT_PRESSED != 0u
         val key = when {
             virtualName != null && virtualName.length == 1 && shift -> {
                 if (virtualName[0] in 'a'..'z') virtualName.uppercase()
-                else shiftNumberKey(virtualName)
+                else shiftVcodeToKey(virtualName)
             }
 
             virtualName != null -> virtualName
             event.uChar.code != 0 -> event.uChar.toString()
             else -> "Unidentified"
         }
-        return KeyboardEvent(
-            key = key,
-            ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
-            alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
-            shift = shift,
+        return SysInputEvent.Success(
+            KeyboardEvent(
+                key = key,
+                ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
+                alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
+                shift = shift,
+            )
         )
     }
 
     private fun processMouseEvent(
         event: EventRecord.Mouse,
         tracking: MouseTracking,
-    ): MouseEvent? {
+    ): SysInputEvent {
         val eventFlags = event.dwEventFlags
         val buttons = event.dwButtonState
         if (tracking == MouseTracking.Off
             || tracking == MouseTracking.Normal && eventFlags == MOUSE_MOVED
             || tracking == MouseTracking.Button && eventFlags == MOUSE_MOVED && buttons == 0u
-        ) return null
-        return MouseEvent(
-            x = event.dwMousePositionX,
-            y = event.dwMousePositionY,
-            buttons = buttons.toInt(), // Windows uses the same flags for buttons as browsers do
-            ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
-            alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
-            shift = event.dwControlKeyState and SHIFT_PRESSED != 0u,
+        ) return SysInputEvent.Retry
+        return SysInputEvent.Success(
+            MouseEvent(
+                x = event.dwMousePositionX,
+                y = event.dwMousePositionY,
+                // TODO: mouse wheel events
+                buttons = buttons.toInt(), // Windows uses the same flags for buttons as browsers do
+                ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
+                alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
+                shift = event.dwControlKeyState and SHIFT_PRESSED != 0u,
+            )
         )
     }
 }
 
-private fun shiftNumberKey(virtualName: String): String {
+private fun shiftVcodeToKey(virtualName: String): String {
     return when (virtualName[0]) {
         '1' -> "!"
         '2' -> "@"

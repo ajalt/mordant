@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.input
 
 import com.github.ajalt.mordant.internal.SYSCALL_HANDLER
+import com.github.ajalt.mordant.internal.syscalls.SysInputEvent
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -41,13 +42,13 @@ class RawModeScope internal constructor(
         do {
             val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
             return when (event) {
-                is KeyboardEvent -> event
-                is MouseEvent -> {
-                    if (mouseTracking != MouseTracking.Off) event
-                    else continue
+                is SysInputEvent.Success -> {
+                    if (event.event is MouseEvent && mouseTracking == MouseTracking.Off) continue
+                    event.event
                 }
 
-                null -> null
+                SysInputEvent.Fail -> null
+                SysInputEvent.Retry -> continue
             }
         } while (t0.elapsedNow() < timeout)
         return null
