@@ -58,8 +58,8 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
             MOUSE_EVENT -> {
                 val mouseEvent = inputEvent.Event.MouseEvent
                 EventRecord.Mouse(
-                    dwMousePositionX = mouseEvent.dwMousePosition.X.toInt(),
-                    dwMousePositionY = mouseEvent.dwMousePosition.Y.toInt(),
+                    dwMousePositionX = mouseEvent.dwMousePosition.X,
+                    dwMousePositionY = mouseEvent.dwMousePosition.Y,
                     dwButtonState = mouseEvent.dwButtonState,
                     dwControlKeyState = mouseEvent.dwControlKeyState,
                     dwEventFlags = mouseEvent.dwEventFlags,

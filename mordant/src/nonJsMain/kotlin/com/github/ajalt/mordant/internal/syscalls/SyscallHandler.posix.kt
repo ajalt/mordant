@@ -527,18 +527,16 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
-        // TODO: mouse wheel events
-        val buttons = when (cb and 3) {
-            0 -> 1
-            1 -> 2
-            2 -> 4
-            else -> 0
-        }
+        // cb == 3 means "a button was released", but there's no way to know which one -_-
         return SysInputEvent.Success(
             MouseEvent(
                 x = cx,
                 y = cy,
-                buttons = buttons,
+                left = cb == 0,
+                right = cb == 1,
+                middle = cb == 2,
+                wheelUp = cb == 64,
+                wheelDown = cb == 65,
                 ctrl = ctrl,
                 alt = alt,
                 shift = shift,

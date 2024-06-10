@@ -22,11 +22,11 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         const val DOUBLE_CLICK: UInt = 0x0002u
         const val MOUSE_WHEELED: UInt = 0x0004u
         const val MOUSE_HWHEELED: UInt = 0x0008u
-        const val FROM_LEFT_1ST_BUTTON_PRESSED: UInt = 0x0001u
-        const val RIGHTMOST_BUTTON_PRESSED: UInt = 0x0002u
-        const val FROM_LEFT_2ND_BUTTON_PRESSED: UInt = 0x0004u
-        const val FROM_LEFT_3RD_BUTTON_PRESSED: UInt = 0x0008u
-        const val FROM_LEFT_4TH_BUTTON_PRESSED: UInt = 0x0010u
+        const val FROM_LEFT_1ST_BUTTON_PRESSED: Int = 0x0001
+        const val RIGHTMOST_BUTTON_PRESSED: Int = 0x0002
+        const val FROM_LEFT_2ND_BUTTON_PRESSED: Int = 0x0004
+        const val FROM_LEFT_3RD_BUTTON_PRESSED: Int = 0x0008
+        const val FROM_LEFT_4TH_BUTTON_PRESSED: Int = 0x0010
 
 
         // https://learn.microsoft.com/en-us/windows/console/setconsolemode
@@ -46,8 +46,8 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         ) : EventRecord()
 
         data class Mouse(
-            val dwMousePositionX: Int,
-            val dwMousePositionY: Int,
+            val dwMousePositionX: Short,
+            val dwMousePositionY: Short,
             val dwButtonState: UInt,
             val dwControlKeyState: UInt,
             val dwEventFlags: UInt,
@@ -110,17 +110,29 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         tracking: MouseTracking,
     ): SysInputEvent {
         val eventFlags = event.dwEventFlags
-        val buttons = event.dwButtonState
+        val buttons = event.dwButtonState.toInt()
         if (tracking == MouseTracking.Off
             || tracking == MouseTracking.Normal && eventFlags == MOUSE_MOVED
-            || tracking == MouseTracking.Button && eventFlags == MOUSE_MOVED && buttons == 0u
+            || tracking == MouseTracking.Button && eventFlags == MOUSE_MOVED && buttons == 0
         ) return SysInputEvent.Retry
+
         return SysInputEvent.Success(
             MouseEvent(
-                x = event.dwMousePositionX,
-                y = event.dwMousePositionY,
-                // TODO: mouse wheel events
-                buttons = buttons.toInt(), // Windows uses the same flags for buttons as browsers do
+                x = event.dwMousePositionX.toInt(),
+                y = event.dwMousePositionY.toInt(),
+                left = buttons and FROM_LEFT_1ST_BUTTON_PRESSED != 0,
+                right = buttons and RIGHTMOST_BUTTON_PRESSED != 0,
+                middle = buttons and FROM_LEFT_2ND_BUTTON_PRESSED != 0,
+                mouse4 = buttons and FROM_LEFT_3RD_BUTTON_PRESSED != 0,
+                mouse5 = buttons and FROM_LEFT_4TH_BUTTON_PRESSED != 0,
+                // If the high word of the dwButtonState member contains a positive value, the wheel
+                // was rotated forward, away from the user.
+                wheelUp = eventFlags and MOUSE_WHEELED != 0u && buttons shr 16 > 0,
+                wheelDown = eventFlags and MOUSE_WHEELED != 0u && buttons shr 16 <= 0,
+                // If the high word of the dwButtonState member contains a positive value, the wheel
+                // was rotated to the right.
+                wheelLeft = eventFlags and MOUSE_HWHEELED != 0u && buttons shr 16 <= 0,
+                wheelRight = eventFlags and MOUSE_HWHEELED != 0u && buttons shr 16 > 0,
                 ctrl = event.dwControlKeyState and CTRL_PRESSED_MASK != 0u,
                 alt = event.dwControlKeyState and ALT_PRESSED_MASK != 0u,
                 shift = event.dwControlKeyState and SHIFT_PRESSED != 0u,

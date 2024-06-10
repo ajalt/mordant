@@ -45,7 +45,7 @@ suspend fun main() = coroutineScope {
             }
 
             is MouseEvent -> {
-                if (event.leftPressed) {
+                if (event.left) {
                     canvas[event.y][event.x] = HSL(hue.toDouble(), 1, .5)
                     hue += 2
                 }
