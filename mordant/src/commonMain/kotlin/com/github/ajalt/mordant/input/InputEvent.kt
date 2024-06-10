@@ -21,15 +21,16 @@ val KeyboardEvent.isCtrlC: Boolean
 data class MouseEvent(
     val x: Int,
     val y: Int,
-    val buttons: Int,
+    val left: Boolean = false,
+    val right: Boolean = false,
+    val middle: Boolean = false,
+    val mouse4: Boolean = false,
+    val mouse5: Boolean = false,
+    val wheelUp: Boolean = false,
+    val wheelDown: Boolean = false,
+    val wheelLeft: Boolean = false,
+    val wheelRight: Boolean = false,
     val ctrl: Boolean = false,
     val alt: Boolean = false,
     val shift: Boolean = false,
 ): InputEvent()
-
-val MouseEvent.leftPressed: Boolean get() = buttons and 1 != 0
-val MouseEvent.rightPressed: Boolean get() = buttons and 2 != 0
-val MouseEvent.middlePressed: Boolean get() = buttons and 4 != 0
-val MouseEvent.mouse4Pressed: Boolean get() = buttons and 8 != 0
-val MouseEvent.mouse5Pressed: Boolean get() = buttons and 16 != 0
-
