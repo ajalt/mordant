@@ -4,6 +4,7 @@ include(
     "mordant",
     "extensions:mordant-coroutines",
     "samples:detection",
+    "samples:drawing",
     "samples:hexviewer",
     "samples:markdown",
     "samples:progress",
