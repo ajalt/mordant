@@ -17,9 +17,6 @@ private interface WinKernel32Lib : Library {
         const val STD_INPUT_HANDLE = -10
         const val STD_OUTPUT_HANDLE = -11
         const val STD_ERROR_HANDLE = -12
-
-        // https://learn.microsoft.com/en-us/windows/console/setconsolemode
-        const val ENABLE_PROCESSED_INPUT = 0x0001
     }
 
     class HANDLE : PointerType()
@@ -283,40 +280,58 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
         return csbi.srWindow?.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    override fun enterRawMode(): AutoCloseable? {
+
+    override fun getStdinConsoleMode(): UInt? {
         val originalMode = IntByReference()
         try {
             kernel.GetConsoleMode(stdinHandle, originalMode)
         } catch (e: LastErrorException) {
             return null
         }
-
-        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
-        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
-        // events.
-        kernel.SetConsoleMode(stdinHandle, 0)
-
-        return AutoCloseable { kernel.SetConsoleMode(stdinHandle, originalMode.value) }
+        return originalMode.value.toUInt()
     }
 
-    override fun readRawKeyEvent(dwMilliseconds: Int): KeyEventRecord? {
-        val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
-        if (waitResult != 0) {
-            return null
+    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
+        try {
+            kernel.SetConsoleMode(stdinHandle, dwMode.toInt())
+            return true
+        } catch (e: LastErrorException) {
+            throw e
+            return false
         }
+    }
+
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
+        val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
+        if (waitResult != 0) return null
         val inputEvents = arrayOfNulls<WinKernel32Lib.INPUT_RECORD>(1)
         val eventsRead = IntByReference()
         kernel.ReadConsoleInput(stdinHandle, inputEvents, inputEvents.size, eventsRead)
-        if (eventsRead.value == 0) {
-            return null
+        val inputEvent = inputEvents[0] ?: return null
+        return when (inputEvent.EventType) {
+            WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
+                val keyEvent = inputEvent.Event!!.KeyEvent!!
+                EventRecord.Key(
+                    bKeyDown = keyEvent.bKeyDown,
+                    wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
+                    uChar = keyEvent.uChar!!.UnicodeChar,
+                    dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
+                )
+            }
+
+            WinKernel32Lib.INPUT_RECORD.MOUSE_EVENT -> {
+                val mouseEvent = inputEvent.Event!!.MouseEvent!!
+                EventRecord.Mouse(
+                    dwMousePositionX = mouseEvent.dwMousePosition!!.X.toInt(),
+                    dwMousePositionY = mouseEvent.dwMousePosition!!.Y.toInt(),
+                    dwButtonState = mouseEvent.dwButtonState.toUInt(),
+                    dwControlKeyState = mouseEvent.dwControlKeyState.toUInt(),
+                    dwEventFlags = mouseEvent.dwEventFlags.toUInt(),
+                )
+            }
+
+            else -> null
         }
-        val keyEvent = inputEvents[0]!!.Event!!.KeyEvent!!
-        return KeyEventRecord(
-            bKeyDown = keyEvent.bKeyDown,
-            wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
-            uChar = keyEvent.uChar!!.UnicodeChar,
-            dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
-        )
     }
 }
 

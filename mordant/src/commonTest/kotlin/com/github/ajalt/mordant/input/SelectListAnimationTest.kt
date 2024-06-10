@@ -40,7 +40,7 @@ class SelectListAnimationTest {
         ░↑ up • ↓ down • / filter • enter select
         """
 
-        a.onInput(slash)
+        a.onEvent(slash)
         rec.latestOutput() shouldMatchRender """
         ░/ ░
         ░❯ a
@@ -48,7 +48,7 @@ class SelectListAnimationTest {
         ░↑ up • ↓ down • esc clear filter • enter select
         """
 
-        a.onInput(esc)
+        a.onEvent(esc)
         rec.latestOutput() shouldMatchRender """
         ░title
         ░❯ a
@@ -84,7 +84,7 @@ class SelectListAnimationTest {
         ░x toggle • ↑ up • ↓ down • / filter • enter confirm
         """
 
-        a.onInput(slash)
+        a.onEvent(slash)
         rec.latestOutput() shouldMatchRender """
         ░/ ░
         ░  • a
@@ -92,7 +92,7 @@ class SelectListAnimationTest {
         ░esc clear filter • enter set filter
         """
 
-        a.onInput(esc)
+        a.onEvent(esc)
         rec.latestOutput() shouldMatchRender """
         ░title
         ░❯ • a
@@ -100,9 +100,9 @@ class SelectListAnimationTest {
         ░x toggle • ↑ up • ↓ down • / filter • enter confirm
         """
 
-        a.onInput(slash)
-        a.onInput(x)
-        a.onInput(enter)
+        a.onEvent(slash)
+        a.onEvent(x)
+        a.onEvent(enter)
         rec.latestOutput() shouldMatchRender """
         ░title
         ░
@@ -126,42 +126,42 @@ class SelectListAnimationTest {
         val a = b.entries("a", "b", "c")
             .createSingleSelectInputAnimation()
 
-        a.onInput(down) shouldBe InputReceiver.Status.Continue
+        a.onEvent(down) shouldBe InputReceiver.Status.Continue
         rec.latestOutput() shouldMatchRender """
         ░  a
         ░❯ b
         ░  c
         """
 
-        a.onInput(down) shouldBe InputReceiver.Status.Continue
+        a.onEvent(down) shouldBe InputReceiver.Status.Continue
         rec.latestOutput() shouldMatchRender """
         ░  a
         ░  b
         ░❯ c
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░  a
         ░  b
         ░❯ c
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░  a
         ░❯ b
         ░  c
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░❯ a
         ░  b
         ░  c
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░❯ a
         ░  b
@@ -176,8 +176,8 @@ class SelectListAnimationTest {
             .filterable(true)
             .createSingleSelectInputAnimation()
 
-        a.onInput(slash)
-        a.onInput(x)
+        a.onEvent(slash)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░❯ ax
@@ -185,7 +185,7 @@ class SelectListAnimationTest {
         ░  cx
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ax
@@ -193,7 +193,7 @@ class SelectListAnimationTest {
         ░  cx
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ax
@@ -201,7 +201,7 @@ class SelectListAnimationTest {
         ░❯ cx
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ax
@@ -209,7 +209,7 @@ class SelectListAnimationTest {
         ░❯ cx
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ax
@@ -217,7 +217,7 @@ class SelectListAnimationTest {
         ░  cx
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░❯ ax
@@ -225,7 +225,7 @@ class SelectListAnimationTest {
         ░  cx
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░❯ ax
@@ -233,8 +233,8 @@ class SelectListAnimationTest {
         ░  cx
         """
 
-        a.onInput(down)
-        a.onInput(enter) shouldBe InputReceiver.Status.Finished("bx")
+        a.onEvent(down)
+        a.onEvent(enter) shouldBe InputReceiver.Status.Finished("bx")
     }
 
     @Test
@@ -243,14 +243,14 @@ class SelectListAnimationTest {
         val a = b.entries("a")
             .filterable(true)
             .createSingleSelectInputAnimation()
-        a.onInput(slash)
-        a.onInput(x)
+        a.onEvent(slash)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░
@@ -291,7 +291,7 @@ class SelectListAnimationTest {
         ░  cx   ░
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░  ax   ░
         ░❯ b    ░
@@ -299,7 +299,7 @@ class SelectListAnimationTest {
         ░  cx   ░
         """
 
-        a.onInput(down)
+        a.onEvent(down)
         rec.latestOutput() shouldMatchRender """
         ░  ax   ░
         ░  b    ░
@@ -307,8 +307,8 @@ class SelectListAnimationTest {
         ░  cdesc░
         """
 
-        a.onInput(slash)
-        a.onInput(x)
+        a.onEvent(slash)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ax   ░
@@ -316,7 +316,7 @@ class SelectListAnimationTest {
         ░  cdesc░
         """
 
-        a.onInput(up)
+        a.onEvent(up)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░❯ ax   ░
@@ -338,42 +338,42 @@ class SelectListAnimationTest {
         ░  • cx
         """
 
-        a.onInput(x)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░❯ ✓ ax
         ░  • b 
         ░  • cx
         """
 
-        a.onInput(slash)
-        a.onInput(x)
+        a.onEvent(slash)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░/ x
         ░  ✓ ax
         ░  • cx
         """
 
-        a.onInput(enter)
+        a.onEvent(enter)
         rec.latestOutput() shouldMatchRender """
         ░❯ ✓ ax
         ░  • cx
         """
 
-        a.onInput(down)
-        a.onInput(x)
+        a.onEvent(down)
+        a.onEvent(x)
         rec.latestOutput() shouldMatchRender """
         ░  ✓ ax
         ░❯ ✓ cx
         """
 
-        a.onInput(esc)
+        a.onEvent(esc)
         rec.latestOutput() shouldMatchRender """
         ░  ✓ ax
         ░  • b 
         ░❯ ✓ cx
         """
 
-        a.onInput(enter) shouldBe InputReceiver.Status.Finished(listOf("ax", "cx"))
+        a.onEvent(enter) shouldBe InputReceiver.Status.Finished(listOf("ax", "cx"))
     }
 
 }

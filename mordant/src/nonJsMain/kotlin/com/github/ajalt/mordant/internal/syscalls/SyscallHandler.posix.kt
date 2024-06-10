@@ -1,6 +1,11 @@
 package com.github.ajalt.mordant.internal.syscalls
 
+import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.MouseEvent
+import com.github.ajalt.mordant.input.MouseTracking
+import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.readBytesAsUtf8
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -154,7 +159,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
 
     // https://www.man7.org/linux/man-pages/man3/termios.3.html
     // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
-    override fun enterRawMode(): AutoCloseable? {
+    // https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable? {
         val orig = getStdinTermios() ?: return null
         val new = Termios(
             iflag = orig.iflag and (ICRNL or IGNCR or INPCK or ISTRIP or IXON).inv(),
@@ -171,37 +177,23 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             ospeed = orig.ospeed,
         )
         setStdinTermios(new)
-        return AutoCloseable { setStdinTermios(orig) }
+        when (mouseTracking) {
+            MouseTracking.Off -> {}
+            MouseTracking.Normal -> print("${CSI}?1005h${CSI}?1000h")
+            MouseTracking.Button -> print("${CSI}?1005h${CSI}?1002h")
+            MouseTracking.Any -> print("${CSI}?1005h${CSI}?1003h")
+        }
+        return AutoCloseable {
+            if (mouseTracking != MouseTracking.Off) print("${CSI}?1000l")
+            setStdinTermios(orig)
+        }
     }
 
     /*
       Some patterns seen in terminal key escape codes, derived from combos seen
       at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
-
-      ESC letter
-      ESC [ letter
-      ESC [ modifier letter
-      ESC [ 1 ; modifier letter
-      ESC [ num char
-      ESC [ num ; modifier char
-      ESC O letter
-      ESC O modifier letter
-      ESC O 1 ; modifier letter
-      ESC N letter
-      ESC [ [ num ; modifier char
-      ESC [ [ 1 ; modifier letter
-      ESC ESC [ num char
-      ESC ESC O letter
-
-      - char is usually ~ but $ and ^ also happen with rxvt
-      - modifier is 1 +
-                    (shift     * 1) +
-                    (left_alt  * 2) +
-                    (ctrl      * 4) +
-                    (right_alt * 8)
-      - two leading ESCs apparently mean the same as one leading ESC
     */
-    override fun readKeyEvent(timeout: Duration): KeyboardEvent? {
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
         val t0 = TimeSource.Monotonic.markNow()
         var ctrl = false
         var alt = false
@@ -209,7 +201,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         var escaped = false
         var name: String? = null
         val s = StringBuilder()
-        var ch: Char = ' '
+        var ch = ' '
 
         fun readTimeout(): Boolean {
             ch = readRawByte(t0, timeout) ?: return true
@@ -227,7 +219,9 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 alt = false,
                 shift = false
             )
-            if (ch == ESC) readTimeout()
+            if (ch == ESC) {
+                if (readTimeout()) return null
+            }
         }
 
         if (escaped && (ch == 'O' || ch == '[')) {
@@ -251,43 +245,19 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 // ESC [ modifier letter
                 // ESC [ [ modifier letter
                 // ESC [ [ num char
+                // For mouse events:
+                // ESC [ M byte byte byte
                 if (readTimeout()) return null
 
                 if (ch == '[') {
                     // escape codes might have a second bracket
                     code.append(ch)
                     if (readTimeout()) return null
+                } else if (ch == 'M') {
+                    // mouse event
+                    return processMouseEvent(t0, timeout)
                 }
 
-                /*
-                 * Here and later we try to buffer just enough data to get
-                 * a complete ascii sequence.
-                 *
-                 * We have basically two classes of ascii characters to process:
-                 *
-                 *
-                 * 1. `\x1b[24;5~` should be parsed as { code: '[24~', modifier: 5 }
-                 *
-                 * This particular example is featuring Ctrl+F12 in xterm.
-                 *
-                 *  - `;5` part is optional, e.g. it could be `\x1b[24~`
-                 *  - first part can contain one or two digits
-                 *  - there is also special case when there can be 3 digits
-                 *    but without modifier. They are the case of paste bracket mode
-                 *
-                 * So the generic regexp is like /^(?:\d\d?(;\d)?[~^$]|\d{3}~)$/
-                 *
-                 *
-                 * 2. `\x1b[1;5H` should be parsed as { code: '[H', modifier: 5 }
-                 *
-                 * This particular example is featuring Ctrl+Home in xterm.
-                 *
-                 *  - `1;5` part is optional, e.g. it could be `\x1b[H`
-                 *  - `1;` part is optional, e.g. it could be `\x1b[5H`
-                 *
-                 * So the generic regexp is like /^((\d;)?\d)?[A-Za-z]$/
-                 *
-                 */
                 val cmdStart = s.length - 1
 
                 // leading digits
@@ -306,10 +276,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                     }
                 }
 
-                /*
-                 * We buffered enough data, now trying to extract code
-                 * and modifier from it
-                 */
+                // We buffered enough data, now extract code and modifier from it
                 val cmd = s.substring(cmdStart)
                 var match = Regex("""(\d\d?)(?:;(\d))?([~^$])|(\d{3}~)""").matchEntire(cmd)
                 if (match != null) {
@@ -535,9 +502,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             alt = escaped
         } else if (escaped) {
             // Escape sequence timeout
-            TODO("Escape sequence timeout")
-//            name = ch.length ? undefined : "escape"
-//            alt = true
+            if (name == null) name = "Escape"
+            alt = true
         }
 
         return KeyboardEvent(
@@ -546,6 +512,35 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             alt = alt,
             shift = shift,
         )
+    }
+
+    private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): MouseEvent? {
+        // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
+        // encoded to fit larger values.
+        val cb = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code
+        val cx = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code - 1
+        val cy = (readUtf8Byte(t0, timeout) ?: return null) - ' '.code - 1
+        val shift = (cb and 4) != 0
+        val alt = (cb and 8) != 0
+        val ctrl = (cb and 16) != 0
+        val buttons = when (cb and 3) {
+            0 -> 1
+            1 -> 2
+            2 -> 4
+            else -> 0
+        }
+        return MouseEvent(
+            x = cx,
+            y = cy,
+            buttons = buttons,
+            ctrl = ctrl,
+            alt = alt,
+            shift = shift,
+        )
+    }
+
+    private fun readUtf8Byte(t0: ComparableTimeMark, timeout: Duration): Int? {
+        return runCatching { readBytesAsUtf8 { readRawByte(t0, timeout)!!.code } }.getOrNull()
     }
 }
 

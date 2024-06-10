@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.internal.syscalls
 
-import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.InputEvent
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.browserPrintln
 import com.github.ajalt.mordant.terminal.PrintTerminalCursor
@@ -17,10 +18,10 @@ internal interface SyscallHandlerJsCommon: SyscallHandler {
     fun readFileIfExists(filename: String): String?
 
     // The public interface never is in nonJsMain, so these will never be called
-    override fun readKeyEvent(timeout: Duration): KeyboardEvent? {
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
         throw UnsupportedOperationException("Reading keyboard is not supported on this platform")
     }
-    override fun enterRawMode(): AutoCloseable {
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
         throw UnsupportedOperationException("Raw mode is not supported on this platform")
     }
 }

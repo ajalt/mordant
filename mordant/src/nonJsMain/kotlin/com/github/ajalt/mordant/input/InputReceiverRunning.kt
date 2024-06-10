@@ -8,11 +8,14 @@ import com.github.ajalt.mordant.terminal.Terminal
  * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
  * input could not be read.
  */
-fun <T> InputReceiver<T>.run(terminal: Terminal): T? {
-    terminal.enterRawMode()?.use { rawMode ->
+fun <T> InputReceiver<T>.receiveInput(
+    terminal: Terminal,
+    mouseTracking: MouseTracking = MouseTracking.Off,
+): T? {
+    terminal.enterRawMode(mouseTracking)?.use { rawMode ->
         while (true) {
-            val event = rawMode.readKey() ?: return null
-            when (val status = onInput(event)) {
+            val event = rawMode.readEvent() ?: return null
+            when (val status = onEvent(event)) {
                 is InputReceiver.Status.Continue -> continue
                 is InputReceiver.Status.Finished -> return status.result
             }

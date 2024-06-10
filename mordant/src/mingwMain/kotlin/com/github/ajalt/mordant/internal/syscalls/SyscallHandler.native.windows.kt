@@ -32,7 +32,8 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         csbi.srWindow.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    override fun readRawKeyEvent(dwMilliseconds: Int): KeyEventRecord? = memScoped {
+    // TODO: implement mouse events
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val waitResult = WaitForSingleObject(stdinHandle, dwMilliseconds.toUInt())
         if (waitResult != 0u) return null
@@ -42,25 +43,41 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         if (eventsRead.value == 0u) {
             return null
         }
-        val keyEvent = inputEvents[0].Event.KeyEvent
-        return KeyEventRecord(
-            bKeyDown = keyEvent.bKeyDown != 0,
-            wVirtualKeyCode = keyEvent.wVirtualKeyCode,
-            uChar = keyEvent.uChar.UnicodeChar.toInt().toChar(),
-            dwControlKeyState = keyEvent.dwControlKeyState,
-        )
+        val inputEvent = inputEvents[0]
+        return when (inputEvent.EventType.toInt()) {
+            KEY_EVENT -> {
+                val keyEvent = inputEvent.Event.KeyEvent
+                EventRecord.Key(
+                    bKeyDown = keyEvent.bKeyDown != 0,
+                    wVirtualKeyCode = keyEvent.wVirtualKeyCode,
+                    uChar = keyEvent.uChar.UnicodeChar.toInt().toChar(),
+                    dwControlKeyState = keyEvent.dwControlKeyState,
+                )
+            }
+
+            MOUSE_EVENT -> {
+                val mouseEvent = inputEvent.Event.MouseEvent
+                EventRecord.Mouse(
+                    dwMousePositionX = mouseEvent.dwMousePosition.X.toInt(),
+                    dwMousePositionY = mouseEvent.dwMousePosition.Y.toInt(),
+                    dwButtonState = mouseEvent.dwButtonState,
+                    dwControlKeyState = mouseEvent.dwControlKeyState,
+                    dwEventFlags = mouseEvent.dwEventFlags,
+                )
+            }
+
+            else -> null
+        }
     }
 
-    override fun enterRawMode(): AutoCloseable? = memScoped {
+    override fun getStdinConsoleMode(): UInt? {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        val originalMode = getConsoleMode(stdinHandle) ?: return null
+        return getConsoleMode(stdinHandle)
+    }
 
-        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
-        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
-        // events.
-        SetConsoleMode(stdinHandle, 0u)
-
-        return AutoCloseable { SetConsoleMode(stdinHandle, originalMode) }
+    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
+        val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
+        return SetConsoleMode(stdinHandle, 0u) != 0
     }
 
     fun ttySetEcho(echo: Boolean) = memScoped {
@@ -75,7 +92,7 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
     }
 
     // https://docs.microsoft.com/en-us/windows/console/getconsolemode
-    private fun MemScope.getConsoleMode(handle: HANDLE?): UInt? {
+    private fun getConsoleMode(handle: HANDLE?): UInt? = memScoped {
         if (handle == null || handle == INVALID_HANDLE_VALUE) return null
         val lpMode = alloc<UIntVar>()
         // "If the function succeeds, the return value is nonzero."
