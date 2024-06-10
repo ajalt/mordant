@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.internal.syscalls.nativeimage
 
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerWindows
 import org.graalvm.nativeimage.Platform
@@ -61,8 +62,17 @@ private object WinKernel32Lib {
         val AsciiChar: Byte
     }
 
+    @CStruct("COORD")
+    interface COORD : PointerBase {
+        @get:CField("X")
+        var X: Short
+
+        @get:CField("Y")
+        var Y: Short
+    }
+
     @CStruct("KEY_EVENT_RECORD")
-    interface KEY_EVENT_RECORD : PointerBase{
+    interface KEY_EVENT_RECORD : PointerBase {
         @get:CField("bKeyDown")
         val bKeyDown: Boolean
 
@@ -82,10 +92,28 @@ private object WinKernel32Lib {
         val dwControlKeyState: Int
     }
 
+    @CStruct("MOUSE_EVENT_RECORD")
+    interface MOUSE_EVENT_RECORD : PointerBase {
+        @get:CField("dwMousePosition")
+        var dwMousePosition: COORD
+
+        @get:CField("dwButtonState")
+        var dwButtonState: Int
+
+        @get:CField("dwControlKeyState")
+        var dwControlKeyState: Int
+
+        @get:CField("dwEventFlags")
+        var dwEventFlags: Int
+    }
+
     @CStruct("Event")
     interface EventUnion : PointerBase {
         @get:CFieldAddress("KeyEvent")
         val KeyEvent: KEY_EVENT_RECORD
+
+        @get:CFieldAddress("MouseEvent")
+        val MouseEvent: MOUSE_EVENT_RECORD
         // ... other fields omitted until we need them
     }
 
@@ -114,7 +142,7 @@ private object WinKernel32Lib {
     external fun GetConsoleMode(hConsoleHandle: PointerBase?, lpMode: CIntPointer?): Boolean
 
     @CFunction("SetConsoleMode")
-    external fun SetConsoleMode(hConsoleHandle: PointerBase?, dwMode: Int)
+    external fun SetConsoleMode(hConsoleHandle: PointerBase?, dwMode: Int): Boolean
 
     @CFunction("GetConsoleScreenBufferInfo")
     external fun GetConsoleScreenBufferInfo(
@@ -162,20 +190,19 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
         }
     }
 
-    override fun enterRawMode(): AutoCloseable? {
+    override fun getStdinConsoleMode(): UInt? {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
-        val originalMode = StackValue.get(CIntPointer::class.java)
-        if (!WinKernel32Lib.GetConsoleMode(stdinHandle, originalMode)) return null
-
-        // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
-        // ENABLE_PROCESSED_INPUT, ENABLE_MOUSE_INPUT or ENABLE_WINDOW_INPUT if we want those
-        // events.
-        WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())
-
-        return AutoCloseable { WinKernel32Lib.SetConsoleMode(stdinHandle, originalMode.read()) }
+        val lpMode = StackValue.get(CIntPointer::class.java)
+        if (!WinKernel32Lib.GetConsoleMode(stdinHandle, lpMode)) return null
+        return lpMode.read().toUInt()
     }
 
-    override fun readRawKeyEvent(dwMilliseconds: Int): KeyEventRecord? {
+    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
+        val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
+        return WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())
+    }
+
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
         val waitResult = WinKernel32Lib.WaitForSingleObject(stdinHandle, dwMilliseconds)
         if (waitResult != 0) {
@@ -187,12 +214,29 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
         if (eventsRead.read() == 0) {
             return null
         }
-        val keyEvent = inputEvents.Event.KeyEvent
-        return KeyEventRecord(
-            bKeyDown = keyEvent.bKeyDown,
-            wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
-            uChar = keyEvent.uChar!!.UnicodeChar,
-            dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
-        )
+        return when (inputEvents.EventType) {
+            WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
+                val keyEvent = inputEvents.Event.KeyEvent
+                EventRecord.Key(
+                    bKeyDown = keyEvent.bKeyDown,
+                    wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
+                    uChar = keyEvent.uChar!!.UnicodeChar,
+                    dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
+                )
+            }
+
+            WinKernel32Lib.INPUT_RECORD.MOUSE_EVENT -> {
+                val mouseEvent = inputEvents.Event.MouseEvent
+                EventRecord.Mouse(
+                    dwMousePositionX = mouseEvent.dwMousePosition.X.toInt(),
+                    dwMousePositionY = mouseEvent.dwMousePosition.Y.toInt(),
+                    dwButtonState = mouseEvent.dwButtonState.toUInt(),
+                    dwControlKeyState = mouseEvent.dwControlKeyState.toUInt(),
+                    dwEventFlags = mouseEvent.dwEventFlags.toUInt(),
+                )
+            }
+
+            else -> null
+        }
     }
 }
