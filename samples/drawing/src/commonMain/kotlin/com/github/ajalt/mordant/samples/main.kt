@@ -1,11 +1,9 @@
 package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.colormath.Color
-import com.github.ajalt.colormath.calculate.wcagContrastRatio
 import com.github.ajalt.colormath.model.HSL
 import com.github.ajalt.colormath.model.Oklab
 import com.github.ajalt.colormath.model.RGB
-import com.github.ajalt.colormath.transform.interpolate
 import com.github.ajalt.colormath.transform.interpolator
 import com.github.ajalt.mordant.animation.coroutines.animateInCoroutine
 import com.github.ajalt.mordant.animation.textAnimation
@@ -39,24 +37,22 @@ suspend fun main() = coroutineScope {
 
     launch { animation.execute() }
 
-    object : InputReceiver<Unit> {
-        override fun onEvent(event: InputEvent): InputReceiver.Status<Unit> {
-            return when (event) {
-                is KeyboardEvent -> when {
-                    event.isCtrlC -> InputReceiver.Status.Finished(Unit)
-                    else -> InputReceiver.Status.Continue
-                }
+    terminal.receiveEvents(MouseTracking.Button) { event ->
+        when (event) {
+            is KeyboardEvent -> when {
+                event.isCtrlC -> InputReceiver.Status.Finished
+                else -> InputReceiver.Status.Continue
+            }
 
-                is MouseEvent -> {
-                    if (event.leftPressed) {
-                        canvas[event.y][event.x] = HSL(hue.toDouble(), 1, .5)
-                        hue += 2
-                    }
-                    InputReceiver.Status.Continue
+            is MouseEvent -> {
+                if (event.leftPressed) {
+                    canvas[event.y][event.x] = HSL(hue.toDouble(), 1, .5)
+                    hue += 2
                 }
+                InputReceiver.Status.Continue
             }
         }
-    }.receiveInput(terminal, MouseTracking.Button) // TODO add a lambda extension to Terminal?
+    }
 
     animation.clear()
 }

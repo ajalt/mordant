@@ -23,3 +23,41 @@ fun <T> InputReceiver<T>.receiveInput(
     }
     return null
 }
+
+// TODO: docs
+inline fun <T> Terminal.receiveKeyEvents(
+    crossinline block: (KeyboardEvent) -> InputReceiver.Status<T>,
+): T? {
+    return receiveEvents(MouseTracking.Off) { event ->
+        when (event) {
+            is KeyboardEvent -> block(event)
+            else -> InputReceiver.Status.Continue
+        }
+    }
+}
+
+inline fun <T> Terminal.receiveMouseEvents(
+    mouseTracking: MouseTracking = MouseTracking.Normal,
+    crossinline block: (MouseEvent) -> InputReceiver.Status<T>,
+): T? {
+    require(mouseTracking != MouseTracking.Off) {
+        "Mouse tracking must be enabled to receive mouse events"
+    }
+    return receiveEvents(mouseTracking) { event ->
+        when (event) {
+            is MouseEvent -> block(event)
+            else -> InputReceiver.Status.Continue
+        }
+    }
+}
+
+inline fun <T> Terminal.receiveEvents(
+    mouseTracking: MouseTracking = MouseTracking.Normal,
+    crossinline block: (InputEvent) -> InputReceiver.Status<T>,
+): T? {
+    return object : InputReceiver<T> {
+        override fun onEvent(event: InputEvent): InputReceiver.Status<T> {
+            return block(event)
+        }
+    }.receiveInput(this, mouseTracking)
+}
