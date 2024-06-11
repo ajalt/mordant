@@ -7,6 +7,8 @@ import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.readBytesAsUtf8
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.microseconds
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
 
 internal abstract class SyscallHandlerPosix : SyscallHandler {
@@ -521,9 +523,12 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
     private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): SysInputEvent {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
-        val cb = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code
-        val cx = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code - 1
-        val cy = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - ' '.code - 1
+        val cb = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail)
+        val cx = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - 33
+        // XXX: I've seen the terminal not send the third byte like `ESC [ M # W`, but I can't find
+        // that pattern documented anywhere, so maybe it's an issue with the terminal emulator not
+        // encoding utf8 correctly?
+        val cy = (readUtf8Byte(t0, timeout.coerceAtMost(1.milliseconds)) ?: 33) - 33
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
@@ -532,9 +537,10 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             MouseEvent(
                 x = cx,
                 y = cy,
-                left = cb == 0,
-                right = cb == 1,
-                middle = cb == 2,
+                // On button-motion events, xterm adds 32 to cb
+                left = cb and 3 == 0,
+                right = cb and 3 == 1,
+                middle = cb and 3 == 2,
                 wheelUp = cb == 64,
                 wheelDown = cb == 65,
                 ctrl = ctrl,
