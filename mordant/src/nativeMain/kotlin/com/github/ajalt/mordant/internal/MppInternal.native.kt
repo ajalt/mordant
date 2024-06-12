@@ -62,7 +62,6 @@ internal actual fun printStderr(message: String, newline: Boolean) {
     fflush(stderr)
 }
 
-// TODO: use the syscall handler for this?
 internal expect fun ttySetEcho(echo: Boolean)
 
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {

@@ -32,7 +32,6 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         csbi.srWindow.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    // TODO: implement mouse events
     override fun readRawEvent(dwMilliseconds: Int): EventRecord? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val waitResult = WaitForSingleObject(stdinHandle, dwMilliseconds.toUInt())
