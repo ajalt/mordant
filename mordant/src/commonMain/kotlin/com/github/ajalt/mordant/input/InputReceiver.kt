@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.input
 
-// TODO: docs
+/**
+ * An object that can receive input events.
+ */
 interface InputReceiver<T> {
     sealed class Status<out T> {
         companion object {

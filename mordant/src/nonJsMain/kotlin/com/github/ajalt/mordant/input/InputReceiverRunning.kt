@@ -3,7 +3,8 @@ package com.github.ajalt.mordant.input
 import com.github.ajalt.mordant.terminal.Terminal
 
 /**
- * Read input from the [terminal], and feed to this [InputReceiver] until it returns a result.
+ * Enter raw mode, read input from the [terminal] for this [InputReceiver] until it returns a
+ * result, then exit raw mode.
  *
  * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
  * input could not be read.
@@ -24,7 +25,13 @@ fun <T> InputReceiver<T>.receiveInput(
     return null
 }
 
-// TODO: docs
+/**
+ * Enter raw mode, read input and pass any [KeyboardEvent]s to [block] until it returns a
+ * result, then exit raw mode.
+ *
+ * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
+ * input could not be read.
+ */
 inline fun <T> Terminal.receiveKeyEvents(
     crossinline block: (KeyboardEvent) -> InputReceiver.Status<T>,
 ): T? {
@@ -36,6 +43,14 @@ inline fun <T> Terminal.receiveKeyEvents(
     }
 }
 
+/**
+ * Enter raw mode, read input and pass any [MouseEvent]s to [block] until it returns a
+ * result, then exit raw mode.
+ *
+ * @param mouseTracking The type of mouse tracking to enable.
+ * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
+ * input could not be read.
+ */
 inline fun <T> Terminal.receiveMouseEvents(
     mouseTracking: MouseTracking = MouseTracking.Normal,
     crossinline block: (MouseEvent) -> InputReceiver.Status<T>,
@@ -51,6 +66,14 @@ inline fun <T> Terminal.receiveMouseEvents(
     }
 }
 
+/**
+ * Enter raw mode, read input and pass any [InputEvent]s to [block] until it returns a
+ * result, then exit raw mode.
+ *
+ * @param mouseTracking The type of mouse tracking to enable.
+ * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
+ * input could not be read.
+ */
 inline fun <T> Terminal.receiveEvents(
     mouseTracking: MouseTracking = MouseTracking.Normal,
     crossinline block: (InputEvent) -> InputReceiver.Status<T>,
