@@ -9,14 +9,14 @@ import com.github.ajalt.mordant.terminal.Terminal
  * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
  * input could not be read.
  */
-fun <T> InputReceiver<T>.receiveInput(
+fun <T> InputReceiver<T>.receiveEvents(
     terminal: Terminal,
     mouseTracking: MouseTracking = MouseTracking.Off,
 ): T? {
     terminal.enterRawMode(mouseTracking)?.use { rawMode ->
         while (true) {
             val event = rawMode.readEvent() ?: return null
-            when (val status = onEvent(event)) {
+            when (val status = receiveEvent(event)) {
                 is InputReceiver.Status.Continue -> continue
                 is InputReceiver.Status.Finished -> return status.result
             }
@@ -79,8 +79,8 @@ inline fun <T> Terminal.receiveEvents(
     crossinline block: (InputEvent) -> InputReceiver.Status<T>,
 ): T? {
     return object : InputReceiver<T> {
-        override fun onEvent(event: InputEvent): InputReceiver.Status<T> {
+        override fun receiveEvent(event: InputEvent): InputReceiver.Status<T> {
             return block(event)
         }
-    }.receiveInput(this, mouseTracking)
+    }.receiveEvents(this, mouseTracking)
 }

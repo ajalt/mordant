@@ -1,4 +1,3 @@
-
 package com.github.ajalt.mordant.internal.syscalls
 
 import com.github.ajalt.mordant.internal.Size
@@ -7,7 +6,7 @@ import platform.posix.*
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 
-internal object SyscallHandlerNativePosix: SyscallHandlerPosix() {
+internal object SyscallHandlerNativePosix : SyscallHandlerPosix() {
     override fun isatty(fd: Int): Boolean {
         return platform.posix.isatty(fd) != 0
     }
@@ -50,12 +49,12 @@ internal object SyscallHandlerNativePosix: SyscallHandlerPosix() {
     }
 
     override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char? = memScoped {
-        while (t0.elapsedNow() < timeout) {
+        do {
             val c = alloc<ByteVar>()
             val read = read(platform.posix.STDIN_FILENO, c.ptr, 1u)
             if (read < 0) return null
             if (read > 0) return c.value.toInt().toChar()
-        }
+        } while (t0.elapsedNow() < timeout)
         return null
     }
 }

@@ -18,7 +18,7 @@ internal interface SyscallHandlerJsCommon: SyscallHandler {
     fun readFileIfExists(filename: String): String?
 
     // The public interface never is in nonJsMain, so these will never be called
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): SysInputEvent {
         throw UnsupportedOperationException("Reading keyboard is not supported on this platform")
     }
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {

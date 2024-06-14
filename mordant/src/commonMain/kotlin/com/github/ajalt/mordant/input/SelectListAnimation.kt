@@ -350,7 +350,7 @@ private open class SelectInputAnimation(
         else animation.stop()
     }
 
-    override fun onEvent(event: InputEvent): Status<List<String>?> {
+    override fun receiveEvent(event: InputEvent): Status<List<String>?> {
         if (event !is KeyboardEvent) return Status.Continue
         val (_, s) = state.update {
             with(config) {
@@ -477,8 +477,8 @@ private class SingleSelectInputAnimation(
     private val animation: SelectInputAnimation,
 ) : InputReceiver<String?> {
     override fun cancel() = animation.cancel()
-    override fun onEvent(event: InputEvent): Status<String?> {
-        return when (val status = animation.onEvent(event)) {
+    override fun receiveEvent(event: InputEvent): Status<String?> {
+        return when (val status = animation.receiveEvent(event)) {
             is Status.Finished -> Status.Finished(status.result?.firstOrNull())
             is Status.Continue -> Status.Continue
         }
