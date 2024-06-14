@@ -11,6 +11,6 @@ interface InputReceiver<T> {
         data object Continue : Status<Nothing>()
         data class Finished<T>(val result: T) : Status<T>()
     }
-    fun onEvent(event: InputEvent): Status<T> = Status.Continue
+    fun receiveEvent(event: InputEvent): Status<T> = Status.Continue
     fun cancel() {}
 }
