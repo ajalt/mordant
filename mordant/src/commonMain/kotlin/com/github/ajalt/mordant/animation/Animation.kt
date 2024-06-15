@@ -31,7 +31,7 @@ abstract class Animation<T>(
     @Deprecated("This parameter is ignored; animations never print a trailing linebreak.")
     private val trailingLinebreak: Boolean = true,
     val terminal: Terminal,
-) {
+): StoppableAnimation {
     private data class State(
         /** The length of each line of the last rendered widget */
         val size: List<Int>? = null,
@@ -88,7 +88,7 @@ abstract class Animation<T>(
      *
      * Future calls to [update] will cause the animation to resume.
      */
-    fun clear() {
+    final override fun clear() {
         val (old, _) = doStop(clearSize = true, newline = false)
         getCursorMoves(
             firstDraw = false,
@@ -110,7 +110,7 @@ abstract class Animation<T>(
      *
      * Future calls to [update] will cause the animation to start again.
      */
-    fun stop() {
+    final override fun stop() {
         doStop(clearSize = false, newline = true)
     }
 

@@ -3,14 +3,15 @@ package com.github.ajalt.mordant.input
 import com.github.ajalt.mordant.terminal.Terminal
 
 /**
- * Enter raw mode, read input from the [terminal] for this [InputReceiver] until it returns a
+ * Enter raw mode, read input from the terminal for this [InputReceiver] until it returns a
  * result, then exit raw mode.
  *
+ * @param mouseTracking The type of mouse tracking to enable.
  * @return the result of the completed receiver, or `null` if the terminal is not interactive or the
  * input could not be read.
  */
 fun <T> InputReceiver<T>.receiveEvents(
-    mouseTracking: MouseTracking = MouseTracking.Off,
+    mouseTracking: MouseTracking = MouseTracking.Normal,
 ): T? {
     terminal.enterRawMode(mouseTracking)?.use { rawMode ->
         while (true) {
