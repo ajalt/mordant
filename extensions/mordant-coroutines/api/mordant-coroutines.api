@@ -40,3 +40,11 @@ public final class com/github/ajalt/mordant/animation/coroutines/CoroutineProgre
 public abstract interface class com/github/ajalt/mordant/animation/coroutines/CoroutineProgressTaskAnimator : com/github/ajalt/mordant/animation/coroutines/CoroutineAnimator, com/github/ajalt/mordant/animation/progress/ProgressTask {
 }
 
+public final class com/github/ajalt/mordant/input/coroutines/ReceiveEventsFlowKt {
+	public static final fun receiveEventsFlow (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun receiveEventsFlow$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun receiveKeyEventsFlow (Lcom/github/ajalt/mordant/terminal/Terminal;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun receiveMouseEventsFlow (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun receiveMouseEventsFlow$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
