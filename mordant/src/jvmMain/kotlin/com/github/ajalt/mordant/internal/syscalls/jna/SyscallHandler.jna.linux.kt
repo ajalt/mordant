@@ -81,13 +81,9 @@ internal object SyscallHandlerJnaLinux : SyscallHandlerJvmPosix() {
         }
     }
 
-    override fun getStdinTermios(): Termios? {
+    override fun getStdinTermios(): Termios {
         val termios = PosixLibC.termios()
-        try {
-            libC.tcgetattr(STDIN_FILENO, termios)
-        } catch (e: LastErrorException) {
-            return null
-        }
+        libC.tcgetattr(STDIN_FILENO, termios)
         return Termios(
             iflag = termios.c_iflag.toUInt(),
             oflag = termios.c_oflag.toUInt(),

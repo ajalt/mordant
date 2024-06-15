@@ -32,15 +32,17 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         csbi.srWindow.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord? = memScoped {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val waitResult = WaitForSingleObject(stdinHandle, dwMilliseconds.toUInt())
-        if (waitResult != 0u) return null
+        if (waitResult != 0u) {
+            throw RuntimeException("Timeout reading from console input")
+        }
         val inputEvents = allocArray<INPUT_RECORD>(1)
         val eventsRead = alloc<UIntVar>()
         ReadConsoleInput!!(stdinHandle, inputEvents, 1u, eventsRead.ptr)
         if (eventsRead.value == 0u) {
-            return null
+            throw RuntimeException("Error reading from console input")
         }
         val inputEvent = inputEvents[0]
         return when (inputEvent.EventType.toInt()) {
@@ -65,18 +67,22 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
                 )
             }
 
-            else -> null
+            else -> throw RuntimeException(
+                "Error reading from console input: unexpected event type ${inputEvent.EventType}"
+            )
         }
     }
 
-    override fun getStdinConsoleMode(): UInt? {
+    override fun getStdinConsoleMode(): UInt {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        return getConsoleMode(stdinHandle)
+        return getConsoleMode(stdinHandle) ?: throw RuntimeException("Error getting console mode")
     }
 
-    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
+    override fun setStdinConsoleMode(dwMode: UInt) {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        return SetConsoleMode(stdinHandle, 0u) != 0
+        if(SetConsoleMode(stdinHandle, 0u) == 0) {
+            throw RuntimeException("Error setting console mode")
+        }
     }
 
     fun ttySetEcho(echo: Boolean) = memScoped {

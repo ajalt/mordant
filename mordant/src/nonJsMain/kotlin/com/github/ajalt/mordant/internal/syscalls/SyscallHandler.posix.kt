@@ -7,7 +7,6 @@ import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.internal.readBytesAsUtf8
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.microseconds
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
 
@@ -150,10 +149,10 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val ospeed: UInt,
     )
 
-    abstract fun getStdinTermios(): Termios?
+    abstract fun getStdinTermios(): Termios
     abstract fun setStdinTermios(termios: Termios)
     protected abstract fun isatty(fd: Int): Boolean
-    protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char?
+    protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char
 
     override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO)
     override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO)
@@ -162,8 +161,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
     // https://www.man7.org/linux/man-pages/man3/termios.3.html
     // https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html
     // https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
-    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable? {
-        val orig = getStdinTermios() ?: return null
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        val orig = getStdinTermios()
         val new = Termios(
             iflag = orig.iflag and (ICRNL or IGNCR or INPCK or ISTRIP or IXON).inv(),
             // we leave OPOST on so we don't change \r\n handling
@@ -205,26 +204,29 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val s = StringBuilder()
         var ch = ' '
 
-        fun readTimeout(): Boolean {
-            ch = readRawByte(t0, timeout) ?: return true
+        fun read() {
+            ch = readRawByte(t0, timeout)
             s.append(ch)
-            return false
         }
 
-        if (readTimeout()) return SysInputEvent.Fail
+        read()
 
         if (ch == ESC) {
             escaped = true
-            if (readTimeout()) return SysInputEvent.Success(
-                KeyboardEvent(
-                    key = "Escape",
-                    ctrl = false,
-                    alt = false,
-                    shift = false
+            try {
+                read()
+            } catch (e: RuntimeException) {
+                return SysInputEvent.Success(
+                    KeyboardEvent(
+                        key = "Escape",
+                        ctrl = false,
+                        alt = false,
+                        shift = false
+                    )
                 )
-            )
+            }
             if (ch == ESC) {
-                if (readTimeout()) return SysInputEvent.Fail
+                read()
             }
         }
 
@@ -236,11 +238,11 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             if (ch == 'O') {
                 // ESC O letter
                 // ESC O modifier letter
-                if (readTimeout()) return SysInputEvent.Fail
+                read()
 
                 if (ch in '0'..'9') {
                     modifier = ch.code - 1
-                    if (readTimeout()) return SysInputEvent.Fail
+                    read()
                 }
 
                 code.append(ch)
@@ -251,12 +253,12 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 // ESC [ [ num char
                 // For mouse events:
                 // ESC [ M byte byte byte
-                if (readTimeout()) return SysInputEvent.Fail
+                read()
 
                 if (ch == '[') {
                     // escape codes might have a second bracket
                     code.append(ch)
-                    if (readTimeout()) return SysInputEvent.Fail
+                    read()
                 } else if (ch == 'M') {
                     // mouse event
                     return processMouseEvent(t0, timeout)
@@ -267,16 +269,16 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
                 // leading digits
                 repeat(3) {
                     if (ch in '0'..'9') {
-                        if (readTimeout()) return SysInputEvent.Fail
+                        read()
                     }
                 }
 
                 // modifier
                 if (ch == ';') {
-                    if (readTimeout()) return SysInputEvent.Fail
+                    read()
 
                     if (ch in '0'..'9') {
-                        if (readTimeout()) return SysInputEvent.Fail
+                        read()
                     }
                 }
 
@@ -523,12 +525,14 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
     private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): SysInputEvent {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
-        val cb = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail)
-        val cx = (readUtf8Byte(t0, timeout) ?: return SysInputEvent.Fail) - 33
+        val cb = readUtf8Byte(t0, timeout)
+        val cx = readUtf8Byte(t0, timeout) - 33
         // XXX: I've seen the terminal not send the third byte like `ESC [ M # W`, but I can't find
         // that pattern documented anywhere, so maybe it's an issue with the terminal emulator not
         // encoding utf8 correctly?
-        val cy = (readUtf8Byte(t0, timeout.coerceAtMost(1.milliseconds)) ?: 33) - 33
+        val cy = runCatching {
+            readUtf8Byte(t0, timeout.coerceAtMost(1.milliseconds)) - 33
+        }.getOrElse { 0 }
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
@@ -550,8 +554,8 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         )
     }
 
-    private fun readUtf8Byte(t0: ComparableTimeMark, timeout: Duration): Int? {
-        return runCatching { readBytesAsUtf8 { readRawByte(t0, timeout)!!.code } }.getOrNull()
+    private fun readUtf8Byte(t0: ComparableTimeMark, timeout: Duration): Int {
+        return readBytesAsUtf8 { readRawByte(t0, timeout).code }
     }
 }
 

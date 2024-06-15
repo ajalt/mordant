@@ -11,12 +11,28 @@ import kotlin.time.TimeSource
  * input events.
  *
  * @param mouseTracking What type of mouse events to listen for.
+ * @return A scope that will restore the terminal to its previous state when closed
+ * @throws RuntimeException if the terminal is not interactive or raw mode cannot be entered.
+ */
+fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope {
+    if (!info.inputInteractive) {
+        throw IllegalStateException("Cannot enter raw mode on a non-interactive terminal")
+    }
+    return RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+}
+
+/**
+ * Enter raw mode on the terminal, disabling line buffering and echoing to enable reading individual
+ * input events.
+ *
+ * @param mouseTracking What type of mouse events to listen for.
  * @return A scope that will restore the terminal to its previous state when closed, or `null` if
  * the terminal is not interactive.
  */
-fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope? {
-    if (!info.inputInteractive) return null
-    return SYSCALL_HANDLER.enterRawMode(mouseTracking)?.let { RawModeScope(it, mouseTracking) }
+fun Terminal.enterRawModeOrNull(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope? {
+    return runCatching {
+        RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+    }.getOrNull()
 }
 
 class RawModeScope internal constructor(
@@ -27,15 +43,35 @@ class RawModeScope internal constructor(
      * Read a single keyboard event from the terminal, ignoring any mouse events that arrive first.
      *
      * @param timeout The maximum amount of time to wait for an event.
+     * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
+     */
+    fun readKey(timeout: Duration = Duration.INFINITE): KeyboardEvent {
+        while (true) {
+            val event = readEvent(timeout)
+            if (event is KeyboardEvent) return event
+        }
+    }
+
+    /**
+     * Read a single keyboard event from the terminal, ignoring any mouse events that arrive first.
+     *
+     * @param timeout The maximum amount of time to wait for an event.
      * @return The event, or `null` if no event was received before the timeout.
      */
-    fun readKey(timeout: Duration = Duration.INFINITE): KeyboardEvent? {
+    fun readKeyOrNull(timeout: Duration = Duration.INFINITE): KeyboardEvent? {
+        return runCatching { readKey(timeout) }.getOrNull()
+    }
+
+    /**
+     * Read a single mouse event from the terminal, ignoring any keyboard events that arrive first.
+     *
+     * @param timeout The maximum amount of time to wait for an event.
+     * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
+     */
+    fun readMouse(timeout: Duration = Duration.INFINITE): MouseEvent {
         while (true) {
-            return when (val event = readEvent(timeout)) {
-                is KeyboardEvent -> event
-                is MouseEvent -> continue
-                null -> null
-            }
+            val event = readEvent(timeout)
+            if (event is MouseEvent) return event
         }
     }
 
@@ -45,14 +81,25 @@ class RawModeScope internal constructor(
      * @param timeout The maximum amount of time to wait for an event.
      * @return The event, or `null` if no event was received before the timeout.
      */
-    fun readMouse(timeout: Duration = Duration.INFINITE): MouseEvent? {
-        while (true) {
-            return when (val event = readEvent(timeout)) {
-                is MouseEvent -> event
-                is KeyboardEvent -> continue
-                null -> null
-            }
-        }
+    fun readMouseOrNull(timeout: Duration = Duration.INFINITE): MouseEvent? {
+        return runCatching { readMouse(timeout) }.getOrNull()
+    }
+
+    /**
+     * Read a single input event from the terminal.
+     *
+     * @param timeout The maximum amount of time to wait for an event.
+     * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
+     */
+    fun readEvent(timeout: Duration = Duration.INFINITE): InputEvent {
+        val t0 = TimeSource.Monotonic.markNow()
+        do {
+            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
+            if (event !is SysInputEvent.Success) continue
+            if (event.event is MouseEvent && mouseTracking == MouseTracking.Off) continue
+            return event.event
+        } while (t0.elapsedNow() < timeout)
+        throw RuntimeException("Timeout while waiting for input")
     }
 
     /**
@@ -61,20 +108,7 @@ class RawModeScope internal constructor(
      * @param timeout The maximum amount of time to wait for an event.
      * @return The event, or `null` if no event was received before the timeout.
      */
-    fun readEvent(timeout: Duration = Duration.INFINITE): InputEvent? {
-        val t0 = TimeSource.Monotonic.markNow()
-        do {
-            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
-            return when (event) {
-                is SysInputEvent.Success -> {
-                    if (event.event is MouseEvent && mouseTracking == MouseTracking.Off) continue
-                    event.event
-                }
-
-                SysInputEvent.Fail -> null
-                SysInputEvent.Retry -> continue
-            }
-        } while (t0.elapsedNow() < timeout)
-        return null
+    fun readEventOrNull(timeout: Duration = Duration.INFINITE): InputEvent? {
+        return runCatching { readEvent(timeout) }.getOrNull()
     }
 }

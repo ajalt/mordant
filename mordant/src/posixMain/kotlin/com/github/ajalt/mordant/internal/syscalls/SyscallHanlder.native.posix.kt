@@ -20,9 +20,11 @@ internal object SyscallHandlerNativePosix : SyscallHandlerPosix() {
         }
     }
 
-    override fun getStdinTermios(): Termios? = memScoped {
+    override fun getStdinTermios(): Termios = memScoped {
         val termios = alloc<termios>()
-        if (tcgetattr(STDIN_FILENO, termios.ptr) != 0) return null
+        if (tcgetattr(STDIN_FILENO, termios.ptr) != 0) {
+            throw RuntimeException("Error reading terminal attributes")
+        }
         return Termios(
             iflag = termios.c_iflag,
             oflag = termios.c_oflag,
@@ -48,13 +50,13 @@ internal object SyscallHandlerNativePosix : SyscallHandlerPosix() {
         tcsetattr(platform.posix.STDIN_FILENO, TCSADRAIN, nativeTermios.ptr)
     }
 
-    override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char? = memScoped {
+    override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char = memScoped {
         do {
             val c = alloc<ByteVar>()
             val read = read(platform.posix.STDIN_FILENO, c.ptr, 1u)
-            if (read < 0) return null
+            if (read < 0) throw RuntimeException("Error reading from stdin")
             if (read > 0) return c.value.toInt().toChar()
         } while (t0.elapsedNow() < timeout)
-        return null
+        throw RuntimeException("Timeout reading from stdin (timeout=$timeout)")
     }
 }
