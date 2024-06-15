@@ -4,7 +4,7 @@ coroutines = "1.8.1"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.5.0"
-markdown = "org.jetbrains:markdown:0.7.0"
+markdown = "org.jetbrains:markdown:0.7.3"
 jna-core = "net.java.dev.jna:jna:5.14.0"
 
 # compileOnly
@@ -14,7 +14,7 @@ graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 # used in tests
-kotest = "io.kotest:kotest-assertions-core:5.9.0"
+kotest = "io.kotest:kotest-assertions-core:5.9.1"
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
 r8 = "com.android.tools:r8:8.3.37"
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
