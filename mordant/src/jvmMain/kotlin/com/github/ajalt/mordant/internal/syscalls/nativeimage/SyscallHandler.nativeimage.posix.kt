@@ -9,9 +9,7 @@ import org.graalvm.nativeimage.c.CContext
 import org.graalvm.nativeimage.c.constant.CConstant
 import org.graalvm.nativeimage.c.function.CFunction
 import org.graalvm.nativeimage.c.struct.CField
-import org.graalvm.nativeimage.c.struct.CFieldAddress
 import org.graalvm.nativeimage.c.struct.CStruct
-import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.word.PointerBase
 
 @CContext(PosixLibC.Directives::class)
@@ -26,11 +24,11 @@ private object PosixLibC {
     @CConstant("TIOCGWINSZ")
     external fun TIOCGWINSZ(): Int
 
-    @CConstant("TCSADRAIN")
-    external fun TCSADRAIN(): Int
-
-    @CConstant("NCCS")
-    external fun NCCS(): Int
+//    @CConstant("TCSADRAIN")
+//    external fun TCSADRAIN(): Int
+//
+//    @CConstant("NCCS")
+//    external fun NCCS(): Int
 
     @CStruct("winsize", addStructKeyword = true)
     interface winsize : PointerBase {
@@ -42,39 +40,39 @@ private object PosixLibC {
         val ws_col: Short
     }
 
-    @CStruct("termios", addStructKeyword = true)
-    interface termios : PointerBase {
-        @get:CField("c_iflag")
-        @set:CField("c_iflag")
-        var c_iflag: Int
-
-        @get:CField("c_oflag")
-        @set:CField("c_oflag")
-        var c_oflag: Int
-
-        @get:CField("c_cflag")
-        @set:CField("c_cflag")
-        var c_cflag: Int
-
-        @get:CField("c_lflag")
-        @set:CField("c_lflag")
-        var c_lflag: Int
-
-        @get:CField("c_line")
-        @set:CField("c_line")
-        var c_line: Byte
-
-        @get:CFieldAddress("c_cc")
-        val c_cc: CCharPointer
-
-        @get:CField("c_ispeed")
-        @set:CField("c_ispeed")
-        var c_ispeed: Int
-
-        @get:CField("c_ospeed")
-        @set:CField("c_ospeed")
-        var c_ospeed: Int
-    }
+//    @CStruct("termios", addStructKeyword = true)
+//    interface termios : PointerBase {
+//        @get:CField("c_iflag")
+//        @set:CField("c_iflag")
+//        var c_iflag: Int
+//
+//        @get:CField("c_oflag")
+//        @set:CField("c_oflag")
+//        var c_oflag: Int
+//
+//        @get:CField("c_cflag")
+//        @set:CField("c_cflag")
+//        var c_cflag: Int
+//
+//        @get:CField("c_lflag")
+//        @set:CField("c_lflag")
+//        var c_lflag: Int
+//
+//        @get:CField("c_line")
+//        @set:CField("c_line")
+//        var c_line: Byte
+//
+//        @get:CFieldAddress("c_cc")
+//        val c_cc: CCharPointer
+//
+//        @get:CField("c_ispeed")
+//        @set:CField("c_ispeed")
+//        var c_ispeed: Int
+//
+//        @get:CField("c_ospeed")
+//        @set:CField("c_ospeed")
+//        var c_ospeed: Int
+//    }
 
     @CFunction("isatty")
     external fun isatty(fd: Int): Boolean
@@ -82,11 +80,11 @@ private object PosixLibC {
     @CFunction("ioctl")
     external fun ioctl(fd: Int, cmd: Int, winSize: winsize?): Int
 
-    @CFunction("tcgetattr")
-    external fun tcgetattr(fd: Int, termios: termios): Int
-
-    @CFunction("tcsetattr")
-    external fun tcsetattr(fd: Int, cmd: Int, termios: termios)
+//    @CFunction("tcgetattr")
+//    external fun tcgetattr(fd: Int, termios: termios): Int
+//
+//    @CFunction("tcsetattr")
+//    external fun tcsetattr(fd: Int, cmd: Int, termios: termios)
 }
 
 @Platforms(Platform.LINUX::class, Platform.MACOS::class)
@@ -102,7 +100,7 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
         }
     }
 
-    override fun getStdinTermios(): Termios? {
+    override fun getStdinTermios(): Termios {
         throw NotImplementedError(
             "Raw mode is not currently supported for native-image. If you are familiar with " +
                     "GraalVM native-image and would like to contribute, see the commented out " +

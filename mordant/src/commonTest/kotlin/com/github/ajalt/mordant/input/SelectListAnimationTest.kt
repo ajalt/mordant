@@ -56,7 +56,7 @@ class SelectListAnimationTest {
         ░↑ up • ↓ down • / filter • enter select
         """
 
-        a.cancel()
+        a.clear()
         b.filterable(false)
             .createSingleSelectInputAnimation()
         rec.latestOutput() shouldMatchRender """
@@ -109,7 +109,7 @@ class SelectListAnimationTest {
         ░x toggle • ↑ up • ↓ down • / filter • esc clear filter • enter confirm
         """
 
-        a.cancel()
+        a.clear()
         b.filterable(false)
             .createMultiSelectInputAnimation()
         rec.latestOutput() shouldMatchRender """

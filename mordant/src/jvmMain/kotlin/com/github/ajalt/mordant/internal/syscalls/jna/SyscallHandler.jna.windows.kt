@@ -245,32 +245,18 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
     private val stdoutHandle = kernel.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE)
     private val stdinHandle = kernel.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE)
     private val stderrHandle = kernel.GetStdHandle(WinKernel32Lib.STD_ERROR_HANDLE)
-    override fun stdoutInteractive(): Boolean {
+    private fun handleInteractive(handle: WinKernel32Lib.HANDLE): Boolean {
         return try {
-            kernel.GetConsoleMode(stdoutHandle, IntByReference())
+            kernel.GetConsoleMode(handle, IntByReference())
             true
         } catch (e: LastErrorException) {
             false
         }
     }
 
-    override fun stdinInteractive(): Boolean {
-        return try {
-            kernel.GetConsoleMode(stdinHandle, IntByReference())
-            true
-        } catch (e: LastErrorException) {
-            false
-        }
-    }
-
-    override fun stderrInteractive(): Boolean {
-        return try {
-            kernel.GetConsoleMode(stderrHandle, IntByReference())
-            true
-        } catch (e: LastErrorException) {
-            false
-        }
-    }
+    override fun stdoutInteractive(): Boolean = handleInteractive(stdoutHandle)
+    override fun stdinInteractive(): Boolean = handleInteractive(stdinHandle)
+    override fun stderrInteractive(): Boolean = handleInteractive(stderrHandle)
 
     override fun getTerminalSize(): Size? {
         val csbi = WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO()
@@ -281,33 +267,26 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
     }
 
 
-    override fun getStdinConsoleMode(): UInt? {
+    override fun getStdinConsoleMode(): UInt {
         val originalMode = IntByReference()
-        try {
-            kernel.GetConsoleMode(stdinHandle, originalMode)
-        } catch (e: LastErrorException) {
-            return null
-        }
+        kernel.GetConsoleMode(stdinHandle, originalMode)
         return originalMode.value.toUInt()
     }
 
-    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
-        try {
-            kernel.SetConsoleMode(stdinHandle, dwMode.toInt())
-            return true
-        } catch (e: LastErrorException) {
-            throw e
-            return false
-        }
+    override fun setStdinConsoleMode(dwMode: UInt) {
+        kernel.SetConsoleMode(stdinHandle, dwMode.toInt())
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord {
         val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
-        if (waitResult != 0) return null
+        if (waitResult != 0) {
+            throw RuntimeException("Timeout reading from console input")
+        }
         val inputEvents = arrayOfNulls<WinKernel32Lib.INPUT_RECORD>(1)
         val eventsRead = IntByReference()
         kernel.ReadConsoleInput(stdinHandle, inputEvents, inputEvents.size, eventsRead)
-        val inputEvent = inputEvents[0] ?: return null
+        val inputEvent = inputEvents[0]
+            ?: throw RuntimeException("Error reading from console input")
         return when (inputEvent.EventType) {
             WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
                 val keyEvent = inputEvent.Event!!.KeyEvent!!
@@ -330,7 +309,9 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
                 )
             }
 
-            else -> null
+            else -> throw RuntimeException(
+                "Error reading from console input: unexpected event type ${inputEvent.EventType}"
+            )
         }
     }
 }

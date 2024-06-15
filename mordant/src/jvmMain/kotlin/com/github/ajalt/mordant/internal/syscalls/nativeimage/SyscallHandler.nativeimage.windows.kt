@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal.syscalls.nativeimage
 
-import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerWindows
 import org.graalvm.nativeimage.Platform
@@ -190,29 +189,33 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
         }
     }
 
-    override fun getStdinConsoleMode(): UInt? {
+    override fun getStdinConsoleMode(): UInt {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
         val lpMode = StackValue.get(CIntPointer::class.java)
-        if (!WinKernel32Lib.GetConsoleMode(stdinHandle, lpMode)) return null
+        if (!WinKernel32Lib.GetConsoleMode(stdinHandle, lpMode)) {
+            throw RuntimeException("Error reading console mode")
+        }
         return lpMode.read().toUInt()
     }
 
-    override fun setStdinConsoleMode(dwMode: UInt): Boolean {
+    override fun setStdinConsoleMode(dwMode: UInt) {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
-        return WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())
+        if (!WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())) {
+            throw RuntimeException("Error setting console mode")
+        }
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
         val waitResult = WinKernel32Lib.WaitForSingleObject(stdinHandle, dwMilliseconds)
         if (waitResult != 0) {
-            return null
+            throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
         val inputEvents = StackValue.get(WinKernel32Lib.INPUT_RECORD::class.java)
         val eventsRead = StackValue.get(CIntPointer::class.java)
         WinKernel32Lib.ReadConsoleInput(stdinHandle, inputEvents, 1, eventsRead)
         if (eventsRead.read() == 0) {
-            return null
+            throw RuntimeException("Error reading from console input")
         }
         return when (inputEvents.EventType) {
             WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
@@ -236,7 +239,9 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
                 )
             }
 
-            else -> null
+            else -> throw RuntimeException(
+                "Error reading from console input: unexpected event type ${inputEvents.EventType}"
+            )
         }
     }
 }

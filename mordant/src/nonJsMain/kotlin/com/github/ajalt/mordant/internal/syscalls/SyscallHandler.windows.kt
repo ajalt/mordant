@@ -54,19 +54,19 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         ) : EventRecord()
     }
 
-    protected abstract fun readRawEvent(dwMilliseconds: Int): EventRecord?
-    protected abstract fun getStdinConsoleMode(): UInt?
-    protected abstract fun setStdinConsoleMode(dwMode: UInt): Boolean
+    protected abstract fun readRawEvent(dwMilliseconds: Int): EventRecord
+    protected abstract fun getStdinConsoleMode(): UInt
+    protected abstract fun setStdinConsoleMode(dwMode: UInt)
 
-    final override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable? {
-        val originalMode = getStdinConsoleMode() ?: return null
+    final override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        val originalMode = getStdinConsoleMode()
         // dwMode=0 means ctrl-c processing, echo, and line input modes are disabled. Could add
         // ENABLE_PROCESSED_INPUT or ENABLE_WINDOW_INPUT if we want those events.
         val dwMode = when (mouseTracking) {
             MouseTracking.Off -> 0u
             else -> ENABLE_MOUSE_INPUT or ENABLE_EXTENDED_FLAGS
         }
-        if (!setStdinConsoleMode(dwMode)) return null
+        setStdinConsoleMode(dwMode)
         return AutoCloseable { setStdinConsoleMode(originalMode) }
     }
 
@@ -75,7 +75,6 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds
             .coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
         return when (val event = readRawEvent(dwMilliseconds)) {
-            null -> SysInputEvent.Fail
             is EventRecord.Key -> processKeyEvent(event)
             is EventRecord.Mouse -> processMouseEvent(event, mouseTracking)
         }
