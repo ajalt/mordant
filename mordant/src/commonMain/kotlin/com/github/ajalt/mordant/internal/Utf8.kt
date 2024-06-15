@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.internal
 
 /** Read bytes from a UTF-8 encoded stream, and return the next codepoint. */
-fun readBytesAsUtf8(readByte: () -> Int): Int {
+internal fun readBytesAsUtf8(readByte: () -> Int): Int {
     val byte = readByte()
     var byteLength = 0
     var codepoint = 0

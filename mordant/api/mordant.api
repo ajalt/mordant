@@ -1,4 +1,4 @@
-public abstract class com/github/ajalt/mordant/animation/Animation {
+public abstract class com/github/ajalt/mordant/animation/Animation : com/github/ajalt/mordant/animation/StoppableAnimation {
 	public fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;)V
 	public synthetic fun <init> (ZLcom/github/ajalt/mordant/terminal/Terminal;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clear ()V
@@ -51,7 +51,7 @@ public final class com/github/ajalt/mordant/animation/Refreshable$DefaultImpls {
 	public static synthetic fun refresh$default (Lcom/github/ajalt/mordant/animation/Refreshable;ZILjava/lang/Object;)V
 }
 
-public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation : com/github/ajalt/mordant/animation/Refreshable {
+public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation : com/github/ajalt/mordant/animation/Refreshable, com/github/ajalt/mordant/animation/StoppableAnimation {
 	public abstract fun clear ()V
 	public abstract fun getFps ()I
 	public abstract fun stop ()V
@@ -65,6 +65,11 @@ public final class com/github/ajalt/mordant/animation/RefreshableAnimationKt {
 	public static final fun asRefreshable (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;)Lcom/github/ajalt/mordant/animation/RefreshableAnimation;
 	public static synthetic fun asRefreshable$default (Lcom/github/ajalt/mordant/animation/Animation;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/RefreshableAnimation;
 	public static final fun getRefreshPeriod (Lcom/github/ajalt/mordant/animation/RefreshableAnimation;)J
+}
+
+public abstract interface class com/github/ajalt/mordant/animation/StoppableAnimation {
+	public abstract fun clear ()V
+	public abstract fun stop ()V
 }
 
 public final class com/github/ajalt/mordant/animation/progress/BaseBlockingAnimator : com/github/ajalt/mordant/animation/progress/BlockingAnimator {
@@ -189,6 +194,203 @@ public abstract interface class com/github/ajalt/mordant/animation/progress/Thre
 
 public final class com/github/ajalt/mordant/animation/progress/ThreadProgressTaskAnimator$DefaultImpls {
 	public static fun getFps (Lcom/github/ajalt/mordant/animation/progress/ThreadProgressTaskAnimator;)I
+}
+
+public abstract class com/github/ajalt/mordant/input/InputEvent {
+}
+
+public final class com/github/ajalt/mordant/input/InputEventKt {
+	public static final fun isCtrlC (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Z
+}
+
+public abstract interface class com/github/ajalt/mordant/input/InputReceiver {
+	public abstract fun getTerminal ()Lcom/github/ajalt/mordant/terminal/Terminal;
+	public abstract fun receiveEvent (Lcom/github/ajalt/mordant/input/InputEvent;)Lcom/github/ajalt/mordant/input/InputReceiver$Status;
+}
+
+public abstract class com/github/ajalt/mordant/input/InputReceiver$Status {
+	public static final field Companion Lcom/github/ajalt/mordant/input/InputReceiver$Status$Companion;
+}
+
+public final class com/github/ajalt/mordant/input/InputReceiver$Status$Companion {
+	public final fun getFinished ()Lcom/github/ajalt/mordant/input/InputReceiver$Status$Finished;
+}
+
+public final class com/github/ajalt/mordant/input/InputReceiver$Status$Continue : com/github/ajalt/mordant/input/InputReceiver$Status {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/input/InputReceiver$Status$Continue;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/input/InputReceiver$Status$Finished : com/github/ajalt/mordant/input/InputReceiver$Status {
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Lcom/github/ajalt/mordant/input/InputReceiver$Status$Finished;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/input/InputReceiver$Status$Finished;Ljava/lang/Object;ILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InputReceiver$Status$Finished;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResult ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/github/ajalt/mordant/input/InputReceiverAnimation : com/github/ajalt/mordant/animation/StoppableAnimation, com/github/ajalt/mordant/input/InputReceiver {
+}
+
+public final class com/github/ajalt/mordant/input/InteractiveSelectListBuilder {
+	public fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;)V
+	public final fun addEntry (Lcom/github/ajalt/mordant/widgets/SelectList$Entry;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Ljava/lang/String;Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun clearOnExit (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun createMultiSelectInputAnimation ()Lcom/github/ajalt/mordant/input/InputReceiverAnimation;
+	public final fun createSingleSelectInputAnimation ()Lcom/github/ajalt/mordant/input/InputReceiverAnimation;
+	public final fun cursorMarker (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descApplyFilter (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descConfirm (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descExitFilter (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descFilter (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descNext (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descPrev (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descSubmit (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun descToggle (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entries ([Lcom/github/ajalt/mordant/widgets/SelectList$Entry;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entries ([Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entriesEntry (Ljava/util/List;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entriesString (Ljava/util/List;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun filterable (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keyExitFilter (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keyFilter (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keyNext (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keyPrev (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keySubmit (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun keyToggle (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun limit (I)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun onlyShowActiveDescription (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun selectedMarker (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun selectedStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun showInstructions (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun startingCursorIndex (I)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun title (Lcom/github/ajalt/mordant/rendering/Widget;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun title (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun unselectedMarker (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun unselectedMarkerStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun unselectedTitleStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+}
+
+public final class com/github/ajalt/mordant/input/InteractiveSelectListKt {
+	public static final fun interactiveMultiSelectList (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
+	public static final fun interactiveMultiSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun interactiveMultiSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun interactiveMultiSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun interactiveMultiSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun interactiveSelectList (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+	public static final fun interactiveSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun interactiveSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun interactiveSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun interactiveSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/input/KeyboardEvent : com/github/ajalt/mordant/input/InputEvent {
+	public fun <init> (Ljava/lang/String;ZZZ)V
+	public synthetic fun <init> (Ljava/lang/String;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun copy (Ljava/lang/String;ZZZ)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/input/KeyboardEvent;Ljava/lang/String;ZZZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Z
+	public final fun getCtrl ()Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getShift ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/input/MouseEvent : com/github/ajalt/mordant/input/InputEvent {
+	public fun <init> (IIZZZZZZZZZZZZ)V
+	public synthetic fun <init> (IIZZZZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
+	public final fun component13 ()Z
+	public final fun component14 ()Z
+	public final fun component2 ()I
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (IIZZZZZZZZZZZZ)Lcom/github/ajalt/mordant/input/MouseEvent;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/input/MouseEvent;IIZZZZZZZZZZZZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/MouseEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Z
+	public final fun getCtrl ()Z
+	public final fun getLeft ()Z
+	public final fun getMiddle ()Z
+	public final fun getMouse4 ()Z
+	public final fun getMouse5 ()Z
+	public final fun getRight ()Z
+	public final fun getShift ()Z
+	public final fun getWheelDown ()Z
+	public final fun getWheelLeft ()Z
+	public final fun getWheelRight ()Z
+	public final fun getWheelUp ()Z
+	public final fun getX ()I
+	public final fun getY ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/input/MouseTracking : java/lang/Enum {
+	public static final field Any Lcom/github/ajalt/mordant/input/MouseTracking;
+	public static final field Button Lcom/github/ajalt/mordant/input/MouseTracking;
+	public static final field Normal Lcom/github/ajalt/mordant/input/MouseTracking;
+	public static final field Off Lcom/github/ajalt/mordant/input/MouseTracking;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/MouseTracking;
+	public static fun values ()[Lcom/github/ajalt/mordant/input/MouseTracking;
+}
+
+public final class com/github/ajalt/mordant/input/RawModeKt {
+	public static final fun enterRawMode (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/RawModeScope;
+	public static synthetic fun enterRawMode$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;ILjava/lang/Object;)Lcom/github/ajalt/mordant/input/RawModeScope;
+	public static final fun enterRawModeOrNull (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/RawModeScope;
+	public static synthetic fun enterRawModeOrNull$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;ILjava/lang/Object;)Lcom/github/ajalt/mordant/input/RawModeScope;
+}
+
+public final class com/github/ajalt/mordant/input/RawModeScope : java/lang/AutoCloseable {
+	public fun close ()V
+	public final fun readEvent-LRDsOJo (J)Lcom/github/ajalt/mordant/input/InputEvent;
+	public static synthetic fun readEvent-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public final fun readEventOrNull-LRDsOJo (J)Lcom/github/ajalt/mordant/input/InputEvent;
+	public static synthetic fun readEventOrNull-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public final fun readKey-LRDsOJo (J)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public static synthetic fun readKey-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public final fun readKeyOrNull-LRDsOJo (J)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public static synthetic fun readKeyOrNull-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/KeyboardEvent;
+	public final fun readMouse-LRDsOJo (J)Lcom/github/ajalt/mordant/input/MouseEvent;
+	public static synthetic fun readMouse-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/MouseEvent;
+	public final fun readMouseOrNull-LRDsOJo (J)Lcom/github/ajalt/mordant/input/MouseEvent;
+	public static synthetic fun readMouseOrNull-LRDsOJo$default (Lcom/github/ajalt/mordant/input/RawModeScope;JILjava/lang/Object;)Lcom/github/ajalt/mordant/input/MouseEvent;
+}
+
+public final class com/github/ajalt/mordant/input/ReceiveEventsKt {
+	public static final fun receiveEvents (Lcom/github/ajalt/mordant/input/InputReceiver;Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/Object;
+	public static final fun receiveEvents (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun receiveEvents$default (Lcom/github/ajalt/mordant/input/InputReceiver;Lcom/github/ajalt/mordant/input/MouseTracking;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun receiveEvents$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun receiveKeyEvents (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun receiveMouseEvents (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun receiveMouseEvents$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/input/MouseTracking;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class com/github/ajalt/mordant/markdown/Markdown : com/github/ajalt/mordant/rendering/Widget {
@@ -1295,6 +1497,31 @@ public final class com/github/ajalt/mordant/widgets/ProgressLayout {
 
 public final class com/github/ajalt/mordant/widgets/ProgressLayoutKt {
 	public static final fun progressLayout (Lkotlin/jvm/functions/Function1;)Lcom/github/ajalt/mordant/widgets/ProgressLayout;
+}
+
+public final class com/github/ajalt/mordant/widgets/SelectList : com/github/ajalt/mordant/rendering/Widget {
+	public fun <init> (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/Widget;IZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;)V
+	public synthetic fun <init> (Ljava/util/List;Lcom/github/ajalt/mordant/rendering/Widget;IZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+}
+
+public final class com/github/ajalt/mordant/widgets/SelectList$Entry {
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/github/ajalt/mordant/rendering/Widget;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/SelectList$Entry;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Lcom/github/ajalt/mordant/rendering/Widget;
+	public final fun getSelected ()Z
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/github/ajalt/mordant/widgets/Spinner : com/github/ajalt/mordant/rendering/Widget {
