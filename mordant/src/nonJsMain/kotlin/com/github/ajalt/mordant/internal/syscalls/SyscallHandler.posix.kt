@@ -143,10 +143,7 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
         val oflag: UInt,
         val cflag: UInt,
         val lflag: UInt,
-        val cline: Byte,
         val cc: ByteArray,
-        val ispeed: UInt,
-        val ospeed: UInt,
     )
 
     abstract fun getStdinTermios(): Termios
@@ -169,13 +166,10 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             oflag = orig.oflag,
             cflag = orig.cflag or CS8,
             lflag = orig.lflag and (ECHO or ICANON or IEXTEN or ISIG).inv(),
-            cline = orig.cline,
             cc = orig.cc.copyOf().also {
                 it[VMIN] = 0 // min wait time on read
                 it[VTIME] = 1 // max wait time on read, in 10ths of a second
             },
-            ispeed = orig.ispeed,
-            ospeed = orig.ospeed,
         )
         setStdinTermios(new)
         when (mouseTracking) {
