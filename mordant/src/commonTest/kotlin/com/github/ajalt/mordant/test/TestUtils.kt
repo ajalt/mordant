@@ -21,7 +21,7 @@ private val upMove = Regex("${Regex.escape(CSI)}\\d+A")
 
 // This handles the difference in wasm movements and the other targets
 fun TerminalRecorder.normalizedOutput(): String {
-    return if (CR_IMPLIES_LF) output().replace(upMove, "\r") else output()
+    return if (CR_IMPLIES_LF) output().replace("\r${CSI}1A", "\r") else output()
 }
 
 fun TerminalRecorder.latestOutput(): String {

@@ -12,6 +12,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBar
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.TimeUnit
 import kotlin.test.Ignore
 import kotlin.test.assertNull
@@ -42,7 +43,9 @@ class GraalSmokeTest {
     @Test
     fun `raw mode test`() {
         val t = Terminal(interactive = true)
-        assertNull(t.enterRawMode()?.use {})
+        assertThrows<RuntimeException> {
+            t.enterRawMode().use {}
+        }
     }
 
     @Test
