@@ -14,11 +14,52 @@ Mordant provides a few ways to read input events, depending on how much control 
     Enabling raw mode disables control character processing, which means that you will need to handle
     events like `ctrl-c` manually if you want your users to be able to exit your program.
 
-### Reading Events with lambdas
 
-The simplest method is to use one of [receiveEvents], [receiveKeyEvents], or [receiveMouseEvents],
-depending on which type of events you want to read. These functions will handle setting up raw mode
-and restoring the terminal to its original state when they are done.
+### Reading Events with Coroutine Flows
+
+[//]: # (TODO: refs) The simplest way to read events is to include the `mordant-coroutines` module,
+and can use [receiveEventsFlow], [receiveKeyEventsFlow], and [receiveMouseEventsFlow] to receive
+events as a [Flow]. These functions will handle setting up raw mode and restoring the terminal to
+its original state when they are done.
+
+=== "Example of receiveEventsFlow"
+
+    ```kotlin
+    terminal.receiveKeyEventsFlow()
+        .takeWhile { !it.isCtrlC }
+        .collect { event ->
+            terminal.info("You pressed ${event.key}")
+        }
+    ```
+
+=== "Example of receiveMouseEventsFlow"
+
+    ```kotlin
+    terminal.receiveMouseEventsFlow()
+        .takeWhile { !it.right }
+        .filter { it.left }
+        .collect { event ->
+            terminal.info("You clicked at ${event.x}, ${event.y}")
+        }
+    ```
+
+=== "Example of receiveEventsFlow"
+
+    ```kotlin
+    terminal.receiveEventsFlow()
+        .takeWhile { it !is KeyboardEvent || it.isCtrlC }
+        .collect { event ->
+            when (event) {
+                is KeyboardEvent -> terminal.info("You pressed ${event.key}")
+                is MouseEvent -> terminal.info("You clicked at ${event.x}, ${event.y}")
+            }
+        }
+    ```
+
+### Reading Events with Callbacks
+
+If you don't want to use coroutines, you can use a callback lambda with one of [receiveEvents],
+[receiveKeyEvents], or [receiveMouseEvents], depending on which type of events you want to read.
 
 === "Example of receiveKeyEvents"
     ```kotlin

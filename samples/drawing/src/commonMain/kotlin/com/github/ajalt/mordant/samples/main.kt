@@ -7,11 +7,18 @@ import com.github.ajalt.colormath.model.RGB
 import com.github.ajalt.colormath.transform.interpolator
 import com.github.ajalt.mordant.animation.coroutines.animateInCoroutine
 import com.github.ajalt.mordant.animation.textAnimation
-import com.github.ajalt.mordant.input.*
+import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.MouseEvent
+import com.github.ajalt.mordant.input.MouseTracking
+import com.github.ajalt.mordant.input.coroutines.receiveEventsFlow
+import com.github.ajalt.mordant.input.isCtrlC
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
 suspend fun main() = coroutineScope {
@@ -37,22 +44,14 @@ suspend fun main() = coroutineScope {
 
     launch { animation.execute() }
 
-    terminal.receiveEvents(MouseTracking.Button) { event ->
-        when (event) {
-            is KeyboardEvent -> when {
-                event.isCtrlC -> InputReceiver.Status.Finished
-                else -> InputReceiver.Status.Continue
-            }
-
-            is MouseEvent -> {
-                if (event.left) {
-                    canvas[event.y][event.x] = HSL(hue.toDouble(), 1, .5)
-                    hue += 2
-                }
-                InputReceiver.Status.Continue
-            }
+    terminal.receiveEventsFlow(MouseTracking.Button)
+        .takeWhile { it !is KeyboardEvent || !it.isCtrlC }
+        .filterIsInstance<MouseEvent>()
+        .filter { it.left }
+        .collect { event ->
+            canvas[event.y][event.x] = HSL(hue.toDouble(), 1, .5)
+            hue += 2
         }
-    }
 
     animation.clear()
 }
