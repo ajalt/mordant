@@ -25,14 +25,14 @@ interface Refreshable {
  *
  * Implementations will need to handle concurrently updating their state.
  */
-interface RefreshableAnimation : Refreshable {
+interface RefreshableAnimation : Refreshable, StoppableAnimation {
 
     /**
      * Stop this animation and remove it from the screen.
      *
      * Future calls to [refresh] will cause the animation to resume.
      */
-    fun clear()
+    override fun clear()
 
     /**
      * Stop this animation without removing it from the screen.
@@ -42,7 +42,7 @@ interface RefreshableAnimation : Refreshable {
      *
      * Future calls to [refresh] will cause the animation to start again.
      */
-    fun stop()
+    override fun stop()
 
     /**
      * The rate, in Hz, that this animation should be refreshed, or 0 if it should not be refreshed

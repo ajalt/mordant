@@ -271,7 +271,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
      * The [result][InputReceiver.Status.Finished.result] will be the selected item title, or `null`
      * if the user canceled the selection.
      */
-    fun createSingleSelectInputAnimation(): InputReceiver<String?> {
+    fun createSingleSelectInputAnimation(): InputReceiverAnimation<String?> {
         require(config.entries.isNotEmpty()) { "Select list must have at least one entry" }
         return SingleSelectInputAnimation(SelectInputAnimation(terminal, config, true))
     }
@@ -282,7 +282,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
      * The [result][InputReceiver.Status.Finished.result] will be the selected item titles, or
      * `null` if the user canceled the selection.
      */
-    fun createMultiSelectInputAnimation(): InputReceiver<List<String>?> {
+    fun createMultiSelectInputAnimation(): InputReceiverAnimation<List<String>?> {
         require(config.entries.isNotEmpty()) { "Select list must have at least one entry" }
         return SelectInputAnimation(terminal, config, false)
     }
@@ -292,7 +292,7 @@ private open class SelectInputAnimation(
     final override val terminal: Terminal,
     private val config: SelectConfig,
     private val singleSelect: Boolean,
-) : InputReceiver<List<String>?> {
+) : InputReceiverAnimation<List<String>?> {
     private data class State(
         val items: List<SelectList.Entry>,
         val cursor: Int,
@@ -345,10 +345,8 @@ private open class SelectInputAnimation(
         }
     }.apply { update(state.value) }
 
-    override fun cancel() {
-        if (config.clearOnExit) animation.clear()
-        else animation.stop()
-    }
+    override fun stop() = animation.stop()
+    override fun clear() = animation.clear()
 
     override fun receiveEvent(event: InputEvent): Status<List<String>?> {
         if (event !is KeyboardEvent) return Status.Continue
@@ -475,9 +473,10 @@ private open class SelectInputAnimation(
 
 private class SingleSelectInputAnimation(
     private val animation: SelectInputAnimation,
-) : InputReceiver<String?> {
+) : InputReceiverAnimation<String?> {
     override val terminal: Terminal get() = animation.terminal
-    override fun cancel() = animation.cancel()
+    override fun stop() = animation.stop()
+    override fun clear() = animation.clear()
     override fun receiveEvent(event: InputEvent): Status<String?> {
         return when (val status = animation.receiveEvent(event)) {
             is Status.Finished -> Status.Finished(status.result?.firstOrNull())
