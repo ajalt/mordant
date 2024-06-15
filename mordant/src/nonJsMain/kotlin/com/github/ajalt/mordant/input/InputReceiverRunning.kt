@@ -10,7 +10,6 @@ import com.github.ajalt.mordant.terminal.Terminal
  * input could not be read.
  */
 fun <T> InputReceiver<T>.receiveEvents(
-    terminal: Terminal,
     mouseTracking: MouseTracking = MouseTracking.Off,
 ): T? {
     terminal.enterRawMode(mouseTracking)?.use { rawMode ->
@@ -79,8 +78,9 @@ inline fun <T> Terminal.receiveEvents(
     crossinline block: (InputEvent) -> InputReceiver.Status<T>,
 ): T? {
     return object : InputReceiver<T> {
+        override val terminal: Terminal get() = this@receiveEvents
         override fun receiveEvent(event: InputEvent): InputReceiver.Status<T> {
             return block(event)
         }
-    }.receiveEvents(this, mouseTracking)
+    }.receiveEvents(mouseTracking)
 }
