@@ -84,7 +84,7 @@ private object PosixLibC {
 //    external fun tcgetattr(fd: Int, termios: termios): Int
 //
 //    @CFunction("tcsetattr")
-//    external fun tcsetattr(fd: Int, cmd: Int, termios: termios)
+//    external fun tcsetattr(fd: Int, cmd: Int, termios: termios): Int
 }
 
 @Platforms(Platform.LINUX::class, Platform.MACOS::class)
@@ -119,29 +119,30 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
         persists.
         */
 //        val termios = StackValue.get(PosixLibC.termios::class.java)
-//        if(PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) return null
+//        if (PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
+//            throw RuntimeException("Error reading terminal attributes")
+//        }
 //        return Termios(
 //            iflag = termios.c_iflag.toUInt(),
 //            oflag = termios.c_oflag.toUInt(),
 //            cflag = termios.c_cflag.toUInt(),
 //            lflag = termios.c_lflag.toUInt(),
-//            cline = termios.c_line,
 //            cc = ByteArray(PosixLibC.NCCS()) { termios.c_cc.read(it) },
-//            ispeed = termios.c_ispeed.toUInt(),
-//            ospeed = termios.c_ospeed.toUInt(),
 //        )
     }
 
     override fun setStdinTermios(termios: Termios) {
 //        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
+//        if (PosixLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
+//            throw RuntimeException("Error reading terminal attributes")
+//        }
 //        nativeTermios.c_iflag = termios.iflag.toInt()
 //        nativeTermios.c_oflag = termios.oflag.toInt()
 //        nativeTermios.c_cflag = termios.cflag.toInt()
 //        nativeTermios.c_lflag = termios.lflag.toInt()
-//        nativeTermios.c_line = termios.cline
 //        termios.cc.forEachIndexed { i, b -> nativeTermios.c_cc.write(i, b) }
-//        nativeTermios.c_ispeed = termios.ispeed.toInt()
-//        nativeTermios.c_ospeed = termios.ospeed.toInt()
-//        PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios)
+//        if (PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios) != 0) {
+//            throw RuntimeException("Error setting terminal attributes")
+//        }
     }
 }

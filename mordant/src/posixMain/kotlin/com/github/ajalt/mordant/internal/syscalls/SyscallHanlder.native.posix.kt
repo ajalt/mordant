@@ -30,24 +30,25 @@ internal object SyscallHandlerNativePosix : SyscallHandlerPosix() {
             oflag = termios.c_oflag.convert(),
             cflag = termios.c_cflag.convert(),
             lflag = termios.c_lflag.convert(),
-            cline = termios.c_line.convert(),
             cc = ByteArray(NCCS) { termios.c_cc[it].convert() },
-            ispeed = termios.c_ispeed.convert(),
-            ospeed = termios.c_ospeed.convert(),
         )
     }
 
     override fun setStdinTermios(termios: Termios): Unit = memScoped {
         val nativeTermios = alloc<termios>()
+        // different platforms have different fields in termios, so we need to read the current
+        // struct before we set the fields we carre about.
+        if (tcgetattr(STDIN_FILENO, nativeTermios.ptr) != 0) {
+            throw RuntimeException("Error reading terminal attributes")
+        }
         nativeTermios.c_iflag = termios.iflag.convert()
         nativeTermios.c_oflag = termios.oflag.convert()
         nativeTermios.c_cflag = termios.cflag.convert()
         nativeTermios.c_lflag = termios.lflag.convert()
-        nativeTermios.c_line = termios.cline.convert()
         repeat(NCCS) { nativeTermios.c_cc[it] = termios.cc[it].convert() }
-        nativeTermios.c_ispeed = termios.ispeed.convert()
-        nativeTermios.c_ospeed = termios.ospeed.convert()
-        tcsetattr(platform.posix.STDIN_FILENO, TCSADRAIN, nativeTermios.ptr)
+        if (tcsetattr(platform.posix.STDIN_FILENO, TCSADRAIN, nativeTermios.ptr) != 0) {
+            throw RuntimeException("Error setting terminal attributes")
+        }
     }
 
     override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char = memScoped {

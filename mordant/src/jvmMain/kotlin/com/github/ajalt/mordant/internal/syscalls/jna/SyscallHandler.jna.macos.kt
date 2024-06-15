@@ -47,9 +47,6 @@ private interface MacosLibC : Library {
         var c_lflag: NativeLong = NativeLong()
 
         @JvmField
-        var c_line: Byte = 0
-
-        @JvmField
         var c_cc: ByteArray = ByteArray(20)
 
         @JvmField
@@ -100,23 +97,18 @@ internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
             oflag = termios.c_oflag.toInt().toUInt(),
             cflag = termios.c_cflag.toInt().toUInt(),
             lflag = termios.c_lflag.toInt().toUInt(),
-            cline = termios.c_line,
             cc = termios.c_cc.copyOf(),
-            ispeed = termios.c_ispeed.toInt().toUInt(),
-            ospeed = termios.c_ospeed.toInt().toUInt(),
         )
     }
 
     override fun setStdinTermios(termios: Termios) {
         val nativeTermios = MacosLibC.termios()
+        libC.tcgetattr(STDIN_FILENO, nativeTermios)
         nativeTermios.c_iflag = NativeLong(termios.iflag.toLong())
         nativeTermios.c_oflag = NativeLong(termios.oflag.toLong())
         nativeTermios.c_cflag = NativeLong(termios.cflag.toLong())
         nativeTermios.c_lflag = NativeLong(termios.lflag.toLong())
-        nativeTermios.c_line = termios.cline
         termios.cc.copyInto(nativeTermios.c_cc)
-        nativeTermios.c_ispeed = NativeLong(termios.ispeed.toLong())
-        nativeTermios.c_ospeed = NativeLong(termios.ospeed.toLong())
         libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
     }
 }

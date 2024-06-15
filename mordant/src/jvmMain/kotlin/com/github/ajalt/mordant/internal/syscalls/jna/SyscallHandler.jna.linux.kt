@@ -89,23 +89,18 @@ internal object SyscallHandlerJnaLinux : SyscallHandlerJvmPosix() {
             oflag = termios.c_oflag.toUInt(),
             cflag = termios.c_cflag.toUInt(),
             lflag = termios.c_lflag.toUInt(),
-            cline = termios.c_line,
             cc = termios.c_cc.copyOf(),
-            ispeed = termios.c_ispeed.toUInt(),
-            ospeed = termios.c_ospeed.toUInt(),
         )
     }
 
     override fun setStdinTermios(termios: Termios) {
         val nativeTermios = PosixLibC.termios()
+        libC.tcgetattr(STDIN_FILENO, nativeTermios)
         nativeTermios.c_iflag = termios.iflag.toInt()
         nativeTermios.c_oflag = termios.oflag.toInt()
         nativeTermios.c_cflag = termios.cflag.toInt()
         nativeTermios.c_lflag = termios.lflag.toInt()
-        nativeTermios.c_line = termios.cline
         termios.cc.copyInto(nativeTermios.c_cc)
-        nativeTermios.c_ispeed = termios.ispeed.toInt()
-        nativeTermios.c_ospeed = termios.ospeed.toInt()
         libC.tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios)
     }
 }
