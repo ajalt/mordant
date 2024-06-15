@@ -289,7 +289,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
 }
 
 private open class SelectInputAnimation(
-    private val terminal: Terminal,
+    final override val terminal: Terminal,
     private val config: SelectConfig,
     private val singleSelect: Boolean,
 ) : InputReceiver<List<String>?> {
@@ -476,6 +476,7 @@ private open class SelectInputAnimation(
 private class SingleSelectInputAnimation(
     private val animation: SelectInputAnimation,
 ) : InputReceiver<String?> {
+    override val terminal: Terminal get() = animation.terminal
     override fun cancel() = animation.cancel()
     override fun receiveEvent(event: InputEvent): Status<String?> {
         return when (val status = animation.receiveEvent(event)) {

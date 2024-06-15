@@ -15,7 +15,7 @@ inline fun Terminal.interactiveSelectList(
     return InteractiveSelectListBuilder(this)
         .apply(block)
         .createSingleSelectInputAnimation()
-        .receiveEvents(this)
+        .receiveEvents()
 }
 
 /**
@@ -65,7 +65,7 @@ inline fun Terminal.interactiveMultiSelectList(
     return InteractiveSelectListBuilder(this)
         .apply(block)
         .createMultiSelectInputAnimation()
-        .receiveEvents(this)
+        .receiveEvents()
 }
 
 /**
