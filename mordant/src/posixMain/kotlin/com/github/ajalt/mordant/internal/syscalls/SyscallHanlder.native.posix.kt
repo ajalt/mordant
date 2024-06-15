@@ -26,27 +26,27 @@ internal object SyscallHandlerNativePosix : SyscallHandlerPosix() {
             throw RuntimeException("Error reading terminal attributes")
         }
         return Termios(
-            iflag = termios.c_iflag,
-            oflag = termios.c_oflag,
-            cflag = termios.c_cflag,
-            lflag = termios.c_lflag,
-            cline = termios.c_line.toByte(),
-            cc = ByteArray(NCCS) { termios.c_cc[it].toByte() },
-            ispeed = termios.c_ispeed,
-            ospeed = termios.c_ospeed,
+            iflag = termios.c_iflag.convert(),
+            oflag = termios.c_oflag.convert(),
+            cflag = termios.c_cflag.convert(),
+            lflag = termios.c_lflag.convert(),
+            cline = termios.c_line.convert(),
+            cc = ByteArray(NCCS) { termios.c_cc[it].convert() },
+            ispeed = termios.c_ispeed.convert(),
+            ospeed = termios.c_ospeed.convert(),
         )
     }
 
     override fun setStdinTermios(termios: Termios): Unit = memScoped {
         val nativeTermios = alloc<termios>()
-        nativeTermios.c_iflag = termios.iflag
-        nativeTermios.c_oflag = termios.oflag
-        nativeTermios.c_cflag = termios.cflag
-        nativeTermios.c_lflag = termios.lflag
-        nativeTermios.c_line = termios.cline.toUByte()
-        repeat(NCCS) { nativeTermios.c_cc[it] = termios.cc[it].toUByte() }
-        nativeTermios.c_ispeed = termios.ispeed
-        nativeTermios.c_ospeed = termios.ospeed
+        nativeTermios.c_iflag = termios.iflag.convert()
+        nativeTermios.c_oflag = termios.oflag.convert()
+        nativeTermios.c_cflag = termios.cflag.convert()
+        nativeTermios.c_lflag = termios.lflag.convert()
+        nativeTermios.c_line = termios.cline.convert()
+        repeat(NCCS) { nativeTermios.c_cc[it] = termios.cc[it].convert() }
+        nativeTermios.c_ispeed = termios.ispeed.convert()
+        nativeTermios.c_ospeed = termios.ospeed.convert()
         tcsetattr(platform.posix.STDIN_FILENO, TCSADRAIN, nativeTermios.ptr)
     }
 
