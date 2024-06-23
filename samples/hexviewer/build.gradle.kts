@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("com.squareup.okio:okio:3.7.0")
+            implementation("com.squareup.okio:okio:3.9.0")
         }
     }
 }
