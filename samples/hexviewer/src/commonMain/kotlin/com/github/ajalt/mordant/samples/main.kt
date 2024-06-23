@@ -2,12 +2,12 @@ package com.github.ajalt.mordant.samples
 
 import com.github.ajalt.mordant.rendering.BorderType
 import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import okio.SYSTEM
 
 
 fun main(args: Array<String>) {
@@ -17,11 +17,11 @@ fun main(args: Array<String>) {
         return
     }
     val path = args[0].toPath()
-    if (!fileSystem().exists(path)) {
+    if (!FileSystem.SYSTEM.exists(path)) {
         terminal.danger("File not found: $path")
         return
     }
-    
+
     // The characters to show for each byte value
     val display = "·␁␂␃␄␅␆␇␈␉␊␋␌␍␎␏␐␑␒␓␔␕␖␗␘␙␚␛␜␝␞␟" +
             " !\"#$%&'()*+,-./0123456789:;<=>?@" +
@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
     // round down to nearest multiple of 8
     val octetsPerRow = (w - w % 8).coerceAtLeast(1)
 
-    val bytes = fileSystem().read(path) { readByteArray() }
+    val bytes = FileSystem.SYSTEM.read(path) { readByteArray() }
 
     val table = table {
         cellBorders = Borders.LEFT_RIGHT
@@ -74,8 +74,4 @@ fun main(args: Array<String>) {
 
     }
     terminal.println(table)
-}
-
-private fun fileSystem(): FileSystem {
-    return FileSystem.SYSTEM // Intellij doesn't recognize this, but the compiler does
 }
