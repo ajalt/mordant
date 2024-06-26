@@ -16,6 +16,8 @@ combine a foreground and background.
     ```kotlin
     import com.github.ajalt.mordant.rendering.TextColors.*
     import com.github.ajalt.mordant.rendering.TextStyles.*
+    import com.github.ajalt.mordant.terminal.Terminal
+    import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
     
     val t = Terminal()
     t.println(brightRed("You can use any of the standard ANSI colors"))
