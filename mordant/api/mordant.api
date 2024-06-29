@@ -259,8 +259,8 @@ public final class com/github/ajalt/mordant/input/InteractiveSelectListBuilder {
 	public final fun descToggle (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun entries ([Lcom/github/ajalt/mordant/widgets/SelectList$Entry;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun entries ([Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
-	public final fun entriesEntry (Ljava/util/List;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
-	public final fun entriesString (Ljava/util/List;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entriesEntry (Ljava/lang/Iterable;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun entriesString (Ljava/lang/Iterable;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun filterable (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun keyExitFilter (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun keyFilter (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
@@ -283,15 +283,15 @@ public final class com/github/ajalt/mordant/input/InteractiveSelectListBuilder {
 
 public final class com/github/ajalt/mordant/input/InteractiveSelectListKt {
 	public static final fun interactiveMultiSelectList (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Ljava/util/List;
-	public static final fun interactiveMultiSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
-	public static synthetic fun interactiveMultiSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
-	public static final fun interactiveMultiSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/util/List;
-	public static synthetic fun interactiveMultiSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun interactiveMultiSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun interactiveMultiSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun interactiveMultiSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;)Ljava/util/List;
+	public static synthetic fun interactiveMultiSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;ILjava/lang/Object;)Ljava/util/List;
 	public static final fun interactiveSelectList (Lcom/github/ajalt/mordant/terminal/Terminal;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
-	public static final fun interactiveSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
-	public static synthetic fun interactiveSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun interactiveSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
-	public static synthetic fun interactiveSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun interactiveSelectListEntry (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun interactiveSelectListEntry$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun interactiveSelectListString (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun interactiveSelectListString$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Iterable;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
 public final class com/github/ajalt/mordant/input/KeyboardEvent : com/github/ajalt/mordant/input/InputEvent {
