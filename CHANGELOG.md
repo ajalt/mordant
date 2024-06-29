@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 2.7.0
 ### Added
 - Added raw mode support for reading keyboard and mouse events. See the docs at [https://ajalt.github.io/mordant/](https://ajalt.github.io/mordant/input/) for details. This feature is currently supported on all targets except JS, wasmJS, and Graal Native Image.
 - Added `Termianl.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder` that let you pick one or more items from a list using the arrow keys.
