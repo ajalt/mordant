@@ -27,7 +27,7 @@ inline fun Terminal.interactiveSelectList(
  */
 @JvmName("interactiveSelectListString")
 fun Terminal.interactiveSelectList(
-    entries: List<String>,
+    entries: Iterable<String>,
     title: String = "",
 ): String? {
     return interactiveSelectList {
@@ -45,7 +45,7 @@ fun Terminal.interactiveSelectList(
  */
 @JvmName("interactiveSelectListEntry")
 fun Terminal.interactiveSelectList(
-    entries: List<SelectList.Entry>,
+    entries: Iterable<SelectList.Entry>,
     title: String = "",
 ): String? {
     return interactiveSelectList {
@@ -77,7 +77,7 @@ inline fun Terminal.interactiveMultiSelectList(
  */
 @JvmName("interactiveMultiSelectListEntry")
 fun Terminal.interactiveMultiSelectList(
-    entries: List<SelectList.Entry>,
+    entries: Iterable<SelectList.Entry>,
     title: String = "",
 ): List<String>? {
     return interactiveMultiSelectList {
@@ -95,7 +95,7 @@ fun Terminal.interactiveMultiSelectList(
  */
 @JvmName("interactiveMultiSelectListString")
 fun Terminal.interactiveMultiSelectList(
-    entries: List<String>,
+    entries: Iterable<String>,
     title: String = "",
 ): List<String>? {
     return interactiveMultiSelectList {
