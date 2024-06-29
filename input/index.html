@@ -369,7 +369,7 @@
           <li class="md-nav__item">
   <a href="#reading-events-with-a-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Reading Events with a class
+      Reading Events With a Class
     </span>
   </a>
   
@@ -536,7 +536,7 @@
           <li class="md-nav__item">
   <a href="#reading-events-with-a-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Reading Events with a class
+      Reading Events With a Class
     </span>
   </a>
   
@@ -721,7 +721,7 @@ events.</p>
 <p>For mouse events, only button presses are reported. If you want mouse movement or drag events, 
 you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-mouse-tracking/">MouseTracking</a> values to <a href="../api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a> and <a href="../api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>.</p>
 </div>
-<h3 id="reading-events-with-a-class">Reading Events with a class<a class="headerlink" href="#reading-events-with-a-class" title="Permanent link">&para;</a></h3>
+<h3 id="reading-events-with-a-class">Reading Events With a Class<a class="headerlink" href="#reading-events-with-a-class" title="Permanent link">&para;</a></h3>
 <p>If you have a class that you want to use to handle input events, you can use implement
 <a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/">InputReceiver</a> and call <a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/receive-event.html">InputReceiver.receiveEvent</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyReceiver</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">InputReceiver</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -742,7 +742,7 @@ you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-
 <p>If you need maximum control, you can enter raw mode manually with <a href="../api/mordant/com.github.ajalt.mordant.input/enter-raw-mode.html">enterRawMode</a> and read events one
 at a time with <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-key.html">readKey</a>, <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html">readMouse</a>, or <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-event.html">readEvent</a>. The object returned by <code>enterRawMode</code> will
 restore the terminal to its original state when closed.</p>
-<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">enterRawMode</span><span class="p">()</span><span class="o">?.</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rawMode</span><span class="w"> </span><span class="o">-&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">enterRawMode</span><span class="p">().</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rawMode</span><span class="w"> </span><span class="o">-&gt;</span>
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawMode</span><span class="p">.</span><span class="na">readKey</span><span class="p">()</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="p">)</span><span class="w"> </span><span class="k">break</span>
