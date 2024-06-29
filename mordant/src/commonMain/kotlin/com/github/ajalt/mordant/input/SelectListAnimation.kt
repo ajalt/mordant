@@ -61,7 +61,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
 
     /** Set the list of items to select from */
     @JvmName("entriesEntry")
-    fun entries(entries: List<SelectList.Entry>): InteractiveSelectListBuilder = apply {
+    fun entries(entries: Iterable<SelectList.Entry>): InteractiveSelectListBuilder = apply {
         config.entries = entries.toMutableList()
     }
 
@@ -72,7 +72,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
 
     /** Set the list of items to select from */
     @JvmName("entriesString")
-    fun entries(entries: List<String>): InteractiveSelectListBuilder = apply {
+    fun entries(entries: Iterable<String>): InteractiveSelectListBuilder = apply {
         config.entries = entries.mapTo(mutableListOf()) { SelectList.Entry(it) }
     }
 
@@ -288,8 +288,8 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     }
 }
 
-private open class SelectInputAnimation(
-    final override val terminal: Terminal,
+private class SelectInputAnimation(
+    override val terminal: Terminal,
     private val config: SelectConfig,
     private val singleSelect: Boolean,
 ) : InputReceiverAnimation<List<String>?> {
