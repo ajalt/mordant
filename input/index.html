@@ -1,0 +1,926 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mordant: Multiplatform text styling for Kotlin command-line applications">
+      
+      
+        <meta name="author" content="AJ Alt">
+      
+      
+      
+        <link rel="prev" href="../progress/">
+      
+      
+        <link rel="next" href="../api/">
+      
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
+    
+    
+      
+        <title>Keyboard and Mouse Input - Mordant</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#reading-keyboard-and-mouse-input-with-raw-mode" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Mordant" class="md-header__button md-logo" aria-label="Mordant" data-md-component="logo">
+      
+  <img src="../img/gradient_white_24dp.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Mordant
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Keyboard and Mouse Input
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ajalt/mordant" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mordant
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Mordant" class="md-nav__button md-logo" aria-label="Mordant" data-md-component="logo">
+      
+  <img src="../img/gradient_white_24dp.svg" alt="logo">
+
+    </a>
+    Mordant
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ajalt/mordant" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Mordant
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progress/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Progress Bars
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Keyboard and Mouse Input
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard and Mouse Input
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reading-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-coroutine-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with Coroutine Flows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with Callbacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events Manually
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raw-mode-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raw Mode Details
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-list-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive List Selection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive List Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selecting-a-single-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selecting a single item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-multiple-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selecting multiple items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Releases
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reading-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-coroutine-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with Coroutine Flows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with Callbacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-with-a-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events with a class
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reading-events-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading Events Manually
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#raw-mode-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raw Mode Details
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-list-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive List Selection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive List Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selecting-a-single-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selecting a single item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-multiple-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selecting multiple items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="reading-keyboard-and-mouse-input-with-raw-mode">Reading Keyboard and Mouse Input With Raw Mode<a class="headerlink" href="#reading-keyboard-and-mouse-input-with-raw-mode" title="Permanent link">&para;</a></h1>
+<p>Normally when reading input from the user with functions like <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html">readLineOrNull</a>, the terminal
+will wait for the user to press enter before sending the input. But if you want to read keys as
+soon as they are pressed, you can use &ldquo;raw mode&rdquo;, which disables line buffering and echo. Once raw
+mode is active, you can read key and mouse events.</p>
+<h2 id="reading-events">Reading Events<a class="headerlink" href="#reading-events" title="Permanent link">&para;</a></h2>
+<p>Mordant provides a few ways to read input events, depending on how much control you need.</p>
+<div class="admonition warning inline end">
+<p class="admonition-title">Warning</p>
+<p>Enabling raw mode disables control character processing, which means that you will need to handle
+events like <code>ctrl-c</code> manually if you want your users to be able to exit your program.</p>
+</div>
+<h3 id="reading-events-with-coroutine-flows">Reading Events with Coroutine Flows<a class="headerlink" href="#reading-events-with-coroutine-flows" title="Permanent link">&para;</a></h3>
+<p>[//]: # (TODO: refs) The simplest way to read events is to include the <code>mordant-coroutines</code> module,
+and can use [receiveEventsFlow], [receiveKeyEventsFlow], and [receiveMouseEventsFlow] to receive
+events as a [Flow]. These functions will handle setting up raw mode and restoring the terminal to
+its original state when they are done.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example of receiveEventsFlow</label><label for="__tabbed_1_2">Example of receiveMouseEventsFlow</label><label for="__tabbed_1_3">Example of receiveEventsFlow</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveKeyEventsFlow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">takeWhile</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">!</span><span class="nb">it</span><span class="p">.</span><span class="na">isCtrlC</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">key</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveMouseEventsFlow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">takeWhile</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">!</span><span class="nb">it</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="na">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">left</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You clicked at </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">x</span><span class="si">}</span><span class="s">, </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">y</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveEventsFlow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">takeWhile</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="w"> </span><span class="k">!is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">isCtrlC</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">        </span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">key</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="k">is</span><span class="w"> </span><span class="n">MouseEvent</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You clicked at </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">x</span><span class="si">}</span><span class="s">, </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">y</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="reading-events-with-callbacks">Reading Events with Callbacks<a class="headerlink" href="#reading-events-with-callbacks" title="Permanent link">&para;</a></h3>
+<p>If you don&rsquo;t want to use coroutines, you can use a callback lambda with one of <a href="../api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>,
+<a href="../api/mordant/com.github.ajalt.mordant.input/receive-key-events.html">receiveKeyEvents</a>, or <a href="../api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a>, depending on which type of events you want to read.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Example of receiveKeyEvents</label><label for="__tabbed_2_2">Example of receiveMouseEvents</label><label for="__tabbed_2_3">Example of receiveEvents</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveKeyEvents</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Finished</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">key</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Continue</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveMouseEvents</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">event</span><span class="p">.</span><span class="na">right</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Finished</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You clicked at </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">x</span><span class="si">}</span><span class="s">, </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">y</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Continue</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">receiveEvents</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">when</span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Finished</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">key</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Continue</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">is</span><span class="w"> </span><span class="n">MouseEvent</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">left</span><span class="p">)</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You clicked at </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">x</span><span class="si">}</span><span class="s">, </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">y</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Continue</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>See the API docs on <a href="../api/mordant/com.github.ajalt.mordant.input/-keyboard-event/">KeyboardEvent</a> and <a href="../api/mordant/com.github.ajalt.mordant.input/-mouse-event/">MouseEvent</a> for more details on the properties of these
+events.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For mouse events, only button presses are reported. If you want mouse movement or drag events, 
+you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-mouse-tracking/">MouseTracking</a> values to <a href="../api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a> and <a href="../api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>.</p>
+</div>
+<h3 id="reading-events-with-a-class">Reading Events with a class<a class="headerlink" href="#reading-events-with-a-class" title="Permanent link">&para;</a></h3>
+<p>If you have a class that you want to use to handle input events, you can use implement
+<a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/">InputReceiver</a> and call <a href="api/mordant/com.github.ajalt.mordant.input">InputReceiver.receiveEvents</a>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyReceiver</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">InputReceiver</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">receiveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="n">InputEvent</span><span class="p">):</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Finished</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">key</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="p">.</span><span class="na">Continue</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">MyReceiver</span><span class="p">().</span><span class="na">receiveEvents</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="reading-events-manually">Reading Events Manually<a class="headerlink" href="#reading-events-manually" title="Permanent link">&para;</a></h3>
+<p>If you need maximum control, you can enter raw mode manually with <a href="../api/mordant/com.github.ajalt.mordant.input/enter-raw-mode.html">enterRawMode</a> and read events one
+at a time with <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-key.html">readKey</a>, <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html">readMouse</a>, or <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-event.html">readEvent</a>. The object returned by <code>enterRawMode</code> will
+restore the terminal to its original state when closed.</p>
+<div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">enterRawMode</span><span class="p">()</span><span class="o">?.</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rawMode</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawMode</span><span class="p">.</span><span class="na">readKey</span><span class="p">()</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="p">)</span><span class="w"> </span><span class="k">break</span>
+<span class="w">        </span><span class="n">terminal</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&quot;You pressed: </span><span class="si">${</span><span class="n">event</span><span class="p">.</span><span class="na">isCtrlC</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="raw-mode-details">Raw Mode Details<a class="headerlink" href="#raw-mode-details" title="Permanent link">&para;</a></h2>
+<p>The exact behavior of which keys and mouse events are reported is highly dependent on the terminal
+app and operating system. Some things to keep in mind:</p>
+<ul>
+<li>Many special keys and modifier key combinations are not reported, especially on operating systems
+  other than Windows.</li>
+<li>Some key combinations aren&rsquo;t reported because they&rsquo;re intercepted by the terminal app to perform
+  actions like switching tabs or closing the window.</li>
+<li>On Linux and macOS, the Escape key isn&rsquo;t reported as a key press; instead, it begins a &ldquo;VTI escape
+  sequence&rdquo; that the terminal uses to report key presses. For example if you press <code>Escape</code>, then <code>[</code>,
+  then <code>d</code>, the terminal will report that as the left arrow key being pressed. It&rsquo;s up to you whether
+  you consider this a feature or a limitation.</li>
+<li>Raw mode isn&rsquo;t supported on JS or wasmJS targets. You can use Node.js&rsquo;s <code>readline</code> module to read
+  input in a similar way, or in the browser you can use the <code>keydown</code> and <code>mousedown</code> events.</li>
+</ul>
+<h2 id="interactive-list-selection">Interactive List Selection<a class="headerlink" href="#interactive-list-selection" title="Permanent link">&para;</a></h2>
+<p>Mordant includes a SelectList widget that you can use to create a list of items that the user can
+select from with the arrow keys and enter.</p>
+<p><img alt="" src="../img/select_list.gif" /></p>
+<h3 id="selecting-a-single-item">Selecting a single item<a class="headerlink" href="#selecting-a-single-item" title="Permanent link">&para;</a></h3>
+<p>If you want to select one item from a list, you can use the <a href="../api/mordant/com.github.ajalt.mordant.input/interactive-select-list.html">interactiveSelectList</a> function or 
+the <a href="../api/mordant/com.github.ajalt.mordant.input/-interactive-select-list-builder/">InteractiveSelectListBuilder</a> class.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Example with interactiveSelectList</label><label for="__tabbed_3_2">Example with interactiveSelectList DSL</label><label for="__tabbed_3_3">Example with InteractiveSelectListBuilder</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">interactiveSelectList</span><span class="p">(</span>
+<span class="w">    </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Small&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Medium&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Large&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;X-Large&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Select a Pizza Size&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a </span><span class="si">$</span><span class="n">selection</span><span class="s"> pizza&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">interactiveSelectList</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Small&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Medium&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Large&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Select Pizza Size&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a </span><span class="si">$</span><span class="n">selection</span><span class="s"> pizza&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InteractiveSelectListBuilder</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">entries</span><span class="p">(</span><span class="s">&quot;Small&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Medium&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Large&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">&quot;Select Pizza Size&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">createSingleSelectInputAnimation</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">receiveEvents</span><span class="p">()</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a </span><span class="si">$</span><span class="n">selection</span><span class="s"> pizza&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<h3 id="selecting-multiple-items">Selecting multiple items<a class="headerlink" href="#selecting-multiple-items" title="Permanent link">&para;</a></h3>
+<p>If you want to select multiple items from a list, you can use the <a href="../api/mordant/com.github.ajalt.mordant.input/interactive-multi-select-list.html">interactiveMultiSelectList</a>
+function.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Example with interactiveMultiSelectList</label><label for="__tabbed_4_2">Example with interactiveMultiSelectList DSL</label><label for="__tabbed_4_3">Example with InteractiveSelectListBuilder</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">interactiveMultiSelectList</span><span class="p">(</span>
+<span class="w">    </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Pepperoni&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sausage&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Mushrooms&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Olives&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Select Toppings&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a pizza with </span><span class="si">${</span><span class="n">selection</span><span class="p">.</span><span class="na">joinToString</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">terminal</span><span class="p">.</span><span class="na">interactiveMultiSelectList</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Pepperoni&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Sausage&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Mushrooms&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">addEntry</span><span class="p">(</span><span class="s">&quot;Olives&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Select Toppings&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">limit</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+<span class="w">    </span><span class="n">filterable</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a pizza with </span><span class="si">${</span><span class="n">selection</span><span class="p">.</span><span class="na">joinToString</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">selection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InteractiveSelectListBuilder</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">entries</span><span class="p">(</span><span class="s">&quot;Pepperoni&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sausage&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Mushrooms&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Olives&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">title</span><span class="p">(</span><span class="s">&quot;Select Toppings&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">limit</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">filterable</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="na">createMultiSelectInputAnimation</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">receiveEvents</span><span class="p">()</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">selection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">danger</span><span class="p">(</span><span class="s">&quot;Aborted pizza order&quot;</span><span class="p">)</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">terminal</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="s">&quot;You ordered a pizza with </span><span class="si">${</span><span class="n">selection</span><span class="p">.</span><span class="na">joinToString</span><span class="p">()</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2018 AJ Alt
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      
+    
+  </body>
+</html>

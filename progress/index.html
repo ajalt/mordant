@@ -16,7 +16,7 @@
         <link rel="prev" href="../guide/">
       
       
-        <link rel="next" href="../api/">
+        <link rel="next" href="../input/">
       
       
       <link rel="icon" href="../img/favicon.ico">
@@ -303,6 +303,26 @@
   
   
     <li class="md-nav__item">
+      <a href="../input/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Keyboard and Mouse Input
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api/" class="md-nav__link">
         
   
@@ -377,7 +397,7 @@
 <h1 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h1>
 <p>You can use the <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-layout.html">progressBarLayout</a> DSL to define the layout of your progress bar. Then you
 can start the animation either on a thread with <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a>, or
-using coroutines with [animateOnCoroutine].<code>animateOnThread</code> is JVM-only, but <code>animateOnCoroutine</code>
+using coroutines with <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html">animateOnCoroutine</a>.<code>animateOnThread</code> is JVM-only, but <code>animateOnCoroutine</code>
 is available on all platforms using the <code>mordant-coroutines</code> module.</p>
 <p>Once the animation is started, you can update the progress bar by calling <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/update.html">update</a> and <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/advance.html">advance</a>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example with Coroutines</label><label for="__tabbed_1_2">Example with Threads</label><label for="__tabbed_1_3">Output</label></div>
