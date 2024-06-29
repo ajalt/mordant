@@ -1,15 +1,14 @@
-# Reading Keyboard and Mouse Input With Raw Mode
+# Keyboard and Mouse Input With Raw Mode
 
 Normally when reading input from the user with functions like [readLineOrNull], the terminal
 will wait for the user to press enter before sending the input. But if you want to read keys as
-soon as they are pressed, you can use "raw mode", which disables line buffering and echo. Once raw
-mode is active, you can read key and mouse events.
+soon as they are pressed, you can use "raw mode", which disables line buffering and echo.
 
 ## Reading Events
 
 Mordant provides a few ways to read input events, depending on how much control you need.
 
-!!! warning inline end
+!!! warning
 
     Enabling raw mode disables control character processing, which means that you will need to handle
     events like `ctrl-c` manually if you want your users to be able to exit your program.
@@ -17,8 +16,8 @@ Mordant provides a few ways to read input events, depending on how much control 
 
 ### Reading Events with Coroutine Flows
 
-[//]: # (TODO: refs) The simplest way to read events is to include the `mordant-coroutines` module,
-and can use [receiveEventsFlow], [receiveKeyEventsFlow], and [receiveMouseEventsFlow] to receive
+The simplest way to read events is to include the `mordant-coroutines` module,
+and use [receiveEventsFlow], [receiveKeyEventsFlow], or [receiveMouseEventsFlow] to receive
 events as a [Flow]. These functions will handle setting up raw mode and restoring the terminal to
 its original state when they are done.
 
@@ -114,10 +113,10 @@ events.
     For mouse events, only button presses are reported. If you want mouse movement or drag events, 
     you can pass one of the [MouseTracking] values to [receiveMouseEvents] and [receiveEvents].
 
-### Reading Events with a class
+### Reading Events With a Class
 
 If you have a class that you want to use to handle input events, you can use implement
-[InputReceiver] and call [InputReceiver.receiveEvents].
+[InputReceiver] and call [InputReceiver.receiveEvent].
 
 ```kotlin
 class MyReceiver : InputReceiver<Unit> {
@@ -142,7 +141,7 @@ at a time with [readKey], [readMouse], or [readEvent]. The object returned by `e
 restore the terminal to its original state when closed.
 
 ```kotlin
-terminal.enterRawMode()?.use { rawMode ->
+terminal.enterRawMode().use { rawMode ->
     while (true) {
         val event = rawMode.readKey()
         if (event == null || event.isCtrlC) break
@@ -273,20 +272,24 @@ function.
     }
     ```
 
+[Flow]:                         https://kotlinlang.org/docs/reference/coroutines/flow.html
 [InputEvent]:                   api/mordant/com.github.ajalt.mordant.input/-input-event/index.html
-[InputReceiver.receiveEvents]:  api/mordant/com.github.ajalt.mordant.input
+[InputReceiver.receiveEvent]:   api/mordant/com.github.ajalt.mordant.input/-input-receiver/receive-event.html
 [InputReceiver]:                api/mordant/com.github.ajalt.mordant.input/-input-receiver/index.html
+[InteractiveSelectListBuilder]: api/mordant/com.github.ajalt.mordant.input/-interactive-select-list-builder/index.html
 [KeyboardEvent]:                api/mordant/com.github.ajalt.mordant.input/-keyboard-event/index.html
 [MouseEvent]:                   api/mordant/com.github.ajalt.mordant.input/-mouse-event/index.html
 [MouseTracking]:                api/mordant/com.github.ajalt.mordant.input/-mouse-tracking/index.html
 [enterRawMode]:                 api/mordant/com.github.ajalt.mordant.input/enter-raw-mode.html
+[interactiveMultiSelectList]:   api/mordant/com.github.ajalt.mordant.input/interactive-multi-select-list.html
+[interactiveSelectList]:        api/mordant/com.github.ajalt.mordant.input/interactive-select-list.html
 [readEvent]:                    api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-event.html
 [readKey]:                      api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-key.html
 [readLineOrNull]:               api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html
 [readMouse]:                    api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html
 [receiveEvents]:                api/mordant/com.github.ajalt.mordant.input/receive-events.html
+[receiveEventsFlow]:            api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html
+[receiveKeyEventsFlow]:         api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html
 [receiveKeyEvents]:             api/mordant/com.github.ajalt.mordant.input/receive-key-events.html
+[receiveMouseEventsFlow]:       api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html
 [receiveMouseEvents]:           api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html
-[InteractiveSelectListBuilder]: api/mordant/com.github.ajalt.mordant.input/-interactive-select-list-builder/index.html
-[interactiveSelectList]:        api/mordant/com.github.ajalt.mordant.input/interactive-select-list.html
-[interactiveMultiSelectList]:   api/mordant/com.github.ajalt.mordant.input/interactive-multi-select-list.html
