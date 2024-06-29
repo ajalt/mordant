@@ -629,9 +629,9 @@ mode is active, you can read key and mouse events.</p>
 events like <code>ctrl-c</code> manually if you want your users to be able to exit your program.</p>
 </div>
 <h3 id="reading-events-with-coroutine-flows">Reading Events with Coroutine Flows<a class="headerlink" href="#reading-events-with-coroutine-flows" title="Permanent link">&para;</a></h3>
-<p>[//]: # (TODO: refs) The simplest way to read events is to include the <code>mordant-coroutines</code> module,
-and can use [receiveEventsFlow], [receiveKeyEventsFlow], and [receiveMouseEventsFlow] to receive
-events as a [Flow]. These functions will handle setting up raw mode and restoring the terminal to
+<p>The simplest way to read events is to include the <code>mordant-coroutines</code> module,
+and can use [receiveEventsFlow], <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, and <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
+events as a <a href="https://kotlinlang.org/docs/reference/coroutines/flow.html">Flow</a>. These functions will handle setting up raw mode and restoring the terminal to
 its original state when they are done.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example of receiveEventsFlow</label><label for="__tabbed_1_2">Example of receiveMouseEventsFlow</label><label for="__tabbed_1_3">Example of receiveEventsFlow</label></div>
 <div class="tabbed-content">
@@ -723,7 +723,7 @@ you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-
 </div>
 <h3 id="reading-events-with-a-class">Reading Events with a class<a class="headerlink" href="#reading-events-with-a-class" title="Permanent link">&para;</a></h3>
 <p>If you have a class that you want to use to handle input events, you can use implement
-<a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/">InputReceiver</a> and call <a href="api/mordant/com.github.ajalt.mordant.input">InputReceiver.receiveEvents</a>.</p>
+<a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/">InputReceiver</a> and call <a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/receive-event.html">InputReceiver.receiveEvent</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyReceiver</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">InputReceiver</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">receiveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="n">InputEvent</span><span class="p">):</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
