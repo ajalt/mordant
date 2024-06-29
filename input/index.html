@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#reading-keyboard-and-mouse-input-with-raw-mode" class="md-skip">
+        <a href="#keyboard-and-mouse-input-with-raw-mode" class="md-skip">
           Skip to content
         </a>
       
@@ -616,21 +616,20 @@
   
 
 
-<h1 id="reading-keyboard-and-mouse-input-with-raw-mode">Reading Keyboard and Mouse Input With Raw Mode<a class="headerlink" href="#reading-keyboard-and-mouse-input-with-raw-mode" title="Permanent link">&para;</a></h1>
+<h1 id="keyboard-and-mouse-input-with-raw-mode">Keyboard and Mouse Input With Raw Mode<a class="headerlink" href="#keyboard-and-mouse-input-with-raw-mode" title="Permanent link">&para;</a></h1>
 <p>Normally when reading input from the user with functions like <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html">readLineOrNull</a>, the terminal
 will wait for the user to press enter before sending the input. But if you want to read keys as
-soon as they are pressed, you can use &ldquo;raw mode&rdquo;, which disables line buffering and echo. Once raw
-mode is active, you can read key and mouse events.</p>
+soon as they are pressed, you can use &ldquo;raw mode&rdquo;, which disables line buffering and echo.</p>
 <h2 id="reading-events">Reading Events<a class="headerlink" href="#reading-events" title="Permanent link">&para;</a></h2>
 <p>Mordant provides a few ways to read input events, depending on how much control you need.</p>
-<div class="admonition warning inline end">
+<div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Enabling raw mode disables control character processing, which means that you will need to handle
 events like <code>ctrl-c</code> manually if you want your users to be able to exit your program.</p>
 </div>
 <h3 id="reading-events-with-coroutine-flows">Reading Events with Coroutine Flows<a class="headerlink" href="#reading-events-with-coroutine-flows" title="Permanent link">&para;</a></h3>
 <p>The simplest way to read events is to include the <code>mordant-coroutines</code> module,
-and can use <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, and <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
+and use <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, or <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
 events as a <a href="https://kotlinlang.org/docs/reference/coroutines/flow.html">Flow</a>. These functions will handle setting up raw mode and restoring the terminal to
 its original state when they are done.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example of receiveEventsFlow</label><label for="__tabbed_1_2">Example of receiveMouseEventsFlow</label><label for="__tabbed_1_3">Example of receiveEventsFlow</label></div>
