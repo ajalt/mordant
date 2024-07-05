@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.internal.syscalls.DumbSyscallHandler
 import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
+import com.github.ajalt.mordant.internal.syscalls.ffm.SyscallHandlerFfmWindows
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaLinux
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaMacos
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaWindows
@@ -136,7 +137,7 @@ internal actual fun getSyscallHandler(): SyscallHandler {
             isNativeImage && os.startsWith("Windows") -> SyscallHandlerNativeImageWindows()
             isNativeImage && (os == "Linux") -> SyscallHandlerNativeImageLinux()
             isNativeImage && (os == "Mac OS X") -> SyscallHandlerNativeImageMacos()
-            os.startsWith("Windows") -> SyscallHandlerJnaWindows
+            os.startsWith("Windows") -> SyscallHandlerFfmWindows()
             os == "Linux" -> SyscallHandlerJnaLinux
             os == "Mac OS X" -> SyscallHandlerJnaMacos
             else -> DumbSyscallHandler
