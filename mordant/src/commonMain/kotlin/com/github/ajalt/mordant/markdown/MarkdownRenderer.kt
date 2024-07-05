@@ -59,7 +59,10 @@ internal class MarkdownRenderer(
                 // skip the extra EOL after top level block, since the layout adds it for us
                 if (node.type == MarkdownTokenTypes.EOL
                     && i in 1..<nodes.lastIndex
-                    && nodes[i - 1].type !in listOf(MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE)
+                    && nodes[i - 1].type !in listOf(
+                        MarkdownTokenTypes.EOL,
+                        MarkdownTokenTypes.WHITE_SPACE
+                    )
                 ) {
                     continue
                 }
@@ -91,8 +94,10 @@ internal class MarkdownRenderer(
             }
 
             MarkdownElementTypes.CODE_FENCE -> {
-                val start = node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
-                val end = node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
+                val start =
+                    node.children.indexOfFirst { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
+                val end =
+                    node.children.indexOfLast { it.type == MarkdownTokenTypes.CODE_FENCE_CONTENT }
                 val dropLast = if (end < 0) 0 else node.children.lastIndex - end
                 val inner = innerInlines(node, drop = start, dropLast = dropLast)
                 val content = Text(
@@ -102,7 +107,7 @@ internal class MarkdownRenderer(
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
 
-            MarkdownElementTypes.CODE_BLOCK -> {
+            MarkdownElementTypes.CODE_BLOCK-> {
                 val content = Text(
                     theme.style("markdown.code.block")(innerInlines(node)),
                     whitespace = Whitespace.PRE_WRAP
@@ -127,14 +132,53 @@ internal class MarkdownRenderer(
                 )
             }
 
-            MarkdownElementTypes.SETEXT_1 -> setext(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
-            MarkdownElementTypes.SETEXT_2 -> setext(theme.string("markdown.h2.rule"), theme.style("markdown.h2"), node)
-            MarkdownElementTypes.ATX_1 -> atxHr(theme.string("markdown.h1.rule"), theme.style("markdown.h1"), node)
-            MarkdownElementTypes.ATX_2 -> atxHr(theme.string("markdown.h2.rule"), theme.style("markdown.h2"), node)
-            MarkdownElementTypes.ATX_3 -> atxHr(theme.string("markdown.h3.rule"), theme.style("markdown.h3"), node)
-            MarkdownElementTypes.ATX_4 -> atxHr(theme.string("markdown.h4.rule"), theme.style("markdown.h4"), node)
-            MarkdownElementTypes.ATX_5 -> atxHr(theme.string("markdown.h5.rule"), theme.style("markdown.h5"), node)
-            MarkdownElementTypes.ATX_6 -> atxHr(theme.string("markdown.h6.rule"), theme.style("markdown.h6"), node)
+            MarkdownElementTypes.SETEXT_1 -> setext(
+                theme.string("markdown.h1.rule"),
+                theme.style("markdown.h1"),
+                node
+            )
+
+            MarkdownElementTypes.SETEXT_2 -> setext(
+                theme.string("markdown.h2.rule"),
+                theme.style("markdown.h2"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_1 -> atxHr(
+                theme.string("markdown.h1.rule"),
+                theme.style("markdown.h1"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_2 -> atxHr(
+                theme.string("markdown.h2.rule"),
+                theme.style("markdown.h2"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_3 -> atxHr(
+                theme.string("markdown.h3.rule"),
+                theme.style("markdown.h3"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_4 -> atxHr(
+                theme.string("markdown.h4.rule"),
+                theme.style("markdown.h4"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_5 -> atxHr(
+                theme.string("markdown.h5.rule"),
+                theme.style("markdown.h5"),
+                node
+            )
+
+            MarkdownElementTypes.ATX_6 -> atxHr(
+                theme.string("markdown.h6.rule"),
+                theme.style("markdown.h6"),
+                node
+            )
 
             GFMElementTypes.TABLE -> table {
                 borderType = when {
@@ -166,10 +210,20 @@ internal class MarkdownRenderer(
     private fun parseInlines(node: ASTNode): String {
         return when (node.type) {
             // ElementTypes
-            MarkdownElementTypes.CODE_SPAN -> {
+            MarkdownElementTypes.CODE_SPAN, GFMElementTypes.INLINE_MATH -> {
                 // Trim the code as a kludge to prevent the background style from extending if the
                 // code ends with whitespace. It would be better to fix this in the text wrapping code.
                 theme.style("markdown.code.span")(
+                    input.substring(
+                        node.children[1].startOffset,
+                        node.children.last().startOffset
+                    ).trim()
+                )
+            }
+
+            // For some reason, math blocks are in a paragraph, unlike code blocks
+            GFMElementTypes.BLOCK_MATH -> {
+                theme.style("markdown.code.block")(
                     input.substring(
                         node.children[1].startOffset,
                         node.children.last().startOffset
@@ -251,6 +305,7 @@ internal class MarkdownRenderer(
             MarkdownTokenTypes.URL,
             MarkdownTokenTypes.WHITE_SPACE,
             GFMTokenTypes.TILDE,
+            GFMTokenTypes.DOLLAR,
             -> node.nodeText()
 
             MarkdownTokenTypes.EOL -> {
@@ -323,7 +378,7 @@ internal class MarkdownRenderer(
         return HorizontalRule(
             content,
             ruleCharacter = bar,
-            ruleStyle =  TextStyle(style.color, style.bgColor)
+            ruleStyle = TextStyle(style.color, style.bgColor)
         ).withPadding { vertical = theme.dimension("markdown.header.padding") }
     }
 
@@ -407,7 +462,8 @@ internal class MarkdownRenderer(
     }
 
     private fun findLinkText(node: ASTNode): String? {
-        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)?.let { innerInlines(it, drop = 1) }
+        return node.findChildOfType(MarkdownElementTypes.LINK_TEXT)
+            ?.let { innerInlines(it, drop = 1) }
     }
 }
 
