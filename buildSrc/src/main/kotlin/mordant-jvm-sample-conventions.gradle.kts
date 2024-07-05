@@ -18,3 +18,9 @@ application {
     mainClass.set("com.github.ajalt.mordant.samples.MainKt")
     applicationDefaultJvmArgs = listOf("-Dfile.encoding=utf-8")
 }
+
+tasks.jar {
+    manifest {
+        attributes["Enable-Native-Access"] = "ALL-UNNAMED"
+    }
+}

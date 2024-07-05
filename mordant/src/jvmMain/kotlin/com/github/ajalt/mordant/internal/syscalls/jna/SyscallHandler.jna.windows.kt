@@ -204,7 +204,7 @@ private interface WinKernel32Lib : Library {
                 MOUSE_EVENT -> Event!!.setType(MOUSE_EVENT_RECORD::class.java)
                 WINDOW_BUFFER_SIZE_EVENT -> Event!!.setType(WINDOW_BUFFER_SIZE_RECORD::class.java)
                 MENU_EVENT -> Event!!.setType(MENU_EVENT_RECORD::class.java)
-                FOCUS_EVENT -> Event!!.setType(MENU_EVENT_RECORD::class.java)
+                FOCUS_EVENT -> Event!!.setType(FOCUS_EVENT_RECORD::class.java)
             }
             super.read()
         }
