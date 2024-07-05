@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Fixed
+- Fix markdown rendering not supporting math blocks [(#182)](https://github.com/ajalt/mordant/issues/182)
 
 ## 2.7.0
 ### Added
