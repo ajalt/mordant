@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - Fix markdown rendering not supporting math blocks [(#182)](https://github.com/ajalt/mordant/issues/182)
+- Fix exception thrown when using `readEvent` in raw mode when some windows terminals lose focus 
 
 ## 2.7.0
 ### Added

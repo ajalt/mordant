@@ -210,7 +210,7 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
 //        }
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
         throw NotImplementedError(
             "Raw mode is not currently supported for native-image. If you are familiar with " +
                     "GraalVM native-image and would like to contribute, see the commented out " +
@@ -249,9 +249,7 @@ internal class SyscallHandlerNativeImageWindows : SyscallHandlerWindows() {
 //                )
 //            }
 //
-//            else -> throw RuntimeException(
-//                "Error reading from console input: unexpected event type ${inputEvents.EventType}"
-//            )
+//            else -> null // Ignore other event types like FOCUS_EVENT that we can't opt out of
 //        }
     }
 }

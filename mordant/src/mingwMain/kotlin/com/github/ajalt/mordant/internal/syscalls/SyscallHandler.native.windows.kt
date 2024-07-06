@@ -32,7 +32,7 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
         csbi.srWindow.run { Size(width = Right - Left + 1, height = Bottom - Top + 1) }
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord = memScoped {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val waitResult = WaitForSingleObject(stdinHandle, dwMilliseconds.toUInt())
         if (waitResult != 0u) {
@@ -67,9 +67,7 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
                 )
             }
 
-            else -> throw RuntimeException(
-                "Error reading from console input: unexpected event type ${inputEvent.EventType}"
-            )
+            else -> null // Ignore other event types like FOCUS_EVENT that we can't opt out of
         }
     }
 
@@ -80,7 +78,7 @@ internal object SyscallHandlerNativeWindows : SyscallHandlerWindows() {
 
     override fun setStdinConsoleMode(dwMode: UInt) {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        if(SetConsoleMode(stdinHandle, 0u) == 0) {
+        if (SetConsoleMode(stdinHandle, 0u) == 0) {
             throw RuntimeException("Error setting console mode")
         }
     }
