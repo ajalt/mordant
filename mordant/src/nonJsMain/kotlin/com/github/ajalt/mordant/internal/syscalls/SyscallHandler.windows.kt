@@ -54,7 +54,7 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         ) : EventRecord()
     }
 
-    protected abstract fun readRawEvent(dwMilliseconds: Int): EventRecord
+    protected abstract fun readRawEvent(dwMilliseconds: Int): EventRecord?
     protected abstract fun getStdinConsoleMode(): UInt
     protected abstract fun setStdinConsoleMode(dwMode: UInt)
 
@@ -75,6 +75,7 @@ internal abstract class SyscallHandlerWindows : SyscallHandler {
         val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds
             .coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
         return when (val event = readRawEvent(dwMilliseconds)) {
+            null -> SysInputEvent.Retry
             is EventRecord.Key -> processKeyEvent(event)
             is EventRecord.Mouse -> processMouseEvent(event, mouseTracking)
         }

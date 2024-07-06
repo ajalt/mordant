@@ -277,7 +277,7 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
         kernel.SetConsoleMode(stdinHandle, dwMode.toInt())
     }
 
-    override fun readRawEvent(dwMilliseconds: Int): EventRecord {
+    override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
         val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
         if (waitResult != 0) {
             throw RuntimeException("Timeout reading from console input")
@@ -309,9 +309,7 @@ internal object SyscallHandlerJnaWindows : SyscallHandlerWindows() {
                 )
             }
 
-            else -> throw RuntimeException(
-                "Error reading from console input: unexpected event type ${inputEvent.EventType}"
-            )
+            else -> null // Ignore other event types like FOCUS_EVENT that we can't opt out of
         }
     }
 }
