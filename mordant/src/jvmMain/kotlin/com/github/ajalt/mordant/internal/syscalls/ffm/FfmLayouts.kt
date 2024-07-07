@@ -91,7 +91,7 @@ private inline fun <T> fieldDelegate(
 internal fun StructLayout.byteField() = scalarField<Byte>(Layouts.BYTE)
 internal fun StructLayout.shortField() = scalarField<Short>(Layouts.SHORT)
 internal fun StructLayout.intField() = scalarField<Int>(Layouts.INT)
-//internal fun StructLayout.longField() = scalarField<Int>(Layouts.LONG)
+internal fun StructLayout.longField() = scalarField<Long>(Layouts.LONG)
 //internal fun StructLayout.floatField() = scalarField<Float>(Layouts.FLOAT)
 //internal fun StructLayout.doubleField() = scalarField<Double>(Layouts.DOUBLE)
 //internal fun StructLayout.boolField() = scalarField<Boolean>(Layouts.BOOL)
