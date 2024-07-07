@@ -7,7 +7,7 @@ import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection")
-private class PosixLibC : Library {
+private class MacosLibC : Library {
     class winsize(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
             val ws_row by shortField()
@@ -26,15 +26,13 @@ private class PosixLibC : Library {
 
     class termios(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
-            val c_iflag by intField()
-            val c_oflag by intField()
-            val c_cflag by intField()
-            val c_lflag by intField()
-            val c_line by byteField()
+            val c_iflag by longField()
+            val c_oflag by longField()
+            val c_cflag by longField()
+            val c_lflag by longField()
             val c_cc by arrayField(32)
-            val padding by paddingField(3)
-            val c_ispeed by intField()
-            val c_ospeed by intField()
+            val c_ispeed by longField()
+            val c_ospeed by longField()
         }
 
         constructor(arena: Arena) : this(arena.allocate(Layout.layout))
@@ -43,7 +41,6 @@ private class PosixLibC : Library {
         var c_oflag by Layout.c_oflag
         var c_cflag by Layout.c_cflag
         var c_lflag by Layout.c_lflag
-        var c_line by Layout.c_line
         val c_cc by Layout.c_cc
         var c_ispeed by Layout.c_ispeed
         var c_ospeed by Layout.c_ospeed
@@ -73,17 +70,17 @@ private class PosixLibC : Library {
     }
 }
 
-internal class SyscallHandlerFfmLinux : SyscallHandlerJvmPosix() {
+internal class SyscallHandlerFfmMacos : SyscallHandlerJvmPosix() {
     private companion object {
         const val TIOCGWINSZ = 0x00005413
         const val TCSADRAIN: Int = 0x1
     }
 
-    private val libC = PosixLibC()
+    private val libC = MacosLibC()
     override fun isatty(fd: Int): Boolean = libC.isatty(fd)
 
     override fun getTerminalSize(): Size? = Arena.ofConfined().use { arena ->
-        val size = PosixLibC.winsize(arena)
+        val size = MacosLibC.winsize(arena)
         if (!libC.ioctl(STDIN_FILENO, TIOCGWINSZ, size.segment)) {
             null
         } else {
@@ -92,7 +89,7 @@ internal class SyscallHandlerFfmLinux : SyscallHandlerJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios = Arena.ofConfined().use { arena ->
-        val termios = PosixLibC.termios(arena)
+        val termios = MacosLibC.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, termios)) {
             throw RuntimeException("failed to read terminal settings")
         }
@@ -106,14 +103,14 @@ internal class SyscallHandlerFfmLinux : SyscallHandlerJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios): Unit = Arena.ofConfined().use { arena ->
-        val nativeTermios = PosixLibC.termios(arena)
+        val nativeTermios = MacosLibC.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, nativeTermios)) {
             throw RuntimeException("failed to update terminal settings")
         }
-        nativeTermios.c_iflag = termios.iflag.toInt()
-        nativeTermios.c_oflag = termios.oflag.toInt()
-        nativeTermios.c_cflag = termios.cflag.toInt()
-        nativeTermios.c_lflag = termios.lflag.toInt()
+        nativeTermios.c_iflag = termios.iflag.toLong()
+        nativeTermios.c_oflag = termios.oflag.toLong()
+        nativeTermios.c_cflag = termios.cflag.toLong()
+        nativeTermios.c_lflag = termios.lflag.toLong()
         nativeTermios.c_cc.copyFrom(MemorySegment.ofArray(termios.cc))
         libC.tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios)
     }
