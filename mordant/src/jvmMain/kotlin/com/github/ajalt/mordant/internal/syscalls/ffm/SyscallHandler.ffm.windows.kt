@@ -4,13 +4,14 @@ import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerWindows
 import com.sun.jna.Library
 import java.lang.foreign.*
-import java.lang.invoke.MethodHandle
 
 internal object WinLayouts {
     val HANDLE: AddressLayout = Layouts.POINTER
     val WORD: ValueLayout.OfShort = ValueLayout.JAVA_SHORT
     val DWORD: ValueLayout.OfInt = Layouts.INT
     val LPDWORD: AddressLayout = Layouts.POINTER
+    val CHAR: ValueLayout.OfByte = ValueLayout.JAVA_BYTE
+    val WCHAR: ValueLayout.OfChar = ValueLayout.JAVA_CHAR
 }
 
 
@@ -87,8 +88,8 @@ private class WinKernel32Lib : Library {
             val wVirtualScanCode by wordField()
             val uChar by customField<Char>(
                 MemoryLayout.unionLayout(
-                    Layouts.WCHAR.withName("UnicodeChar"),
-                    Layouts.CHAR.withName("AsciiChar")
+                    WinLayouts.WCHAR.withName("UnicodeChar"),
+                    WinLayouts.CHAR.withName("AsciiChar")
                 ).withName("uChar")
             ) { segment, parent ->
                 parent.layout.varHandle("uChar", "UnicodeChar").get(segment) as Char
@@ -181,48 +182,20 @@ private class WinKernel32Lib : Library {
             )
     }
 
-    object MethodHandles {
+    object MethodHandles : MethodHandlesHolder() {
         init {
             System.loadLibrary("kernel32")
             System.loadLibrary("msvcrt")
         }
 
-        private val lookup = SymbolLookup.loaderLookup()
-        private val linker = Linker.nativeLinker()
-
-        private fun handle(name: String, descriptor: FunctionDescriptor): MethodHandle {
-            return lookup.find(name)
-                .map { linker.downcallHandle(it, descriptor) }
-                .orElseThrow()
-        }
-
-        private fun handle(
-            name: String,
-            resLayout: MemoryLayout,
-            vararg argLayouts: MemoryLayout,
-        ): MethodHandle {
-            return handle(name, FunctionDescriptor.of(resLayout, *argLayouts))
-        }
-
-        val WaitForSingleObject: MethodHandle =
-            handle("WaitForSingleObject", WinLayouts.DWORD, WinLayouts.HANDLE, WinLayouts.DWORD)
-        val GetStdHandle: MethodHandle =
-            handle("GetStdHandle", WinLayouts.HANDLE, WinLayouts.DWORD)
-        val GetConsoleMode: MethodHandle =
-            handle("GetConsoleMode", Layouts.INT, WinLayouts.HANDLE, WinLayouts.LPDWORD)
-        val GetConsoleScreenBufferInfo: MethodHandle =
-            handle("GetConsoleScreenBufferInfo", Layouts.INT, WinLayouts.HANDLE, Layouts.POINTER)
-        val SetConsoleMode: MethodHandle =
-            handle("SetConsoleMode", Layouts.INT, WinLayouts.HANDLE, WinLayouts.DWORD)
-        val ReadConsoleInputW: MethodHandle =
-            handle(
-                "ReadConsoleInputW",
-                Layouts.INT,
-                WinLayouts.HANDLE,
-                Layouts.POINTER,
-                WinLayouts.DWORD,
-                WinLayouts.LPDWORD
-            )
+        val WaitForSingleObject by handle(WinLayouts.DWORD, WinLayouts.HANDLE, WinLayouts.DWORD)
+        val GetStdHandle by handle(WinLayouts.HANDLE, WinLayouts.DWORD)
+        val GetConsoleMode by handle(Layouts.INT, WinLayouts.HANDLE, WinLayouts.LPDWORD)
+        val GetConsoleScreenBufferInfo by handle(Layouts.INT, WinLayouts.HANDLE, Layouts.POINTER)
+        val SetConsoleMode by handle(Layouts.INT, WinLayouts.HANDLE, WinLayouts.DWORD)
+        val ReadConsoleInputW by handle(
+            Layouts.INT, WinLayouts.HANDLE, Layouts.POINTER, WinLayouts.DWORD, WinLayouts.LPDWORD
+        )
     }
 
     fun WaitForSingleObject(hHandle: MemorySegment, dwMilliseconds: Int): Int {
