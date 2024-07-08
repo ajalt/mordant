@@ -9,7 +9,9 @@ import org.graalvm.nativeimage.c.CContext
 import org.graalvm.nativeimage.c.constant.CConstant
 import org.graalvm.nativeimage.c.function.CFunction
 import org.graalvm.nativeimage.c.struct.CField
+import org.graalvm.nativeimage.c.struct.CFieldAddress
 import org.graalvm.nativeimage.c.struct.CStruct
+import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.word.PointerBase
 
 @CContext(PosixLibC.Directives::class)
@@ -24,11 +26,11 @@ private object PosixLibC {
     @CConstant("TIOCGWINSZ")
     external fun TIOCGWINSZ(): Int
 
-//    @CConstant("TCSADRAIN")
-//    external fun TCSADRAIN(): Int
-//
-//    @CConstant("NCCS")
-//    external fun NCCS(): Int
+    @CConstant("TCSADRAIN")
+    external fun TCSADRAIN(): Int
+
+    @CConstant("NCCS")
+    external fun NCCS(): Int
 
     @CStruct("winsize", addStructKeyword = true)
     interface winsize : PointerBase {
@@ -40,39 +42,39 @@ private object PosixLibC {
         val ws_col: Short
     }
 
-//    @CStruct("termios", addStructKeyword = true)
-//    interface termios : PointerBase {
-//        @get:CField("c_iflag")
-//        @set:CField("c_iflag")
-//        var c_iflag: Int
-//
-//        @get:CField("c_oflag")
-//        @set:CField("c_oflag")
-//        var c_oflag: Int
-//
-//        @get:CField("c_cflag")
-//        @set:CField("c_cflag")
-//        var c_cflag: Int
-//
-//        @get:CField("c_lflag")
-//        @set:CField("c_lflag")
-//        var c_lflag: Int
-//
-//        @get:CField("c_line")
-//        @set:CField("c_line")
-//        var c_line: Byte
-//
-//        @get:CFieldAddress("c_cc")
-//        val c_cc: CCharPointer
-//
-//        @get:CField("c_ispeed")
-//        @set:CField("c_ispeed")
-//        var c_ispeed: Int
-//
-//        @get:CField("c_ospeed")
-//        @set:CField("c_ospeed")
-//        var c_ospeed: Int
-//    }
+    @CStruct("termios", addStructKeyword = true)
+    interface termios : PointerBase {
+        @get:CField("c_iflag")
+        @set:CField("c_iflag")
+        var c_iflag: Int
+
+        @get:CField("c_oflag")
+        @set:CField("c_oflag")
+        var c_oflag: Int
+
+        @get:CField("c_cflag")
+        @set:CField("c_cflag")
+        var c_cflag: Int
+
+        @get:CField("c_lflag")
+        @set:CField("c_lflag")
+        var c_lflag: Int
+
+        @get:CField("c_line")
+        @set:CField("c_line")
+        var c_line: Byte
+
+        @get:CFieldAddress("c_cc")
+        val c_cc: CCharPointer
+
+        @get:CField("c_ispeed")
+        @set:CField("c_ispeed")
+        var c_ispeed: Int
+
+        @get:CField("c_ospeed")
+        @set:CField("c_ospeed")
+        var c_ospeed: Int
+    }
 
     @CFunction("isatty")
     external fun isatty(fd: Int): Boolean
@@ -80,11 +82,11 @@ private object PosixLibC {
     @CFunction("ioctl")
     external fun ioctl(fd: Int, cmd: Int, winSize: winsize?): Int
 
-//    @CFunction("tcgetattr")
-//    external fun tcgetattr(fd: Int, termios: termios): Int
-//
-//    @CFunction("tcsetattr")
-//    external fun tcsetattr(fd: Int, cmd: Int, termios: termios): Int
+    @CFunction("tcgetattr")
+    external fun tcgetattr(fd: Int, termios: termios?): Int
+
+    @CFunction("tcsetattr")
+    external fun tcsetattr(fd: Int, cmd: Int, termios: termios?): Int
 }
 
 @Platforms(Platform.LINUX::class, Platform.MACOS::class)
@@ -101,48 +103,31 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios {
-        throw NotImplementedError(
-            "Raw mode is not currently supported for native-image. If you are familiar with " +
-                    "GraalVM native-image and would like to contribute, see the commented out " +
-                    "code in the file SyscallHandler.nativeimage.posix"
+        val termios = StackValue.get(PosixLibC.termios::class.java)
+        if (PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
+            throw RuntimeException("Error reading terminal attributes")
+        }
+        return Termios(
+            iflag = termios.c_iflag.toUInt(),
+            oflag = termios.c_oflag.toUInt(),
+            cflag = termios.c_cflag.toUInt(),
+            lflag = termios.c_lflag.toUInt(),
+            cc = ByteArray(PosixLibC.NCCS()) { termios.c_cc.read(it) },
         )
-        /*
-        This fails with the following error:
-
-        Error: Expected Object but got Word for call argument in
-        com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImagePosix.getStdinTermios(SyscallHandler.nativeimage.posix.kt:117).
-        One possible cause for this error is when word values are passed into lambdas as parameters
-        or from variables in an enclosing scope, which is not supported, but can be solved by
-        instead using explicit classes (including anonymous classes).
-
-        I've tried all the ways I can think of to declare tcgetattr and tcsetattr, but the error
-        persists.
-        */
-//        val termios = StackValue.get(PosixLibC.termios::class.java)
-//        if (PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
-//            throw RuntimeException("Error reading terminal attributes")
-//        }
-//        return Termios(
-//            iflag = termios.c_iflag.toUInt(),
-//            oflag = termios.c_oflag.toUInt(),
-//            cflag = termios.c_cflag.toUInt(),
-//            lflag = termios.c_lflag.toUInt(),
-//            cc = ByteArray(PosixLibC.NCCS()) { termios.c_cc.read(it) },
-//        )
     }
 
     override fun setStdinTermios(termios: Termios) {
-//        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
-//        if (PosixLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
-//            throw RuntimeException("Error reading terminal attributes")
-//        }
-//        nativeTermios.c_iflag = termios.iflag.toInt()
-//        nativeTermios.c_oflag = termios.oflag.toInt()
-//        nativeTermios.c_cflag = termios.cflag.toInt()
-//        nativeTermios.c_lflag = termios.lflag.toInt()
-//        termios.cc.forEachIndexed { i, b -> nativeTermios.c_cc.write(i, b) }
-//        if (PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios) != 0) {
-//            throw RuntimeException("Error setting terminal attributes")
-//        }
+        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
+        if (PosixLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
+            throw RuntimeException("Error reading terminal attributes")
+        }
+        nativeTermios.c_iflag = termios.iflag.toInt()
+        nativeTermios.c_oflag = termios.oflag.toInt()
+        nativeTermios.c_cflag = termios.cflag.toInt()
+        nativeTermios.c_lflag = termios.lflag.toInt()
+        termios.cc.forEachIndexed { i, b -> nativeTermios.c_cc.write(i, b) }
+        if (PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios) != 0) {
+            throw RuntimeException("Error setting terminal attributes")
+        }
     }
 }
