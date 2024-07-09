@@ -10,9 +10,12 @@ import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNati
 import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageWindows
 import com.github.ajalt.mordant.terminal.*
 import java.io.File
+import java.io.IOException
 import java.lang.management.ManagementFactory
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.readText
 import kotlin.system.exitProcess
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
@@ -151,7 +154,9 @@ internal actual fun exitProcessMpp(status: Int) {
 }
 
 internal actual fun readFileIfExists(filename: String): String? {
-    val file = File(filename)
-    if (!file.isFile) return null
-    return file.bufferedReader().use { it.readText() }
+    return try {
+        Path.of(filename).readText()
+    } catch (e: IOException) {
+        null
+    }
 }
