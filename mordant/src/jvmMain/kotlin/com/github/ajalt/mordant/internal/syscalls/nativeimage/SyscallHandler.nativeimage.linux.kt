@@ -14,10 +14,10 @@ import org.graalvm.nativeimage.c.struct.CStruct
 import org.graalvm.nativeimage.c.type.CCharPointer
 import org.graalvm.word.PointerBase
 
-@CContext(PosixLibC.Directives::class)
-@Platforms(Platform.LINUX::class, Platform.MACOS::class)
+@CContext(LinuxLibC.Directives::class)
+@Platforms(Platform.LINUX::class)
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection", "FunctionName")
-private object PosixLibC {
+private object LinuxLibC {
 
     class Directives : CContext.Directives {
         override fun getHeaderFiles() = listOf("<unistd.h>", "<sys/ioctl.h>", "<termios.h>")
@@ -89,13 +89,13 @@ private object PosixLibC {
     external fun tcsetattr(fd: Int, cmd: Int, termios: termios?): Int
 }
 
-@Platforms(Platform.LINUX::class, Platform.MACOS::class)
-internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
-    override fun isatty(fd: Int): Boolean = PosixLibC.isatty(fd)
+@Platforms(Platform.LINUX::class)
+internal class SyscallHandlerNativeImageLinux : SyscallHandlerJvmPosix() {
+    override fun isatty(fd: Int): Boolean = LinuxLibC.isatty(fd)
 
     override fun getTerminalSize(): Size? {
-        val size = StackValue.get(PosixLibC.winsize::class.java)
-        return if (PosixLibC.ioctl(0, PosixLibC.TIOCGWINSZ(), size) < 0) {
+        val size = StackValue.get(LinuxLibC.winsize::class.java)
+        return if (LinuxLibC.ioctl(0, LinuxLibC.TIOCGWINSZ(), size) < 0) {
             null
         } else {
             Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
@@ -103,8 +103,8 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios {
-        val termios = StackValue.get(PosixLibC.termios::class.java)
-        if (PosixLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
+        val termios = StackValue.get(LinuxLibC.termios::class.java)
+        if (LinuxLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
         return Termios(
@@ -112,13 +112,13 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
             oflag = termios.c_oflag.toUInt(),
             cflag = termios.c_cflag.toUInt(),
             lflag = termios.c_lflag.toUInt(),
-            cc = ByteArray(PosixLibC.NCCS()) { termios.c_cc.read(it) },
+            cc = ByteArray(LinuxLibC.NCCS()) { termios.c_cc.read(it) },
         )
     }
 
     override fun setStdinTermios(termios: Termios) {
-        val nativeTermios = StackValue.get(PosixLibC.termios::class.java)
-        if (PosixLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
+        val nativeTermios = StackValue.get(LinuxLibC.termios::class.java)
+        if (LinuxLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
         nativeTermios.c_iflag = termios.iflag.toInt()
@@ -126,7 +126,7 @@ internal class SyscallHandlerNativeImagePosix : SyscallHandlerJvmPosix() {
         nativeTermios.c_cflag = termios.cflag.toInt()
         nativeTermios.c_lflag = termios.lflag.toInt()
         termios.cc.forEachIndexed { i, b -> nativeTermios.c_cc.write(i, b) }
-        if (PosixLibC.tcsetattr(STDIN_FILENO, PosixLibC.TCSADRAIN(), nativeTermios) != 0) {
+        if (LinuxLibC.tcsetattr(STDIN_FILENO, LinuxLibC.TCSADRAIN(), nativeTermios) != 0) {
             throw RuntimeException("Error setting terminal attributes")
         }
     }

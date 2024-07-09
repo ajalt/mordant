@@ -5,7 +5,8 @@ import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaLinux
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaMacos
 import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaWindows
-import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImagePosix
+import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageLinux
+import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageMacos
 import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageWindows
 import com.github.ajalt.mordant.terminal.*
 import java.io.File
@@ -130,7 +131,8 @@ internal actual fun getSyscallHandler(): SyscallHandler {
         val os = System.getProperty("os.name")
         when {
             isNativeImage && os.startsWith("Windows") -> SyscallHandlerNativeImageWindows()
-            isNativeImage && (os == "Linux" || os == "Mac OS X") -> SyscallHandlerNativeImagePosix()
+            isNativeImage && (os == "Linux") -> SyscallHandlerNativeImageLinux()
+            isNativeImage && (os == "Mac OS X") -> SyscallHandlerNativeImageMacos()
             os.startsWith("Windows") -> SyscallHandlerJnaWindows
             os == "Linux" -> SyscallHandlerJnaLinux
             os == "Mac OS X" -> SyscallHandlerJnaMacos
