@@ -39,15 +39,6 @@ class GraalSmokeTest {
         future.get(1000, TimeUnit.MILLISECONDS)
     }
 
-    @Ignore("Raw mode is currently unsupported on native-image")
-    @Test
-    fun `raw mode test`() {
-        val t = Terminal(interactive = true)
-        assertThrows<RuntimeException> {
-            t.enterRawMode().use {}
-        }
-    }
-
     @Test
     fun `markdown test`() {
         val vt = TerminalRecorder()
