@@ -22,10 +22,10 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-    implementation("com.github.ajalt.mordant:mordant:2.7.0")
+    implementation("com.github.ajalt.mordant:mordant:2.7.1")
 
     // optional extensions for running animations with coroutines
-    implementation("com.github.ajalt.mordant:mordant-coroutines:2.7.0")
+    implementation("com.github.ajalt.mordant:mordant-coroutines:2.7.1")
 }
 ```
 

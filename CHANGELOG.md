@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 2.7.1
 ## Added
 - Added support for raw mode on GraalVM native Image. Contributed by @hubvd [(#186)](https://github.com/ajalt/mordant/issues/186)
 
