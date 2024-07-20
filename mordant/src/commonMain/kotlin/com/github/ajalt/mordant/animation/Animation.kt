@@ -1,6 +1,8 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.internal.*
+import com.github.ajalt.mordant.internal.CR_IMPLIES_LF
+import com.github.ajalt.mordant.internal.MppAtomicRef
+import com.github.ajalt.mordant.internal.update
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.terminal.PrintRequest
 import com.github.ajalt.mordant.terminal.Terminal
@@ -46,7 +48,7 @@ abstract class Animation<T>(
     private val state = MppAtomicRef(State())
 
     private val interceptor: TerminalInterceptor = TerminalInterceptor { req ->
-        val terminalSize = Size(terminal.info.width, terminal.info.height)
+        val terminalSize = Size(terminal.size.width, terminal.size.height)
         val (st, _) = state.update {
             copy(
                 firstDraw = false,
@@ -95,7 +97,7 @@ abstract class Animation<T>(
             clearScreen = true,
             lastSize = old.size,
             size = null,
-            terminalSize = Size(terminal.info.width, terminal.info.height),
+            terminalSize = Size(terminal.size.width, terminal.size.height),
             lastTerminalSize = old.lastTerminalSize,
             // if we previously stopped, we need to move up past the final newline we added
             extraUp = if (old.firstDraw && old.size != null) 1 else 0,
@@ -137,7 +139,7 @@ abstract class Animation<T>(
      * place.
      */
     fun update(data: T) {
-        if (SYSCALL_HANDLER.fastIsTty()) terminal.info.updateTerminalSize()
+        if (terminal.terminalInterface.shouldAutoUpdateSize()) terminal.updateSize()
 
         val rendered = renderData(data).render(terminal)
         val (old, _) = state.update {

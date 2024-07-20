@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
 import com.github.ajalt.mordant.terminal.*
 
 internal interface MppAtomicInt {
@@ -56,6 +55,6 @@ internal expect fun readFileIfExists(filename: String): String?
 
 internal expect fun hasFileSystem(): Boolean
 
-internal expect fun getSyscallHandler() : SyscallHandler
+internal expect fun getStandardTerminalInterface() : TerminalInterface
 
-internal val SYSCALL_HANDLER: SyscallHandler = getSyscallHandler()
+internal val STANDARD_TERM_INTERFACE: TerminalInterface = getStandardTerminalInterface()

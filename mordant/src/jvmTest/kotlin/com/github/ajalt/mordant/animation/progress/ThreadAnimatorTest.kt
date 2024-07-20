@@ -8,8 +8,6 @@ import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 private const val HIDE_CURSOR = "$CSI?25l"

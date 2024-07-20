@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.widgets
 
-import com.github.ajalt.mordant.internal.MppAtomicInt
 import com.github.ajalt.mordant.internal.DEFAULT_STYLE
+import com.github.ajalt.mordant.internal.MppAtomicInt
 import com.github.ajalt.mordant.rendering.Lines
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.Widget

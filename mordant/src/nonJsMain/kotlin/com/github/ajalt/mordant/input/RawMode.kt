@@ -1,7 +1,5 @@
 package com.github.ajalt.mordant.input
 
-import com.github.ajalt.mordant.internal.SYSCALL_HANDLER
-import com.github.ajalt.mordant.internal.syscalls.SysInputEvent
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -18,7 +16,7 @@ fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): Raw
     if (!info.inputInteractive) {
         throw IllegalStateException("Cannot enter raw mode on a non-interactive terminal")
     }
-    return RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+    return RawModeScope(this, terminalInterface.enterRawMode(mouseTracking), mouseTracking)
 }
 
 /**
@@ -31,11 +29,12 @@ fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): Raw
  */
 fun Terminal.enterRawModeOrNull(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope? {
     return runCatching {
-        RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+        RawModeScope(this, terminalInterface.enterRawMode(mouseTracking), mouseTracking)
     }.getOrNull()
 }
 
 class RawModeScope internal constructor(
+    private val terminal: Terminal,
     closeable: AutoCloseable,
     private val mouseTracking: MouseTracking,
 ) : AutoCloseable by closeable {
@@ -94,10 +93,10 @@ class RawModeScope internal constructor(
     fun readEvent(timeout: Duration = Duration.INFINITE): InputEvent {
         val t0 = TimeSource.Monotonic.markNow()
         do {
-            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
-            if (event !is SysInputEvent.Success) continue
-            if (event.event is MouseEvent && mouseTracking == MouseTracking.Off) continue
-            return event.event
+            val event = terminal.terminalInterface
+                .readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
+            if (event == null || event is MouseEvent && mouseTracking == MouseTracking.Off) continue
+            return event
         } while (t0.elapsedNow() < timeout)
         throw RuntimeException("Timeout while waiting for input")
     }

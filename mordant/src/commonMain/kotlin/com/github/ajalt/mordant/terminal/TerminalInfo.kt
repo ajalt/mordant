@@ -5,15 +5,8 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 
 /**
  * Information about the current terminal
- *
- * [width] and [height] don't automatically change if the terminal is resized. Call
- * [updateTerminalSize] to get the latest values.
  */
 data class TerminalInfo(
-    /** The terminal width, in cells */
-    var width: Int,
-    /** The terminal height, in cells */
-    var height: Int,
     /** The level of ANSI codes to use when printing to the terminal */
     var ansiLevel: AnsiLevel,
     /** If true, ANSI hyperlink codes can be used */
@@ -36,24 +29,4 @@ data class TerminalInfo(
 ) {
     /** Return true if both input and output are interactive */
     val interactive: Boolean get() = inputInteractive && outputInteractive
-
-    /**
-     * Query the terminal for its current size, updating [width] and [height] if successful.
-     *
-     * @return `true` if the terminal size was queried successfully (even if the size hasn't
-     *  changed), or false if the size could not be determined.
-     */
-    fun updateTerminalSize(): Boolean {
-        val (w, h) = TerminalDetection.detectSize() ?: return false
-        width = w
-        height = h
-        return true
-    }
-
-    @Deprecated(
-        "The timeoutMs parameter is no longer used; this function does not open a subprocess",
-        ReplaceWith("updateTerminalSize()")
-    )
-    @Suppress("UNUSED_PARAMETER")
-    fun updateTerminalSize(timeoutMs: Long): Boolean = updateTerminalSize()
 }

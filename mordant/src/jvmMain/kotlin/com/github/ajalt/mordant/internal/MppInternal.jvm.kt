@@ -1,17 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.syscalls.DumbSyscallHandler
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
-import com.github.ajalt.mordant.internal.syscalls.ffm.SyscallHandlerFfmLinux
-import com.github.ajalt.mordant.internal.syscalls.ffm.SyscallHandlerFfmWindows
-import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaLinux
-import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaMacos
-import com.github.ajalt.mordant.internal.syscalls.jna.SyscallHandlerJnaWindows
-import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageLinux
-import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageMacos
-import com.github.ajalt.mordant.internal.syscalls.nativeimage.SyscallHandlerNativeImageWindows
+import com.github.ajalt.mordant.input.InputEvent
+import com.github.ajalt.mordant.input.MouseTracking
+import com.github.ajalt.mordant.rendering.Size
 import com.github.ajalt.mordant.terminal.*
-import java.io.File
 import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.nio.file.Path
@@ -19,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.io.path.readText
 import kotlin.system.exitProcess
+import kotlin.time.Duration
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -128,7 +121,7 @@ internal actual fun sendInterceptedPrintRequest(
     })
 }
 
-internal actual fun getSyscallHandler(): SyscallHandler {
+internal actual fun getStandardTerminalInterface(): TerminalInterface {
     return try {
         // Inlined version of ImageInfo.inImageCode()
         val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
@@ -141,10 +134,10 @@ internal actual fun getSyscallHandler(): SyscallHandler {
             os.startsWith("Windows") -> SyscallHandlerFfmWindows()
             os == "Linux" -> SyscallHandlerFfmLinux()
             os == "Mac OS X" -> SyscallHandlerJnaMacos
-            else -> DumbSyscallHandler
+            else -> DumbTerminalInterface
         }
     } catch (e: UnsatisfiedLinkError) {
-        DumbSyscallHandler
+        DumbTerminalInterface
     }
 }
 
@@ -160,5 +153,17 @@ internal actual fun readFileIfExists(filename: String): String? {
         Path.of(filename).readText()
     } catch (e: IOException) {
         null
+    }
+}
+
+private object DumbTerminalInterface : StandardTerminalInterface() {
+    override fun stdoutInteractive(): Boolean = true
+    override fun stdinInteractive(): Boolean = true
+    override fun getTerminalSize(): Size? = null
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        throw UnsupportedOperationException("Cannot enter raw mode on this system")
+    }
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+        throw UnsupportedOperationException("Cannot read input on this system")
     }
 }

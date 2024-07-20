@@ -1,6 +1,14 @@
 # Changelog
 
 ## Unreleased
+### Changed
+- TODO:
+  - size moved to terminal
+  - Only one terminal constructor now
+  - public TerminalDetection
+  - TerminalInterface
+    - info -> info()
+    - added getTerminalSize etc.
 
 ## 2.7.2
 ### Fixed
