@@ -1,6 +1,10 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.input.InputEvent
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.Size
+import kotlin.time.Duration
 
 /**
  * A [TerminalInterface] that records all output and allows you to provide input.
@@ -14,7 +18,8 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
  * assertEquals(recorder.output(), "Hello, world!\n")
  */
 class TerminalRecorder private constructor(
-    override val info: TerminalInfo,
+    private val info: TerminalInfo,
+    private val size: Size,
 ) : TerminalInterface {
     constructor(
         ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
@@ -23,17 +28,16 @@ class TerminalRecorder private constructor(
         hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
         outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
         inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-        crClearsLine: Boolean = false,
+        crClearsLine: Boolean = false, // TODO(3.0): rename this to supportsAnsiCursor
     ) : this(
-        info = TerminalInfo(
-            width,
-            height,
-            ansiLevel,
-            hyperlinks,
+        TerminalInfo(
+            ansiLevel = ansiLevel,
+            ansiHyperLinks = hyperlinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
             crClearsLine = crClearsLine,
         ),
+        Size(width, height),
     )
 
     /**
@@ -70,4 +74,27 @@ class TerminalRecorder private constructor(
     }
 
     override fun readLineOrNull(hideInput: Boolean): String? = inputLines.removeFirstOrNull()
+    override fun getTerminalSize(): Size = size
+    override fun info(
+        ansiLevel: AnsiLevel?,
+        hyperlinks: Boolean?,
+        outputInteractive: Boolean?,
+        inputInteractive: Boolean?,
+    ): TerminalInfo {
+        return TerminalInfo(
+            ansiLevel = ansiLevel ?: info.ansiLevel,
+            ansiHyperLinks = hyperlinks ?: info.ansiHyperLinks,
+            outputInteractive = outputInteractive ?: info.outputInteractive,
+            inputInteractive = inputInteractive ?: info.inputInteractive,
+            crClearsLine = info.crClearsLine,
+        )
+    }
+
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+        TODO()
+    }
+
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        TODO()
+    }
 }

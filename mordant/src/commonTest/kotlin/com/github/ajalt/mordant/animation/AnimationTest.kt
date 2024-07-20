@@ -1,6 +1,5 @@
 package com.github.ajalt.mordant.animation
 
-import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.normalizedOutput

@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerNativeWindows
+import com.github.ajalt.mordant.terminal.TerminalInterface
+import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceNativeWindows
 
-internal actual fun ttySetEcho(echo: Boolean) = SyscallHandlerNativeWindows.ttySetEcho(echo)
+internal actual fun ttySetEcho(echo: Boolean) = TerminalInterfaceNativeWindows.ttySetEcho(echo)
 internal actual fun hasFileSystem(): Boolean = true
-internal actual fun getSyscallHandler(): SyscallHandler = SyscallHandlerNativeWindows
+internal actual fun getStandardTerminalInterface(): TerminalInterface = TerminalInterfaceNativeWindows

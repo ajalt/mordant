@@ -1,6 +1,14 @@
 # Changelog
 
 ## Unreleased
+### Changed
+- TODO:
+  - size moved to terminal
+  - Only one terminal constructor now
+  - public TerminalDetection
+  - TerminalInterface
+    - info -> info()
+    - added getTerminalSize etc.
 
 ### Fixed
 - Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#240)](https://github.com/ajalt/mordant/issues/240)

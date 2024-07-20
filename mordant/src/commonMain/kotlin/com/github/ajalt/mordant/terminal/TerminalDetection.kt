@@ -1,45 +1,45 @@
 package com.github.ajalt.mordant.terminal
 
-import com.github.ajalt.mordant.internal.SYSCALL_HANDLER
-import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.getEnv
 import com.github.ajalt.mordant.internal.runningInIdeaJavaAgent
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.AnsiLevel.*
+import com.github.ajalt.mordant.rendering.Size
 
-internal object TerminalDetection {
+/**
+ * Detect information about the current terminal.
+ */
+object TerminalDetection {
+    /**
+     * Detect information about the current terminal.
+     *
+     * @param ansiLevel The desired level of ANSI support. If `null`, the level will be detected.
+     * @param hyperlinks Whether to enable hyperlink support. If `null`, hyperlinks support will be detected.
+     * @param forceInputInteractive Force stdin to be treated as interactive. If `null`, stdin will be detected.
+     * @param forceOutputInteractive Force stdout to be treated as interactive. If `null`, stdout will be detected.
+     * @param detectedStdinInteractive Whether stdin was detected as interactive.
+     * @param detectedStdoutInteractive Whether stdout was detected as interactive.
+     */
     fun detectTerminal(
         ansiLevel: AnsiLevel?,
-        width: Int?,
-        height: Int?,
         hyperlinks: Boolean?,
-        interactive: Boolean?,
+        forceInputInteractive: Boolean?,
+        forceOutputInteractive: Boolean?,
+        detectedStdinInteractive: Boolean,
+        detectedStdoutInteractive: Boolean,
     ): TerminalInfo {
         // intellij console is interactive, even though isatty returns false
         val ij = isIntellijRunActionConsole()
-        val inputInteractive = interactive ?: (ij || SYSCALL_HANDLER.stdinInteractive())
-        val outputInteractive = interactive ?: (ij || SYSCALL_HANDLER.stdoutInteractive())
+        val inputInteractive = forceInputInteractive ?: (ij || detectedStdinInteractive)
+        val outputInteractive = forceOutputInteractive ?: (ij || detectedStdoutInteractive)
         val level = ansiLevel ?: ansiLevel(outputInteractive)
         val ansiHyperLinks = hyperlinks ?: (outputInteractive && level != NONE && ansiHyperLinks())
-        val (w, h) = detectInitialSize()
         return TerminalInfo(
-            width = width ?: w,
-            height = height ?: h,
             ansiLevel = level,
             ansiHyperLinks = ansiHyperLinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
             crClearsLine = ij // TODO(3.0): rename this to supportsAnsiCursor
-        )
-    }
-
-    /** Returns the size, or `null` if the size can't be detected */
-    fun detectSize(): Size? = SYSCALL_HANDLER.getTerminalSize()
-
-    private fun detectInitialSize(): Size {
-        return detectSize() ?: Size(
-            width = (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
-            height = (getEnv("LINES")?.toIntOrNull() ?: 24)
         )
     }
 
@@ -198,4 +198,13 @@ internal object TerminalDetection {
         // their terminal tab. In the latter case, the JediTerm envvar is set, in the former it's missing.
         return !isJediTerm() && runningInIdeaJavaAgent()
     }
+}
+
+internal fun TerminalInterface.detectSize(width: Int?, height: Int?): Size {
+    if (width != null && height != null) return Size(width, height)
+    val detected = getTerminalSize() ?: Size(
+        width = (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
+        height = (getEnv("LINES")?.toIntOrNull() ?: 24)
+    )
+    return Size(width = width ?: detected.width, height = height ?: detected.height)
 }

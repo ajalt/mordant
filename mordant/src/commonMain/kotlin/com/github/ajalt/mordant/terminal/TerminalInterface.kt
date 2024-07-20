@@ -1,11 +1,27 @@
 package com.github.ajalt.mordant.terminal
 
+import com.github.ajalt.mordant.input.InputEvent
+import com.github.ajalt.mordant.input.MouseTracking
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.rendering.Size
+import kotlin.time.Duration
+
 
 interface TerminalInterface {
     /**
-     * Information about the current terminal.
+     * Get information about the current terminal.
+     *
+     * @param ansiLevel The level of ANSI codes to use, or `null` to autodetect.
+     * @param hyperlinks Whether to enable hyperlink support, or `null` to autodetect.
+     * @param outputInteractive Whether the output stream is interactive. If `null`, it will be autodetected.
+     * @param inputInteractive Whether the input stream is interactive. If `null`, it will be autodetected.
      */
-    val info: TerminalInfo
+    fun info(
+        ansiLevel: AnsiLevel?,
+        hyperlinks: Boolean?,
+        outputInteractive: Boolean?,
+        inputInteractive: Boolean?,
+    ): TerminalInfo
 
     /**
      * Display a PrintRequest on this terminal.
@@ -20,6 +36,12 @@ interface TerminalInterface {
      *   targets are supported by default except Browser JS.
      */
     fun readLineOrNull(hideInput: Boolean): String?
+
+    // TODO: docs
+    fun getTerminalSize(): Size?
+    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? // null means retry
+    fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable
+    fun shouldAutoUpdateSize(): Boolean = true
 }
 
 data class PrintRequest(

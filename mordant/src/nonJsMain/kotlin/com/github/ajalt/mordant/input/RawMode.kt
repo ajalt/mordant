@@ -1,7 +1,5 @@
 package com.github.ajalt.mordant.input
 
-import com.github.ajalt.mordant.internal.SYSCALL_HANDLER
-import com.github.ajalt.mordant.internal.syscalls.SysInputEvent
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlin.time.Duration
 import kotlin.time.TimeSource
@@ -18,7 +16,7 @@ fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): Raw
     if (!info.inputInteractive) {
         throw IllegalStateException("Cannot enter raw mode on a non-interactive terminal")
     }
-    return RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+    return RawModeScope(this, terminalInterface.enterRawMode(mouseTracking), mouseTracking)
 }
 
 /**
@@ -31,11 +29,12 @@ fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): Raw
  */
 fun Terminal.enterRawModeOrNull(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope? {
     return runCatching {
-        RawModeScope(SYSCALL_HANDLER.enterRawMode(mouseTracking), mouseTracking)
+        RawModeScope(this, terminalInterface.enterRawMode(mouseTracking), mouseTracking)
     }.getOrNull()
 }
 
 class RawModeScope internal constructor(
+    private val terminal: Terminal,
     closeable: AutoCloseable,
     private val mouseTracking: MouseTracking,
 ) : AutoCloseable by closeable {
@@ -56,11 +55,7 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readKeyOrNull(timeout: Duration = Duration.INFINITE): KeyboardEvent? {
-        return readEventsUntilTimeout(timeout) { inputEvent ->
-            if (inputEvent is KeyboardEvent) {
-                return inputEvent
-            }
-        }
+        return readEventsUntilTimeout(timeout) { it !is KeyboardEvent } as KeyboardEvent?
     }
 
     /**
@@ -80,11 +75,7 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readMouseOrNull(timeout: Duration = Duration.INFINITE): MouseEvent? {
-        return readEventsUntilTimeout(timeout) { inputEvent ->
-            if (inputEvent is MouseEvent && mouseTracking != MouseTracking.Off) {
-                return inputEvent
-            }
-        }
+        return readEventsUntilTimeout(timeout) { it !is MouseEvent } as MouseEvent?
     }
 
     /**
@@ -104,19 +95,18 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readEventOrNull(timeout: Duration = Duration.INFINITE): InputEvent? {
-        return readEventsUntilTimeout(timeout) { inputEvent ->
-            if (inputEvent !is MouseEvent || mouseTracking != MouseTracking.Off) {
-                return inputEvent
-            }
-        }
+        return readEventsUntilTimeout(timeout) { false }
     }
 
-    private inline fun readEventsUntilTimeout(timeout: Duration, handler: (InputEvent) -> Unit): Nothing? {
+    private inline fun readEventsUntilTimeout(
+        timeout: Duration, skip: (InputEvent) -> Boolean,
+    ): InputEvent? {
         val t0 = TimeSource.Monotonic.markNow()
         do {
-            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
-            if (event is SysInputEvent.Success) {
-                handler(event.event)
+            val event = terminal.terminalInterface
+                .readInputEvent(timeout - t0.elapsedNow(), mouseTracking) ?: continue
+            if (event !is MouseEvent || mouseTracking != MouseTracking.Off || skip(event)) {
+                return event
             }
         } while (t0.elapsedNow() < timeout)
         return null

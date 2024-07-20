@@ -28,9 +28,3 @@ internal val DEFAULT_PADDING = Padding(0)
 @Suppress("RegExpRedundantEscape") // JS requires escaping the lone `]` at the beginning of the pattern, so we can't use $OSC
 internal val ANSI_RE = Regex("""$ESC\][^$ESC]*$ESC\\|$ESC(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])""")
 internal const val HYPERLINK_RESET = "__mordant_reset__"
-
-internal data class Size(val width: Int, val height: Int) {
-    override fun toString(): String {
-        return "${width}x$height"
-    }
-}

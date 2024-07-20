@@ -1,14 +1,13 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandler
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerBrowser
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJsCommon
 import com.github.ajalt.mordant.terminal.*
+import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceBrowser
+import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceJsCommon
 
 
 // Since `js()` and `external` work differently in wasm and js, we need to define the functions that
 // use them twice
-internal expect fun makeNodeSyscallHandler(): SyscallHandlerJsCommon?
+internal expect fun makeNodeTerminalInterface(): TerminalInterfaceJsCommon?
 internal expect fun browserPrintln(message: String)
 
 private class JsAtomicRef<T>(override var value: T) : MppAtomicRef<T> {
@@ -44,11 +43,11 @@ internal actual fun MppAtomicInt(initial: Int): MppAtomicInt = JsAtomicInt(initi
 internal actual fun <T> MppAtomicRef(value: T): MppAtomicRef<T> = JsAtomicRef(value)
 
 
-internal actual fun getSyscallHandler(): SyscallHandler {
-    return makeNodeSyscallHandler() ?: SyscallHandlerBrowser
+internal actual fun getStandardTerminalInterface(): TerminalInterface {
+    return makeNodeTerminalInterface() ?: TerminalInterfaceBrowser
 }
 
-private val impls get() = SYSCALL_HANDLER as SyscallHandlerJsCommon
+private val impls get() = STANDARD_TERM_INTERFACE as TerminalInterfaceJsCommon
 
 internal actual fun runningInIdeaJavaAgent(): Boolean = false
 
@@ -69,9 +68,6 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 
 internal actual fun readFileIfExists(filename: String): String? = impls.readFileIfExists(filename)
 
-// There are no shutdown hooks on browsers, so we don't need to do anything here
-private class BrowserTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal)
-
 
 internal actual fun sendInterceptedPrintRequest(
     request: PrintRequest,
@@ -83,4 +79,4 @@ internal actual fun sendInterceptedPrintRequest(
     )
 }
 
-internal actual fun hasFileSystem(): Boolean = impls !is SyscallHandlerBrowser
+internal actual fun hasFileSystem(): Boolean = impls !is TerminalInterfaceBrowser
