@@ -20,23 +20,23 @@ import com.github.ajalt.mordant.widgets.Text
 class Terminal private constructor(
     val theme: Theme,
     val tabWidth: Int,
-    private val terminalInterface: TerminalInterface,
-    private val interceptors: MppAtomicRef<List<TerminalInterceptor>>,
+    val terminalInterface: TerminalInterface,
+    private val forceWidth: Int?,
+    private val forceHeight: Int?,
+    /** The terminal capabilities that were detected or set in the constructor. */
+    val info: TerminalInfo,
 ) {
     /**
      * @param ansiLevel The level of color support to use, or `null` to detect the level of the current terminal
      * @param theme The theme to use for widgets and styles like [success]
      * @param width The width to render widget and wrap text, or `null` to detect the current width.
-     *   On JVM, you'll need to call [info.updateTerminalSize][TerminalInfo.updateTerminalSize] to
-     *   detect the size correctly.
-     * @param height The height of th terminal to use when rendering widgets, or `null` to detect the current width.
-     *   On JVM, you'll need to call [info.updateTerminalSize][TerminalInfo.updateTerminalSize] to
-     *   detect the size correctly.
+     * @param height The height of the terminal to use when rendering widgets, or `null` to detect the current width.
      * @param hyperlinks whether to render hyperlinks using ANSI codes, or `null` to detect the capability
      * @param tabWidth The number of spaces to use for `\t` characters
      * @param interactive Set to true to always use color codes, even if stdout is redirected to a
      *   file, or `null` to detect the capability. This can be useful if you expect to call your
      *   program from some other source like gradle that forwards the output to the terminal.
+     * @param terminalInterface The terminal interface to use to interact with the terminal.
      */
     constructor(
         ansiLevel: AnsiLevel? = null,
@@ -46,43 +46,43 @@ class Terminal private constructor(
         hyperlinks: Boolean? = null,
         tabWidth: Int = 8,
         interactive: Boolean? = null,
+        terminalInterface: TerminalInterface = STANDARD_TERM_INTERFACE,
     ) : this(
-        theme,
-        tabWidth,
-        StdoutTerminalInterface(ansiLevel, width, height, hyperlinks, interactive)
+        theme = theme,
+        tabWidth = tabWidth,
+        terminalInterface = terminalInterface,
+        forceWidth = width,
+        forceHeight = height,
+        info = terminalInterface.info(
+            ansiLevel = ansiLevel,
+            hyperlinks = hyperlinks,
+            outputInteractive = interactive,
+            inputInteractive = interactive,
+        )
     )
 
-    /**
-     * @param theme The theme to use for widgets and styles like [success]
-     * @param tabWidth The number of spaces to use for `\t` characters
-     * @param terminalInterface The [TerminalInterface] to use to read and write
-     */
-    constructor(
-        theme: Theme,
-        tabWidth: Int,
-        terminalInterface: TerminalInterface,
-    ) : this(theme, tabWidth, terminalInterface, MppAtomicRef(emptyList()))
+    private val interceptors: MppAtomicRef<List<TerminalInterceptor>> =
+        MppAtomicRef(emptyList())
+
+    private val atomicSize: MppAtomicRef<Size> =
+        MppAtomicRef(terminalInterface.detectSize(forceWidth, forceHeight))
+
 
     /**
-     * @param theme The theme to use for widgets and styles like [success]
-     * @param terminalInterface The [TerminalInterface] to use to read and write
+     * The current size of the terminal.
+     *
+     * This value is updated automatically whenever you print to the terminal.
      */
-    constructor(
-        theme: Theme,
-        terminalInterface: TerminalInterface,
-    ) : this(theme, 8, terminalInterface, MppAtomicRef(emptyList()))
+    val size: Size get() = atomicSize.value
 
     /**
-     * @param terminalInterface The [TerminalInterface] to use to read and write
+     * Detect the current terminal's size and update [size].
+     *
+     * This is called automatically whenever you print to the terminal.
      */
-    constructor(
-        terminalInterface: TerminalInterface,
-    ) : this(Theme.Default, 8, terminalInterface, MppAtomicRef(emptyList()))
-
-    /**
-     * The terminal capabilities that were detected or set in the constructor.
-     */
-    val info: TerminalInfo = terminalInterface.info
+    fun updateSize(): Size {
+        return atomicSize.update { terminalInterface.detectSize(forceWidth, forceHeight) }.second
+    }
 
     /**
      * Colors and styles that are downsampled based on the current terminal [info].
@@ -91,7 +91,7 @@ class Terminal private constructor(
      * [kotlin.io.print]. If you're using the terminal's [print], you can use [TextColors] and
      * [TextStyles] directly instead.
      */
-    @Deprecated("Use TextColors or .theme instead")
+    @Deprecated("Use TextColors or .theme instead") // TODO(3.0) remove
     val colors: TerminalColors = TerminalColors(info, theme)
 
     /**
@@ -99,13 +99,16 @@ class Terminal private constructor(
      *
      * If the terminal is not interactive, all the cursor functions are no-ops.
      */
-    val cursor: TerminalCursor =
-        if (info.interactive) makePrintingTerminalCursor(this) else DisabledTerminalCursor
+    val cursor: TerminalCursor = when {
+        info.interactive -> makePrintingTerminalCursor(this)
+        else -> DisabledTerminalCursor
+    }
 
     /**
      * Print a line styled with the theme's [success][Theme.success] style.
      */
     fun success(
+        // TODO(3.0): make extensions
         message: Any?,
         whitespace: Whitespace = Whitespace.PRE,
         align: TextAlign = TextAlign.NONE,
@@ -374,7 +377,7 @@ class Terminal private constructor(
     }
 
     private fun sendPrintRequest(request: PrintRequest) {
-        if (SYSCALL_HANDLER.fastIsTty()) info.updateTerminalSize()
+        if (terminalInterface.shouldAutoUpdateSize()) updateSize()
         sendInterceptedPrintRequest(request, terminalInterface, interceptors.value)
     }
 }

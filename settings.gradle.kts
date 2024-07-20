@@ -2,6 +2,9 @@ rootProject.name = "mordant"
 
 include(
     "mordant",
+    "mordant-jvm-jna",
+    "mordant-jvm-ffm",
+    "mordant-jvm-graal-ffi",
     "extensions:mordant-coroutines",
     "samples:detection",
     "samples:drawing",

@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.graalvm
 
 import com.github.ajalt.mordant.animation.progress.animateOnThread
 import com.github.ajalt.mordant.animation.progress.execute
-import com.github.ajalt.mordant.input.enterRawMode
 import com.github.ajalt.mordant.markdown.Markdown
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.TextStyles.bold
@@ -12,11 +11,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBar
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.TimeUnit
-import kotlin.test.Ignore
-import kotlin.test.assertNull
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Smoke tests for the GraalVM platform.

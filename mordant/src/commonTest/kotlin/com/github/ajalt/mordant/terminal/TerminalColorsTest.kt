@@ -9,7 +9,6 @@ import io.kotest.data.blocking.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 @Suppress("DEPRECATION")

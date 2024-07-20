@@ -1,12 +1,12 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJsCommon
-import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerWasm
+import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceJsCommon
+import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceWasm
 
 internal actual fun browserPrintln(message: String): Unit = js("console.error(message)")
 
-internal actual fun makeNodeSyscallHandler(): SyscallHandlerJsCommon? {
-    return if (runningOnNode()) SyscallHandlerWasm() else null
+internal actual fun makeNodeTerminalInterface(): TerminalInterfaceJsCommon? {
+    return if (runningOnNode()) TerminalInterfaceWasm() else null
 }
 
 private external interface CodePointString {
