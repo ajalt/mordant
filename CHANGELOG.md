@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Fixed
+- Fixed raw mode on macos for JVM and native not using the correct termios constants. [(#180)](https://github.com/ajalt/mordant/issues/180)
 
 ## 2.7.1
 ## Added

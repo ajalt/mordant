@@ -91,6 +91,7 @@ private object LinuxLibC {
 
 @Platforms(Platform.LINUX::class)
 internal class SyscallHandlerNativeImageLinux : SyscallHandlerJvmPosix() {
+    override val termiosConstants: TermiosConstants get() = LinuxTermiosConstants
     override fun isatty(fd: Int): Boolean = LinuxLibC.isatty(fd)
 
     override fun getTerminalSize(): Size? {

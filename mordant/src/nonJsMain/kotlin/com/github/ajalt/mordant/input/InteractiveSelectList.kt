@@ -15,7 +15,7 @@ inline fun Terminal.interactiveSelectList(
     return InteractiveSelectListBuilder(this)
         .apply(block)
         .createSingleSelectInputAnimation()
-        .receiveEvents()
+        .receiveEvents(MouseTracking.Off)
 }
 
 /**
@@ -65,7 +65,7 @@ inline fun Terminal.interactiveMultiSelectList(
     return InteractiveSelectListBuilder(this)
         .apply(block)
         .createMultiSelectInputAnimation()
-        .receiveEvents()
+        .receiveEvents(MouseTracking.Off)
 }
 
 /**

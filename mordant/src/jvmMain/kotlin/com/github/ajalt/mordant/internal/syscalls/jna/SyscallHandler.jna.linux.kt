@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.internal.syscalls.jna
 
 import com.github.ajalt.mordant.internal.Size
 import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerJvmPosix
+import com.github.ajalt.mordant.internal.syscalls.SyscallHandlerPosix
 import com.oracle.svm.core.annotate.Delete
 import com.sun.jna.*
 
@@ -69,6 +70,7 @@ private interface PosixLibC : Library {
 internal object SyscallHandlerJnaLinux : SyscallHandlerJvmPosix() {
     private const val TIOCGWINSZ = 0x00005413
     private const val TCSADRAIN: Int = 0x1
+    override val termiosConstants: TermiosConstants get() = LinuxTermiosConstants
     private val libC: PosixLibC = Native.load(Platform.C_LIBRARY_NAME, PosixLibC::class.java)
     override fun isatty(fd: Int): Boolean = libC.isatty(fd) != 0
 

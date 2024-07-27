@@ -65,11 +65,15 @@ internal actual fun printStderr(message: String, newline: Boolean) {
 internal expect fun ttySetEcho(echo: Boolean)
 
 internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
-    if (hideInput) ttySetEcho(false)
-    try {
-        return readlnOrNull()
-    } finally {
-        if (hideInput) ttySetEcho(true)
+    return try {
+        if (hideInput) ttySetEcho(false)
+        try {
+            readlnOrNull()
+        } finally {
+            if (hideInput) ttySetEcho(true)
+        }
+    } catch (e: Throwable) {
+        null
     }
 }
 

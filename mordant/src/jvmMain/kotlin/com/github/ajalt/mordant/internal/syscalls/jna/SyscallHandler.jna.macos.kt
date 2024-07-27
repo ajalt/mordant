@@ -69,6 +69,7 @@ private interface MacosLibC : Library {
 @Delete
 @Suppress("SpellCheckingInspection")
 internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
+    override val termiosConstants: TermiosConstants get() = MacosTermiosConstants
     private const val TCSANOW: Int = 0x0
     private val TIOCGWINSZ = when {
         Platform.isMIPS() || Platform.isPPC() || Platform.isSPARC() -> 0x40087468L
@@ -104,12 +105,11 @@ internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
     override fun setStdinTermios(termios: Termios) {
         val nativeTermios = MacosLibC.termios()
         libC.tcgetattr(STDIN_FILENO, nativeTermios)
-        nativeTermios.c_iflag = NativeLong(termios.iflag.toLong())
-        nativeTermios.c_oflag = NativeLong(termios.oflag.toLong())
-        nativeTermios.c_cflag = NativeLong(termios.cflag.toLong())
-        nativeTermios.c_lflag = NativeLong(termios.lflag.toLong())
+        nativeTermios.c_iflag.setValue(termios.iflag.toLong())
+        nativeTermios.c_oflag.setValue(termios.oflag.toLong())
+        nativeTermios.c_cflag.setValue(termios.cflag.toLong())
+        nativeTermios.c_lflag.setValue(termios.lflag.toLong())
         termios.cc.copyInto(nativeTermios.c_cc)
-        libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
     }
 }
 
