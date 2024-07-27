@@ -87,6 +87,7 @@ private object MacosLibC {
 
 @Platforms(Platform.MACOS::class)
 internal class SyscallHandlerNativeImageMacos : SyscallHandlerJvmPosix() {
+    override val termiosConstants: TermiosConstants get() = MacosTermiosConstants
     override fun isatty(fd: Int): Boolean = MacosLibC.isatty(fd)
 
     override fun getTerminalSize(): Size? {
