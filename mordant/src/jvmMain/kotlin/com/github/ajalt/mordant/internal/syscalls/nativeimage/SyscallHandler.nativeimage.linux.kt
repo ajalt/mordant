@@ -42,7 +42,7 @@ private object LinuxLibC {
         val ws_col: Short
     }
 
-    @CStruct("termios", addStructKeyword = true)
+    @CStruct("termios", addStructKeyword = true, isIncomplete = true)
     interface termios : PointerBase {
         @get:CField("c_iflag")
         @set:CField("c_iflag")
@@ -67,13 +67,9 @@ private object LinuxLibC {
         @get:CFieldAddress("c_cc")
         val c_cc: CCharPointer
 
-        @get:CField("c_ispeed")
-        @set:CField("c_ispeed")
-        var c_ispeed: Int
-
-        @get:CField("c_ospeed")
-        @set:CField("c_ospeed")
-        var c_ospeed: Int
+        companion object {
+            const val STRUCT_SIZE = 60
+        }
     }
 
     @CFunction("isatty")
@@ -104,7 +100,7 @@ internal class SyscallHandlerNativeImageLinux : SyscallHandlerJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios {
-        val termios = StackValue.get(LinuxLibC.termios::class.java)
+        val termios = StackValue.get<LinuxLibC.termios>(LinuxLibC.termios.STRUCT_SIZE)
         if (LinuxLibC.tcgetattr(STDIN_FILENO, termios) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
@@ -118,7 +114,7 @@ internal class SyscallHandlerNativeImageLinux : SyscallHandlerJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios) {
-        val nativeTermios = StackValue.get(LinuxLibC.termios::class.java)
+        val nativeTermios = StackValue.get<LinuxLibC.termios>(LinuxLibC.termios.STRUCT_SIZE)
         if (LinuxLibC.tcgetattr(STDIN_FILENO, nativeTermios) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
