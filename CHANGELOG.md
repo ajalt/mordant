@@ -1,13 +1,16 @@
 # Changelog
 
 ## Unreleased
+
+## 2.7.2
 ### Fixed
 - Fixed raw mode on macOS for JVM and native not using the correct termios constants. [(#180)](https://github.com/ajalt/mordant/issues/180)
 - Raw mode on macOS and Linux will now report the `ESC ESC` sequence as an `Escape` key event.
+- Fixed raw mode on GraalVM native image not compiling with musl libc. Contributed by @hubvd [(#189)](https://github.com/ajalt/mordant/issues/189)
 
 ## 2.7.1
 ## Added
-- Added support for raw mode on GraalVM native Image. Contributed by @hubvd [(#186)](https://github.com/ajalt/mordant/issues/186)
+- Added support for raw mode on GraalVM native image on macOS and Linux. Contributed by @hubvd [(#186)](https://github.com/ajalt/mordant/issues/186)
 
 ### Fixed
 - Fix markdown rendering not supporting math blocks [(#182)](https://github.com/ajalt/mordant/issues/182)
