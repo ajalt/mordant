@@ -2,7 +2,8 @@
 
 ## Unreleased
 ### Fixed
-- Fixed raw mode on macos for JVM and native not using the correct termios constants. [(#180)](https://github.com/ajalt/mordant/issues/180)
+- Fixed raw mode on macOS for JVM and native not using the correct termios constants. [(#180)](https://github.com/ajalt/mordant/issues/180)
+- Raw mode on macOS and Linux will now report the `ESC ESC` sequence as an `Escape` key event.
 
 ## 2.7.1
 ## Added
