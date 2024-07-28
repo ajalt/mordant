@@ -151,17 +151,10 @@ internal abstract class SyscallHandlerPosix : SyscallHandler {
             try {
                 read()
             } catch (e: RuntimeException) {
-                return SysInputEvent.Success(
-                    KeyboardEvent(
-                        key = "Escape",
-                        ctrl = false,
-                        alt = false,
-                        shift = false
-                    )
-                )
+                return SysInputEvent.Success(KeyboardEvent("Escape"))
             }
             if (ch == ESC) {
-                read()
+                return SysInputEvent.Success(KeyboardEvent("Escape"))
             }
         }
 
