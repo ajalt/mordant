@@ -110,6 +110,7 @@ internal object SyscallHandlerJnaMacos : SyscallHandlerJvmPosix() {
         nativeTermios.c_cflag.setValue(termios.cflag.toLong())
         nativeTermios.c_lflag.setValue(termios.lflag.toLong())
         termios.cc.copyInto(nativeTermios.c_cc)
+        libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
     }
 }
 
