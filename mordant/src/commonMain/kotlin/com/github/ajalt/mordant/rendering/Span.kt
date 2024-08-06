@@ -21,7 +21,7 @@ class Span private constructor(val text: String, val style: TextStyle = DEFAULT_
         fun word(text: String, style: TextStyle = DEFAULT_STYLE): Span {
             require(text.isNotEmpty()) { "Span text cannot be empty" }
             require(text.count { it.isWhitespace() }.let { it == 0 || it == text.length }) {
-                "Spans must contain ether all whitespace, or no whitespace: \"$text\""
+                "Spans must contain either all whitespace, or no whitespace: \"$text\""
             }
             require("\n" !in text) { "Spans cannot contain newlines" }
             require(CSI !in text) { "Spans cannot contain ANSI codes" }
