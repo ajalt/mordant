@@ -8,7 +8,7 @@ import platform.posix.*
 // different bit widths for some of the termios fields, so the compileMetadata task would fail if we
 // don't use separate files.
 
-internal object TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
+internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
     override val termiosConstants: TermiosConstants = TermiosConstants(
         VTIME = VTIME,
         VMIN = VMIN,

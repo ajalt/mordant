@@ -28,13 +28,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: 21
+          java-version: 22
           distribution: 'graalvm-community'
           set-java-home: false
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version: 22
       - uses: gradle/actions/setup-gradle@v3
       - name: Run tests
         run: >-
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version: 22
       - uses: gradle/actions/setup-gradle@v3
       - name: Deploy to sonatype
         # disable configuration cache due to https://github.com/gradle/gradle/issues/22779

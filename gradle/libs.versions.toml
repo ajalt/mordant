@@ -1,11 +1,11 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 coroutines = "1.8.1"
 
 [libraries]
 colormath = "com.github.ajalt.colormath:colormath:3.5.0"
 markdown = "org.jetbrains:markdown:0.7.3"
-jna-core = "net.java.dev.jna:jna:5.14.0"
+jna-core = "net.java.dev.jna:jna:5.15.0"
 
 # compileOnly
 graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"

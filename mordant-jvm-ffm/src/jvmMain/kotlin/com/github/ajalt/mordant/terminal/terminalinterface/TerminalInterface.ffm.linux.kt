@@ -5,7 +5,7 @@ import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection")
-private class PosixLibC {
+private class LinuxCLibrary {
     class winsize(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
             val ws_row by shortField()
@@ -30,6 +30,7 @@ private class PosixLibC {
             val c_lflag by intField()
             val c_line by byteField()
             val c_cc by arrayField(32)
+            @Suppress("unused")
             val padding by paddingField(3)
             val c_ispeed by intField()
             val c_ospeed by intField()
@@ -79,11 +80,11 @@ internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
         const val TCSADRAIN: Int = 0x1
     }
 
-    private val libC = PosixLibC()
+    private val libC = LinuxCLibrary()
     override fun isatty(fd: Int): Boolean = libC.isatty(fd)
 
     override fun getTerminalSize(): Size? = Arena.ofConfined().use { arena ->
-        val size = PosixLibC.winsize(arena)
+        val size = LinuxCLibrary.winsize(arena)
         if (!libC.ioctl(STDIN_FILENO, TIOCGWINSZ, size.segment)) {
             null
         } else {
@@ -92,7 +93,7 @@ internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios = Arena.ofConfined().use { arena ->
-        val termios = PosixLibC.termios(arena)
+        val termios = LinuxCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, termios)) {
             throw RuntimeException("failed to read terminal settings")
         }
@@ -106,7 +107,7 @@ internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios): Unit = Arena.ofConfined().use { arena ->
-        val nativeTermios = PosixLibC.termios(arena)
+        val nativeTermios = LinuxCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, nativeTermios)) {
             throw RuntimeException("failed to update terminal settings")
         }
