@@ -14,7 +14,7 @@ internal object WinLayouts {
 
 
 @Suppress("FunctionName", "ClassName", "unused", "PropertyName")
-private class WinKernel32Lib {
+private class WinKernel32Library {
 
     class COORD(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
@@ -242,7 +242,7 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
         const val STD_ERROR_HANDLE: Int = -12
     }
 
-    private val kernel = WinKernel32Lib()
+    private val kernel = WinKernel32Library()
     private val stdoutHandle get() = kernel.GetStdHandle(STD_OUTPUT_HANDLE)
     private val stdinHandle get() = kernel.GetStdHandle(STD_INPUT_HANDLE)
     private val stderrHandle get() = kernel.GetStdHandle(STD_ERROR_HANDLE)
@@ -256,7 +256,7 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
     override fun stdinInteractive(): Boolean = handleInteractive(stdinHandle)
 
     override fun getTerminalSize(): Size? = Arena.ofConfined().use { arena ->
-        val csbi = WinKernel32Lib.CONSOLE_SCREEN_BUFFER_INFO(arena)
+        val csbi = WinKernel32Library.CONSOLE_SCREEN_BUFFER_INFO(arena)
         if (!kernel.GetConsoleScreenBufferInfo(stdoutHandle, csbi)) {
             return null
         }
@@ -280,18 +280,18 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
         if (waitResult != 0) {
             throw RuntimeException("Timeout reading from console input")
         }
-        val inputEvents = arena.allocate(WinKernel32Lib.INPUT_RECORD.Layout.layout, 1)
+        val inputEvents = arena.allocate(WinKernel32Library.INPUT_RECORD.Layout.layout, 1)
         val eventsReadSeg = arena.allocateInt()
         if (!kernel.ReadConsoleInputW(stdin, inputEvents, 1, eventsReadSeg)
             || eventsReadSeg.get(Layouts.INT, 0) != 1
         ) {
             throw RuntimeException("Error reading from console input")
         }
-        val inputEvent = inputEvents.elements(WinKernel32Lib.INPUT_RECORD.Layout.layout)
-            .map(WinKernel32Lib::INPUT_RECORD).toList().single()
+        val inputEvent = inputEvents.elements(WinKernel32Library.INPUT_RECORD.Layout.layout)
+            .map(WinKernel32Library::INPUT_RECORD).toList().single()
 
         return when (inputEvent.EventType) {
-            WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
+            WinKernel32Library.INPUT_RECORD.KEY_EVENT -> {
                 val keyEvent = inputEvent.keyEvent
                 EventRecord.Key(
                     bKeyDown = keyEvent.bKeyDown,
@@ -301,7 +301,7 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
                 )
             }
 
-            WinKernel32Lib.INPUT_RECORD.MOUSE_EVENT -> {
+            WinKernel32Library.INPUT_RECORD.MOUSE_EVENT -> {
                 val mouseEvent = inputEvent.mouseEvent
                 EventRecord.Mouse(
                     dwMousePositionX = mouseEvent.dwMousePosition.X,

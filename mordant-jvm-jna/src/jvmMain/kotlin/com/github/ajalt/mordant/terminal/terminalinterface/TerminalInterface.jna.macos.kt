@@ -108,6 +108,10 @@ internal class TerminalInterfaceJnaMacos : TerminalInterfaceJvmPosix() {
         termios.cc.copyInto(nativeTermios.c_cc)
         libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
     }
+
+    override fun shouldAutoUpdateSize(): Boolean {
+        return false // Shelling out to STTY is slow, so don't do it automatically
+    }
 }
 
 @Suppress("SameParameterValue")

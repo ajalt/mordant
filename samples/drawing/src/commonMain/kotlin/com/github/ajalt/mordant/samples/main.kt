@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 suspend fun main() = coroutineScope {
     val terminal = Terminal(ansiLevel = AnsiLevel.TRUECOLOR, interactive = true)
     var hue = 0
-    val canvas = List(terminal.info.height - 1) {
-        MutableList<Color>(terminal.info.width) { RGB("#000") }
+    val canvas = List(terminal.size.height - 1) {
+        MutableList<Color>(terminal.size.width) { RGB("#000") }
     }
     val animation = terminal.textAnimation<Unit> {
         buildString {

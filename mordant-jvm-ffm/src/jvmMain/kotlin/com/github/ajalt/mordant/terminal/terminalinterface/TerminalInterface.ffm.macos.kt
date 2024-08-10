@@ -5,7 +5,7 @@ import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection")
-private class MacosLibC {
+private class MacosCLibrary {
     class winsize(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
             val ws_row by shortField()
@@ -72,11 +72,11 @@ internal class TerminalInterfaceFfmMacos : TerminalInterfaceJvmPosix() {
         const val TCSADRAIN: Int = 0x1
     }
 
-    private val libC = MacosLibC()
+    private val libC = MacosCLibrary()
     override fun isatty(fd: Int): Boolean = libC.isatty(fd)
 
     override fun getTerminalSize(): Size? = Arena.ofConfined().use { arena ->
-        val size = MacosLibC.winsize(arena)
+        val size = MacosCLibrary.winsize(arena)
         if (!libC.ioctl(STDIN_FILENO, TIOCGWINSZ, size.segment)) {
             null
         } else {
@@ -85,7 +85,7 @@ internal class TerminalInterfaceFfmMacos : TerminalInterfaceJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios = Arena.ofConfined().use { arena ->
-        val termios = MacosLibC.termios(arena)
+        val termios = MacosCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, termios)) {
             throw RuntimeException("failed to read terminal settings")
         }
@@ -99,7 +99,7 @@ internal class TerminalInterfaceFfmMacos : TerminalInterfaceJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios): Unit = Arena.ofConfined().use { arena ->
-        val nativeTermios = MacosLibC.termios(arena)
+        val nativeTermios = MacosCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, nativeTermios)) {
             throw RuntimeException("failed to update terminal settings")
         }
