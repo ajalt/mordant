@@ -12,6 +12,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
+import kotlin.test.fail
 
 /**
  * Smoke tests for the GraalVM platform.
@@ -21,7 +22,11 @@ import java.util.concurrent.TimeUnit
 class GraalSmokeTest {
     @Test
     fun `terminal detection test`() {
-        Terminal()
+        val name = Terminal().terminalInterface::class.simpleName
+        val assertion = name!!.startsWith("TerminalInterfaceNativeImage")
+        if (!assertion) {
+            fail("Incorrect terminal interface: $name")
+        }
     }
 
     @Test

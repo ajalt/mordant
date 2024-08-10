@@ -9,18 +9,15 @@ kotlin {
 
     sourceSets {
         jvmMain.dependencies {
-            implementation(project(":mordant"))
+            implementation(project(":mordant-omnibus"))
         }
     }
 }
 
 application {
     mainClass.set("com.github.ajalt.mordant.samples.MainKt")
-    applicationDefaultJvmArgs = listOf("-Dfile.encoding=utf-8")
-}
-
-tasks.jar {
-    manifest {
-        attributes["Enable-Native-Access"] = "ALL-UNNAMED"
-    }
+    applicationDefaultJvmArgs = listOf(
+        "-Dfile.encoding=utf-8",
+        "--enable-native-access=ALL-UNNAMED"
+    )
 }

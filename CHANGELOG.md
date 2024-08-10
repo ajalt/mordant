@@ -1,14 +1,18 @@
 # Changelog
 
 ## Unreleased
+## Added
+- New `TerminalDetection` object that can be used to detect terminal capabilities without creating a terminal instance.
+- Added new optional methods to `TerminalInterface` to control raw mode: `getTerminalSize`, `readInputEvent`, `enterRawMode`, and `shouldAutoUpdateSize`.
+- Added new terminal implementation that uses the [Foreign Function and Memory (FFM) API](https://openjdk.java.net/jeps/419) added in JDK 22.
+- Split the library up into modules, so you can produce smaller JVM artifacts by only using the parts you need.
+
 ### Changed
-- TODO:
-  - size moved to terminal
-  - Only one terminal constructor now
-  - public TerminalDetection
-  - TerminalInterface
-    - info -> info()
-    - added getTerminalSize etc.
+- **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.
+- **Breaking Change** `TerminalInterface.info` is now a method with parameters instead of a property.
+
+### Removed
+- Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
 
 ## 2.7.2
 ### Fixed

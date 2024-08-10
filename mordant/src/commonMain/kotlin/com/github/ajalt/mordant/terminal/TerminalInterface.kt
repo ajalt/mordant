@@ -38,9 +38,11 @@ interface TerminalInterface {
     fun readLineOrNull(hideInput: Boolean): String?
 
     // TODO: docs
-    fun getTerminalSize(): Size?
-    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? // null means retry
-    fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable
+    fun getTerminalSize(): Size? = null
+    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? = null // null means retry
+    fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        throw NotImplementedError("Raw mode is not supported on this terminal")
+    }
     fun shouldAutoUpdateSize(): Boolean = true
 }
 

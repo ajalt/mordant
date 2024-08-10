@@ -2,6 +2,7 @@ rootProject.name = "mordant"
 
 include(
     "mordant",
+    "mordant-omnibus",
     "mordant-jvm-jna",
     "mordant-jvm-ffm",
     "mordant-jvm-graal-ffi",

@@ -5,6 +5,11 @@ import com.github.ajalt.mordant.terminal.TerminalInterfaceProvider
 
 class TerminalInterfaceProviderJna : TerminalInterfaceProvider {
     override fun load(): TerminalInterface? {
+        // Inlined version of ImageInfo.inImageCode()
+        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
+        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
+        if (isNativeImage) return null
+
         val os = System.getProperty("os.name")
         return try {
             when {

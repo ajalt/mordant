@@ -8,5 +8,8 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":mordant"))
         }
+        jvmMain.dependencies {
+            implementation(project(":mordant-omnibus"))
+        }
     }
 }

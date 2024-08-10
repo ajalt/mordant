@@ -8,7 +8,7 @@ tasks.test {
 }
 
 dependencies {
-    implementation(project(":mordant"))
+    implementation(project(":mordant-omnibus"))
     testImplementation(kotlin("test"))
 }
 
