@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.terminal.*
 import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.nio.file.Path
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.io.path.readText
@@ -122,23 +123,23 @@ internal actual fun sendInterceptedPrintRequest(
 }
 
 internal actual fun getStandardTerminalInterface(): TerminalInterface {
-    return try {
-        // Inlined version of ImageInfo.inImageCode()
-        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
-        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
-        val os = System.getProperty("os.name")
-        when {
-            isNativeImage && os.startsWith("Windows") -> SyscallHandlerNativeImageWindows()
-            isNativeImage && (os == "Linux") -> SyscallHandlerNativeImageLinux()
-            isNativeImage && (os == "Mac OS X") -> SyscallHandlerNativeImageMacos()
-            os.startsWith("Windows") -> SyscallHandlerFfmWindows()
-            os == "Linux" -> SyscallHandlerFfmLinux()
-            os == "Mac OS X" -> SyscallHandlerJnaMacos
-            else -> DumbTerminalInterface
-        }
-    } catch (e: UnsatisfiedLinkError) {
-        DumbTerminalInterface
+    val providers = ServiceLoader.load(TerminalInterfaceProvider::class.java)
+        .associateBy { it::class.qualifiedName }
+    // The built-in providers in the order that they should be loaded
+    val builtins = listOf(
+        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderFfm",
+        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderNativeImage",
+        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderJna",
+    )
+
+    // All providers, including user-provided ones
+    val allProviders = builtins + (providers.keys - builtins)
+
+    for (provider in allProviders) {
+        return providers[provider]?.load() ?: continue
     }
+
+    return DumbTerminalInterface
 }
 
 internal actual val CR_IMPLIES_LF: Boolean = false
@@ -163,6 +164,7 @@ private object DumbTerminalInterface : StandardTerminalInterface() {
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
         throw UnsupportedOperationException("Cannot enter raw mode on this system")
     }
+
     override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
         throw UnsupportedOperationException("Cannot read input on this system")
     }
