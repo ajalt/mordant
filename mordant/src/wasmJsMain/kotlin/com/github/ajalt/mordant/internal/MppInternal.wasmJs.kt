@@ -1,7 +1,7 @@
 package com.github.ajalt.mordant.internal
 
-import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceJsCommon
-import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceWasm
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJsCommon
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceWasm
 
 internal actual fun browserPrintln(message: String): Unit = js("console.error(message)")
 
