@@ -1,8 +1,8 @@
 package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.terminal.*
-import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceBrowser
-import com.github.ajalt.mordant.terminal.`interface`.TerminalInterfaceJsCommon
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceBrowser
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJsCommon
 
 
 // Since `js()` and `external` work differently in wasm and js, we need to define the functions that

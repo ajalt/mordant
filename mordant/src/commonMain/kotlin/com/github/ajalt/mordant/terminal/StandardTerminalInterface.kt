@@ -5,7 +5,7 @@ import com.github.ajalt.mordant.internal.readLineOrNullMpp
 import com.github.ajalt.mordant.rendering.AnsiLevel
 
 /**
- * A base class for terminal interfaces that print using standard `kotlin.io` functions.
+ * A base class for terminal interfaces that prints using standard `kotlin.io` functions.
  */
 abstract class StandardTerminalInterface : TerminalInterface {
     override fun info(
