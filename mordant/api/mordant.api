@@ -539,6 +539,13 @@ public final class com/github/ajalt/mordant/rendering/OverflowWrap : java/lang/E
 	public static fun values ()[Lcom/github/ajalt/mordant/rendering/OverflowWrap;
 }
 
+public final class com/github/ajalt/mordant/rendering/Size {
+	public fun <init> (II)V
+	public final fun getHeight ()I
+	public final fun getWidth ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/github/ajalt/mordant/rendering/Span {
 	public static final field Companion Lcom/github/ajalt/mordant/rendering/Span$Companion;
 	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextStyle;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -1167,23 +1174,35 @@ public abstract class com/github/ajalt/mordant/terminal/Prompt {
 	protected fun renderValue (Ljava/lang/Object;)Ljava/lang/String;
 }
 
+public abstract class com/github/ajalt/mordant/terminal/StandardTerminalInterface : com/github/ajalt/mordant/terminal/TerminalInterface {
+	public fun <init> ()V
+	public fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
+	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
+	public fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public fun readLineOrNull (Z)Ljava/lang/String;
+	public fun shouldAutoUpdateSize ()Z
+	public fun stdinInteractive ()Z
+	public fun stdoutInteractive ()Z
+}
+
 public final class com/github/ajalt/mordant/terminal/StringPrompt : com/github/ajalt/mordant/terminal/Prompt {
 	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/github/ajalt/mordant/terminal/Terminal {
-	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;)V
-	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Lcom/github/ajalt/mordant/rendering/Theme;ILcom/github/ajalt/mordant/terminal/TerminalInterface;)V
-	public fun <init> (Lcom/github/ajalt/mordant/rendering/Theme;Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
-	public fun <init> (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun danger (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
 	public static synthetic fun danger$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
 	public final fun getColors ()Lcom/github/ajalt/mordant/terminal/TerminalColors;
 	public final fun getCursor ()Lcom/github/ajalt/mordant/terminal/TerminalCursor;
 	public final fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public final fun getSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public final fun getTabWidth ()I
+	public final fun getTerminalInterface ()Lcom/github/ajalt/mordant/terminal/TerminalInterface;
 	public final fun getTheme ()Lcom/github/ajalt/mordant/rendering/Theme;
 	public final fun info (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
 	public static synthetic fun info$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
@@ -1211,6 +1230,7 @@ public final class com/github/ajalt/mordant/terminal/Terminal {
 	public static synthetic fun render$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ILjava/lang/Object;)Ljava/lang/String;
 	public final fun success (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
 	public static synthetic fun success$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
+	public final fun updateSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public final fun warning (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
 	public static synthetic fun warning$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
 }
@@ -1266,40 +1286,52 @@ public final class com/github/ajalt/mordant/terminal/TerminalCursor$DefaultImpls
 	public static synthetic fun hide$default (Lcom/github/ajalt/mordant/terminal/TerminalCursor;ZILjava/lang/Object;)V
 }
 
+public final class com/github/ajalt/mordant/terminal/TerminalDetection {
+	public static final field INSTANCE Lcom/github/ajalt/mordant/terminal/TerminalDetection;
+	public final fun detectTerminal (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;ZZ)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+}
+
 public final class com/github/ajalt/mordant/terminal/TerminalInfo {
-	public fun <init> (IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)V
-	public final fun component1 ()I
-	public final fun component2 ()I
-	public final fun component3 ()Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)V
+	public final fun component1 ()Lcom/github/ajalt/mordant/rendering/AnsiLevel;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
 	public final fun component4 ()Z
 	public final fun component5 ()Z
-	public final fun component6 ()Z
-	public final fun component7 ()Z
-	public final fun copy (IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
-	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/TerminalInfo;IILcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public final fun copy (Lcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZ)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/terminal/TerminalInfo;Lcom/github/ajalt/mordant/rendering/AnsiLevel;ZZZZILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAnsiHyperLinks ()Z
 	public final fun getAnsiLevel ()Lcom/github/ajalt/mordant/rendering/AnsiLevel;
 	public final fun getCrClearsLine ()Z
-	public final fun getHeight ()I
 	public final fun getInputInteractive ()Z
 	public final fun getInteractive ()Z
 	public final fun getOutputInteractive ()Z
-	public final fun getWidth ()I
 	public fun hashCode ()I
 	public final fun setAnsiHyperLinks (Z)V
 	public final fun setAnsiLevel (Lcom/github/ajalt/mordant/rendering/AnsiLevel;)V
-	public final fun setHeight (I)V
-	public final fun setWidth (I)V
 	public fun toString ()Ljava/lang/String;
-	public final fun updateTerminalSize ()Z
-	public final fun updateTerminalSize (J)Z
 }
 
 public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterface {
 	public abstract fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
-	public abstract fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public abstract fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public abstract fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
+	public abstract fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public abstract fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public abstract fun readLineOrNull (Z)Ljava/lang/String;
+	public abstract fun shouldAutoUpdateSize ()Z
+}
+
+public final class com/github/ajalt/mordant/terminal/TerminalInterface$DefaultImpls {
+	public static fun enterRawMode (Lcom/github/ajalt/mordant/terminal/TerminalInterface;Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public static fun getTerminalSize (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)Lcom/github/ajalt/mordant/rendering/Size;
+	public static fun readInputEvent-VtjQ1oo (Lcom/github/ajalt/mordant/terminal/TerminalInterface;JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public static fun shouldAutoUpdateSize (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)Z
+}
+
+public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterfaceProvider {
+	public abstract fun load ()Lcom/github/ajalt/mordant/terminal/TerminalInterface;
 }
 
 public final class com/github/ajalt/mordant/terminal/TerminalRecorder : com/github/ajalt/mordant/terminal/TerminalInterface {
@@ -1307,11 +1339,15 @@ public final class com/github/ajalt/mordant/terminal/TerminalRecorder : com/gith
 	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;IIZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clearOutput ()V
 	public fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
-	public fun getInfo ()Lcom/github/ajalt/mordant/terminal/TerminalInfo;
+	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
 	public final fun getInputLines ()Ljava/util/List;
+	public fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
+	public fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
 	public final fun output ()Ljava/lang/String;
+	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public fun readLineOrNull (Z)Ljava/lang/String;
 	public final fun setInputLines (Ljava/util/List;)V
+	public fun shouldAutoUpdateSize ()Z
 	public final fun stderr ()Ljava/lang/String;
 	public final fun stdout ()Ljava/lang/String;
 }
@@ -1320,6 +1356,156 @@ public final class com/github/ajalt/mordant/terminal/YesNoPrompt : com/github/aj
 	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun renderValue (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceJvmPosix : com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix {
+	public fun <init> ()V
+	protected fun readRawByte-HG0u8IE (Lkotlin/time/ComparableTimeMark;J)C
+}
+
+public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix : com/github/ajalt/mordant/terminal/StandardTerminalInterface {
+	protected static final field Companion Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Companion;
+	public static final field STDERR_FILENO I
+	public static final field STDIN_FILENO I
+	public static final field STDOUT_FILENO I
+	public fun <init> ()V
+	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public abstract fun getStdinTermios ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;
+	public abstract fun getTermiosConstants ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
+	protected abstract fun isatty (I)Z
+	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	protected abstract fun readRawByte-HG0u8IE (Lkotlin/time/ComparableTimeMark;J)C
+	public abstract fun setStdinTermios (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;)V
+	public fun stdinInteractive ()Z
+	public fun stdoutInteractive ()Z
+}
+
+protected final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Companion {
+	public final fun getLinuxTermiosConstants ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
+	public final fun getMacosTermiosConstants ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
+}
+
+public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios {
+	public synthetic fun <init> (IIII[BLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-pVg5ArA ()I
+	public final fun component2-pVg5ArA ()I
+	public final fun component3-pVg5ArA ()I
+	public final fun component4-pVg5ArA ()I
+	public final fun component5 ()[B
+	public final fun copy-guggwrw (IIII[B)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;
+	public static synthetic fun copy-guggwrw$default (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;IIII[BILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCc ()[B
+	public final fun getCflag-pVg5ArA ()I
+	public final fun getIflag-pVg5ArA ()I
+	public final fun getLflag-pVg5ArA ()I
+	public final fun getOflag-pVg5ArA ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants {
+	public synthetic fun <init> (IIIIIIIIIIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component10-pVg5ArA ()I
+	public final fun component11-pVg5ArA ()I
+	public final fun component12-pVg5ArA ()I
+	public final fun component13-pVg5ArA ()I
+	public final fun component14-pVg5ArA ()I
+	public final fun component2 ()I
+	public final fun component3-pVg5ArA ()I
+	public final fun component4-pVg5ArA ()I
+	public final fun component5-pVg5ArA ()I
+	public final fun component6-pVg5ArA ()I
+	public final fun component7-pVg5ArA ()I
+	public final fun component8-pVg5ArA ()I
+	public final fun component9-pVg5ArA ()I
+	public final fun copy-aaEChFo (IIIIIIIIIIIIII)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
+	public static synthetic fun copy-aaEChFo$default (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;IIIIIIIIIIIIIIILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCS8-pVg5ArA ()I
+	public final fun getECHO-pVg5ArA ()I
+	public final fun getICANON-pVg5ArA ()I
+	public final fun getICRNL-pVg5ArA ()I
+	public final fun getIEXTEN-pVg5ArA ()I
+	public final fun getIGNCR-pVg5ArA ()I
+	public final fun getINLCR-pVg5ArA ()I
+	public final fun getINPCK-pVg5ArA ()I
+	public final fun getISIG-pVg5ArA ()I
+	public final fun getISTRIP-pVg5ArA ()I
+	public final fun getIXON-pVg5ArA ()I
+	public final fun getOPOST-pVg5ArA ()I
+	public final fun getVMIN ()I
+	public final fun getVTIME ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows : com/github/ajalt/mordant/terminal/StandardTerminalInterface {
+	public static final field DOUBLE_CLICK I
+	public static final field ENABLE_EXTENDED_FLAGS I
+	public static final field ENABLE_MOUSE_INPUT I
+	public static final field ENABLE_PROCESSED_INPUT I
+	public static final field ENABLE_QUICK_EDIT_MODE I
+	public static final field ENABLE_WINDOW_INPUT I
+	public static final field FROM_LEFT_1ST_BUTTON_PRESSED I
+	public static final field FROM_LEFT_2ND_BUTTON_PRESSED I
+	public static final field FROM_LEFT_3RD_BUTTON_PRESSED I
+	public static final field FROM_LEFT_4TH_BUTTON_PRESSED I
+	public static final field LEFT_ALT_PRESSED I
+	public static final field LEFT_CTRL_PRESSED I
+	public static final field MOUSE_HWHEELED I
+	public static final field MOUSE_MOVED I
+	public static final field MOUSE_WHEELED I
+	public static final field RIGHTMOST_BUTTON_PRESSED I
+	public static final field RIGHT_ALT_PRESSED I
+	public static final field RIGHT_CTRL_PRESSED I
+	public static final field SHIFT_PRESSED I
+	public fun <init> ()V
+	public final fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	protected abstract fun getStdinConsoleMode-pVg5ArA ()I
+	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	protected abstract fun readRawEvent (I)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord;
+	protected abstract fun setStdinConsoleMode-WZ4Q5Ns (I)V
+}
+
+protected abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord {
+}
+
+public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Key : com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord {
+	public synthetic fun <init> (ZSCILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2-Mh2AYeg ()S
+	public final fun component3 ()C
+	public final fun component4-pVg5ArA ()I
+	public final fun copy-BxohIvk (ZSCI)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Key;
+	public static synthetic fun copy-BxohIvk$default (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Key;ZSCIILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Key;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBKeyDown ()Z
+	public final fun getDwControlKeyState-pVg5ArA ()I
+	public final fun getUChar ()C
+	public final fun getWVirtualKeyCode-Mh2AYeg ()S
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Mouse : com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord {
+	public synthetic fun <init> (SSIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()S
+	public final fun component2 ()S
+	public final fun component3-pVg5ArA ()I
+	public final fun component4-pVg5ArA ()I
+	public final fun component5-pVg5ArA ()I
+	public final fun copy-Z3u013Y (SSIII)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Mouse;
+	public static synthetic fun copy-Z3u013Y$default (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Mouse;SSIIIILjava/lang/Object;)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord$Mouse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDwButtonState-pVg5ArA ()I
+	public final fun getDwControlKeyState-pVg5ArA ()I
+	public final fun getDwEventFlags-pVg5ArA ()I
+	public final fun getDwMousePositionX ()S
+	public final fun getDwMousePositionY ()S
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/github/ajalt/mordant/widgets/Caption : com/github/ajalt/mordant/rendering/Widget {
