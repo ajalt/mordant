@@ -1,0 +1,5 @@
+public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceProviderJna : com/github/ajalt/mordant/terminal/TerminalInterfaceProvider {
+	public fun <init> ()V
+	public fun load ()Lcom/github/ajalt/mordant/terminal/TerminalInterface;
+}
+

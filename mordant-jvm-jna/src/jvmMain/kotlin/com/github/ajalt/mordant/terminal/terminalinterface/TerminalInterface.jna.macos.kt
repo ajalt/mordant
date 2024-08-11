@@ -76,13 +76,13 @@ internal class TerminalInterfaceJnaMacos : TerminalInterfaceJvmPosix() {
     override fun isatty(fd: Int): Boolean = libC.isatty(fd) != 0
 
     override fun getTerminalSize(): Size? {
-        // TODO: JNA has a bug that causes this to fail on macosArm64, use stty on mac for now
-//        val size = MacosLibC.winsize()
-//        return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
-//            null
-//        } else {
-//            size.ws_col.toInt() to size.ws_row.toInt()
-//        }
+        // XXX: JNA has a bug that causes this to fail on macosArm64, use stty on mac for now
+        // val size = MacosLibC.winsize()
+        // return if (libC.ioctl(STDIN_FILENO, NativeLong(TIOCGWINSZ), size) < 0) {
+        //     null
+        // } else {
+        //     size.ws_col.toInt() to size.ws_row.toInt()
+        // }
         return getSttySize(100)
     }
 

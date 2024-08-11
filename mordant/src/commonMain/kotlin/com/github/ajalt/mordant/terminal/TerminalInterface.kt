@@ -37,12 +37,35 @@ interface TerminalInterface {
      */
     fun readLineOrNull(hideInput: Boolean): String?
 
-    // TODO: docs
+    /**
+     * Return the current size, in cells, of the terminal, or null if the size is unknown.
+     */
     fun getTerminalSize(): Size? = null
-    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? = null // null means retry
+
+    /**
+     * Read a single input event from the terminal, or null if no event is available but this call
+     * should be retried immediately.
+     *
+     * You would return `null` if you receive an event that should be ignored, like a mouse
+     * event when mouse tracking is off.
+     */
+    fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+        throw NotImplementedError("Reading input events is not supported on this terminal")
+    }
+
+    /**
+     * Enter raw mode on the terminal, disabling line buffering and echoing to enable reading
+     * individual character.
+     *
+     * @return A scope that will restore the terminal to its previous state when closed.
+     */
     fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
         throw NotImplementedError("Raw mode is not supported on this terminal")
     }
+
+    /**
+     * Return true if the [getTerminalSize] method should be called frequently to update the size.
+     */
     fun shouldAutoUpdateSize(): Boolean = true
 }
 
