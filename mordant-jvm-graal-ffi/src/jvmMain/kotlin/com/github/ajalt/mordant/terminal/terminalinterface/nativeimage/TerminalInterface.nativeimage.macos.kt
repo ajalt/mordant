@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.nativeimage
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJvmPosix
 import org.graalvm.nativeimage.Platform
 import org.graalvm.nativeimage.Platforms
 import org.graalvm.nativeimage.StackValue

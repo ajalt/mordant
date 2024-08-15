@@ -1,11 +1,12 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJvmPosix
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection")
-private class LinuxCLibrary {
+private class MacosCLibrary {
     class winsize(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
             val ws_row by shortField()
@@ -24,16 +25,11 @@ private class LinuxCLibrary {
 
     class termios(override val segment: MemorySegment) : StructAccessor {
         object Layout : StructLayout() {
-            val c_iflag by intField()
-            val c_oflag by intField()
-            val c_cflag by intField()
-            val c_lflag by intField()
-            val c_line by byteField()
+            val c_iflag by longField()
+            val c_oflag by longField()
+            val c_cflag by longField()
+            val c_lflag by longField()
             val c_cc by arrayField(32)
-            @Suppress("unused")
-            val padding by paddingField(3)
-            val c_ispeed by intField()
-            val c_ospeed by intField()
         }
 
         constructor(arena: Arena) : this(arena.allocate(Layout.layout))
@@ -42,10 +38,7 @@ private class LinuxCLibrary {
         var c_oflag by Layout.c_oflag
         var c_cflag by Layout.c_cflag
         var c_lflag by Layout.c_lflag
-        var c_line by Layout.c_line
         val c_cc by Layout.c_cc
-        var c_ispeed by Layout.c_ispeed
-        var c_ospeed by Layout.c_ospeed
     }
 
     object MethodHandles : MethodHandlesHolder() {
@@ -72,19 +65,19 @@ private class LinuxCLibrary {
     }
 }
 
-internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
-    override val termiosConstants: TermiosConstants get() = LinuxTermiosConstants
+internal class TerminalInterfaceFfmMacos : TerminalInterfaceJvmPosix() {
+    override val termiosConstants: TermiosConstants get() = MacosTermiosConstants
 
     private companion object {
         const val TIOCGWINSZ = 0x00005413
         const val TCSADRAIN: Int = 0x1
     }
 
-    private val libC = LinuxCLibrary()
+    private val libC = MacosCLibrary()
     override fun isatty(fd: Int): Boolean = libC.isatty(fd)
 
     override fun getTerminalSize(): Size? = Arena.ofConfined().use { arena ->
-        val size = LinuxCLibrary.winsize(arena)
+        val size = MacosCLibrary.winsize(arena)
         if (!libC.ioctl(STDIN_FILENO, TIOCGWINSZ, size.segment)) {
             null
         } else {
@@ -93,7 +86,7 @@ internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
     }
 
     override fun getStdinTermios(): Termios = Arena.ofConfined().use { arena ->
-        val termios = LinuxCLibrary.termios(arena)
+        val termios = MacosCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, termios)) {
             throw RuntimeException("failed to read terminal settings")
         }
@@ -107,14 +100,14 @@ internal class TerminalInterfaceFfmLinux : TerminalInterfaceJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios): Unit = Arena.ofConfined().use { arena ->
-        val nativeTermios = LinuxCLibrary.termios(arena)
+        val nativeTermios = MacosCLibrary.termios(arena)
         if (!libC.tcgetattr(STDIN_FILENO, nativeTermios)) {
             throw RuntimeException("failed to update terminal settings")
         }
-        nativeTermios.c_iflag = termios.iflag.toInt()
-        nativeTermios.c_oflag = termios.oflag.toInt()
-        nativeTermios.c_cflag = termios.cflag.toInt()
-        nativeTermios.c_lflag = termios.lflag.toInt()
+        nativeTermios.c_iflag = termios.iflag.toLong()
+        nativeTermios.c_oflag = termios.oflag.toLong()
+        nativeTermios.c_cflag = termios.cflag.toLong()
+        nativeTermios.c_lflag = termios.lflag.toLong()
         nativeTermios.c_cc.copyFrom(MemorySegment.ofArray(termios.cc))
         libC.tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios)
     }
