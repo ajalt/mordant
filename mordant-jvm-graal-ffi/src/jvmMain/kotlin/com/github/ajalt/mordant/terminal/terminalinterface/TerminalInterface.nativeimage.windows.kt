@@ -60,10 +60,10 @@ private object WinKernel32Lib {
     @CStruct("COORD")
     interface COORD : PointerBase {
         @get:CField("X")
-        var X: Short
+        val X: Short
 
         @get:CField("Y")
-        var Y: Short
+        val Y: Short
     }
 
     @CStruct("KEY_EVENT_RECORD")
@@ -90,19 +90,19 @@ private object WinKernel32Lib {
     @CStruct("MOUSE_EVENT_RECORD")
     interface MOUSE_EVENT_RECORD : PointerBase {
         @get:CField("dwMousePosition")
-        var dwMousePosition: COORD
+        val dwMousePosition: COORD
 
         @get:CField("dwButtonState")
-        var dwButtonState: Int
+        val dwButtonState: Int
 
         @get:CField("dwControlKeyState")
-        var dwControlKeyState: Int
+        val dwControlKeyState: Int
 
         @get:CField("dwEventFlags")
-        var dwEventFlags: Int
+        val dwEventFlags: Int
     }
 
-    @CStruct("Event")
+    @CStruct("Event", isIncomplete=true)
     interface EventUnion : PointerBase {
         @get:CFieldAddress("KeyEvent")
         val KeyEvent: KEY_EVENT_RECORD
