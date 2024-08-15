@@ -2,6 +2,8 @@ package com.github.ajalt.mordant.terminal.terminalinterface
 
 import com.github.ajalt.mordant.terminal.TerminalInterface
 import com.github.ajalt.mordant.terminal.TerminalInterfaceProvider
+import com.oracle.svm.core.annotate.Substitute
+import com.oracle.svm.core.annotate.TargetClass
 
 class TerminalInterfaceProviderFfm : TerminalInterfaceProvider {
     override fun load(): TerminalInterface? {
@@ -16,4 +18,12 @@ class TerminalInterfaceProviderFfm : TerminalInterfaceProvider {
             else -> null
         }
     }
+}
+
+@TargetClass(TerminalInterfaceProviderFfm::class)
+private class TerminalInterfaceProviderFfmNative {
+
+    @Substitute
+    fun load(): TerminalInterface? = null
+
 }

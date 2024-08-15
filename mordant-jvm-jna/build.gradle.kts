@@ -11,6 +11,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.jna.core)
+            compileOnly(libs.graalvm.svm)
         }
     }
 }
