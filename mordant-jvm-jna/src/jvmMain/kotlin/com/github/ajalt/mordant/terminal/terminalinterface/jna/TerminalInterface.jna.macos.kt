@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.jna
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJvmPosix
 import com.sun.jna.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit

@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 
 import java.lang.foreign.*
 import java.lang.foreign.MemoryLayout.PathElement

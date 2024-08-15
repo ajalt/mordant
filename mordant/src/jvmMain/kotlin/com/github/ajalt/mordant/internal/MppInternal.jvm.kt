@@ -127,9 +127,9 @@ internal actual fun getStandardTerminalInterface(): TerminalInterface {
         .associateBy { it::class.qualifiedName }
     // The built-in providers in the order that they should be loaded
     val builtins = listOf(
-        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderFfm",
-        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderNativeImage",
-        "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderJna",
+        "com.github.ajalt.mordant.terminal.terminalinterface.ffm.TerminalInterfaceProviderFfm",
+        "com.github.ajalt.mordant.terminal.terminalinterface.nativeimage.TerminalInterfaceProviderNativeImage",
+        "com.github.ajalt.mordant.terminal.terminalinterface.jna.TerminalInterfaceProviderJna",
     )
 
     // All providers, including user-provided ones

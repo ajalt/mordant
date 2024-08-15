@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceWindows
 import java.lang.foreign.*
 
 private object WinLayouts {

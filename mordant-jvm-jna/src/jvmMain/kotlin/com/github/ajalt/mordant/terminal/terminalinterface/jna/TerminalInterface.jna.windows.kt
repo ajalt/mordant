@@ -1,6 +1,7 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.jna
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceWindows
 import com.sun.jna.*
 import com.sun.jna.ptr.IntByReference
 import com.sun.jna.win32.W32APIOptions
