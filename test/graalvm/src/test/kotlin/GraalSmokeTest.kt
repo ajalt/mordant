@@ -11,6 +11,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBar
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledInNativeImage
 import java.util.concurrent.TimeUnit
 import kotlin.test.fail
 
@@ -19,13 +20,16 @@ import kotlin.test.fail
  *
  * They just make sure nothing crashes; the actual output is verified in the normal test suite.
  */
+@EnabledInNativeImage
 class GraalSmokeTest {
-    // It would be nice to have more graal-specific assertions, but the nativeTest task actually
-    // runs all the tests twice, the first time on regular JVM to detect tests, then a second time
-    // on native. So any assertions about environment would have to handle that.
     @Test
     fun `terminal detection test`() {
+        val name = Terminal().terminalInterface::class.simpleName
         Terminal()
+        val assertion = name!!.startsWith("TerminalInterfaceNativeImage")
+        if (!assertion) {
+            fail("Incorrect terminal interface: $name")
+        }
     }
 
     @Test
