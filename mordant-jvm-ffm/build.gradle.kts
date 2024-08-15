@@ -9,5 +9,8 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":mordant"))
         }
+        jvmMain.dependencies {
+            compileOnly(libs.graalvm.svm)
+        }
     }
 }
