@@ -1,4 +1,4 @@
-public final class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceProviderNativeImage : com/github/ajalt/mordant/terminal/TerminalInterfaceProvider {
+public final class com/github/ajalt/mordant/terminal/terminalinterface/nativeimage/TerminalInterfaceProviderNativeImage : com/github/ajalt/mordant/terminal/TerminalInterfaceProvider {
 	public fun <init> ()V
 	public fun load ()Lcom/github/ajalt/mordant/terminal/TerminalInterface;
 }
