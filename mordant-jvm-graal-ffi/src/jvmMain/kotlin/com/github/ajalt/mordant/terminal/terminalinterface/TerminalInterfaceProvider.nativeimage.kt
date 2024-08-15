@@ -2,20 +2,38 @@ package com.github.ajalt.mordant.terminal.terminalinterface
 
 import com.github.ajalt.mordant.terminal.TerminalInterface
 import com.github.ajalt.mordant.terminal.TerminalInterfaceProvider
+import com.oracle.svm.core.annotate.Substitute
+import com.oracle.svm.core.annotate.TargetClass
+import org.graalvm.nativeimage.Platform
+import org.graalvm.nativeimage.Platforms
 
 class TerminalInterfaceProviderNativeImage : TerminalInterfaceProvider {
-    override fun load(): TerminalInterface? {
-        // Inlined version of ImageInfo.inImageCode()
-        val imageCode = System.getProperty("org.graalvm.nativeimage.imagecode")
-        val isNativeImage = imageCode == "buildtime" || imageCode == "runtime"
-        if (!isNativeImage) return null
+    override fun load(): TerminalInterface? = null
+}
 
-        val os = System.getProperty("os.name")
-        return when {
-            os.startsWith("Windows") -> TerminalInterfaceNativeImageWindows()
-            os == "Linux" -> TerminalInterfaceNativeImageLinux()
-            os == "Mac OS X" -> TerminalInterfaceNativeImageMacos()
-            else -> null
-        }
-    }
+@Platforms(Platform.LINUX::class)
+@TargetClass(TerminalInterfaceProviderNativeImage::class)
+private class TerminalInterfaceProviderNativeImageLinux {
+
+    @Substitute
+    fun load(): TerminalInterface = TerminalInterfaceNativeImageLinux()
+
+}
+
+@Platforms(Platform.WINDOWS::class)
+@TargetClass(TerminalInterfaceProviderNativeImage::class)
+private class TerminalInterfaceProviderNativeImageWindows {
+
+    @Substitute
+    fun load(): TerminalInterface = TerminalInterfaceNativeImageWindows()
+
+}
+
+@Platforms(Platform.MACOS::class)
+@TargetClass(TerminalInterfaceProviderNativeImage::class)
+private class TerminalInterfaceProviderNativeImageMacos {
+
+    @Substitute
+    fun load(): TerminalInterface = TerminalInterfaceNativeImageMacos()
+
 }
