@@ -1,4 +1,4 @@
-package com.github.ajalt.mordant.terminal.terminalinterface
+package com.github.ajalt.mordant.terminal.terminalinterface.nativeimage
 
 import com.github.ajalt.mordant.terminal.TerminalInterface
 import com.github.ajalt.mordant.terminal.TerminalInterfaceProvider
