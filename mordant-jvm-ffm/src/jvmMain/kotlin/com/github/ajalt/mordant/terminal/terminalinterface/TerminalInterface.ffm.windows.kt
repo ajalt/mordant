@@ -3,7 +3,7 @@ package com.github.ajalt.mordant.terminal.terminalinterface
 import com.github.ajalt.mordant.rendering.Size
 import java.lang.foreign.*
 
-internal object WinLayouts {
+private object WinLayouts {
     val HANDLE: AddressLayout = Layouts.POINTER
     val WORD: ValueLayout.OfShort = ValueLayout.JAVA_SHORT
     val DWORD: ValueLayout.OfInt = Layouts.INT
