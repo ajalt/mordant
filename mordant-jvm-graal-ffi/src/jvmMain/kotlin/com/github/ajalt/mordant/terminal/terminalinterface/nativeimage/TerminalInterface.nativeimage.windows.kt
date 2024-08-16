@@ -9,9 +9,9 @@ import org.graalvm.nativeimage.c.CContext
 import org.graalvm.nativeimage.c.constant.CConstant
 import org.graalvm.nativeimage.c.function.CFunction
 import org.graalvm.nativeimage.c.struct.CField
-import org.graalvm.nativeimage.c.struct.CFieldAddress
 import org.graalvm.nativeimage.c.struct.CStruct
 import org.graalvm.nativeimage.c.type.CIntPointer
+import org.graalvm.word.Pointer
 import org.graalvm.word.PointerBase
 
 @Platforms(Platform.WINDOWS::class)
@@ -28,9 +28,6 @@ private object WinKernel32Lib {
 
     @CConstant("STD_OUTPUT_HANDLE")
     external fun STD_OUTPUT_HANDLE(): Int
-
-    @CConstant("ENABLE_PROCESSED_INPUT")
-    external fun ENABLE_PROCESSED_INPUT(): Int
 
     @CStruct("CONSOLE_SCREEN_BUFFER_INFO")
     interface CONSOLE_SCREEN_BUFFER_INFO : PointerBase {
@@ -49,73 +46,30 @@ private object WinKernel32Lib {
 
     }
 
-    @CStruct("KEY_EVENT_RECORD.uChar")
-    interface UnionChar : PointerBase {
-        @get:CField("UnicodeChar")
-        val UnicodeChar: Char
-
-        @get:CField("AsciiChar")
-        val AsciiChar: Byte
+    class COORD(private val pointer: Pointer) {
+        val X: Short get() = pointer.readShort(0)
+        val Y: Short get() = pointer.readShort(2)
     }
 
-    @CStruct("COORD")
-    interface COORD : PointerBase {
-        @get:CField("X")
-        val X: Short
+    sealed class EventUnion {
+        class KeyEvent(private val pointer: Pointer) : EventUnion() {
+            val bKeyDown: Boolean get() = pointer.readInt(0) != 0
+            val wVirtualKeyCode: Short get() = pointer.readShort(6)
+            val uChar: Char get() = pointer.readChar(10)
+            val dwControlKeyState: Int get() = pointer.readInt(12)
+        }
 
-        @get:CField("Y")
-        val Y: Short
+        class MouseEvent(private val pointer: Pointer) : EventUnion() {
+            val dwMousePosition: COORD get() = COORD(pointer)
+            val dwButtonState: Int get() = pointer.readInt(4)
+            val dwControlKeyState: Int get() = pointer.readInt(8)
+            val dwEventFlags: Int get() = pointer.readInt(12)
+        }
     }
 
-    @CStruct("KEY_EVENT_RECORD")
-    interface KEY_EVENT_RECORD : PointerBase {
-        @get:CField("bKeyDown")
-        val bKeyDown: Boolean
-
-        @get:CField("wRepeatCount")
-        val wRepeatCount: Short
-
-        @get:CField("wVirtualKeyCode")
-        val wVirtualKeyCode: Short
-
-        @get:CField("wVirtualScanCode")
-        val wVirtualScanCode: Short
-
-        @get:CField("uChar")
-        val uChar: UnionChar?
-
-        @get:CField("dwControlKeyState")
-        val dwControlKeyState: Int
-    }
-
-    @CStruct("MOUSE_EVENT_RECORD")
-    interface MOUSE_EVENT_RECORD : PointerBase {
-        @get:CField("dwMousePosition")
-        val dwMousePosition: COORD
-
-        @get:CField("dwButtonState")
-        val dwButtonState: Int
-
-        @get:CField("dwControlKeyState")
-        val dwControlKeyState: Int
-
-        @get:CField("dwEventFlags")
-        val dwEventFlags: Int
-    }
-
-    @CStruct("INPUT_RECORD.Event", isIncomplete=true)
-    interface EventUnion : PointerBase {
-        @get:CFieldAddress("KeyEvent")
-        val KeyEvent: KEY_EVENT_RECORD
-
-        @get:CFieldAddress("MouseEvent")
-        val MouseEvent: MOUSE_EVENT_RECORD
-        // ... other fields omitted until we need them
-    }
-
-    @CStruct("INPUT_RECORD")
-    interface INPUT_RECORD : PointerBase {
+    class InputRecord(private val pointer: Pointer) {
         companion object {
+            const val BYTE_SIZE = 20
             const val KEY_EVENT: Short = 0x0001
             const val MOUSE_EVENT: Short = 0x0002
             const val WINDOW_BUFFER_SIZE_EVENT: Short = 0x0004
@@ -123,11 +77,15 @@ private object WinKernel32Lib {
             const val FOCUS_EVENT: Short = 0x0010
         }
 
-        @get:CField("EventType")
         val EventType: Short
+            get() = pointer.readShort(0)
 
-        @get:CField("Event")
-        val Event: EventUnion
+        val Event: EventUnion?
+            get() = when (EventType) {
+                KEY_EVENT -> EventUnion.KeyEvent(pointer.add(4))
+                MOUSE_EVENT -> EventUnion.MouseEvent(pointer.add(4))
+                else -> null
+            }
     }
 
 
@@ -149,10 +107,10 @@ private object WinKernel32Lib {
     @CFunction("WaitForSingleObject")
     external fun WaitForSingleObject(hHandle: PointerBase?, dwMilliseconds: Int): Int
 
-    @CFunction("ReadConsoleInput")
-    external fun ReadConsoleInput(
+    @CFunction("ReadConsoleInputW")
+    external fun ReadConsoleInputW(
         hConsoleOutput: PointerBase?,
-        lpBuffer: INPUT_RECORD?,
+        lpBuffer: Pointer?,
         nLength: Int,
         lpNumberOfEventsRead: CIntPointer?,
     )
@@ -192,7 +150,7 @@ internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() 
 
     override fun setStdinConsoleMode(dwMode: UInt) {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
-        if (!WinKernel32Lib.SetConsoleMode(stdinHandle, WinKernel32Lib.ENABLE_PROCESSED_INPUT())) {
+        if (!WinKernel32Lib.SetConsoleMode(stdinHandle, dwMode.toInt())) {
             throw RuntimeException("Error setting console mode")
         }
     }
@@ -203,31 +161,32 @@ internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() 
         if (waitResult != 0) {
             throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
-        val inputEvents = StackValue.get(WinKernel32Lib.INPUT_RECORD::class.java)
+        val inputEvents = StackValue.get<Pointer>(WinKernel32Lib.InputRecord.BYTE_SIZE)
         val eventsRead = StackValue.get(CIntPointer::class.java)
-        WinKernel32Lib.ReadConsoleInput(stdinHandle, inputEvents, 1, eventsRead)
+        WinKernel32Lib.ReadConsoleInputW(stdinHandle, inputEvents, 1, eventsRead)
         if (eventsRead.read() == 0) {
             throw RuntimeException("Error reading from console input")
         }
-        return when (inputEvents.EventType) {
-            WinKernel32Lib.INPUT_RECORD.KEY_EVENT -> {
-                val keyEvent = inputEvents.Event.KeyEvent
+
+        val inputRecord = WinKernel32Lib.InputRecord(inputEvents)
+
+        return when (val event = inputRecord.Event) {
+            is WinKernel32Lib.EventUnion.KeyEvent -> {
                 EventRecord.Key(
-                    bKeyDown = keyEvent.bKeyDown,
-                    wVirtualKeyCode = keyEvent.wVirtualKeyCode.toUShort(),
-                    uChar = keyEvent.uChar!!.UnicodeChar,
-                    dwControlKeyState = keyEvent.dwControlKeyState.toUInt(),
+                    bKeyDown = event.bKeyDown,
+                    wVirtualKeyCode = event.wVirtualKeyCode.toUShort(),
+                    uChar = event.uChar,
+                    dwControlKeyState = event.dwControlKeyState.toUInt(),
                 )
             }
 
-            WinKernel32Lib.INPUT_RECORD.MOUSE_EVENT -> {
-                val mouseEvent = inputEvents.Event.MouseEvent
+            is WinKernel32Lib.EventUnion.MouseEvent -> {
                 EventRecord.Mouse(
-                    dwMousePositionX = mouseEvent.dwMousePosition.X,
-                    dwMousePositionY = mouseEvent.dwMousePosition.Y,
-                    dwButtonState = mouseEvent.dwButtonState.toUInt(),
-                    dwControlKeyState = mouseEvent.dwControlKeyState.toUInt(),
-                    dwEventFlags = mouseEvent.dwEventFlags.toUInt(),
+                    dwMousePositionX = event.dwMousePosition.X,
+                    dwMousePositionY = event.dwMousePosition.Y,
+                    dwButtonState = event.dwButtonState.toUInt(),
+                    dwControlKeyState = event.dwControlKeyState.toUInt(),
+                    dwEventFlags = event.dwEventFlags.toUInt(),
                 )
             }
 

@@ -13,4 +13,11 @@ kotlin {
             compileOnly(libs.graalvm.svm)
         }
     }
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xno-param-assertions",
+            "-Xno-call-assertions",
+            "-Xno-receiver-assertions",
+        )
+    }
 }
