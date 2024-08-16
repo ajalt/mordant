@@ -1,10 +1,3 @@
-public abstract class com/github/ajalt/mordant/terminal/terminalinterface/ffm/MethodHandlesHolder {
-	public fun <init> ()V
-	public fun <init> (Ljava/lang/foreign/Linker;Ljava/lang/foreign/SymbolLookup;)V
-	public synthetic fun <init> (Ljava/lang/foreign/Linker;Ljava/lang/foreign/SymbolLookup;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	protected final fun handle (Ljava/lang/foreign/MemoryLayout;[Ljava/lang/foreign/MemoryLayout;)Lkotlin/properties/PropertyDelegateProvider;
-}
-
 public final class com/github/ajalt/mordant/terminal/terminalinterface/ffm/TerminalInterfaceProviderFfm : com/github/ajalt/mordant/terminal/TerminalInterfaceProvider {
 	public fun <init> ()V
 	public fun load ()Lcom/github/ajalt/mordant/terminal/TerminalInterface;

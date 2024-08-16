@@ -51,10 +51,10 @@ private object WinKernel32Lib {
 
     @CStruct("uChar")
     interface UnionChar : PointerBase {
-        @get:CFieldAddress("UnicodeChar")
+        @get:CField("UnicodeChar")
         val UnicodeChar: Char
 
-        @get:CFieldAddress("AsciiChar")
+        @get:CField("AsciiChar")
         val AsciiChar: Byte
     }
 
