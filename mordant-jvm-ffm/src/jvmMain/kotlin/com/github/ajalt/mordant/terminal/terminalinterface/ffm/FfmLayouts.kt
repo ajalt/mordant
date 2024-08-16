@@ -145,7 +145,7 @@ internal fun MemorySegment.offsetOf(
     return asSlice(parent.byteOffset(name), layout.byteSize())
 }
 
-abstract class MethodHandlesHolder(
+internal abstract class MethodHandlesHolder(
     private val linker: Linker = Linker.nativeLinker(),
     private val lookup: SymbolLookup = SymbolLookup.loaderLookup().or(linker.defaultLookup()),
 ) {
