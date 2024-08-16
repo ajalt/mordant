@@ -49,7 +49,7 @@ private object WinKernel32Lib {
 
     }
 
-    @CStruct("uChar")
+    @CStruct("KEY_EVENT_RECORD.uChar")
     interface UnionChar : PointerBase {
         @get:CField("UnicodeChar")
         val UnicodeChar: Char
@@ -103,7 +103,7 @@ private object WinKernel32Lib {
         val dwEventFlags: Int
     }
 
-    @CStruct("Event", isIncomplete=true)
+    @CStruct("INPUT_RECORD.Event", isIncomplete=true)
     interface EventUnion : PointerBase {
         @get:CFieldAddress("KeyEvent")
         val KeyEvent: KEY_EVENT_RECORD
