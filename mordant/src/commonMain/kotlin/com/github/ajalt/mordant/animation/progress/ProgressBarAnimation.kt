@@ -34,6 +34,9 @@ interface ProgressTask<T> {
      *
      * If the task is already finished, this method will still update the task's state, but it will
      * remain marked as finished. Use [reset] if you want to start the task again.
+     *
+     * Note that if you are calling this method concurrently, the [block] may be called more than
+     * once, so it should not have any side effects.
      */
     fun update(block: ProgressTaskUpdateScope<T>.() -> Unit)
 
