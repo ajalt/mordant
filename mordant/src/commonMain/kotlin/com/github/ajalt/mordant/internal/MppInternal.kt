@@ -16,14 +16,13 @@ internal interface MppAtomicRef<T> {
     fun getAndSet(newValue: T): T
 }
 
-/** Update the reference via spin lock, spinning up to [attempts] times. */
-internal inline fun <T> MppAtomicRef<T>.update(attempts: Int = 99, block: T.() -> T): Pair<T, T> {
-    repeat(attempts) {
+/** Update the reference via spin lock, spinning forever until it succeeds. */
+internal inline fun <T> MppAtomicRef<T>.update(block: T.() -> T): Pair<T, T> {
+    while(true) {
         val old = value
         val newValue = block(old)
         if (compareAndSet(old, newValue)) return old to newValue
     }
-    throw ConcurrentModificationException("Failed to update state due to concurrent updates")
 }
 
 internal expect fun <T> MppAtomicRef(value: T): MppAtomicRef<T>

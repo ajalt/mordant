@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed
+- Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#240)](https://github.com/ajalt/mordant/issues/240)
+
 ## 2.7.2
 ### Fixed
 - Fixed raw mode on macOS for JVM and native not using the correct termios constants. [(#180)](https://github.com/ajalt/mordant/issues/180)
