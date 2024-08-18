@@ -15,7 +15,8 @@
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
 
 ### Fixed
-- Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#240)](https://github.com/ajalt/mordant/issues/240)
+- Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#204)](https://github.com/ajalt/mordant/issues/204)
+- Improved performance of progress bars under high concurrency. [(#207)](https://github.com/ajalt/mordant/issues/207)
 
 ## 2.7.2
 ### Fixed

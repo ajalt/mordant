@@ -13,6 +13,8 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit.SECONDS
 import kotlin.time.TimeSource
 
+private const val MAX_BUCKETS = 30
+
 class MultiProgressBarAnimation(
     /** The terminal to render the animation to */
     val terminal: Terminal,
@@ -101,7 +103,12 @@ class MultiProgressBarAnimation(
     }
 }
 
-private class HistoryEntry(val time: ComparableTimeMark, val completed: Long)
+private data class HistoryEntry(
+    /** The start of the time span covered by this bucket */
+    val start: ComparableTimeMark,
+    /** Total completed at this time */
+    val completed: Long,
+)
 
 private data class TaskState<T>(
     val context: T,
@@ -167,14 +174,15 @@ private class ProgressTaskImpl<T>(
             scope.block()
 
             // Remove samples older than the speed estimate duration
-            val oldestSampleTime = timeSource.markNow() - speedEstimateDuration
-            val entry = HistoryEntry(timeSource.markNow(), scope.completed)
-            val samples = samples.dropWhile { it.time < oldestSampleTime } + entry
+            val now = timeSource.markNow()
+            val samples = addHistoryEntry(
+                samples, speedEstimateDuration, now, scope.completed
+            )
             val total = scope.total
 
-            val startTime = status.pauseTime ?: timeSource.markNow()
-            val finishTime = status.finishTime ?: timeSource.markNow()
-            val pauseTime = status.pauseTime ?: timeSource.markNow()
+            val startTime = status.pauseTime ?: now
+            val finishTime = status.finishTime ?: now
+            val pauseTime = status.pauseTime ?: now
 
             val status = when {
                 total != null && scope.completed >= total -> Status.Finished(startTime, finishTime)
@@ -247,12 +255,38 @@ private class ProgressTaskImpl<T>(
     override val total: Long? get() = state.value.total
 }
 
+private fun addHistoryEntry(
+    samples: List<HistoryEntry>,
+    estimateDuration: Duration,
+    now: ComparableTimeMark,
+    completed: Long,
+): List<HistoryEntry> {
+    val bucketSize = estimateDuration / MAX_BUCKETS
+    val oldestStartTime = now - estimateDuration - bucketSize
+    val needsNewBucket = samples.lastOrNull()?.let { it.start + bucketSize < now } ?: true
+    val lastBucket = when {
+        needsNewBucket -> HistoryEntry(now, completed)
+        else -> samples.last().copy(completed = completed)
+    }
+    return buildList(MAX_BUCKETS.coerceAtMost(samples.size + 1)) {
+        for ((i, sample) in samples.withIndex()) {
+            if (i == 0 && needsNewBucket && samples.size >= MAX_BUCKETS) continue
+            if (i == samples.lastIndex && !needsNewBucket) continue
+            if (sample.start > oldestStartTime) add(sample)
+        }
+        add(lastBucket)
+    }
+}
+
 private fun estimateSpeed(
     startedTime: ComparableTimeMark?,
     samples: List<HistoryEntry>,
 ): Double? {
-    if (startedTime == null || samples.size < 2) return null
-    val sampleTimespan = samples.first().time.elapsedNow().toDouble(SECONDS)
-    val complete = samples.last().completed - samples.first().completed
+    if (startedTime == null || samples.isEmpty()) return null
+    val sampleTimespan = samples.first().start.elapsedNow().toDouble(SECONDS)
+    val complete = when (samples.size) {
+        1 -> samples.first().completed
+        else -> samples.last().completed - samples.first().completed
+    }
     return if (complete <= 0 || sampleTimespan <= 0.0) null else complete / sampleTimespan
 }
