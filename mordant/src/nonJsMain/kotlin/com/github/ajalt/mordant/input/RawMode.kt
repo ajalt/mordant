@@ -46,10 +46,7 @@ class RawModeScope internal constructor(
      * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
      */
     fun readKey(timeout: Duration = Duration.INFINITE): KeyboardEvent {
-        while (true) {
-            val event = readEvent(timeout)
-            if (event is KeyboardEvent) return event
-        }
+        return readKeyOrNull(timeout) ?: throwTimeout()
     }
 
     /**
@@ -59,7 +56,11 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readKeyOrNull(timeout: Duration = Duration.INFINITE): KeyboardEvent? {
-        return runCatching { readKey(timeout) }.getOrNull()
+        return readEventsUntilTimeout(timeout) { inputEvent ->
+            if (inputEvent is KeyboardEvent) {
+                return inputEvent
+            }
+        }
     }
 
     /**
@@ -69,10 +70,7 @@ class RawModeScope internal constructor(
      * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
      */
     fun readMouse(timeout: Duration = Duration.INFINITE): MouseEvent {
-        while (true) {
-            val event = readEvent(timeout)
-            if (event is MouseEvent) return event
-        }
+        return readMouseOrNull(timeout) ?: throwTimeout()
     }
 
     /**
@@ -82,7 +80,11 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readMouseOrNull(timeout: Duration = Duration.INFINITE): MouseEvent? {
-        return runCatching { readMouse(timeout) }.getOrNull()
+        return readEventsUntilTimeout(timeout) { inputEvent ->
+            if (inputEvent is MouseEvent && mouseTracking != MouseTracking.Off) {
+                return inputEvent
+            }
+        }
     }
 
     /**
@@ -92,14 +94,7 @@ class RawModeScope internal constructor(
      * @throws RuntimeException if no event is received before the timeout, or input cannot be read.
      */
     fun readEvent(timeout: Duration = Duration.INFINITE): InputEvent {
-        val t0 = TimeSource.Monotonic.markNow()
-        do {
-            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
-            if (event !is SysInputEvent.Success) continue
-            if (event.event is MouseEvent && mouseTracking == MouseTracking.Off) continue
-            return event.event
-        } while (t0.elapsedNow() < timeout)
-        throw RuntimeException("Timeout while waiting for input")
+        return readEventOrNull(timeout) ?: throwTimeout()
     }
 
     /**
@@ -109,6 +104,23 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readEventOrNull(timeout: Duration = Duration.INFINITE): InputEvent? {
-        return runCatching { readEvent(timeout) }.getOrNull()
+        return readEventsUntilTimeout(timeout) { inputEvent ->
+            if (inputEvent !is MouseEvent || mouseTracking != MouseTracking.Off) {
+                return inputEvent
+            }
+        }
     }
+
+    private inline fun readEventsUntilTimeout(timeout: Duration, handler: (InputEvent) -> Unit): Nothing? {
+        val t0 = TimeSource.Monotonic.markNow()
+        do {
+            val event = SYSCALL_HANDLER.readInputEvent(timeout - t0.elapsedNow(), mouseTracking)
+            if (event is SysInputEvent.Success) {
+                handler(event.event)
+            }
+        } while (t0.elapsedNow() < timeout)
+        return null
+    }
+
+    private fun throwTimeout(): Nothing = throw RuntimeException("Timeout while waiting for input")
 }
