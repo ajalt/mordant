@@ -54,6 +54,10 @@ private fun nodeReadFileSync(filename: String): String? =
         }"""
     )
 
+@Suppress("UNUSED_PARAMETER")
+private fun nodeBufferToString(buffer: JsAny): String = js("buffer.toString()")
+
+private fun importNodeFsModule(): FsModule = js("""require("fs")""")
 
 internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
     private val fs: FsModule = importNodeFsModule()
@@ -74,7 +78,7 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 
     override fun allocBuffer(size: Int): JsAny = Buffer.alloc(size)
 
-    override fun bufferToString(buffer: JsAny): String = js("buffer.toString()")
+    override fun bufferToString(buffer: JsAny): String = nodeBufferToString(buffer)
 
     override fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int {
         return fs.readSync(fd, buffer, offset, len, null)
@@ -84,9 +88,7 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
         return NodeTerminalCursor(terminal)
     }
 
-    override fun readFileIfExists(filename: String): String? {
-        return nodeReadFileSync(filename)
-    }
+    override fun readFileIfExists(filename: String): String? = nodeReadFileSync(filename)
 
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
         if (!stdinInteractive()) {
@@ -114,5 +116,3 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
         super.hide(showOnExit)
     }
 }
-
-private fun importNodeFsModule(): FsModule = js("""require("fs")""")
