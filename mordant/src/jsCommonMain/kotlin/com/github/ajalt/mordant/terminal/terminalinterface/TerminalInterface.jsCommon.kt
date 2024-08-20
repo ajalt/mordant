@@ -18,13 +18,6 @@ internal abstract class TerminalInterfaceJsCommon: StandardTerminalInterface() {
     abstract fun exitProcess(status: Int)
     abstract fun readFileIfExists(filename: String): String?
 
-    // The public interface never is in nonJsMain, so these will never be called
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
-        throw UnsupportedOperationException("Reading keyboard is not supported on this platform")
-    }
-    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
-        throw UnsupportedOperationException("Raw mode is not supported on this platform")
-    }
 }
 
 internal abstract class TerminalInterfaceNode<BufferT> : TerminalInterfaceJsCommon() {
@@ -33,11 +26,7 @@ internal abstract class TerminalInterfaceNode<BufferT> : TerminalInterfaceJsComm
             buildString {
                 val buf = allocBuffer(1)
                 do {
-                    val len = readSync(
-                        fd = 0, buffer = buf, offset = 0, len = 1
-                    )
-                    if (len == 0) break
-                    val char = "$buf" // don't call toString here due to KT-55817
+                    val char = readByteWithBuf(buf) ?: break
                     append(char)
                 } while (char != "\n" && char != "${0.toChar()}")
             }
@@ -47,7 +36,23 @@ internal abstract class TerminalInterfaceNode<BufferT> : TerminalInterfaceJsComm
     }
 
     abstract fun allocBuffer(size: Int): BufferT
+    abstract fun bufferToString(buffer: BufferT): String
     abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
+
+    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+        return PosixEventParser { _, _ ->
+            val buf = allocBuffer(1)
+            readByteWithBuf(buf)?.let { it[0] }
+                ?: throw RuntimeException("Failed reading from stdin")
+        }.readInputEvent(timeout)
+    }
+
+    private fun readByteWithBuf(buf: BufferT): String? {
+        val len = readSync(fd = 0, buffer = buf, offset = 0, len = 1)
+        if (len == 0) return null
+        // don't call kotlin's toString here due to KT-55817
+        return bufferToString(buf)
+    }
 }
 
 internal object TerminalInterfaceBrowser : TerminalInterfaceJsCommon() {
@@ -65,6 +70,7 @@ internal object TerminalInterfaceBrowser : TerminalInterfaceJsCommon() {
     }
 
     override fun readFileIfExists(filename: String): String? = null
+
 }
 
 // There are no shutdown hooks on browsers, so we don't need to do anything here

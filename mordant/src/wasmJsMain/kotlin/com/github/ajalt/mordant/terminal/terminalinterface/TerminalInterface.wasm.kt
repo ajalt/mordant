@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal.terminalinterface
 
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.Size
 import com.github.ajalt.mordant.terminal.PrintTerminalCursor
 import com.github.ajalt.mordant.terminal.Terminal
@@ -8,6 +9,7 @@ import com.github.ajalt.mordant.terminal.TerminalCursor
 
 private external interface Stream {
     val isTTY: Boolean
+    fun setRawMode(mode: Boolean)
     fun write(s: String)
     fun getWindowSize(): JsArray<JsNumber>
 }
@@ -72,6 +74,8 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 
     override fun allocBuffer(size: Int): JsAny = Buffer.alloc(size)
 
+    override fun bufferToString(buffer: JsAny): String = js("buffer.toString()")
+
     override fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int {
         return fs.readSync(fd, buffer, offset, len, null)
     }
@@ -82,6 +86,14 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 
     override fun readFileIfExists(filename: String): String? {
         return nodeReadFileSync(filename)
+    }
+
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        if (!stdinInteractive()) {
+            throw RuntimeException("Cannot enter raw mode on a non-interactive terminal")
+        }
+        process.stdin.setRawMode(true)
+        return AutoCloseable { process.stdin.setRawMode(false) }
     }
 }
 

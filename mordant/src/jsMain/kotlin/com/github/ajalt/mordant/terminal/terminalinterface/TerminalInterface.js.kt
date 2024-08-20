@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal.terminalinterface
 
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.Size
 import com.github.ajalt.mordant.terminal.PrintTerminalCursor
 import com.github.ajalt.mordant.terminal.Terminal
@@ -33,6 +34,10 @@ internal class TerminalInterfaceJsNode(private val fs: dynamic): TerminalInterfa
         return Buffer.alloc(size)
     }
 
+    override fun bufferToString(buffer: dynamic): String {
+        return js("buffer.toString()") as String
+    }
+
     override fun readSync(fd: Int, buffer: dynamic, offset: Int, len: Int): Int {
         return fs.readSync(fd, buffer, offset, len, null) as Int
     }
@@ -43,6 +48,17 @@ internal class TerminalInterfaceJsNode(private val fs: dynamic): TerminalInterfa
 
     override fun readFileIfExists(filename: String): String? {
         return fs.readFileSync(filename, "utf-8") as? String
+    }
+
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        if (!stdinInteractive()) {
+            throw RuntimeException("Cannot enter raw mode on a non-interactive terminal")
+        }
+        process.stdin.setRawMode(true)
+        return AutoCloseable {
+            process.stdin.setRawMode(false)
+            Unit
+        }
     }
 }
 

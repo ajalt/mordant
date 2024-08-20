@@ -3,10 +3,8 @@ package com.github.ajalt.mordant.internal
 import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJsCommon
 import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJsNode
 
-private external val process: dynamic
 private external val console: dynamic
 private external val Symbol: dynamic
-private external val Buffer: dynamic
 
 internal actual fun browserPrintln(message: String) {
     // No way to avoid the newline on browsers
