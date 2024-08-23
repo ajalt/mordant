@@ -15,3 +15,7 @@ abstract class TerminalInterfaceJvmPosix : TerminalInterfacePosix() {
         throw RuntimeException("Timeout reading from stdin (timeout=$timeout)")
     }
 }
+
+/*
+~/node/bin/node --require build/js/node_modules/source-map-support/register.js build/js/packages/mordant-samples-select/kotlin/mordant-samples-select.js
+ */

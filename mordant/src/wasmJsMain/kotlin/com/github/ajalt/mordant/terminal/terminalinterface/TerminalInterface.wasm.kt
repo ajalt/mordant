@@ -25,10 +25,6 @@ private external object process {
     fun exit(status: Int)
 }
 
-private external interface FsModule {
-    fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int, position: JsAny?): Int
-}
-
 private external object Buffer {
     fun alloc(size: Int): JsAny
 }
@@ -55,13 +51,23 @@ private fun nodeReadFileSync(filename: String): String? =
     )
 
 @Suppress("UNUSED_PARAMETER")
+private fun nodeReadSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int =
+    js(
+        """
+        {
+            try {
+                return require('fs').readSync(fd, buffer, offset, len, null)
+            } catch (e) {
+                if (e.code === 'EAGAIN') return 0
+                throw e
+            }
+        }"""
+    )
+
+@Suppress("UNUSED_PARAMETER")
 private fun nodeBufferToString(buffer: JsAny): String = js("buffer.toString()")
 
-private fun importNodeFsModule(): FsModule = js("""require("fs")""")
-
 internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
-    private val fs: FsModule = importNodeFsModule()
-
     override fun readEnvvar(key: String): String? = nodeReadEnvvar(key)
     override fun stdoutInteractive(): Boolean = process.stdout.isTTY
     override fun stdinInteractive(): Boolean = process.stdin.isTTY
@@ -81,7 +87,7 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
     override fun bufferToString(buffer: JsAny): String = nodeBufferToString(buffer)
 
     override fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int {
-        return fs.readSync(fd, buffer, offset, len, null)
+        return nodeReadSync(fd, buffer, offset, len)
     }
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {

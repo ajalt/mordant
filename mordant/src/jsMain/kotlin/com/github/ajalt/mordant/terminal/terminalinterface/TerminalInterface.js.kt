@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.terminal.TerminalCursor
 private external val process: dynamic
 private external val Buffer: dynamic
 
-internal class TerminalInterfaceJsNode(private val fs: dynamic): TerminalInterfaceNode<dynamic>() {
+internal class TerminalInterfaceJsNode(private val fs: dynamic) : TerminalInterfaceNode<dynamic>() {
     override fun readEnvvar(key: String): String? = process.env[key] as? String
     override fun stdoutInteractive(): Boolean = js("Boolean(process.stdout.isTTY)") as Boolean
     override fun stdinInteractive(): Boolean = js("Boolean(process.stdin.isTTY)") as Boolean
@@ -39,7 +39,12 @@ internal class TerminalInterfaceJsNode(private val fs: dynamic): TerminalInterfa
     }
 
     override fun readSync(fd: Int, buffer: dynamic, offset: Int, len: Int): Int {
-        return fs.readSync(fd, buffer, offset, len, null) as Int
+        try {
+            return fs.readSync(fd, buffer, offset, len, null) as Int
+        } catch (e: dynamic) {
+            if (e.code == "EAGAIN") return 0
+            throw e
+        }
     }
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {

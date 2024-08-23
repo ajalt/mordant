@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalCursor
 import kotlin.time.Duration
 
-internal abstract class TerminalInterfaceJsCommon: StandardTerminalInterface() {
+internal abstract class TerminalInterfaceJsCommon : StandardTerminalInterface() {
     abstract fun readEnvvar(key: String): String?
     abstract fun printStderr(message: String, newline: Boolean)
     abstract fun readLineOrNull(): String?
@@ -40,10 +40,13 @@ internal abstract class TerminalInterfaceNode<BufferT> : TerminalInterfaceJsComm
     abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
 
     override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
-        return PosixEventParser { _, _ ->
+        return PosixEventParser { t0, t ->
             val buf = allocBuffer(1)
-            readByteWithBuf(buf)?.let { it[0] }
-                ?: throw RuntimeException("Failed reading from stdin")
+            do {
+                val c = readByteWithBuf(buf)?.let { it[0] }
+                if (c != null) return@PosixEventParser c
+            } while (t0.elapsedNow() < t)
+            throw RuntimeException("Timeout reading from stdin (timeout=$timeout)")
         }.readInputEvent(timeout)
     }
 
