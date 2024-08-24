@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":extensions:mordant-coroutines"))
+            implementation(project(":mordant-coroutines"))
         }
     }
 }

@@ -6,7 +6,7 @@ include(
     "mordant-jvm-jna",
     "mordant-jvm-ffm",
     "mordant-jvm-graal-ffi",
-    "extensions:mordant-coroutines",
+    "mordant-coroutines",
     "samples:detection",
     "samples:drawing",
     "samples:hexviewer",

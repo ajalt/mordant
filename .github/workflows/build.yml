@@ -40,7 +40,7 @@ jobs:
         run: >-
             ./gradlew
             :mordant:check
-            :extensions:mordant-coroutines:check
+            :mordant-coroutines:check
             :test:graalvm:nativeTest
             ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
