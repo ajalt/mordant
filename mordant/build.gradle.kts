@@ -11,7 +11,6 @@ kotlin {
         }
         commonMain.dependencies {
             api(libs.colormath)
-            implementation(libs.markdown)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -7,6 +7,7 @@ include(
     "mordant-jvm-ffm",
     "mordant-jvm-graal-ffi",
     "mordant-coroutines",
+    "mordant-markdown",
     "samples:detection",
     "samples:drawing",
     "samples:hexviewer",

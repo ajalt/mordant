@@ -7,10 +7,12 @@
 - Added new terminal implementation that uses the [Foreign Function and Memory (FFM) API](https://openjdk.java.net/jeps/419) added in JDK 22.
 - Split the library up into modules, so you can produce smaller JVM artifacts by only using the parts you need.
 - Added support for raw mode and input events to JS and wasmJS targets when running on node.js.
+- Added tvOS and watchOS native targets to all modules except the new `mordant-markdown` module.
 
 ### Changed
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.
 - **Breaking Change** `TerminalInterface.info` is now a method with parameters instead of a property.
+- **Breaking Change** Moved `Markdown` widget to separate `mordant-markdown` module, which is not included by default. If you use markdown rendering, you need to add that module to you dependencies.
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 

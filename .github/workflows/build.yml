@@ -41,6 +41,7 @@ jobs:
             ./gradlew
             :mordant:check
             :mordant-coroutines:check
+            :mordant-markdown:check
             :test:graalvm:nativeTest
             ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
