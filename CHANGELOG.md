@@ -6,6 +6,7 @@
 - Added new optional methods to `TerminalInterface` to control raw mode: `getTerminalSize`, `readInputEvent`, `enterRawMode`, and `shouldAutoUpdateSize`.
 - Added new terminal implementation that uses the [Foreign Function and Memory (FFM) API](https://openjdk.java.net/jeps/419) added in JDK 22.
 - Split the library up into modules, so you can produce smaller JVM artifacts by only using the parts you need.
+- Added support for raw mode and input events to JS and wasmJS targets when running on node.js.
 
 ### Changed
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.

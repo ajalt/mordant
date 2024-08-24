@@ -26,10 +26,6 @@ kotlin {
 
     // https://kotlinlang.org/docs/multiplatform-hierarchy.html#see-the-full-hierarchy-template
     sourceSets {
-        val nonJsMain by creating { dependsOn(commonMain.get()) }
-        for (target in listOf(jvmMain, nativeMain)) {
-            target.get().dependsOn(nonJsMain)
-        }
         val posixMain by creating { dependsOn(nativeMain.get()) }
         linuxMain.get().dependsOn(posixMain)
         appleMain.get().dependsOn(posixMain)

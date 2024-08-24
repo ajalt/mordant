@@ -162,9 +162,16 @@ app and operating system. Some things to keep in mind:
 - On Linux and macOS, the Escape key isn't reported as a key press; instead, it begins a "VTI escape
   sequence" that the terminal uses to report key presses. For example if you press `Escape`, then `[`,
   then `d`, the terminal will report that as the left arrow key being pressed. It's up to you whether
-  you consider this a feature or a limitation.
-- Raw mode isn't supported on JS or wasmJS targets. You can use Node.js's `readline` module to read
-  input in a similar way, or in the browser you can use the `keydown` and `mousedown` events.
+  you consider this a feature or a limitation. 
+- Raw mode is supported on JS or wasmJS targets on Node.js only. You can also use Node.js's
+  `readline` module to read input with callbacks instead of blocking, or in the browser you can use
+  the `keydown` and `mousedown` events.
+
+!! danger
+
+    Reading events in raw mode on Node.js is not fully supported on Windows due to limitations in
+    Node.js. When reading events, timeouts are ignored and the call will block until a key is pressed.
+    Keys like the arrow keys, function keys, and some modifier keys may not be reported at all.
 
 ## Interactive List Selection
 

@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.terminal.terminalinterface
 
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.Size
 import com.github.ajalt.mordant.terminal.PrintTerminalCursor
 import com.github.ajalt.mordant.terminal.Terminal
@@ -8,6 +9,7 @@ import com.github.ajalt.mordant.terminal.TerminalCursor
 
 private external interface Stream {
     val isTTY: Boolean
+    fun setRawMode(mode: Boolean)
     fun write(s: String)
     fun getWindowSize(): JsArray<JsNumber>
 }
@@ -21,10 +23,6 @@ private external object process {
     fun on(event: String, listener: () -> Unit)
     fun removeListener(event: String, listener: () -> Unit)
     fun exit(status: Int)
-}
-
-private external interface FsModule {
-    fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int, position: JsAny?): Int
 }
 
 private external object Buffer {
@@ -52,10 +50,24 @@ private fun nodeReadFileSync(filename: String): String? =
         }"""
     )
 
+@Suppress("UNUSED_PARAMETER")
+private fun nodeReadSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int =
+    js(
+        """
+        {
+            try {
+                return require('fs').readSync(fd, buffer, offset, len, null)
+            } catch (e) {
+                if (e.code === 'EAGAIN') return 0
+                throw e
+            }
+        }"""
+    )
+
+@Suppress("UNUSED_PARAMETER")
+private fun nodeBufferToString(buffer: JsAny): String = js("buffer.toString()")
 
 internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
-    private val fs: FsModule = importNodeFsModule()
-
     override fun readEnvvar(key: String): String? = nodeReadEnvvar(key)
     override fun stdoutInteractive(): Boolean = process.stdout.isTTY
     override fun stdinInteractive(): Boolean = process.stdin.isTTY
@@ -72,16 +84,24 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 
     override fun allocBuffer(size: Int): JsAny = Buffer.alloc(size)
 
+    override fun bufferToString(buffer: JsAny): String = nodeBufferToString(buffer)
+
     override fun readSync(fd: Int, buffer: JsAny, offset: Int, len: Int): Int {
-        return fs.readSync(fd, buffer, offset, len, null)
+        return nodeReadSync(fd, buffer, offset, len)
     }
 
     override fun makeTerminalCursor(terminal: Terminal): TerminalCursor {
         return NodeTerminalCursor(terminal)
     }
 
-    override fun readFileIfExists(filename: String): String? {
-        return nodeReadFileSync(filename)
+    override fun readFileIfExists(filename: String): String? = nodeReadFileSync(filename)
+
+    override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        if (!stdinInteractive()) {
+            throw RuntimeException("Cannot enter raw mode on a non-interactive terminal")
+        }
+        process.stdin.setRawMode(true)
+        return AutoCloseable { process.stdin.setRawMode(false) }
     }
 }
 
@@ -102,5 +122,3 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
         super.hide(showOnExit)
     }
 }
-
-private fun importNodeFsModule(): FsModule = js("""require("fs")""")
