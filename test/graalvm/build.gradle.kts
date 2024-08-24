@@ -9,6 +9,7 @@ tasks.test {
 
 dependencies {
     implementation(project(":mordant-omnibus"))
+    implementation(project(":mordant-markdown"))
     testImplementation(kotlin("test"))
 }
 

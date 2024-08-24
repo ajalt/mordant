@@ -10,13 +10,16 @@ repositories {
 val r8: Configuration by configurations.creating
 
 dependencies {
-    implementation(project(":mordant"))
+    implementation(project(":mordant-omnibus"))
+    implementation(project(":mordant-markdown"))
+    implementation(project(":mordant-coroutines"))
     r8(libs.r8)
 }
 
 
 val fatJar by tasks.register<Jar>("fatJar") {
     archiveClassifier = "fat"
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     from(sourceSets.main.get().output)
 
