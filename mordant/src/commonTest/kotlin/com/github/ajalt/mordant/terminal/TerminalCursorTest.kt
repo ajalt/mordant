@@ -16,8 +16,7 @@ private fun c(b: CursorMovements.() -> Unit): String {
 }
 
 class TerminalCursorTest {
-    @Test
-    @JsName("disabled_commands")
+    @[Test JsName("disabled_commands")]
     fun `disabled commands`() {
         val vt = TerminalRecorder(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
@@ -39,8 +38,7 @@ class TerminalCursorTest {
         }
     }
 
-    @Test
-    @JsName("cursor_directions_0_count")
+    @[Test JsName("cursor_directions_0_count")]
     fun `cursor directions 0 count`() = forAll(
         row(c { up(0) }),
         row(c { down(0) }),
@@ -50,8 +48,7 @@ class TerminalCursorTest {
         actual shouldBe ""
     }
 
-    @Test
-    @JsName("cursor_show_and_hide")
+    @[Test JsName("cursor_show_and_hide")]
     fun `cursor show and hide`() {
         val vt = TerminalRecorder()
         val t = Terminal(terminalInterface = vt)
@@ -62,8 +59,7 @@ class TerminalCursorTest {
         vt.output() shouldBe "$CSI?25h"
     }
 
-    @Test
-    @JsName("disabled_cursor_show_and_hide")
+    @[Test JsName("disabled_cursor_show_and_hide")]
     fun `disabled cursor show and hide`() {
         val vt = TerminalRecorder(AnsiLevel.NONE)
         val t = Terminal(terminalInterface = vt)
@@ -73,8 +69,7 @@ class TerminalCursorTest {
         vt.output() shouldBe ""
     }
 
-    @Test
-    @JsName("cursor_commands")
+    @[Test JsName("cursor_commands")]
     fun `cursor commands`() = forAll(
         row(c { up(2) }, "${CSI}2A"),
         row(c { down(3) }, "${CSI}3B"),
@@ -94,8 +89,7 @@ class TerminalCursorTest {
         actual shouldBe expected
     }
 
-    @Test
-    @JsName("cursor_commands_negative_count")
+    @[Test JsName("cursor_commands_negative_count")]
     fun `cursor commands negative count`() {
         forAll(
             row(c { up(-1) }, c { down(1) }),

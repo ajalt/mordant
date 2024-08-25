@@ -11,36 +11,31 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class TableColumnWidthTest : RenderingTest() {
-    @Test
-    @JsName("exact_min")
+    @[Test JsName("exact_min")]
     fun `exact min`() = doTest(
         18,
         "|11 |22 foo|33|44|"
     )
 
-    @Test
-    @JsName("expand_flex")
+    @[Test JsName("expand_flex")]
     fun `expand flex`() = doTest(
         26,
         "|11 |22 foo|33  |44      |"
     )
 
-    @Test
-    @JsName("expand_flex_partial_remainder")
+    @[Test JsName("expand_flex_partial_remainder")]
     fun `expand flex partial remainder`() = doTest(
         27,
         "|11 |22 foo|33   |44      |"
     )
 
-    @Test
-    @JsName("expand_flex_equal_remainder")
+    @[Test JsName("expand_flex_equal_remainder")]
     fun `expand flex equal remainder`() = doTest(
         28,
         "|11 |22 foo|33   |44       |"
     )
 
-    @Test
-    @JsName("shrink_auto_partial")
+    @[Test JsName("shrink_auto_partial")]
     fun `shrink auto partial`() = doTest(
         16,
         """
@@ -49,8 +44,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_auto_max")
+    @[Test JsName("shrink_auto_max")]
     fun `shrink auto max`() = doTest(
         15,
         """
@@ -59,8 +53,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_flex_past_min")
+    @[Test JsName("shrink_flex_past_min")]
     fun `shrink flex past min`() = doTest(
         13,
         """
@@ -69,8 +62,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_flex_completely")
+    @[Test JsName("shrink_flex_completely")]
     fun `shrink flex completely`() = doTest(
         11,
         """
@@ -79,8 +71,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_flex_and_partial_auto")
+    @[Test JsName("shrink_flex_and_partial_auto")]
     fun `shrink flex and partial auto`() = doTest(
         9,
         """
@@ -89,8 +80,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_auto_completely")
+    @[Test JsName("shrink_auto_completely")]
     fun `shrink auto completely`() = doTest(
         8,
         """
@@ -98,8 +88,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_fixed_partial")
+    @[Test JsName("shrink_fixed_partial")]
     fun `shrink fixed partial`() = doTest(
         6,
         """
@@ -107,15 +96,13 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("shrink_fixed_completely")
+    @[Test JsName("shrink_fixed_completely")]
     fun `shrink fixed completely`() = doTest(
         0,
         "|||||"
     )
 
-    @Test
-    @JsName("shrink_fixed_completely_with_row_borders")
+    @[Test JsName("shrink_fixed_completely_with_row_borders")]
     fun `shrink fixed completely with row borders`() = doTest(
         0,
         """
@@ -143,22 +130,19 @@ class TableColumnWidthTest : RenderingTest() {
         }, expected.trimIndent(), width = tableWidth, trimMargin = false)
     }
 
-    @Test
-    @JsName("custom_priority_exact")
+    @[Test JsName("custom_priority_exact")]
     fun `custom priority exact`() = doCustomTest(
         18,
         "|11 |22 foo|33|44|"
     )
 
-    @Test
-    @JsName("custom_priority_expand")
+    @[Test JsName("custom_priority_expand")]
     fun `custom priority expand`() = doCustomTest(
         20,
         "|11 |22 foo|33|44  |"
     )
 
-    @Test
-    @JsName("custom_priority_shrink")
+    @[Test JsName("custom_priority_shrink")]
     fun `custom priority shrink`() = doCustomTest(
         9,
         """
@@ -167,8 +151,7 @@ class TableColumnWidthTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("custom_priority_shrink_min")
+    @[Test JsName("custom_priority_shrink_min")]
     fun `custom priority shrink min`() = doCustomTest(
         6,
         """

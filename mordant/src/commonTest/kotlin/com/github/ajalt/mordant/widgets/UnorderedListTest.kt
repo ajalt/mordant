@@ -5,8 +5,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class UnorderedListTest : RenderingTest() {
-    @Test
-    @JsName("vararg_string_constructor")
+    @[Test JsName("vararg_string_constructor")]
     fun `vararg string constructor`() = checkRender(
         UnorderedList("one", "two", "three"),
         """
@@ -16,8 +15,7 @@ class UnorderedListTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("vararg_widget_constructor")
+    @[Test JsName("vararg_widget_constructor")]
     fun `vararg widget constructor`() = checkRender(
         UnorderedList(Text("one"), Text("two"), Text("three")),
         """
@@ -27,8 +25,7 @@ class UnorderedListTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("empty_list")
+    @[Test JsName("empty_list")]
     fun `empty list`() = checkRender(
         UnorderedList(emptyList()),
         ""

@@ -114,8 +114,7 @@ class LinearLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("verticalLayout_justify")
+    @[Test JsName("verticalLayout_justify")]
     fun `verticalLayout justify`() = checkRender(
         verticalLayout {
             align = TextAlign.JUSTIFY
@@ -132,8 +131,7 @@ class LinearLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("verticalLayout_left_align")
+    @[Test JsName("verticalLayout_left_align")]
     fun `verticalLayout left align`() {
         class W(val w: Int) : Widget {
             override fun measure(t: Terminal, width: Int): WidthRange {
@@ -169,8 +167,7 @@ class LinearLayoutTest : RenderingTest() {
     )
 
 
-    @Test
-    @JsName("nesting_horizontalLayouts_in_verticalLayouts")
+    @[Test JsName("nesting_horizontalLayouts_in_verticalLayouts")]
     fun `nesting horizontalLayouts in verticalLayouts`() = checkRender(
         verticalLayout {
             cell(horizontalLayout { cells("1", "1") })
@@ -182,8 +179,7 @@ class LinearLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("nesting_horizontalLayouts_in_verticalLayouts_with_fixed_column_width")
+    @[Test JsName("nesting_horizontalLayouts_in_verticalLayouts_with_fixed_column_width")]
     fun `nesting horizontalLayouts in verticalLayouts with fixed column width`() = checkRender(
         verticalLayout {
             cell(horizontalLayout {

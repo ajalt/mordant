@@ -14,7 +14,8 @@ import com.github.ajalt.mordant.rendering.Theme
  * Strings decorated with these styles will be downsampled correctly even if they are printed
  * directly rather than through [Terminal.print].
  */
-class TerminalColors internal constructor( // TODO(3.0): remove
+class TerminalColors internal constructor(
+    // TODO(3.0): remove
     private val terminalInfo: TerminalInfo,
     private val theme: Theme,
 ) {

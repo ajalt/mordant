@@ -96,7 +96,7 @@ class ProgressAnimation internal constructor(
      */
     fun advance(amount: Long = 1) {
         inner.advance(amount)
-        if(!inner.finished) {
+        if (!inner.finished) {
             update()
         }
     }
@@ -167,8 +167,11 @@ internal fun Terminal.progressAnimation(
         )
     }
     val definition = ProgressBarDefinition(cells, origDef.spacing, origDef.alignColumns)
-    return ProgressAnimation(definition.animateOnThread(this,
-        timeSource = timeSource,
-        speedEstimateDuration = builder.historyLength.toDouble().seconds
-        ))
+    return ProgressAnimation(
+        definition.animateOnThread(
+            this,
+            timeSource = timeSource,
+            speedEstimateDuration = builder.historyLength.toDouble().seconds
+        )
+    )
 }

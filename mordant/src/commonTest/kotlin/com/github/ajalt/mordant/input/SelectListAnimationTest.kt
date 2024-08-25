@@ -24,8 +24,7 @@ class SelectListAnimationTest {
     private val esc = KeyboardEvent("Escape")
     private val x = KeyboardEvent("x")
 
-    @Test
-    @JsName("single_select_instructions")
+    @[Test JsName("single_select_instructions")]
     fun `single select instructions`() {
         val a = b.entries("a", "b")
             .title("title")
@@ -68,8 +67,7 @@ class SelectListAnimationTest {
     }
 
 
-    @Test
-    @JsName("multi_select_instructions")
+    @[Test JsName("multi_select_instructions")]
     fun `multi select instructions`() {
         val a = b.entries("a", "b")
             .title("title")
@@ -120,8 +118,7 @@ class SelectListAnimationTest {
         """
     }
 
-    @Test
-    @JsName("cursor_movement")
+    @[Test JsName("cursor_movement")]
     fun `cursor movement`() {
         val a = b.entries("a", "b", "c")
             .createSingleSelectInputAnimation()
@@ -169,8 +166,7 @@ class SelectListAnimationTest {
         """
     }
 
-    @Test
-    @JsName("filtered_cursor_movement")
+    @[Test JsName("filtered_cursor_movement")]
     fun `filtered cursor movement`() {
         val a = b.entries("1", "ax", "2", "bx", "3", "cx", "4")
             .filterable(true)
@@ -237,8 +233,7 @@ class SelectListAnimationTest {
         a.receiveEvent(enter) shouldBe InputReceiver.Status.Finished("bx")
     }
 
-    @Test
-    @JsName("filtered_to_empty")
+    @[Test JsName("filtered_to_empty")]
     fun `filtered to empty`() {
         val a = b.entries("a")
             .filterable(true)
@@ -257,8 +252,7 @@ class SelectListAnimationTest {
         """
     }
 
-    @Test
-    @JsName("always_show_descriptions")
+    @[Test JsName("always_show_descriptions")]
     fun `always show descriptions`() {
         b
             .addEntry("a", "adesc")
@@ -273,8 +267,7 @@ class SelectListAnimationTest {
         """
     }
 
-    @Test
-    @JsName("only_show_active_description")
+    @[Test JsName("only_show_active_description")]
     fun `only show active description`() {
         val a = b
             .addEntry("ax", "adesc")
@@ -325,8 +318,7 @@ class SelectListAnimationTest {
         """
     }
 
-    @Test
-    @JsName("filtering_multi_select")
+    @[Test JsName("filtering_multi_select")]
     fun `filtering multi select`() {
         val a = b.entries("ax", "b", "cx")
             .filterable(true)

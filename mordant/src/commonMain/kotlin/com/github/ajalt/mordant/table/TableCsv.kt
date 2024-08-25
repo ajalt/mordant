@@ -68,6 +68,7 @@ fun Table.contentToCsv(
                     require(escapeChar != null || !escapable.containsMatchIn(cell)) { "Content requires escaping, but no escapeChar set" }
                     escapable.replace(quotesEscaped) { "$escapeChar${it.value}" }
                 }
+
                 else -> quotesEscaped
             }
 
@@ -77,6 +78,7 @@ fun Table.contentToCsv(
                     (escapeChar == null || doubleQuote) && quoteChar in cell
                             || escapable.containsMatchIn(cell)
                 }
+
                 CsvQuoting.NONNUMERIC -> cell.any { it !in '0'..'9' }
                 CsvQuoting.NONE -> false
             }

@@ -9,7 +9,7 @@ import kotlin.time.Duration
 import kotlin.time.TimeSource
 
 // TODO: docs
-abstract class TerminalInterfaceWindows: StandardTerminalInterface() {
+abstract class TerminalInterfaceWindows : StandardTerminalInterface() {
     private companion object {
         // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
         const val RIGHT_ALT_PRESSED: UInt = 0x0001u

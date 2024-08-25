@@ -14,14 +14,12 @@ class TableCsvTest {
         return table { body { rowFrom(row) } }
     }
 
-    @Test
-    @JsName("empty_table")
+    @[Test JsName("empty_table")]
     fun `empty table`() {
         t(emptyList()).contentToCsv() shouldBe "\n"
     }
 
-    @Test
-    @JsName("single_cell_table")
+    @[Test JsName("single_cell_table")]
     fun `single cell table`() {
         t(listOf(1)).contentToCsv() shouldBe "1\n"
     }
@@ -42,8 +40,7 @@ class TableCsvTest {
         ) shouldBe expected + "\n"
     }
 
-    @Test
-    @JsName("escape_error")
+    @[Test JsName("escape_error")]
     fun `escape error`() {
         shouldThrow<IllegalArgumentException> {
             t(listOf("a", 1, "p,\"q\"")).contentToCsv(
@@ -63,16 +60,14 @@ class TableCsvTest {
         t(row).contentToCsv(quoting = quoting) shouldBe expected + "\n"
     }
 
-    @Test
-    @JsName("quoting_none")
+    @[Test JsName("quoting_none")]
     fun `quoting none`() {
         shouldThrow<IllegalArgumentException> {
             t(listOf("a", 1, "p,q")).contentToCsv(quoting = CsvQuoting.NONE)
         }
     }
 
-    @Test
-    @JsName("column_span")
+    @[Test JsName("column_span")]
     fun `column span`() {
         table {
             body {
@@ -89,8 +84,7 @@ class TableCsvTest {
         """.trimMargin()
     }
 
-    @Test
-    @JsName("row_span")
+    @[Test JsName("row_span")]
     fun `row span`() {
         table {
             body {

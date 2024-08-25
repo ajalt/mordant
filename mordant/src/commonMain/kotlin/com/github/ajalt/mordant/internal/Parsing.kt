@@ -34,7 +34,10 @@ private fun parseAnsi(text: String, defaultStyle: TextStyle): List<Chunk> {
     var style = defaultStyle
     for (command in commands) {
         if (command.range.first > idxAfterLastCmd) {
-            parts += Chunk(text = text.substring(idxAfterLastCmd, command.range.first), style = style)
+            parts += Chunk(
+                text = text.substring(idxAfterLastCmd, command.range.first),
+                style = style
+            )
         }
         idxAfterLastCmd = command.range.last + 1
         style = updateStyle(style, defaultStyle, command.value)
@@ -107,25 +110,39 @@ private fun splitLines(words: List<Chunk>): List<Line> {
  * If the [ansi] contains any reset codes, the reset style attributes will be set to their
  * corresponding value from [defaultStyle].
  */
-internal fun updateStyle(existingStyle: TextStyle, defaultStyle: TextStyle, ansi: String): TextStyle {
+internal fun updateStyle(
+    existingStyle: TextStyle,
+    defaultStyle: TextStyle,
+    ansi: String,
+): TextStyle {
     if (ansi.startsWith(OSC)) return updateStyleWithOsc(ansi, existingStyle, defaultStyle)
     if (ansi.startsWith(CSI)) return updateStyleWithCsi(ansi, existingStyle, defaultStyle)
     return existingStyle // DSC, APC, etc. don't affect style, discard them
 }
 
-private fun updateStyleWithOsc(ansi: String, existingStyle: TextStyle, defaultStyle: TextStyle): TextStyle {
+private fun updateStyleWithOsc(
+    ansi: String,
+    existingStyle: TextStyle,
+    defaultStyle: TextStyle,
+): TextStyle {
     if (!ansi.startsWith("${OSC}8")) return existingStyle // Only OSC 8 (hyperlinks) are supported
     val params = ansi.substring(3, ansi.length - 2).split(";")
     if (params.isEmpty()) return existingStyle // invalid ansi sequence
     val hyperlink = params.last().takeUnless { it.isBlank() }
-    val id = if (hyperlink == null) defaultStyle.hyperlinkId else params.find { it.startsWith("id=") }?.drop(3)
+    val id =
+        if (hyperlink == null) defaultStyle.hyperlinkId else params.find { it.startsWith("id=") }
+            ?.drop(3)
     return existingStyle.copy(
         hyperlink = hyperlink ?: defaultStyle.hyperlink,
         hyperlinkId = id
     )
 }
 
-private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultStyle: TextStyle): TextStyle {
+private fun updateStyleWithCsi(
+    ansi: String,
+    existingStyle: TextStyle,
+    defaultStyle: TextStyle,
+): TextStyle {
     if (!ansi.endsWith("m")) return existingStyle // SGR sequences end in "m", others don't affect style
 
     // SGR sequences only contains numbers. Anything else is malformed, so we skip it.
@@ -160,10 +177,12 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
                 inverse = defaultStyle.inverse ?: false
                 strikethrough = defaultStyle.strikethrough ?: false
             }
+
             AnsiCodes.boldAndDimClose -> {
                 bold = defaultStyle.bold ?: false
                 dim = defaultStyle.dim ?: false
             }
+
             AnsiCodes.italicClose -> italic = defaultStyle.italic ?: false
             AnsiCodes.underlineClose -> underline = defaultStyle.underline ?: false
             AnsiCodes.inverseClose -> inverse = defaultStyle.inverse ?: false
@@ -174,15 +193,18 @@ private fun updateStyleWithCsi(ansi: String, existingStyle: TextStyle, defaultSt
             in AnsiCodes.fg16Range, in AnsiCodes.fg16BrightRange -> {
                 color = Ansi16(code)
             }
+
             in AnsiCodes.bg16Range, in AnsiCodes.bg16BrightRange -> {
                 bgColor = Ansi16(code - AnsiCodes.fgBgOffset)
             }
+
             AnsiCodes.fgColorSelector -> {
                 val (c, consumed) = getAnsiColor(i + 1, codes)
                 if (c == null) break // Unrecognized code format: stop parsing
                 color = c
                 i += consumed
             }
+
             AnsiCodes.bgColorSelector -> {
                 val (c, consumed) = getAnsiColor(i + 1, codes)
                 if (c == null) break
@@ -235,6 +257,7 @@ private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
                 Ansi256(codes[i + 1]) to 2
             }
         }
+
         AnsiCodes.selectorRgb -> {
             if (i + 3 > codes.lastIndex
                 || codes[i + 1] !in 0..255
@@ -246,6 +269,7 @@ private fun getAnsiColor(i: Int, codes: List<Int>): Pair<Color?, Int> {
                 RGB.from255(codes[i + 1], codes[i + 2], codes[i + 3]) to 4
             }
         }
+
         else -> null to 0
     }
 }

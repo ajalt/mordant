@@ -5,4 +5,5 @@ import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceNati
 
 internal actual fun ttySetEcho(echo: Boolean) = TerminalInterfaceNativeWindows.ttySetEcho(echo)
 internal actual fun hasFileSystem(): Boolean = true
-internal actual fun getStandardTerminalInterface(): TerminalInterface = TerminalInterfaceNativeWindows
+internal actual fun getStandardTerminalInterface(): TerminalInterface =
+    TerminalInterfaceNativeWindows

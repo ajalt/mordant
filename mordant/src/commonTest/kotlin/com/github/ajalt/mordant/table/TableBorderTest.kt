@@ -7,14 +7,16 @@ import kotlin.test.Test
 @Suppress("TestFunctionName")
 class TableBorderTest : RenderingTest() {
     @Test
-    fun NONE() = doTest(NONE,
+    fun NONE() = doTest(
+        NONE,
         """
         ░ × 
         """
     )
 
     @Test
-    fun BOTTOM() = doTest(BOTTOM,
+    fun BOTTOM() = doTest(
+        BOTTOM,
         """
         ░ × 
         ░───
@@ -22,14 +24,16 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun RIGHT() = doTest(RIGHT,
+    fun RIGHT() = doTest(
+        RIGHT,
         """
         ░ × │
         """
     )
 
     @Test
-    fun BOTTOM_RIGHT() = doTest(BOTTOM_RIGHT,
+    fun BOTTOM_RIGHT() = doTest(
+        BOTTOM_RIGHT,
         """
         ░ × │
         ░───┘
@@ -37,7 +41,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun TOP() = doTest(TOP,
+    fun TOP() = doTest(
+        TOP,
         """
         ░───
         ░ × 
@@ -45,7 +50,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun TOP_BOTTOM() = doTest(TOP_BOTTOM,
+    fun TOP_BOTTOM() = doTest(
+        TOP_BOTTOM,
         """
         ░───
         ░ × 
@@ -54,7 +60,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun TOP_RIGHT() = doTest(TOP_RIGHT,
+    fun TOP_RIGHT() = doTest(
+        TOP_RIGHT,
         """
         ░───┐
         ░ × │
@@ -62,7 +69,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun TOP_RIGHT_BOTTOM() = doTest(TOP_RIGHT_BOTTOM,
+    fun TOP_RIGHT_BOTTOM() = doTest(
+        TOP_RIGHT_BOTTOM,
         """
         ░───┐
         ░ × │
@@ -71,14 +79,16 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun LEFT() = doTest(LEFT,
+    fun LEFT() = doTest(
+        LEFT,
         """
         ░│ × 
         """
     )
 
     @Test
-    fun LEFT_BOTTOM() = doTest(LEFT_BOTTOM,
+    fun LEFT_BOTTOM() = doTest(
+        LEFT_BOTTOM,
         """
         ░│ × 
         ░└───
@@ -86,14 +96,16 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun LEFT_RIGHT() = doTest(LEFT_RIGHT,
+    fun LEFT_RIGHT() = doTest(
+        LEFT_RIGHT,
         """
         ░│ × │
         """
     )
 
     @Test
-    fun LEFT_RIGHT_BOTTOM() = doTest(LEFT_RIGHT_BOTTOM,
+    fun LEFT_RIGHT_BOTTOM() = doTest(
+        LEFT_RIGHT_BOTTOM,
         """
         ░│ × │
         ░└───┘
@@ -101,7 +113,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun LEFT_TOP() = doTest(LEFT_TOP,
+    fun LEFT_TOP() = doTest(
+        LEFT_TOP,
         """
         ░┌───
         ░│ × 
@@ -109,7 +122,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun LEFT_TOP_BOTTOM() = doTest(LEFT_TOP_BOTTOM,
+    fun LEFT_TOP_BOTTOM() = doTest(
+        LEFT_TOP_BOTTOM,
         """
         ░┌───
         ░│ × 
@@ -118,7 +132,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun LEFT_TOP_RIGHT() = doTest(LEFT_TOP_RIGHT,
+    fun LEFT_TOP_RIGHT() = doTest(
+        LEFT_TOP_RIGHT,
         """
         ░┌───┐
         ░│ × │
@@ -126,7 +141,8 @@ class TableBorderTest : RenderingTest() {
     )
 
     @Test
-    fun ALL() = doTest(ALL,
+    fun ALL() = doTest(
+        ALL,
         """
         ░┌───┐
         ░│ × │

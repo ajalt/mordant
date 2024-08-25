@@ -9,8 +9,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class SelectListTest : RenderingTest() {
-    @Test
-    @JsName("no_optional_elements")
+    @[Test JsName("no_optional_elements")]
     fun `no optional elements`() = doTest(
         """
     ░foo
@@ -24,8 +23,7 @@ class SelectListTest : RenderingTest() {
         cursorMarker = "",
     )
 
-    @Test
-    @JsName("no_selected_marker")
+    @[Test JsName("no_selected_marker")]
     fun `no selected marker`() = doTest(
         """
     ░title
@@ -41,8 +39,7 @@ class SelectListTest : RenderingTest() {
         selectedMarker = "",
     )
 
-    @Test
-    @JsName("multi_selected_marker")
+    @[Test JsName("multi_selected_marker")]
     fun `multi selected marker`() = doTest(
         """
     ░title
@@ -61,8 +58,7 @@ class SelectListTest : RenderingTest() {
         captionBottom = Text("caption"),
     )
 
-    @Test
-    @JsName("styles_with_descriptions")
+    @[Test JsName("styles_with_descriptions")]
     fun `styles with descriptions`() = doTest(
         """
     ░  ${blue("•")} ${red("foo")}    ░

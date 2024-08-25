@@ -33,7 +33,7 @@ abstract class Animation<T>(
     @Deprecated("This parameter is ignored; animations never print a trailing linebreak.")
     private val trailingLinebreak: Boolean = true,
     val terminal: Terminal,
-): StoppableAnimation {
+) : StoppableAnimation {
     private data class State(
         /** The length of each line of the last rendered widget */
         val size: List<Int>? = null,

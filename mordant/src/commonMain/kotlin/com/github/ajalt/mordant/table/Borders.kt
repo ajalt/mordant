@@ -22,6 +22,7 @@ enum class Borders(
     LEFT_TOP_BOTTOM(left = true, top = true, right = false, bottom = true),
     LEFT_TOP_RIGHT(left = true, top = true, right = true, bottom = false),
     ALL(left = true, top = true, right = true, bottom = true),
+
     @Suppress("unused")
     @Deprecated("Use TOP_BOTTOM", replaceWith = ReplaceWith("TOP_BOTTOM"))
     TOM_BOTTOM(left = false, top = true, right = false, bottom = true),

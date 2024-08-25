@@ -36,7 +36,14 @@ class Text internal constructor(
     internal fun withAlign(align: TextAlign, overflowWrap: OverflowWrap?): Text {
         return when {
             align == this.align && (overflowWrap == null || overflowWrap == this.overflowWrap) -> this
-            else -> Text(lines, whitespace, align, overflowWrap ?: this.overflowWrap, width, tabWidth)
+            else -> Text(
+                lines,
+                whitespace,
+                align,
+                overflowWrap ?: this.overflowWrap,
+                width,
+                tabWidth
+            )
         }
     }
 
@@ -45,7 +52,9 @@ class Text internal constructor(
         val lines = wrap(this.width ?: width, tabWidth ?: t.tabWidth, NONE, OverflowWrap.NORMAL)
         val max = lines.lines.maxOfOrNull { l -> l.sumOf { it.cellWidth } } ?: 0
         val min = when {
-            whitespace.wrap -> lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 } ?: 0
+            whitespace.wrap -> lines.lines.maxOfOrNull { l -> l.maxOfOrNull { it.cellWidth } ?: 0 }
+                ?: 0
+
             else -> max
         }
         return WidthRange(min, max)
@@ -55,7 +64,12 @@ class Text internal constructor(
         return wrap(this.width ?: width, tabWidth ?: t.tabWidth, align, overflowWrap)
     }
 
-    private fun wrap(wrapWidth: Int, tabWidth: Int, align: TextAlign, overflowWrap: OverflowWrap): Lines {
+    private fun wrap(
+        wrapWidth: Int,
+        tabWidth: Int,
+        align: TextAlign,
+        overflowWrap: OverflowWrap,
+    ): Lines {
         if (wrapWidth <= 0 && overflowWrap != OverflowWrap.NORMAL) return EMPTY_LINES
 
         val lines = mutableListOf<Line>()
@@ -119,6 +133,7 @@ class Text internal constructor(
                         tabWidth - (width % tabWidth),
                         piece.style
                     ) else continue
+
                     else -> piece
                 }
 
@@ -135,12 +150,15 @@ class Text internal constructor(
                     when (overflowWrap) {
                         OverflowWrap.NORMAL -> {
                         }
+
                         OverflowWrap.TRUNCATE -> {
                             span = Span.word(span.text.take(wrapWidth), span.style)
                         }
+
                         OverflowWrap.ELLIPSES -> {
                             span = Span.word(span.text.take((wrapWidth - 1)) + "…", span.style)
                         }
+
                         OverflowWrap.BREAK_WORD -> {
                             span.text.chunked(wrapWidth).forEach {
                                 if (it.length == wrapWidth) {
@@ -209,7 +227,11 @@ class Text internal constructor(
         if (halfExtra > 0) alignLineRight(line, halfExtra, endStyle)
     }
 
-    private fun justifyLine(line: MutableList<Span>, extraWidth: Int, endStyle: TextStyle): MutableList<Span> {
+    private fun justifyLine(
+        line: MutableList<Span>,
+        extraWidth: Int,
+        endStyle: TextStyle,
+    ): MutableList<Span> {
         val spaceCount = line.count { it.isWhitespace() }
 
         if (spaceCount == 0) {
@@ -219,7 +241,8 @@ class Text internal constructor(
 
         val spaceSize = extraWidth / spaceCount
         var skipRemainder = spaceCount - extraWidth % spaceCount
-        val justifiedLine = ArrayList<Span>(line.size + skipRemainder + if (spaceSize > 0) spaceCount else 0)
+        val justifiedLine =
+            ArrayList<Span>(line.size + skipRemainder + if (spaceSize > 0) spaceCount else 0)
         for (span in line) {
             justifiedLine += span
             if (!span.isWhitespace()) continue

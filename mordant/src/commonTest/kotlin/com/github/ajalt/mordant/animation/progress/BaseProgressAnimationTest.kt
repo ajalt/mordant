@@ -103,8 +103,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.latestOutput() shouldBe "text.txt|  0%|......|       0/200| ---.-/s|eta -:--:--"
     }
 
-    @Test
-    @JsName("task_visibility")
+    @[Test JsName("task_visibility")]
     fun `task visibility`() {
         val l = progressBarContextLayout<Int>(textFps = 1, animationFps = 1) {
             text { "Task $context" }
@@ -137,8 +136,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.latestOutput() shouldBe ""
     }
 
-    @Test
-    @JsName("changing_text_cell")
+    @[Test JsName("changing_text_cell")]
     fun `changing text cell`() {
         val l = progressBarContextLayout(
             textFps = 1, animationFps = 1, alignColumns = false
@@ -157,8 +155,7 @@ class BaseProgressAnimationTest : RenderingTest() {
         vt.normalizedOutput().visibleCrLf() shouldBe "====\n1111${moves}====\n22  ".visibleCrLf()
     }
 
-    @Test
-    @JsName("different_context_types")
+    @[Test JsName("different_context_types")]
     fun `different context types`() {
         val l1 = progressBarContextLayout<Int> { text { "int: $context" } }
         val l2 = progressBarContextLayout<String> { text { "string: $context" } }

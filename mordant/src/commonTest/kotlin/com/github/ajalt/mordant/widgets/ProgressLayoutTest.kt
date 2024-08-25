@@ -26,71 +26,61 @@ class ProgressLayoutTest : RenderingTest() {
     private val indetermStyle = Theme.Default.style("progressbar.indeterminate")
 
 
-    @Test
-    @JsName("indeterminate_not_started")
+    @[Test JsName("indeterminate_not_started")]
     fun `indeterminate not started`() = doTest(
         "text.txt|  0%|#########|     0/---.-B| ---.-/s|eta -:--:--|-:--:--",
         0, started = false
     )
 
-    @Test
-    @JsName("indeterminate_started")
+    @[Test JsName("indeterminate_started")]
     fun `indeterminate started`() = doTest(
         "text.txt|  0%|#########|     0/---.-B| ---.-/s|eta -:--:--|0:00:00",
         0
     )
 
-    @Test
-    @JsName("no_progress")
+    @[Test JsName("no_progress")]
     fun `no progress`() = doTest(
         "text.txt|  0%|.........|         0/0B| ---.-/s|eta -:--:--|0:00:00",
         0, 0
     )
 
-    @Test
-    @JsName("large_values")
+    @[Test JsName("large_values")]
     fun `large values`() = doTest(
         "text.txt| 50%|####>....|150.0/300.0MB|100.0M/s|eta 0:00:01|4:10:33",
         150_000_000, 300_000_000, 15033.0, 100_000_000.0
     )
 
-    @Test
-    @JsName("short_eta")
+    @[Test JsName("short_eta")]
     fun `short eta`() = doTest(
         "text.txt| 50%|####>....|         1/2B|   4.0/s|eta 0:00:00|0:00:03",
         1, 2, 3.0, 4.0
     )
 
-    @Test
-    @JsName("long_eta")
+    @[Test JsName("long_eta")]
     fun `long eta`() = doTest(
         "text.txt| 50%|####>....|150.0/300.0MB|   2.0/s|eta -:--:--|0:00:01",
         150_000_000, 300_000_000, 1.5, 2.0
     )
 
-    @Test
-    @JsName("zero_total")
+    @[Test JsName("zero_total")]
     fun `zero total`() = doTest(
         "text.txt|  0%|.........|         0/0B| ---.-/s|eta -:--:--|0:00:00",
         0, 0
     )
 
-    @Test
-    @JsName("negative_completed_value")
+    @[Test JsName("negative_completed_value")]
     fun `negative completed value`() = doTest(
         "text.txt|-50%|.........|        -1/2B| ---.-/s|eta -:--:--|0:00:00",
         -1, 2
     )
 
-    @Test
-    @JsName("completed_greater_than_total")
+    @[Test JsName("completed_greater_than_total")]
     fun `completed value greater than total`() = doTest(
         "text.txt|200%|#########|        10/5B| ---.-/s|eta -:--:--|0:00:00",
         10, 5
     )
 
-    @Test
-    @JsName("default_pacing")
+    @[Test JsName("default_pacing")]
     fun `default spacing`() = checkRender(
         progressBarLayout {
             text("|")
@@ -114,8 +104,7 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("custom_pulse_duration")
+    @[Test JsName("custom_pulse_duration")]
     fun `custom pulse duration`() {
         t += 0.5.seconds
         checkRender(
@@ -127,8 +116,7 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("no_pulse")
+    @[Test JsName("no_pulse")]
     fun `no pulse`() {
         t += 1.seconds
         checkRender(
@@ -140,8 +128,7 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("timeRemaining_compact")
+    @[Test JsName("timeRemaining_compact")]
     fun `timeRemaining compact`() {
         val l = progressBarLayout {
             timeRemaining(compact = true)
@@ -157,22 +144,19 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("layout_no_cells")
+    @[Test JsName("layout_no_cells")]
     fun `layout with no cells`() {
         val layout = progressBarLayout { }.build(null, 0, start)
         checkRender(layout, "")
     }
 
-    @Test
-    @JsName("layout_no_states")
+    @[Test JsName("layout_no_states")]
     fun `layout with no states`() {
         val layout = MultiProgressBarWidgetMaker.build(emptyList())
         checkRender(layout, "")
     }
 
-    @Test
-    @JsName("eta_and_remaining_compact")
+    @[Test JsName("eta_and_remaining_compact")]
     fun `eta and remaining compact`() = forAll(
         row(null, null, "--:--|  eta --:--"),
         row(0.seconds, 1.seconds, "00:00|  eta 00:01"),
@@ -194,8 +178,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(layout, expected)
     }
 
-    @Test
-    @JsName("eta_and_remaining_finished")
+    @[Test JsName("eta_and_remaining_finished")]
     fun `eta and remaining finished`() {
         t += 1.hours
         val finishedTime = t.markNow()
@@ -206,8 +189,7 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("eta_and_remaining_paused")
+    @[Test JsName("eta_and_remaining_paused")]
     fun `eta and remaining paused`() {
         t += 1.hours
         val pausedTime = t.markNow()
@@ -216,8 +198,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(layout, "1:00:00|eta -:--:--")
     }
 
-    @Test
-    @JsName("eta_elapsedWhenFinished")
+    @[Test JsName("eta_elapsedWhenFinished")]
     fun `eta elapsedWhenFinished`() {
         val layout = etaLayout(elapsedWhenFinished = true)
         t += 1.hours
@@ -267,8 +248,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(layout.build(null, 0, start), expected, trimMargin = false)
     }
 
-    @Test
-    @JsName("styled_marquee")
+    @[Test JsName("styled_marquee")]
     fun `styled marquee`() = forAll(
         row(0, red("   ")),
         row(1, red("  1")),
@@ -286,8 +266,7 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(layout.build(null, 0, start), expected, trimMargin = false)
     }
 
-    @Test
-    @JsName("completed_decimal_format")
+    @[Test JsName("completed_decimal_format")]
     fun `completed decimal format`() = forAll(
         row(0, 0, null,/*      */" 0/---.-"),
         row(0, 1e1, 1e2,/*     */"  10/100"),
@@ -312,15 +291,13 @@ class ProgressLayoutTest : RenderingTest() {
         checkRender(widget, expected, trimMargin = false)
     }
 
-    @Test
-    @JsName("marquee_scrollWhenContentFits_false")
+    @[Test JsName("marquee_scrollWhenContentFits_false")]
     fun `marquee scrollWhenContentFits=false`() {
         val layout = progressBarLayout { marquee("123", width = 5) }
         checkRender(layout.build(null, 0, start), "  123", trimMargin = false)
     }
 
-    @Test
-    @JsName("marquee_scrollWhenContentFits_true")
+    @[Test JsName("marquee_scrollWhenContentFits_true")]
     fun `marquee scrollWhenContentFits=true`() {
         val start = setTime(2.seconds)
         val layout = progressBarLayout { marquee("123", width = 5, scrollWhenContentFits = true) }
@@ -375,8 +352,7 @@ class ProgressLayoutTest : RenderingTest() {
         )
     }
 
-    @Test
-    @JsName("use_as_builder")
+    @[Test JsName("use_as_builder")]
     fun `use as builder`() {
         val builder = ProgressLayoutBuilder<Int>()
         builder.text { "a$context" }

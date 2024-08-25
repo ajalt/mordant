@@ -8,7 +8,8 @@ import kotlin.test.Test
 
 class TableBorderStyleTest : RenderingTest() {
     @Test
-    fun square() = doTest(BorderType.SQUARE, """
+    fun square() = doTest(
+        BorderType.SQUARE, """
         ░┌───┬───┐                   ┌───┬───┐   ╷   ╷   ╷   ╷░
         ░│1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │░
         ░├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵░
@@ -30,10 +31,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵░
         ░│118│119│120 121 122 123 124 125 126 127 128 129 130 ░
         ░└───┴───┘                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun rounded() = doTest(BorderType.ROUNDED, """
+    fun rounded() = doTest(
+        BorderType.ROUNDED, """
         ░╭───┬───╮                   ╭───┬───╮   ╷   ╷   ╷   ╷░
         ░│1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │░
         ░├───┼───┤   ╶───────╴       ╰───┴───╯   ╵   ╵   ╵   ╵░
@@ -55,10 +58,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░├───┼───┤   ╶───────╴       ╰───┴───╯   ╵   ╵   ╵   ╵░
         ░│118│119│120 121 122 123 124 125 126 127 128 129 130 ░
         ░╰───┴───╯                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun heavy() = doTest(BorderType.HEAVY, """
+    fun heavy() = doTest(
+        BorderType.HEAVY, """
         ░┏━━━┳━━━┓                   ┏━━━┳━━━┓   ╻   ╻   ╻   ╻░
         ░┃1  ┃2  ┃3   4   5   6   7  ┃8  ┃9  ┃10 ┃11 ┃12 ┃13 ┃░
         ░┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹░
@@ -80,10 +85,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹░
         ░┃118┃119┃120 121 122 123 124 125 126 127 128 129 130 ░
         ░┗━━━┻━━━┛                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun double() = doTest(BorderType.DOUBLE, """
+    fun double() = doTest(
+        BorderType.DOUBLE, """
         ░╔═══╦═══╗                   ╔═══╦═══╗                ░
         ░║1  ║2  ║3   4   5   6   7  ║8  ║9  ║10 ║11 ║12 ║13 ║░
         ░╠═══╬═══╣    ═══════        ╚═══╩═══╝                ░
@@ -105,10 +112,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░╠═══╬═══╣    ═══════        ╚═══╩═══╝                ░
         ░║118║119║120 121 122 123 124 125 126 127 128 129 130 ░
         ░╚═══╩═══╝                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun heavy_head_foot() = doTest(BorderType.HEAVY_HEAD_FOOT, """
+    fun heavy_head_foot() = doTest(
+        BorderType.HEAVY_HEAD_FOOT, """
         ░┏━━━┳━━━┓                   ┏━━━┳━━━┓   ╻   ╻   ╻   ╻░
         ░┃1  ┃2  ┃3   4   5   6   7  ┃8  ┃9  ┃10 ┃11 ┃12 ┃13 ┃░
         ░┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹░
@@ -130,10 +139,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░┣━━━╋━━━┫   ╺━━━━━━━╸       ┗━━━┻━━━┛   ╹   ╹   ╹   ╹░
         ░┃118┃119┃120 121 122 123 124 125 126 127 128 129 130 ░
         ░┗━━━┻━━━┛                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun square_double_head_separator() = doTest(BorderType.SQUARE_DOUBLE_SECTION_SEPARATOR, """
+    fun square_double_head_separator() = doTest(
+        BorderType.SQUARE_DOUBLE_SECTION_SEPARATOR, """
         ░┌───┬───┐                   ┌───┬───┐   ╷   ╷   ╷   ╷░
         ░│1  │2  │3   4   5   6   7  │8  │9  │10 │11 │12 │13 │░
         ░├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵░
@@ -155,10 +166,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░├───┼───┤   ╶───────╴       └───┴───┘   ╵   ╵   ╵   ╵░
         ░│118│119│120 121 122 123 124 125 126 127 128 129 130 ░
         ░└───┴───┘                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun ascii() = doTest(BorderType.ASCII, """
+    fun ascii() = doTest(
+        BorderType.ASCII, """
         ░+---+---+                   +---+---+                ░
         ░|1  |2  |3   4   5   6   7  |8  |9  |10 |11 |12 |13 |░
         ░+---+---+    -------        +---+---+                ░
@@ -180,10 +193,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░+---+---+    -------        +---+---+                ░
         ░|118|119|120 121 122 123 124 125 126 127 128 129 130 ░
         ░+---+---+                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun ascii_double_section_separator() = doTest(BorderType.ASCII_DOUBLE_SECTION_SEPARATOR, """
+    fun ascii_double_section_separator() = doTest(
+        BorderType.ASCII_DOUBLE_SECTION_SEPARATOR, """
         ░+---+---+                   +---+---+                ░
         ░|1  |2  |3   4   5   6   7  |8  |9  |10 |11 |12 |13 |░
         ░+---+---+    -------        +---+---+                ░
@@ -205,10 +220,12 @@ class TableBorderStyleTest : RenderingTest() {
         ░+---+---+    -------        +---+---+                ░
         ░|118|119|120 121 122 123 124 125 126 127 128 129 130 ░
         ░+---+---+                                            ░
-        """)
+        """
+    )
 
     @Test
-    fun blank() = doTest(BorderType.BLANK, """
+    fun blank() = doTest(
+        BorderType.BLANK, """
         ░                                                     ░
         ░ 1   2   3   4   5   6   7   8   9   10  11  12  13  ░
         ░                                                     ░
@@ -230,7 +247,8 @@ class TableBorderStyleTest : RenderingTest() {
         ░                                                     ░
         ░ 118 119 120 121 122 123 124 125 126 127 128 129 130 ░
         ░                                                     ░
-        """.trimMargin())
+        """.trimMargin()
+    )
 
     private fun doTest(borderType: BorderType, expected: String) {
         checkRender(table {
@@ -286,6 +304,6 @@ class TableBorderStyleTest : RenderingTest() {
                 transitionRow(false)
                 sectionRows()
             }
-        },  expected)
+        }, expected)
     }
 }

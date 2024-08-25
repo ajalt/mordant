@@ -8,8 +8,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class DefinitionListTest : RenderingTest() {
-    @Test
-    @JsName("multiple_items_inline")
+    @[Test JsName("multiple_items_inline")]
     fun `multiple items inline`() = doTest(
         """
     ░term 1:      desc 1
@@ -33,8 +32,7 @@ class DefinitionListTest : RenderingTest() {
         descriptionSpacing = 4
     }
 
-    @Test
-    @JsName("inline_desc_wrap")
+    @[Test JsName("inline_desc_wrap")]
     fun `inline desc wrap`() = doTest(
         """
     ░term 1:    Lorem ipsum
@@ -48,8 +46,7 @@ class DefinitionListTest : RenderingTest() {
         inline = true
     }
 
-    @Test
-    @JsName("inline_desc_no_wrap_due_to_short_desc")
+    @[Test JsName("inline_desc_no_wrap_due_to_short_desc")]
     fun `inline desc no wrap due to short desc`() = doTest(
         """
     ░term 1 lorem ipsum:  1
@@ -61,8 +58,7 @@ class DefinitionListTest : RenderingTest() {
         inline = true
     }
 
-    @Test
-    @JsName("inline_term_overflow")
+    @[Test JsName("inline_term_overflow")]
     fun `inline term overflow`() = doTest(
         """
     ░term 1:   desc 1
@@ -77,8 +73,7 @@ class DefinitionListTest : RenderingTest() {
         inline = true
     }
 
-    @Test
-    @JsName("inline_term_all_overflow")
+    @[Test JsName("inline_term_all_overflow")]
     fun `inline term all overflow`() = doTest(
         """
     ░term 1 lorem ipsum:
@@ -92,8 +87,7 @@ class DefinitionListTest : RenderingTest() {
         entry("term 2 lorem ipsum:", "dolor sit amet")
     }
 
-    @Test
-    @JsName("inline_term_overflow_wrap")
+    @[Test JsName("inline_term_overflow_wrap")]
     fun `inline term overflow wrap`() = doTest(
         """
     ░term 1:  desc 1
@@ -110,8 +104,7 @@ class DefinitionListTest : RenderingTest() {
         entry("term 3:", "desc 3")
     }
 
-    @Test
-    @JsName("inline_multi_line_term_and_desc")
+    @[Test JsName("inline_multi_line_term_and_desc")]
     fun `inline multi line term and desc`() = doTest(
         """
    ░term 1:   desc 1
@@ -133,8 +126,7 @@ class DefinitionListTest : RenderingTest() {
     }
 
 
-    @Test
-    @JsName("non_inline")
+    @[Test JsName("non_inline")]
     fun `non-inline`() = doTest(
         """
     ░term 1:
@@ -160,8 +152,7 @@ class DefinitionListTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("non_inline_custom_spacing")
+    @[Test JsName("non_inline_custom_spacing")]
     fun `non-inline custom spacing`() = doTest(
         """
     ░term 1:
@@ -182,8 +173,7 @@ class DefinitionListTest : RenderingTest() {
         entry("term 3:", "desc 3")
     }
 
-    @Test
-    @JsName("list_in_layout")
+    @[Test JsName("list_in_layout")]
     fun `list in layout`() {
         val widget = verticalLayout {
             cell(definitionList {

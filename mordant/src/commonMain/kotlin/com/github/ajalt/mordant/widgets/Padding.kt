@@ -59,7 +59,13 @@ fun Widget.withPadding(padding: Padding, padEmptyLines: Boolean = true): Widget 
 fun Widget.withPadding(all: Int, padEmptyLines: Boolean = true): Widget =
     Padded.get(this, Padding(all), padEmptyLines)
 
-fun Widget.withPadding(top: Int, right: Int, bottom: Int, left: Int, padEmptyLines: Boolean = true): Widget =
+fun Widget.withPadding(
+    top: Int,
+    right: Int,
+    bottom: Int,
+    left: Int,
+    padEmptyLines: Boolean = true,
+): Widget =
     Padded.get(this, Padding(top, right, bottom, left), padEmptyLines)
 
 fun Widget.withPadding(padEmptyLines: Boolean = true, padding: Padding.Builder.() -> Unit): Widget =
@@ -83,7 +89,12 @@ internal class Padded private constructor(
         fun get(content: Widget, padding: Padding, padEmptyLines: Boolean): Widget {
             return when {
                 padding.isEmpty -> content
-                content is Padded -> Padded(content.content, content.padding + padding, padEmptyLines)
+                content is Padded -> Padded(
+                    content.content,
+                    content.padding + padding,
+                    padEmptyLines
+                )
+
                 else -> Padded(content, padding, padEmptyLines)
             }
         }

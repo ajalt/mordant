@@ -13,7 +13,7 @@ private const val ESC = '\u001b'
 
 
 internal class PosixEventParser(
-    private val readRawByte: (t0: ComparableTimeMark, timeout: Duration) -> Char
+    private val readRawByte: (t0: ComparableTimeMark, timeout: Duration) -> Char,
 ) {
     /*
       Some patterns seen in terminal key escape codes, derived from combos seen
