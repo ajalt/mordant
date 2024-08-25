@@ -51,7 +51,7 @@ class TerminalRecorder private constructor(
     var inputEvents: MutableList<InputEvent> = mutableListOf()
 
     /** Whether raw mode is currently active */
-    var rawModeActive: Boolean = false
+    private var rawModeActive: Boolean = false
 
     private val stdout: StringBuilder = StringBuilder()
     private val stderr: StringBuilder = StringBuilder()
@@ -105,6 +105,9 @@ class TerminalRecorder private constructor(
     }
 
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
+        if (!info.inputInteractive) {
+            throw RuntimeException("Cannot enter raw mode on a non-interactive terminal")
+        }
         rawModeActive = true
         return AutoCloseable { rawModeActive = false }
     }
