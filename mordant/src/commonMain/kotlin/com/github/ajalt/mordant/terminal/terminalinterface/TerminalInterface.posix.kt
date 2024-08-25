@@ -7,7 +7,12 @@ import com.github.ajalt.mordant.terminal.StandardTerminalInterface
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
 
-// TODO: docs
+/**
+ * A terminal interface for POSIX systems.
+ *
+ * This class provides a base interface for POSIX systems like Linux and macOS that use termios for
+ * terminal configuration.
+ */
 @Suppress("unused", "SpellCheckingInspection")
 abstract class TerminalInterfacePosix : StandardTerminalInterface() {
     protected companion object {

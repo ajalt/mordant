@@ -8,7 +8,9 @@ import com.github.ajalt.mordant.terminal.StandardTerminalInterface
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
-// TODO: docs
+/**
+ * A base TerminalInterface implementation for Windows systems.
+ */
 abstract class TerminalInterfaceWindows : StandardTerminalInterface() {
     private companion object {
         // https://learn.microsoft.com/en-us/windows/console/key-event-record-str
