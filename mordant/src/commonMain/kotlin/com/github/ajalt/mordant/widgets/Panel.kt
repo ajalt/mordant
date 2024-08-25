@@ -128,7 +128,8 @@ class Panel private constructor(
     override fun measure(t: Terminal, width: Int): WidthRange {
         val contentWidth = content.measure(t, maxContentWidth(width)) + borderWidth
         val titlePadding = titlePadding[t]
-        val titleWidth = title?.measure(t, maxTitleWidth(width, titlePadding))?.plus(borderWidth + titlePadding * 2)
+        val titleWidth = title?.measure(t, maxTitleWidth(width, titlePadding))
+            ?.plus(borderWidth + titlePadding * 2)
 
         return listOf(
             if (expand) contentWidth.copy(min = contentWidth.max) else contentWidth,
@@ -146,7 +147,8 @@ class Panel private constructor(
             else -> (measurement.max - borderWidth).coerceAtMost(maxContentWidth)
         }
 
-        val renderedContent = content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
+        val renderedContent =
+            content.render(t, maxContentWidth).setSize(contentWidth, textAlign = LEFT)
         val renderedTop = HorizontalRule(
             title ?: EmptyWidget,
             ThemeString.Explicit(borderType?.body?.ew ?: " "),
@@ -173,7 +175,8 @@ class Panel private constructor(
             })
         }
 
-        val lines = ArrayList<Line>(renderedContent.height + renderedTop.height + renderedBottom.height)
+        val lines =
+            ArrayList<Line>(renderedContent.height + renderedTop.height + renderedBottom.height)
         val b = borderType.body
         val vertical = listOf(Span.word(b.ns, borderStyle))
 

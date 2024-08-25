@@ -64,8 +64,7 @@ class CoroutinesAnimatorTest {
         job.isActive shouldBe false
     }
 
-    @Test
-    @JsName("stop_and_clear")
+   @[Test JsName("stop_and_clear")]
     fun `stop and clear`() = runTest {
         val a = progressBarLayout(spacing = 0, textFps = 1) {
             completed()
@@ -86,8 +85,7 @@ class CoroutinesAnimatorTest {
         vt.fullNormalizedOutput() shouldBe "$HIDE_CURSOR        0/10\r${CSI}0J$SHOW_CURSOR"
     }
 
-    @Test
-    @JsName("unit_animation")
+   @[Test JsName("unit_animation")]
     fun `unit animation`() = runTest {
         var i = 1
         var fin = false
@@ -111,8 +109,7 @@ class CoroutinesAnimatorTest {
         job.isActive shouldBe false
     }
 
-    @Test
-    @JsName("multi_progress_animation")
+   @[Test JsName("multi_progress_animation")]
     fun `multi progress animation`() = runTest {
         val layout = progressBarLayout { completed(fps = 1) }
         val animation = MultiProgressBarAnimation(t).animateInCoroutine()

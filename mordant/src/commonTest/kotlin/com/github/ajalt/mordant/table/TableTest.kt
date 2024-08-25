@@ -15,8 +15,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class TableTest : RenderingTest() {
-    @Test
-    @JsName("empty_table")
+    @[Test JsName("empty_table")]
     fun `empty table`() = doBodyTest(
         """
     ░┌┐
@@ -25,8 +24,7 @@ class TableTest : RenderingTest() {
     """
     ) {}
 
-    @Test
-    @JsName("empty_cell")
+    @[Test JsName("empty_cell")]
     fun `empty cell`() = doBodyTest(
         """
     ░┌┐
@@ -38,8 +36,7 @@ class TableTest : RenderingTest() {
         row("")
     }
 
-    @Test
-    @JsName("border_top")
+    @[Test JsName("border_top")]
     fun `border top`() = doBodyTest(
         """
     ░───
@@ -53,8 +50,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_right")
+    @[Test JsName("border_right")]
     fun `border right`() = doBodyTest(
         """
     ░ 1 │
@@ -67,8 +63,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_bottom")
+    @[Test JsName("border_bottom")]
     fun `border bottom`() = doBodyTest(
         """
     ░ 1 ░
@@ -82,8 +77,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_left")
+    @[Test JsName("border_left")]
     fun `border left`() = doBodyTest(
         """
     ░│ 1 ░
@@ -96,8 +90,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_top_with_corners")
+    @[Test JsName("border_top_with_corners")]
     fun `border top with corners`() = doBodyTest(
         """
     ░╶───╴
@@ -115,8 +108,7 @@ class TableTest : RenderingTest() {
         row(2)
     }
 
-    @Test
-    @JsName("border_right_with_corners")
+    @[Test JsName("border_right_with_corners")]
     fun `border right with corners`() = doBodyTest(
         """
     ░┌───┐   ╷
@@ -132,8 +124,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_bottom_with_corners")
+    @[Test JsName("border_bottom_with_corners")]
     fun `border bottom with corners`() = doBodyTest(
         """
     ░┌───┐
@@ -151,8 +142,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_left_with_corners")
+    @[Test JsName("border_left_with_corners")]
     fun `border left with corners`() = doBodyTest(
         """
     ░╷   ┌───┐
@@ -168,8 +158,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("inside_borders")
+    @[Test JsName("inside_borders")]
     fun `inside borders`() = doBodyTest(
         """
     ░ 1 │ 2 ░
@@ -196,8 +185,7 @@ class TableTest : RenderingTest() {
     }
 
 
-    @Test
-    @JsName("empty_row")
+    @[Test JsName("empty_row")]
     fun `empty row`() = doBodyTest(
         """
     ░┌───┐
@@ -214,8 +202,7 @@ class TableTest : RenderingTest() {
         row(2)
     }
 
-    @Test
-    @JsName("non_rectangular_table")
+    @[Test JsName("non_rectangular_table")]
     fun `non-rectangular table`() = doBodyTest(
         """
     ░┌───┐       ░
@@ -235,8 +222,7 @@ class TableTest : RenderingTest() {
         row(5)
     }
 
-    @Test
-    @JsName("preformatted_text_content")
+    @[Test JsName("preformatted_text_content")]
     fun `preformatted text content`() = doBodyTest(
         """
     ░┌────────────────┬─┐
@@ -262,8 +248,7 @@ class TableTest : RenderingTest() {
         row(3, 4)
     }
 
-    @Test
-    @JsName("wide_unicode_characters")
+    @[Test JsName("wide_unicode_characters")]
     fun `wide unicode characters`() = doBodyTest(
         """
     ░┌──────────┐
@@ -284,8 +269,7 @@ class TableTest : RenderingTest() {
         row("1234")
     }
 
-    @Test
-    @JsName("striped_row_styles")
+    @[Test JsName("striped_row_styles")]
     fun `striped row styles`() = doBodyTest(
         """
     ░┌─────┐
@@ -307,8 +291,7 @@ class TableTest : RenderingTest() {
         row("row 4")
     }
 
-    @Test
-    @JsName("row_and_column_span_no_borders")
+    @[Test JsName("row_and_column_span_no_borders")]
     fun `row and column span no borders`() = doBodyTest(
         """
     ░span1
@@ -329,8 +312,7 @@ class TableTest : RenderingTest() {
         row(3, 4, 5)
     }
 
-    @Test
-    @JsName("row_and_column_span")
+    @[Test JsName("row_and_column_span")]
     fun `row and column span`() = doBodyTest(
         """
     ░┌───────────┬───┐
@@ -358,8 +340,7 @@ class TableTest : RenderingTest() {
         row(4, 5, 6, 7)
     }
 
-    @Test
-    @JsName("nested_tables")
+    @[Test JsName("nested_tables")]
     fun `nested tables`() = doBodyTest(
         """
     ░┌───────────┬───┐
@@ -387,8 +368,7 @@ class TableTest : RenderingTest() {
     }
 
 
-    @Test
-    @JsName("outer_border_none")
+    @[Test JsName("outer_border_none")]
     fun `outer border none`() = doTest(
         """
     ░ 1  │ 2  │ 3  
@@ -411,8 +391,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_outer_all_inner_left_right")
+    @[Test JsName("border_outer_all_inner_left_right")]
     fun `border outer all inner left right`() = doTest(
         """
     ░┌───┬───┬───┐
@@ -432,8 +411,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("border_outer_all_inner_none")
+    @[Test JsName("border_outer_all_inner_none")]
     fun `border outer all inner none`() = doTest(
         """
     ░┌───────────┐
@@ -460,8 +438,7 @@ class TableTest : RenderingTest() {
         }
     }
 
-    @Test
-    @JsName("section_column_builders")
+    @[Test JsName("section_column_builders")]
     fun `section column builders`() = doTest(
         """
     ░┌─────┬─────┐
@@ -517,8 +494,7 @@ class TableTest : RenderingTest() {
         body { row(1, 2, 3) }
     }
 
-    @Test
-    @JsName("caption_widgets")
+    @[Test JsName("caption_widgets")]
     fun `caption widgets`() = doTest(
         """
     ░!

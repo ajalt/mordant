@@ -5,8 +5,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 
 class OrderedListTest : RenderingTest() {
-    @Test
-    @JsName("vararg_string_constructor")
+    @[Test JsName("vararg_string_constructor")]
     fun `vararg string constructor`() = checkRender(
         OrderedList("one", "two", "three"),
         """
@@ -16,8 +15,7 @@ class OrderedListTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("vararg_widget_constructor")
+    @[Test JsName("vararg_widget_constructor")]
     fun `vararg widget constructor`() = checkRender(
         OrderedList(Text("one"), Text("two"), Text("three")),
         """
@@ -27,8 +25,7 @@ class OrderedListTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("empty_list")
+    @[Test JsName("empty_list")]
     fun `empty list`() = checkRender(
         OrderedList(emptyList()),
         ""

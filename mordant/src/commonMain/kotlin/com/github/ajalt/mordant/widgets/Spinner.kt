@@ -50,7 +50,12 @@ class Spinner(
     /**
      * Construct a [Spinner] from a string, where each character in the string is one frame.
      */
-    constructor(frames: String, style: TextStyle = DEFAULT_STYLE, duration: Int = 1, initial: Int = 0) :
+    constructor(
+        frames: String,
+        style: TextStyle = DEFAULT_STYLE,
+        duration: Int = 1,
+        initial: Int = 0,
+    ) :
             this(frames.map { Text(style(it.toString())) }, duration, initial)
 
     private val _tick = MppAtomicInt(initial)

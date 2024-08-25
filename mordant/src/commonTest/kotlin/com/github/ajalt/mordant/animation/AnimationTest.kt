@@ -12,8 +12,7 @@ class AnimationTest {
     private val rec = TerminalRecorder(width = 24)
     private val t = Terminal(terminalInterface = rec)
 
-    @Test
-    @JsName("no_trailing_linebreak")
+    @[Test JsName("no_trailing_linebreak")]
     fun `no trailing linebreak`() {
         val a = t.textAnimation<Int>(trailingLinebreak = false) { "<$it>\n===" }
         a.update(1)
@@ -26,8 +25,7 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "${moves}<2>\n==="
     }
 
-    @Test
-    @JsName("no_trailing_linebreak_single_line")
+    @[Test JsName("no_trailing_linebreak_single_line")]
     fun `no trailing linebreak single line`() {
         val a = t.textAnimation<Int>(trailingLinebreak = false) { "<$it>" }
         a.update(1)
@@ -40,8 +38,7 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "${moves}<2>"
     }
 
-    @Test
-    @JsName("animation_size_change")
+    @[Test JsName("animation_size_change")]
     fun `animation size change`() {
         val a = t.textAnimation<String> { it }
         a.update("1")
@@ -67,8 +64,7 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "1\r2\n"
     }
 
-    @Test
-    @JsName("print_during_animation")
+    @[Test JsName("print_during_animation")]
     fun `print during animation`() {
         val a = t.textAnimation<Int> { "<$it>\n===" }
         a.update(1)
@@ -118,8 +114,7 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "<4>\n==="
     }
 
-    @Test
-    @JsName("two_animations")
+    @[Test JsName("two_animations")]
     fun `two animations`() {
         val a = t.textAnimation<Int> { "<a$it>" }
         val b = t.textAnimation<Int> { "<b$it>" }

@@ -22,8 +22,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("indeterminate_unaligned")
+    @[Test JsName("indeterminate_unaligned")]
     fun `indeterminate unaligned`() = doTest(
         completed1 = 0, total1 = null, elapsed1 = null, speed1 = null,
         completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
@@ -34,8 +33,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("one_in_progress")
+    @[Test JsName("one_in_progress")]
     fun `one in progress`() = doTest(
         completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
         completed2 = 0, total2 = null, elapsed2 = null, speed2 = null,
@@ -45,8 +43,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("two_finished")
+    @[Test JsName("two_finished")]
     fun `two finished`() = doTest(
         completed1 = 5, total1 = 10, elapsed1 = 5.0, speed1 = 1.0,
         completed2 = 20, total2 = 20, elapsed2 = 10.0, speed2 = 2.0,
@@ -56,8 +53,7 @@ class MultiProgressLayoutTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("different_layouts")
+    @[Test JsName("different_layouts")]
     fun `different layouts`() {
         val t = TestTimeSource()
         val animTime = t.markNow()

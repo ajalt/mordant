@@ -1,8 +1,6 @@
 package com.github.ajalt.mordant.main
 
 import com.github.ajalt.mordant.animation.coroutines.animateInCoroutine
-import com.github.ajalt.mordant.animation.progress.animateOnThread
-import com.github.ajalt.mordant.animation.progress.execute
 import com.github.ajalt.mordant.markdown.Markdown
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
@@ -12,7 +10,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-suspend fun main(args: Array<String>) = coroutineScope{
+suspend fun main(args: Array<String>) = coroutineScope {
     // make sure that the terminal detection doesn't crash.
     Terminal()
 

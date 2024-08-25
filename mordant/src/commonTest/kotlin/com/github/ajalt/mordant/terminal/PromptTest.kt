@@ -16,16 +16,14 @@ class PromptTest {
         vt.output() shouldBe "pr: "
     }
 
-    @Test
-    @JsName("terminal_prompt")
+    @[Test JsName("terminal_prompt")]
     fun `terminal prompt`() {
         vt.inputLines = mutableListOf("answer")
         t.prompt("pr") shouldBe "answer"
         vt.output() shouldBe "pr: "
     }
 
-    @Test
-    @JsName("StringPrompt_with_default")
+    @[Test JsName("StringPrompt_with_default")]
     fun `StringPrompt with default`() {
         vt.inputLines = mutableListOf("")
         // showDefault should be inferred, but is disabled due to KT-59326
@@ -34,8 +32,7 @@ class PromptTest {
         vt.output() shouldBe "pr ${style("(def)")}: "
     }
 
-    @Test
-    @JsName("StringPrompt_with_choices")
+    @[Test JsName("StringPrompt_with_choices")]
     fun `StringPrompt with choices`() {
         vt.inputLines = mutableListOf("b")
         StringPrompt("pr", t, choices = listOf("a", "b")).ask() shouldBe "b"
@@ -43,8 +40,7 @@ class PromptTest {
         vt.output() shouldBe "pr ${s("[a, b]")}: "
     }
 
-    @Test
-    @JsName("custom_Prompt")
+    @[Test JsName("custom_Prompt")]
     fun `custom Prompt`() {
         t.info.ansiLevel = AnsiLevel.NONE
         class IntPrompt : Prompt<Int>("pr", t) {
@@ -63,8 +59,7 @@ class PromptTest {
         vt.output() shouldBe "before\npr: nope\nbefore\npr: "
     }
 
-    @Test
-    @JsName("StringPrompt_invalid_choices")
+    @[Test JsName("StringPrompt_invalid_choices")]
     fun `StringPrompt invalid choice`() {
         vt.inputLines = mutableListOf("bad", "a")
         StringPrompt("pr", t, choices = listOf("a", "b")).ask() shouldBe "a"
@@ -74,8 +69,7 @@ class PromptTest {
         vt.output() shouldBe "$p${e("Invalid value, choose from [a, b]")}\n$p"
     }
 
-    @Test
-    @JsName("YesNoPrompt_no_default")
+    @[Test JsName("YesNoPrompt_no_default")]
     fun `YesNoPrompt no default`() {
         vt.inputLines = mutableListOf("Y")
         YesNoPrompt("pr", t).ask() shouldBe true
@@ -83,8 +77,7 @@ class PromptTest {
         vt.output() shouldBe "pr ${style("[y/n]")}: "
     }
 
-    @Test
-    @JsName("YesNoPrompt_default")
+    @[Test JsName("YesNoPrompt_default")]
     fun `YesNoPrompt default`() {
         vt.inputLines = mutableListOf("")
         YesNoPrompt("pr", t, default = false).ask() shouldBe false
@@ -92,16 +85,14 @@ class PromptTest {
         vt.output() shouldBe "pr ${style("[y/N]")}: "
     }
 
-    @Test
-    @JsName("ConfirmationPrompt_match")
+    @[Test JsName("ConfirmationPrompt_match")]
     fun `ConfirmationPrompt match`() {
         vt.inputLines = mutableListOf("a", "a")
         ConfirmationPrompt.createString("pr1", "pr2", t).ask() shouldBe "a"
         vt.output() shouldBe "pr1: pr2: "
     }
 
-    @Test
-    @JsName("ConfirmationPrompt_mismatch")
+    @[Test JsName("ConfirmationPrompt_mismatch")]
     fun `ConfirmationPrompt mismatch`() {
         vt.inputLines = mutableListOf("a", "b", "c", "c")
         ConfirmationPrompt.createString("pr1", "pr2", t).ask() shouldBe "c"

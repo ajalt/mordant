@@ -23,14 +23,12 @@ import kotlin.test.Test
 
 
 class TextTest : RenderingTest() {
-    @Test
-    @JsName("trailing_line_break")
+    @[Test JsName("trailing_line_break")]
     fun `trailing line break`() {
         checkRender(Text("x\n"), "x\n", trimMargin = false)
     }
 
-    @Test
-    @JsName("override_width")
+    @[Test JsName("override_width")]
     fun `override width`() = checkRender(
         Text(
             """
@@ -44,8 +42,7 @@ class TextTest : RenderingTest() {
     """, width = 79
     )
 
-    @Test
-    @JsName("hard_line_breaks")
+    @[Test JsName("hard_line_breaks")]
     fun `hard line breaks`() = checkRender(
         Text(
             """
@@ -71,8 +68,7 @@ class TextTest : RenderingTest() {
         checkRender(Text(text, whitespace = PRE), expected, tabWidth = 4)
     }
 
-    @Test
-    @JsName("ansi_parsing")
+    @[Test JsName("ansi_parsing")]
     fun `ansi parsing`() = checkRender(
         Text(
             """
@@ -87,8 +83,7 @@ class TextTest : RenderingTest() {
     """, width = 79
     )
 
-    @Test
-    @JsName("ansi_parsing_256")
+    @[Test JsName("ansi_parsing_256")]
     fun `ansi parsing 256`() = checkRender(
         Text(
             (TextColors.color(Ansi256(111)) on TextColors.color(Ansi256(222)))("red")
@@ -96,8 +91,7 @@ class TextTest : RenderingTest() {
         "${CSI}38;5;111;48;5;222mred${CSI}39;49m"
     )
 
-    @Test
-    @JsName("ansi_parsing_truecolor")
+    @[Test JsName("ansi_parsing_truecolor")]
     fun `ansi parsing truecolor`() = checkRender(
         Text(
             (TextColors.rgb("#ff0000") on TextColors.rgb("#00ff00"))("red")
@@ -105,8 +99,7 @@ class TextTest : RenderingTest() {
         "${CSI}38;2;255;0;0;48;2;0;255;0mred${CSI}39;49m"
     )
 
-    @Test
-    @JsName("ansi_parsing_with_styles")
+    @[Test JsName("ansi_parsing_with_styles")]
     fun `ansi parsing with styles`() = checkRender(
         Text(
             """
@@ -124,20 +117,18 @@ class TextTest : RenderingTest() {
     """, width = 79
     ) { it.normalizeHyperlinks() }
 
-    @Test
-    @JsName("replacing_whole_string_color")
+    @[Test JsName("replacing_whole_string_color")]
     fun `replacing whole string color`() = checkRender(
         Text((green on gray)((red on blue)("text"))),
         (green on gray)("text")
     )
 
 
-    @Test
-    @JsName("ansi_bold_and_dim")
+    @[Test JsName("ansi_bold_and_dim")]
     fun `ansi bold and dim`() = checkRender(
         Text(" ${dim("dim${bold("bold")}dim")} ".visibleCrLf()),
         " ␛2mdim␛1mbold␛22;2mdim␛22m "
-    // [1;2mbold[0m[2m not [0m[2;31mbold[0m
+        // [1;2mbold[0m[2m not [0m[2;31mbold[0m
     )
 
 
@@ -150,15 +141,13 @@ class TextTest : RenderingTest() {
         checkRender(Text(style((red on blue)("text"))), expected("text"))
     }
 
-    @Test
-    @JsName("hyperlink_one_line")
+    @[Test JsName("hyperlink_one_line")]
     fun `hyperlink one line`() = doHyperlinkTest(
         "This is a link",
         "${OSC}8;id=1;https://example.com${ST}This is a link${OSC}8;;$ST"
     )
 
-    @Test
-    @JsName("hyperlink_word_wrap")
+    @[Test JsName("hyperlink_word_wrap")]
     fun `hyperlink word wrap`() = doHyperlinkTest(
         "This is a link",
         """
@@ -168,8 +157,7 @@ class TextTest : RenderingTest() {
         width = 8
     )
 
-    @Test
-    @JsName("hyperlink_break_word")
+    @[Test JsName("hyperlink_break_word")]
     fun `hyperlink break word`() = doHyperlinkTest(
         "This_is_a_link",
         """

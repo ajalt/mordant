@@ -58,7 +58,8 @@ private class DefinitionList(
                 continue
             }
             val termLines = term.render(t, termWidth).lines
-            val descLines = desc.render(t, (width - termWidth - descriptionSpacing).coerceAtLeast(0)).lines
+            val descLines =
+                desc.render(t, (width - termWidth - descriptionSpacing).coerceAtLeast(0)).lines
             termLines.zip(descLines).mapTo(lines) { (t, d) ->
                 flatLine(t, Span.space(descriptionSpacing + termWidth - t.lineWidth), d)
             }

@@ -62,11 +62,13 @@ class HorizontalRule internal constructor(
         val padding = titlePadding[t]
         val totalPadding = 2 * padding
         val minBarWidth = 4 + totalPadding // 2 for each of left bar and right bar
-        val renderedTitle = title.withAlign(TextAlign.NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
+        val renderedTitle =
+            title.withAlign(TextAlign.NONE).render(t, (width - minBarWidth).coerceAtLeast(0))
         val lines = if (renderedTitle.isEmpty()) {
             listOf(rule(t, width))
         } else {
-            val titleRuleLine = if (titleOverflowTop) renderedTitle.lines.last() else renderedTitle.lines.first()
+            val titleRuleLine =
+                if (titleOverflowTop) renderedTitle.lines.last() else renderedTitle.lines.first()
             val ruleWidth = width - titleRuleLine.sumOf { it.cellWidth } - totalPadding
             val leftRuleWidth = when (titleAlign) {
                 TextAlign.LEFT -> 1

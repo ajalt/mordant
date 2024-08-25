@@ -43,7 +43,13 @@ class BorderTypeSection(
 
     private val array = arrayOf(" ", w, s, sw, e, ew, es, esw, n, nw, ns, nsw, ne, new, nes, nesw)
 
-    fun getCorner(n: Boolean, e: Boolean, s: Boolean, w: Boolean, textStyle: TextStyle = DEFAULT_STYLE): Span {
+    fun getCorner(
+        n: Boolean,
+        e: Boolean,
+        s: Boolean,
+        w: Boolean,
+        textStyle: TextStyle = DEFAULT_STYLE,
+    ): Span {
         val i = (if (n) 8 else 0) or (if (e) 4 else 0) or (if (s) 2 else 0) or (if (w) 1 else 0)
         return Span.word(array[i], textStyle)
     }

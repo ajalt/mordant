@@ -10,8 +10,7 @@ import kotlin.test.Test
 
 class PanelTest : RenderingTest(width = 20) {
 
-    @Test
-    @JsName("no_expand")
+    @[Test JsName("no_expand")]
     fun `no expand`() = checkRender(
         Panel(Text("text"), expand = false),
         """
@@ -31,8 +30,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("no_border")
+    @[Test JsName("no_border")]
     fun `no border`() = checkRender(
         Panel(Text("text\nline 2", whitespace = PRE), borderType = null),
         """
@@ -41,8 +39,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("default_title")
+    @[Test JsName("default_title")]
     fun `default title`() = checkRender(
         Panel("text content", title = "title"),
         """
@@ -52,8 +49,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("long_title")
+    @[Test JsName("long_title")]
     fun `long title`() = checkRender(
         Panel("content", title = "title title"),
         """
@@ -63,8 +59,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("title_align_left")
+    @[Test JsName("title_align_left")]
     fun `title align left`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.LEFT),
         """
@@ -74,8 +69,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("title_align_right")
+    @[Test JsName("title_align_right")]
     fun `title align right`() = checkRender(
         Panel("text content", title = "title", titleAlign = TextAlign.RIGHT),
         """
@@ -85,8 +79,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("bottom_title")
+    @[Test JsName("bottom_title")]
     fun `bottom title`() = checkRender(
         Panel("text content", bottomTitle = "title"),
         """
@@ -96,8 +89,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("title_widgets")
+    @[Test JsName("title_widgets")]
     fun `title widgets`() = checkRender(
         Panel(Text("text content"), title = Text("foo\nbar"), bottomTitle = Text("foo\nbar")),
         """
@@ -109,8 +101,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("bottom_align")
+    @[Test JsName("bottom_align")]
     fun `bottom align`() = checkRender(
         Panel(
             "my panel content",
@@ -126,8 +117,7 @@ class PanelTest : RenderingTest(width = 20) {
         """
     )
 
-    @Test
-    @JsName("themed_panel")
+    @[Test JsName("themed_panel")]
     fun `themed panel`() = checkRender(
         Panel(green("text content"), title = blue("title")),
         """

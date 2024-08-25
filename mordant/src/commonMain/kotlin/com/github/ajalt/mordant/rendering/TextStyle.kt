@@ -85,6 +85,7 @@ interface TextStyle {
             )
         }
     }
+
     operator fun plus(other: TextStyles): TextStyle = this + other.style
 }
 

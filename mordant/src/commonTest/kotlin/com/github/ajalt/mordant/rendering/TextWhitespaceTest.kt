@@ -62,8 +62,7 @@ class TextWhitespaceTest : RenderingTest() {
         """
     )
 
-    @Test
-    @JsName("consecutive_whitespace_spans")
+    @[Test JsName("consecutive_whitespace_spans")]
     fun `consecutive whitespace spans`() {
         val line1 = Line(listOf("a", "   ", " ").map { Span.word(it) })
         val line2 = Line(listOf(" ", "b").map { Span.word(it) })

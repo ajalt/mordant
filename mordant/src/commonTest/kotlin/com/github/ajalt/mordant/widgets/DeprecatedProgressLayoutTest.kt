@@ -16,36 +16,31 @@ class DeprecatedProgressLayoutTest : RenderingTest() {
         0
     )
 
-    @Test
-    @JsName("no_progress")
+    @[Test JsName("no_progress")]
     fun `no progress`() = doTest(
         "text.txt|  0%|.........................|         0/0B| ---.-it/s",
         0, 0
     )
 
-    @Test
-    @JsName("large_values")
+    @[Test JsName("large_values")]
     fun `large values`() = doTest(
         "text.txt| 50%|############>............|150.0/300.0MB|100.0Mit/s",
         150_000_000, 300_000_000, 1.5, 100_000_000.0
     )
 
-    @Test
-    @JsName("short_eta")
+    @[Test JsName("short_eta")]
     fun `short eta`() = doTest(
         "text.txt| 50%|############>............|         1/2B|   4.0it/s",
         1, 2, 3.0, 4.0
     )
 
-    @Test
-    @JsName("automatic_eta")
+    @[Test JsName("automatic_eta")]
     fun `automatic eta`() = doTest(
         "text.txt| 50%|############>............|         1/2B|   0.3it/s",
         1, 2, 3.0
     )
 
-    @Test
-    @JsName("long_eta")
+    @[Test JsName("long_eta")]
     fun `long eta`() = doTest(
         "text.txt| 50%|############>............|150.0/300.0MB|   2.0it/s",
         150_000_000, 300_000_000, 1.5, 2.0
@@ -72,8 +67,7 @@ class DeprecatedProgressLayoutTest : RenderingTest() {
         width = 3,
     )
 
-    @Test
-    @JsName("no_pulse")
+    @[Test JsName("no_pulse")]
     fun `no pulse`() = checkRender(
         progressLayout {
             progressBar(showPulse = false)
