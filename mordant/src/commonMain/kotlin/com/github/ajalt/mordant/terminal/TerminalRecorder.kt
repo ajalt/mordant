@@ -44,10 +44,20 @@ class TerminalRecorder private constructor(
      * Lines of input to return from [readLineOrNull].
      */
     var inputLines: MutableList<String> = mutableListOf()
+
+    /**
+     * Input events to return when reading in raw mode
+     */
+    var inputEvents: MutableList<InputEvent> = mutableListOf()
+
+    /** Whether raw mode is currently active */
+    var rawModeActive: Boolean = false
+
     private val stdout: StringBuilder = StringBuilder()
     private val stderr: StringBuilder = StringBuilder()
     private val output: StringBuilder = StringBuilder()
 
+    /** Clear [stdout], [stderr], and [output] */
     fun clearOutput() {
         stdout.clear()
         stderr.clear()
@@ -91,10 +101,11 @@ class TerminalRecorder private constructor(
     }
 
     override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
-        TODO()
+        return inputEvents.removeFirstOrNull()
     }
 
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
-        TODO()
+        rawModeActive = true
+        return AutoCloseable { rawModeActive = false }
     }
 }
