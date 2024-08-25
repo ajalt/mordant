@@ -26,6 +26,10 @@ internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
         IEXTEN = IEXTEN.convert(),
     )
 
+    override fun readIntoBuffer(c: ByteVar): Long {
+        return read(platform.posix.STDIN_FILENO, c.ptr, 1u).convert()
+    }
+
     override fun getTerminalSize(): Size? = memScoped {
         val size = alloc<winsize>()
         if (ioctl(STDIN_FILENO, TIOCGWINSZ.toULong(), size) < 0) {

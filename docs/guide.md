@@ -1,7 +1,44 @@
 # Getting Started
 
-You can get the library using any maven-compatible build system.
-Installation instructions can be found in the [README][README].
+Mordant is split into a number of modules to allow you to pick the functionality you need. On JVM,
+there are several modules that implement `TerminalInterface` using different dependencies.
+
+=== "All-in-one gradle dependencies"
+    ```kotlin
+    // Adds all JVM interface modules
+    implementation("com.github.ajalt.mordant:mordant:$mordantVersion")
+    
+    // optional extensions for running animations with coroutines
+    implementation("com.github.ajalt.mordant:mordant-coroutines:$mordantVersion")
+    
+    // optional widget for rendering Markdown
+    implementation("com.github.ajalt.mordant:mordant-markdown:$mordantVersion")
+    ```
+
+=== "Individual JVM gradle dependencies"
+    ```kotlin
+    // This modules doesn't include any JVM interface modules, so you'll need one or more if you're 
+    // targeting JVM
+    implementation("com.github.ajalt.mordant:mordant-core:$mordantVersion")
+    
+    // This module uses the Java Foreign Function and Memory API. It requires JDK 22+, and you must 
+    // add `--enable-native-access=ALL-UNNAMED` to your `java` command line arguments.
+    implementation("com.github.ajalt.mordant:mordant-jvm-ffm:$mordantVersion")
+    
+    // This module uses the Java Native Access library. It supports all versions of Java, but 
+    // requires linking to a bundled native library, so it increases your JAR size.
+    implementation("com.github.ajalt.mordant:mordant-jvm-jna:$mordantVersion")
+    
+    // This module uses the GraalVM Native Image FFI interface. This only supports Graal Native Image.
+    implementation("com.github.ajalt.mordant:mordant-jvm-graal-ffi:$mordantVersion")
+    
+    // optional extensions for running animations with coroutines
+    implementation("com.github.ajalt.mordant:mordant-coroutines:$mordantVersion")
+    
+    // optional widget for rendering Markdown
+    implementation("com.github.ajalt.mordant:mordant-markdown:$mordantVersion")
+    ```
+
 
 ## Text Colors and Styles
 
