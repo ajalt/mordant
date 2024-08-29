@@ -9,6 +9,7 @@
 - Added support for raw mode and input events to JS and wasmJS targets when running on node.js.
 - Added tvOS and watchOS native targets to all modules except the new `mordant-markdown` module.
 - Added ability to control raw mode with the `TerminalRecorder`.
+- Added support for unicode input in raw mode.
 
 ### Changed
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.

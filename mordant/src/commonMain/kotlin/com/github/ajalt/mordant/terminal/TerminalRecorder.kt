@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Size
-import kotlin.time.Duration
+import kotlin.time.TimeMark
 
 /**
  * A [TerminalInterface] that records all output and allows you to provide input.
@@ -100,7 +100,7 @@ class TerminalRecorder private constructor(
         )
     }
 
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+    override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
         return inputEvents.removeFirstOrNull()
     }
 

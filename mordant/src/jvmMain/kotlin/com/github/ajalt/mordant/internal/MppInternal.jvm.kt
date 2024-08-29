@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.io.path.readText
 import kotlin.system.exitProcess
-import kotlin.time.Duration
+import kotlin.time.TimeMark
 
 private class JvmAtomicRef<T>(value: T) : MppAtomicRef<T> {
     private val ref = AtomicReference(value)
@@ -165,7 +165,7 @@ private object DumbTerminalInterface : StandardTerminalInterface() {
         throw UnsupportedOperationException("Cannot enter raw mode on this system")
     }
 
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
+    override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
         throw UnsupportedOperationException("Cannot read input on this system")
     }
 }
