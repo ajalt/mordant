@@ -93,7 +93,7 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
     abstract fun setStdinTermios(termios: Termios)
     abstract val termiosConstants: TermiosConstants
     protected abstract fun isatty(fd: Int): Boolean
-    protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char
+    protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Int
 
     override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO)
     override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO)
