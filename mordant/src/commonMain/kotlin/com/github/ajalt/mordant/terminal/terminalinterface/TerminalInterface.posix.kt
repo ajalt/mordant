@@ -4,8 +4,7 @@ import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.StandardTerminalInterface
-import kotlin.time.ComparableTimeMark
-import kotlin.time.Duration
+import kotlin.time.TimeMark
 
 /**
  * A terminal interface for POSIX systems.
@@ -93,7 +92,7 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
     abstract fun setStdinTermios(termios: Termios)
     abstract val termiosConstants: TermiosConstants
     protected abstract fun isatty(fd: Int): Boolean
-    protected abstract fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Int
+    protected abstract fun readRawByte(timeout: TimeMark): Int
 
     override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO)
     override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO)
@@ -127,8 +126,8 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
         }
     }
 
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
-        return PosixEventParser { t0, t -> readRawByte(t0, t) }.readInputEvent(timeout)
+    override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
+        return PosixEventParser { t -> readRawByte(t) }.readInputEvent(timeout)
     }
 }
 

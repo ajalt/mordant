@@ -5,8 +5,7 @@ import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
 import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.terminal.StandardTerminalInterface
-import kotlin.time.Duration
-import kotlin.time.TimeSource
+import kotlin.time.TimeMark
 
 /**
  * A base TerminalInterface implementation for Windows systems.
@@ -75,10 +74,14 @@ abstract class TerminalInterfaceWindows : StandardTerminalInterface() {
         return AutoCloseable { setStdinConsoleMode(originalMode) }
     }
 
-    override fun readInputEvent(timeout: Duration, mouseTracking: MouseTracking): InputEvent? {
-        val t0 = TimeSource.Monotonic.markNow()
-        val dwMilliseconds = (timeout - t0.elapsedNow()).inWholeMilliseconds
-            .coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
+    override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
+        val elapsed = timeout.elapsedNow()
+        val dwMilliseconds = when {
+            elapsed.isInfinite() -> Int.MAX_VALUE
+            elapsed.isPositive() -> 0 // positive elapsed is in the past
+            else -> -(elapsed.inWholeMilliseconds).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        }
+
         return when (val event = readRawEvent(dwMilliseconds)) {
             null -> null
             is EventRecord.Key -> processKeyEvent(event)
@@ -95,6 +98,23 @@ abstract class TerminalInterfaceWindows : StandardTerminalInterface() {
                 if (virtualName[0] in 'a'..'z') virtualName.uppercase()
                 else shiftVcodeToKey(virtualName)
             }
+
+            event.uChar in Char.MIN_SURROGATE..Char.MAX_SURROGATE -> {
+                // We got a surrogate pair, so we need to read the next char to get the full
+                // codepoint. Skip any key up events that might be in the queue.
+                var nextEvent: EventRecord?
+                do {
+                    nextEvent = readRawEvent(0)
+                } while (nextEvent != null
+                    && (nextEvent !is EventRecord.Key || !nextEvent.bKeyDown)
+                )
+                if (nextEvent !is EventRecord.Key) {
+                    event.uChar.toString()
+                } else {
+                    charArrayOf(event.uChar, nextEvent.uChar).concatToString()
+                }
+            }
+
 
             virtualName != null -> virtualName
             event.uChar.code != 0 -> event.uChar.toString()

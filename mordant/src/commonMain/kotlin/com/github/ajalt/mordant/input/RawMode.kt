@@ -55,7 +55,7 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readKeyOrNull(timeout: Duration = Duration.INFINITE): KeyboardEvent? {
-        return readEventsUntilTimeout(timeout) { it !is KeyboardEvent } as KeyboardEvent?
+        return readEventWithTimeout(timeout) { it !is KeyboardEvent } as KeyboardEvent?
     }
 
     /**
@@ -75,7 +75,7 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readMouseOrNull(timeout: Duration = Duration.INFINITE): MouseEvent? {
-        return readEventsUntilTimeout(timeout) { it !is MouseEvent } as MouseEvent?
+        return readEventWithTimeout(timeout) { it !is MouseEvent } as MouseEvent?
     }
 
     /**
@@ -95,20 +95,18 @@ class RawModeScope internal constructor(
      * @return The event, or `null` if no event was received before the timeout.
      */
     fun readEventOrNull(timeout: Duration = Duration.INFINITE): InputEvent? {
-        return readEventsUntilTimeout(timeout) { false }
+        return readEventWithTimeout(timeout) { false }
     }
 
-    private inline fun readEventsUntilTimeout(
+    private inline fun readEventWithTimeout(
         timeout: Duration, skip: (InputEvent) -> Boolean,
     ): InputEvent? {
-        val t0 = TimeSource.Monotonic.markNow()
+        val t = TimeSource.Monotonic.markNow() + timeout
         do {
-            val event = terminal.terminalInterface
-                .readInputEvent(timeout - t0.elapsedNow(), mouseTracking) ?: continue
-            if (event !is MouseEvent || mouseTracking != MouseTracking.Off || skip(event)) {
-                return event
-            }
-        } while (t0.elapsedNow() < timeout)
+            val event = terminal.terminalInterface.readInputEvent(t, mouseTracking) ?: continue
+            if (event is MouseEvent && mouseTracking == MouseTracking.Off || skip(event)) continue
+            return event
+        } while (t.hasNotPassedNow())
         return null
     }
 

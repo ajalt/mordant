@@ -1,8 +1,5 @@
 package com.github.ajalt.mordant.internal
 
-import kotlin.time.ComparableTimeMark
-import kotlin.time.Duration
-
 /** Read bytes from a UTF-8 encoded stream, and return the next codepoint. */
 internal fun readBytesAsUtf8(readByte: () -> Int): Int {
     val byte = readByte()

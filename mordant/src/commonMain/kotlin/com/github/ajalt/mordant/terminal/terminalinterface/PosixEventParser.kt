@@ -3,40 +3,37 @@ package com.github.ajalt.mordant.terminal.terminalinterface
 import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
-import com.github.ajalt.mordant.internal.codepointSequence
 import com.github.ajalt.mordant.internal.codepointToString
 import com.github.ajalt.mordant.internal.readBytesAsUtf8
-import kotlin.time.ComparableTimeMark
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
 private const val ESC = '\u001b'
 
 
 internal class PosixEventParser(
-    private val readRawByte: (t0: ComparableTimeMark, timeout: Duration) -> Int,
+    private val readRawByte: (timeout: TimeMark) -> Int,
 ) {
     /*
       Some patterns seen in terminal key escape codes, derived from combos seen
       at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
     */
-    fun readInputEvent(timeout: Duration): InputEvent {
-        val t0 = TimeSource.Monotonic.markNow()
+    fun readInputEvent(timeout: TimeMark): InputEvent {
         var ctrl = false
         var alt = false
         var shift = false
         var escaped = false
         var name: String? = null
         val s = StringBuilder()
-        var ch = ' '
+        var ch: Char
 
         fun read() {
-            ch = readRawByte(t0, timeout).toChar()
+            ch = readRawByte(timeout).toChar()
             s.append(ch)
         }
 
-        val first = codepointToString(readUtf8Int(t0, timeout))
+        val first = codepointToString(readUtf8Int(timeout))
         if (first.length > 1) {
             return KeyboardEvent(first) // Got a utf8 char like an emoji
         } else {
@@ -86,7 +83,7 @@ internal class PosixEventParser(
                     read()
                 } else if (ch == 'M') {
                     // mouse event
-                    return processMouseEvent(t0, timeout)
+                    return processMouseEvent(timeout)
                 }
 
                 val cmdStart = s.length - 1
@@ -345,16 +342,16 @@ internal class PosixEventParser(
         )
     }
 
-    private fun processMouseEvent(t0: ComparableTimeMark, timeout: Duration): InputEvent {
+    private fun processMouseEvent(timeout: TimeMark): InputEvent {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
-        val cb = readUtf8Int(t0, timeout)
-        val cx = readUtf8Int(t0, timeout) - 33
+        val cb = readUtf8Int(timeout)
+        val cx = readUtf8Int(timeout) - 33
         // XXX: I've seen the terminal not send the third byte like `ESC [ M # W`, but I can't find
         // that pattern documented anywhere, so maybe it's an issue with the terminal emulator not
         // encoding utf8 correctly?
         val cy = runCatching {
-            readUtf8Int(t0, timeout.coerceAtMost(1.milliseconds)) - 33
+            readUtf8Int(TimeSource.Monotonic.markNow() + 1.milliseconds) - 33
         }.getOrElse { 0 }
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
@@ -376,7 +373,7 @@ internal class PosixEventParser(
     }
 
     /** Read one utf-8 encoded codepoint from the input stream. */
-    private fun readUtf8Int(t0: ComparableTimeMark, timeout: Duration): Int {
-        return readBytesAsUtf8 { readRawByte(t0, timeout) }
+    private fun readUtf8Int(timeout: TimeMark): Int {
+        return readBytesAsUtf8 { readRawByte(timeout) }
     }
 }

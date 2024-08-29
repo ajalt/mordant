@@ -1173,7 +1173,7 @@ public abstract class com/github/ajalt/mordant/terminal/StandardTerminalInterfac
 	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
 	public fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
-	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public fun readLineOrNull (Z)Ljava/lang/String;
 	public fun shouldAutoUpdateSize ()Z
 	public fun stdinInteractive ()Z
@@ -1311,7 +1311,7 @@ public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterf
 	public abstract fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
 	public abstract fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public abstract fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
-	public abstract fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public abstract fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public abstract fun readLineOrNull (Z)Ljava/lang/String;
 	public abstract fun shouldAutoUpdateSize ()Z
 }
@@ -1319,7 +1319,7 @@ public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterf
 public final class com/github/ajalt/mordant/terminal/TerminalInterface$DefaultImpls {
 	public static fun enterRawMode (Lcom/github/ajalt/mordant/terminal/TerminalInterface;Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
 	public static fun getTerminalSize (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)Lcom/github/ajalt/mordant/rendering/Size;
-	public static fun readInputEvent-VtjQ1oo (Lcom/github/ajalt/mordant/terminal/TerminalInterface;JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public static fun readInputEvent (Lcom/github/ajalt/mordant/terminal/TerminalInterface;Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public static fun shouldAutoUpdateSize (Lcom/github/ajalt/mordant/terminal/TerminalInterface;)Z
 }
 
@@ -1333,12 +1333,14 @@ public final class com/github/ajalt/mordant/terminal/TerminalRecorder : com/gith
 	public final fun clearOutput ()V
 	public fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
 	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public final fun getInputEvents ()Ljava/util/List;
 	public final fun getInputLines ()Ljava/util/List;
 	public fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
 	public final fun output ()Ljava/lang/String;
-	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public fun readLineOrNull (Z)Ljava/lang/String;
+	public final fun setInputEvents (Ljava/util/List;)V
 	public final fun setInputLines (Ljava/util/List;)V
 	public fun shouldAutoUpdateSize ()Z
 	public final fun stderr ()Ljava/lang/String;
@@ -1353,7 +1355,7 @@ public final class com/github/ajalt/mordant/terminal/YesNoPrompt : com/github/aj
 
 public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceJvmPosix : com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix {
 	public fun <init> ()V
-	protected fun readRawByte-HG0u8IE (Lkotlin/time/ComparableTimeMark;J)C
+	protected fun readRawByte (Lkotlin/time/TimeMark;)I
 }
 
 public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix : com/github/ajalt/mordant/terminal/StandardTerminalInterface {
@@ -1366,8 +1368,8 @@ public abstract class com/github/ajalt/mordant/terminal/terminalinterface/Termin
 	public abstract fun getStdinTermios ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;
 	public abstract fun getTermiosConstants ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
 	protected abstract fun isatty (I)Z
-	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
-	protected abstract fun readRawByte-HG0u8IE (Lkotlin/time/ComparableTimeMark;J)C
+	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	protected abstract fun readRawByte (Lkotlin/time/TimeMark;)I
 	public abstract fun setStdinTermios (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;)V
 	public fun stdinInteractive ()Z
 	public fun stdoutInteractive ()Z
@@ -1457,7 +1459,7 @@ public abstract class com/github/ajalt/mordant/terminal/terminalinterface/Termin
 	public fun <init> ()V
 	public final fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
 	protected abstract fun getStdinConsoleMode-pVg5ArA ()I
-	public fun readInputEvent-VtjQ1oo (JLcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	protected abstract fun readRawEvent (I)Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceWindows$EventRecord;
 	protected abstract fun setStdinConsoleMode-WZ4Q5Ns (I)V
 }
