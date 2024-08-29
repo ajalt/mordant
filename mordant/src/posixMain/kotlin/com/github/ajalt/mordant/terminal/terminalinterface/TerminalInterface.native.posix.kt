@@ -12,12 +12,12 @@ internal abstract class TerminalInterfaceNativePosix : TerminalInterfacePosix() 
         return platform.posix.isatty(fd) != 0
     }
 
-    override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Char = memScoped {
+    override fun readRawByte(t0: ComparableTimeMark, timeout: Duration): Int = memScoped {
         do {
             val c = alloc<ByteVar>()
             val read = readIntoBuffer(c)
             if (read < 0) throw RuntimeException("Error reading from stdin")
-            if (read > 0) return c.value.toInt().toChar()
+            if (read > 0) return c.value.toInt()
         } while (t0.elapsedNow() < timeout)
         throw RuntimeException("Timeout reading from stdin (timeout=$timeout)")
     }

@@ -1,10 +1,13 @@
 package com.github.ajalt.mordant.internal
 
+import kotlin.time.ComparableTimeMark
+import kotlin.time.Duration
+
 /** Read bytes from a UTF-8 encoded stream, and return the next codepoint. */
 internal fun readBytesAsUtf8(readByte: () -> Int): Int {
     val byte = readByte()
-    var byteLength = 0
-    var codepoint = 0
+    val byteLength: Int
+    var codepoint: Int
     when {
         byte and 0b1000_0000 == 0x00 -> {
             return byte // 1-byte character
@@ -34,4 +37,21 @@ internal fun readBytesAsUtf8(readByte: () -> Int): Int {
         codepoint = codepoint shl 6 or (next and 0b0011_1111)
     }
     return codepoint
+}
+
+/** Convert a unicode codepoint to a String. */
+internal fun codepointToString(codePoint: Int): String {
+    return when (codePoint) {
+        in 0..0xFFFF -> {
+            Char(codePoint).toString()
+        }
+        in 0x10000..0x10FFFF -> {
+            val highSurrogate = Char(((codePoint - 0x10000) shr 10) or 0xD800)
+            val lowSurrogate = Char(((codePoint - 0x10000) and 0x3FF) or 0xDC00)
+            highSurrogate.toString() + lowSurrogate.toString()
+        }
+        else -> {
+            throw IllegalArgumentException("Invalid code point: $codePoint")
+        }
+    }
 }
