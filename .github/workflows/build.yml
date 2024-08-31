@@ -20,9 +20,9 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            EXTRA_GRADLE_ARGS: :test:proguard:r8jar apiCheck
+            EXTRA_GRADLE_ARGS: apiCheck :test:proguard:r8jar
           - os: macos-latest
-            EXTRA_GRADLE_ARGS: :mordant:compilePosixMainKotlinMetadata
+            EXTRA_GRADLE_ARGS: :mordant:compileNativeMainKotlinMetadata :mordant:compilePosixMainKotlinMetadata :mordant:compileAppleMainKotlinMetadata
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
@@ -39,11 +39,11 @@ jobs:
       - name: Run tests
         run: >-
             ./gradlew
+            ${{matrix.EXTRA_GRADLE_ARGS}}
             :mordant:check
             :mordant-coroutines:check
             :mordant-markdown:check
             :test:graalvm:nativeTest
-            ${{matrix.EXTRA_GRADLE_ARGS}}
             --stacktrace
       - name: Run R8 Jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
