@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.input.InputEvent
 import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.rendering.Size
+import kotlin.jvm.JvmInline
 import kotlin.time.Duration
 import kotlin.time.TimeMark
 
@@ -53,6 +54,7 @@ interface TerminalInterface {
      * @param timeout The point in time that this call should block to while waiting for an event.
      *   If the timeout is in the past, this method should not block.
      * @param mouseTracking The current mouse tracking mode.
+     * @return The event, or `null` if no event is available but this call should be retried
      */
     fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
         throw NotImplementedError("Reading input events is not supported on this terminal")

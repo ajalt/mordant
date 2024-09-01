@@ -1355,7 +1355,7 @@ public final class com/github/ajalt/mordant/terminal/YesNoPrompt : com/github/aj
 
 public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfaceJvmPosix : com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix {
 	public fun <init> ()V
-	protected fun readRawByte (Lkotlin/time/TimeMark;)I
+	protected fun readRawByte ()Ljava/lang/Integer;
 }
 
 public abstract class com/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix : com/github/ajalt/mordant/terminal/StandardTerminalInterface {
@@ -1369,7 +1369,7 @@ public abstract class com/github/ajalt/mordant/terminal/terminalinterface/Termin
 	public abstract fun getTermiosConstants ()Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$TermiosConstants;
 	protected abstract fun isatty (I)Z
 	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
-	protected abstract fun readRawByte (Lkotlin/time/TimeMark;)I
+	protected abstract fun readRawByte ()Ljava/lang/Integer;
 	public abstract fun setStdinTermios (Lcom/github/ajalt/mordant/terminal/terminalinterface/TerminalInterfacePosix$Termios;)V
 	public fun stdinInteractive ()Z
 	public fun stdoutInteractive ()Z

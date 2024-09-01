@@ -40,13 +40,8 @@ internal abstract class TerminalInterfaceNode<BufferT> : TerminalInterfaceJsComm
     abstract fun readSync(fd: Int, buffer: BufferT, offset: Int, len: Int): Int
 
     override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
-        return PosixEventParser { t ->
-            val buf = allocBuffer(1)
-            do {
-                val c = readByteWithBuf(buf)?.let { it[0].code }
-                if (c != null) return@PosixEventParser c
-            } while (t.hasNotPassedNow())
-            throw RuntimeException("Timeout reading from stdin (timeout=${timeout.elapsedNow()})")
+        return PosixEventParser {
+            readByteWithBuf(allocBuffer(1))?.let { it[0].code }
         }.readInputEvent(timeout)
     }
 

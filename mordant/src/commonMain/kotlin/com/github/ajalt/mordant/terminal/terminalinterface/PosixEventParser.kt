@@ -13,13 +13,21 @@ private const val ESC = '\u001b'
 
 
 internal class PosixEventParser(
-    private val readRawByte: (timeout: TimeMark) -> Int,
+    private val readRawByte: () -> Int?,
 ) {
+    private fun readRawByte(timeout: TimeMark): Int? {
+        do {
+            val byte = readRawByte()
+            if (byte != null) return byte
+        } while (timeout.hasNotPassedNow())
+        return null
+    }
+
     /*
       Some patterns seen in terminal key escape codes, derived from combos seen
       at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
     */
-    fun readInputEvent(timeout: TimeMark): InputEvent {
+    fun readInputEvent(timeout: TimeMark): InputEvent? {
         var ctrl = false
         var alt = false
         var shift = false
@@ -28,12 +36,13 @@ internal class PosixEventParser(
         val s = StringBuilder()
         var ch: Char
 
-        fun read() {
-            ch = readRawByte(timeout).toChar()
+        fun read(): Char? {
+            ch = readRawByte(timeout)?.toChar() ?: return null
             s.append(ch)
+            return ch
         }
 
-        val first = codepointToString(readUtf8Int(timeout))
+        val first = codepointToString(readUtf8Int(timeout) ?: return null)
         if (first.length > 1) {
             return KeyboardEvent(first) // Got a utf8 char like an emoji
         } else {
@@ -42,11 +51,7 @@ internal class PosixEventParser(
 
         if (ch == ESC) {
             escaped = true
-            try {
-                read()
-            } catch (e: RuntimeException) {
-                return KeyboardEvent("Escape")
-            }
+            read() ?: return KeyboardEvent("Escape")
             if (ch == ESC) {
                 return KeyboardEvent("Escape")
             }
@@ -60,11 +65,11 @@ internal class PosixEventParser(
             if (ch == 'O') {
                 // ESC O letter
                 // ESC O modifier letter
-                read()
+                read() ?: return null
 
                 if (ch in '0'..'9') {
                     modifier = ch.code - 1
-                    read()
+                    read() ?: return null
                 }
 
                 code.append(ch)
@@ -75,12 +80,12 @@ internal class PosixEventParser(
                 // ESC [ [ num char
                 // For mouse events:
                 // ESC [ M byte byte byte
-                read()
+                read() ?: return null
 
                 if (ch == '[') {
                     // escape codes might have a second bracket
                     code.append(ch)
-                    read()
+                    read() ?: return null
                 } else if (ch == 'M') {
                     // mouse event
                     return processMouseEvent(timeout)
@@ -91,16 +96,16 @@ internal class PosixEventParser(
                 // leading digits
                 repeat(3) {
                     if (ch in '0'..'9') {
-                        read()
+                        read() ?: return null
                     }
                 }
 
                 // modifier
                 if (ch == ';') {
-                    read()
+                    read() ?: return null
 
                     if (ch in '0'..'9') {
-                        read()
+                        read() ?: return null
                     }
                 }
 
@@ -342,17 +347,17 @@ internal class PosixEventParser(
         )
     }
 
-    private fun processMouseEvent(timeout: TimeMark): InputEvent {
+    private fun processMouseEvent(timeout: TimeMark): InputEvent? {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
-        val cb = readUtf8Int(timeout)
-        val cx = readUtf8Int(timeout) - 33
+        val cb = readUtf8Int(timeout) ?: return null
+        val cx = (readUtf8Int(timeout) ?: return null) - 33
         // XXX: I've seen the terminal not send the third byte like `ESC [ M # W`, but I can't find
         // that pattern documented anywhere, so maybe it's an issue with the terminal emulator not
         // encoding utf8 correctly?
-        val cy = runCatching {
-            readUtf8Int(TimeSource.Monotonic.markNow() + 1.milliseconds) - 33
-        }.getOrElse { 0 }
+        val cy = readUtf8Int(TimeSource.Monotonic.markNow() + 1.milliseconds).let {
+            if (it == null) 0 else it - 33
+        }
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
@@ -373,7 +378,7 @@ internal class PosixEventParser(
     }
 
     /** Read one utf-8 encoded codepoint from the input stream. */
-    private fun readUtf8Int(timeout: TimeMark): Int {
+    private fun readUtf8Int(timeout: TimeMark): Int? {
         return readBytesAsUtf8 { readRawByte(timeout) }
     }
 }
