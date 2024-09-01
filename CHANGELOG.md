@@ -22,6 +22,7 @@
 ### Fixed
 - Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#204)](https://github.com/ajalt/mordant/issues/204)
 - Improved performance of progress bars under high concurrency. [(#207)](https://github.com/ajalt/mordant/issues/207)
+- Fixed `NoClassDefFoundError` when running with certain gradle plugins [(#217)](https://github.com/ajalt/mordant/issues/217)
 
 ## 2.7.2
 ### Fixed
