@@ -53,7 +53,7 @@ internal actual fun runningInIdeaJavaAgent() = try {
     val bean = ManagementFactory.getRuntimeMXBean()
     val jvmArgs = bean.inputArguments
     jvmArgs.any { it.startsWith("-javaagent") && "idea_rt.jar" in it }
-} catch (e: Exception) {
+} catch (e: Throwable) {
     false
 }
 
