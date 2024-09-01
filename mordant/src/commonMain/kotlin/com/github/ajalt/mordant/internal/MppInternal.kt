@@ -53,7 +53,8 @@ internal expect fun exitProcessMpp(status: Int)
 
 internal expect fun readFileIfExists(filename: String): String?
 
-internal expect fun hasFileSystem(): Boolean
+/** Whether tests running on this platform can access the filesystem */
+internal expect fun testsHaveFileSystem(): Boolean
 
 internal expect fun getStandardTerminalInterface(): TerminalInterface
 

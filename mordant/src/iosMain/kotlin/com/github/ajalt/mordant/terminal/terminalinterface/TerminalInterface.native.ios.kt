@@ -4,11 +4,11 @@ import com.github.ajalt.mordant.rendering.Size
 import kotlinx.cinterop.*
 import platform.posix.*
 
-// The source code for this file is identical between linux and apple targets, but they have
-// different bit widths for some of the termios fields, so the compileMetadata task would fail if we
-// don't use separate files.
+// XXX: The source code for this file is identical between linux and the various apple targets, but
+// they have different bit widths for some fields, so the compileMetadata task fails if we don't use
+// separate files. Hopefully some day there will be solution that doesn't require copy-pasting.
 
-internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
+internal class TerminalInterfaceNativeCopyPasted : TerminalInterfaceNativePosix() {
     override val termiosConstants: TermiosConstants = TermiosConstants(
         VTIME = VTIME,
         VMIN = VMIN,
@@ -32,7 +32,7 @@ internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
 
     override fun getTerminalSize(): Size? = memScoped {
         val size = alloc<winsize>()
-        if (ioctl(STDIN_FILENO, TIOCGWINSZ.toULong(), size) < 0) {
+        if (ioctl(STDIN_FILENO, TIOCGWINSZ.convert(), size) < 0) {
             null
         } else {
             Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())
@@ -41,15 +41,15 @@ internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
 
     override fun getStdinTermios(): Termios = memScoped {
         val termios = alloc<termios>()
-        if (tcgetattr(STDIN_FILENO, termios.ptr) != 0) {
+        if (tcgetattr(platform.posix.STDIN_FILENO, termios.ptr) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
         return Termios(
-            iflag = termios.c_iflag.convert<UInt>(),
-            oflag = termios.c_oflag.convert<UInt>(),
-            cflag = termios.c_cflag.convert<UInt>(),
-            lflag = termios.c_lflag.convert<UInt>(),
-            cc = ByteArray(NCCS) { termios.c_cc[it].convert<Byte>() },
+            iflag = termios.c_iflag.convert(),
+            oflag = termios.c_oflag.convert(),
+            cflag = termios.c_cflag.convert(),
+            lflag = termios.c_lflag.convert(),
+            cc = ByteArray(NCCS) { termios.c_cc[it].convert() },
         )
     }
 
@@ -57,15 +57,15 @@ internal class TerminalInterfaceNativeApple : TerminalInterfaceNativePosix() {
         val nativeTermios = alloc<termios>()
         // different platforms have different fields in termios, so we need to read the current
         // struct before we set the fields we care about.
-        if (tcgetattr(STDIN_FILENO, nativeTermios.ptr) != 0) {
+        if (tcgetattr(platform.posix.STDIN_FILENO, nativeTermios.ptr) != 0) {
             throw RuntimeException("Error reading terminal attributes")
         }
-        nativeTermios.c_iflag = termios.iflag.convert<tcflag_t>()
-        nativeTermios.c_oflag = termios.oflag.convert<tcflag_t>()
-        nativeTermios.c_cflag = termios.cflag.convert<tcflag_t>()
-        nativeTermios.c_lflag = termios.lflag.convert<tcflag_t>()
+        nativeTermios.c_iflag = termios.iflag.convert()
+        nativeTermios.c_oflag = termios.oflag.convert()
+        nativeTermios.c_cflag = termios.cflag.convert()
+        nativeTermios.c_lflag = termios.lflag.convert()
         repeat(NCCS) { nativeTermios.c_cc[it] = termios.cc[it].convert<UByte>() }
-        if (tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios.ptr) != 0) {
+        if (tcsetattr(platform.posix.STDIN_FILENO, TCSADRAIN, nativeTermios.ptr) != 0) {
             throw RuntimeException("Error setting terminal attributes")
         }
     }

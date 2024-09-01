@@ -79,4 +79,4 @@ internal actual fun sendInterceptedPrintRequest(
     )
 }
 
-internal actual fun hasFileSystem(): Boolean = impls !is TerminalInterfaceBrowser
+internal actual fun testsHaveFileSystem(): Boolean = impls !is TerminalInterfaceBrowser

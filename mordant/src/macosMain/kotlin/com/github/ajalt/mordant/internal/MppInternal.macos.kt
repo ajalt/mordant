@@ -1,3 +1,9 @@
 package com.github.ajalt.mordant.internal
 
-internal actual fun hasFileSystem(): Boolean = true
+import com.github.ajalt.mordant.terminal.TerminalInterface
+import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceNativeCopyPasted
+
+internal actual fun testsHaveFileSystem(): Boolean = true
+internal actual fun getStandardTerminalInterface(): TerminalInterface {
+    return TerminalInterfaceNativeCopyPasted()
+}

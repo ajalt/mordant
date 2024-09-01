@@ -143,7 +143,7 @@ internal actual fun getStandardTerminalInterface(): TerminalInterface {
 }
 
 internal actual val CR_IMPLIES_LF: Boolean = false
-internal actual fun hasFileSystem(): Boolean = true
+internal actual fun testsHaveFileSystem(): Boolean = true
 
 internal actual fun exitProcessMpp(status: Int) {
     exitProcess(status)
