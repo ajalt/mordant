@@ -92,7 +92,13 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
     abstract fun setStdinTermios(termios: Termios)
     abstract val termiosConstants: TermiosConstants
     protected abstract fun isatty(fd: Int): Boolean
-    protected abstract fun readRawByte(timeout: TimeMark): Int
+
+    /**
+     * Read a byte from the terminal, or `null` if no byte is available.
+     *
+     * This will only be called while raw mode is active.
+     */
+    protected abstract fun readRawByte(): Int?
 
     override fun stdoutInteractive(): Boolean = isatty(STDOUT_FILENO)
     override fun stdinInteractive(): Boolean = isatty(STDIN_FILENO)
@@ -127,7 +133,7 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
     }
 
     override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
-        return PosixEventParser { t -> readRawByte(t) }.readInputEvent(timeout)
+        return PosixEventParser { readRawByte() }.readInputEvent(timeout)
     }
 }
 
