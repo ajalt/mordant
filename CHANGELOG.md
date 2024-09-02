@@ -16,6 +16,7 @@
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.
 - **Breaking Change** `TerminalInterface.info` is now a method with parameters instead of a property.
 - **Breaking Change** Moved `Markdown` widget to separate `mordant-markdown` module, which is not included by default. If you use markdown rendering, you need to add that module to you dependencies.
+- In raw mode on POSIX systems, pressing the escape key once will now immediately return an `Escape` event. [(#193)](https://github.com/ajalt/mordant/issues/193)
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
