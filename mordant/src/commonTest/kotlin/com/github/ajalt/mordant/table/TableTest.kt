@@ -11,6 +11,8 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -514,6 +516,25 @@ class TableTest : RenderingTest() {
         body { row(1, 2, 3) }
     }
 
+    @[Test JsName("caption_with_truncated_table")]
+    fun `caption with truncated table`() = forAll(
+        row(TextAlign.LEFT, "Caption   "),
+        row(TextAlign.RIGHT, "   Caption"),
+    ) { align, expected ->
+        doTest(
+            """
+    ░$expected░
+    ░┌────────┐░
+    ░│ long ce│░
+    ░└────────┘░
+    """,
+            width = 10
+        ) {
+            captionTop("Caption", align = align)
+            body { row("long cell") }
+        }
+    }
+
     @Test
     fun grid() = checkRender(
         grid {
@@ -542,8 +563,8 @@ class TableTest : RenderingTest() {
         body { row(111, 222, 333) }
     }
 
-    private fun doTest(expected: String, builder: TableBuilder.() -> Unit) {
-        checkRender(table(builder), expected)
+    private fun doTest(expected: String, width: Int = 79, builder: TableBuilder.() -> Unit) {
+        checkRender(table(builder), expected, width = width)
     }
 
     private fun doBodyTest(expected: String, builder: SectionBuilder.() -> Unit) {

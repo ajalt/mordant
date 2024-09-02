@@ -26,7 +26,7 @@ class Caption(
     }
 
     override fun render(t: Terminal, width: Int): Lines {
-        val captionWidth = content.measure(t, width).max
+        val captionWidth = content.measure(t, width).max.coerceAtMost(width)
         val lines = mutableListOf<Line>()
         top?.let { lines.addAll(it.render(t, captionWidth).lines) }
         lines.addAll(content.render(t, width).lines)
