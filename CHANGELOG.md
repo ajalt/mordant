@@ -10,6 +10,7 @@
 - Added tvOS and watchOS native targets to all modules except the new `mordant-markdown` module.
 - Added ability to control raw mode with the `TerminalRecorder`.
 - Added support for unicode input in raw mode.
+- Added `nonInteractiveWidth` and `nonInteractiveHeight` to `Terminal` terminal constructor to set a different width when the terminal is not interactive (e.g. when redirecting output to a file) [(#140)](https://github.com/ajalt/mordant/issues/140)
 
 ### Changed
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.

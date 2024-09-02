@@ -1186,8 +1186,8 @@ public final class com/github/ajalt/mordant/terminal/StringPrompt : com/github/a
 }
 
 public final class com/github/ajalt/mordant/terminal/Terminal {
-	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
-	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;)V
+	public synthetic fun <init> (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Lcom/github/ajalt/mordant/rendering/Theme;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Boolean;ILjava/lang/Boolean;Lcom/github/ajalt/mordant/terminal/TerminalInterface;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun danger (Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;Z)V
 	public static synthetic fun danger$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
 	public final fun getColors ()Lcom/github/ajalt/mordant/terminal/TerminalColors;

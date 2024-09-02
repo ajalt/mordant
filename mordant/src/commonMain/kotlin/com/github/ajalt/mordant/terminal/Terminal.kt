@@ -18,19 +18,27 @@ import com.github.ajalt.mordant.widgets.Text
  * `interactive`.
  */
 class Terminal private constructor(
+    /** The theme to use when rendering widgets */
     val theme: Theme,
+    /** The number of spaces to use when printing tab characters. */
     val tabWidth: Int,
+    /** The interface to use to interact with the system terminal. */
     val terminalInterface: TerminalInterface,
     private val forceWidth: Int?,
     private val forceHeight: Int?,
+    private val nonInteractiveWidth: Int?,
+    private val nonInteractiveHeight: Int?,
     /** The terminal capabilities that were detected or set in the constructor. */
     val info: TerminalInfo,
 ) {
+
     /**
      * @param ansiLevel The level of color support to use, or `null` to detect the level of the current terminal
      * @param theme The theme to use for widgets and styles like [success]
      * @param width The width to render widget and wrap text, or `null` to detect the current width.
      * @param height The height of the terminal to use when rendering widgets, or `null` to detect the current width.
+     * @param nonInteractiveWidth The width to use when the terminal is not interactive, or `null` to use the default of 79 columns.
+     * @param nonInteractiveHeight The height to use when the terminal is not interactive, or `null` to use the default of 24 rows.
      * @param hyperlinks whether to render hyperlinks using ANSI codes, or `null` to detect the capability
      * @param tabWidth The number of spaces to use for `\t` characters
      * @param interactive Set to true to always use color codes, even if stdout is redirected to a
@@ -43,6 +51,8 @@ class Terminal private constructor(
         theme: Theme = Theme.Default,
         width: Int? = null,
         height: Int? = null,
+        nonInteractiveWidth: Int? = null,
+        nonInteractiveHeight: Int? = null,
         hyperlinks: Boolean? = null,
         tabWidth: Int = 8,
         interactive: Boolean? = null,
@@ -53,6 +63,8 @@ class Terminal private constructor(
         terminalInterface = terminalInterface,
         forceWidth = width,
         forceHeight = height,
+        nonInteractiveWidth = nonInteractiveWidth,
+        nonInteractiveHeight = nonInteractiveHeight,
         info = terminalInterface.info(
             ansiLevel = ansiLevel,
             hyperlinks = hyperlinks,
@@ -65,7 +77,15 @@ class Terminal private constructor(
         MppAtomicRef(emptyList())
 
     private val atomicSize: MppAtomicRef<Size> =
-        MppAtomicRef(terminalInterface.detectSize(forceWidth, forceHeight))
+        MppAtomicRef(
+            terminalInterface.detectSize(
+                info,
+                forceWidth,
+                forceHeight,
+                nonInteractiveWidth,
+                nonInteractiveHeight
+            )
+        )
 
 
     /**
@@ -81,7 +101,15 @@ class Terminal private constructor(
      * This is called automatically whenever you print to the terminal.
      */
     fun updateSize(): Size {
-        return atomicSize.update { terminalInterface.detectSize(forceWidth, forceHeight) }.second
+        return atomicSize.update {
+            terminalInterface.detectSize(
+                info,
+                forceWidth,
+                forceHeight,
+                nonInteractiveWidth,
+                nonInteractiveHeight
+            )
+        }.second
     }
 
     /**
