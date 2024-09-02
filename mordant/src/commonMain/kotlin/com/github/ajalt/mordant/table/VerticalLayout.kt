@@ -58,7 +58,7 @@ internal class VerticalLayout private constructor(
             columnWidth is ColumnWidth.Expand -> width
             hasAlignedCells -> measure(t, width).max
             else -> width
-        }
+        }.coerceAtMost(width)
         val lines = mutableListOf<Line>()
         val spacingLine = when (textAlign) {
             NONE -> EMPTY_LINE
