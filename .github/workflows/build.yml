@@ -22,7 +22,7 @@ jobs:
           - os: ubuntu-latest
             EXTRA_GRADLE_ARGS: apiCheck :test:proguard:r8jar
           - os: macos-latest
-            EXTRA_GRADLE_ARGS: :mordant:compileNativeMainKotlinMetadata :mordant:compilePosixMainKotlinMetadata :mordant:compileAppleMainKotlinMetadata
+            EXTRA_GRADLE_ARGS: :mordant:compileKotlinMetadata
     runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
