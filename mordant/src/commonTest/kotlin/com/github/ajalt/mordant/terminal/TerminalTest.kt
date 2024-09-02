@@ -3,6 +3,8 @@ package com.github.ajalt.mordant.terminal
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.cyan
 import com.github.ajalt.mordant.rendering.Whitespace
+import io.kotest.data.blocking.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -83,5 +85,24 @@ class TerminalTest {
         |${cyan(" with a")}
         |${cyan("    wrap")}
         """.trimMargin()
+    }
+
+    @[Test JsName("width_override")]
+    fun `width override`() = forAll(
+        row(1, 2, true, 1),
+        row(1, 2, false, 2),
+        row(null, 2, true, 3),
+        row(null, 2, false, 2),
+        row(1, null, true, 1),
+        row(1, null, false, 1),
+        row(null, null, true, 3),
+    ) { width, niWidth, interactive, expected ->
+        val vt = TerminalRecorder(width = 3, outputInteractive = interactive)
+        val t = Terminal(
+            terminalInterface = vt,
+            width = width,
+            nonInteractiveWidth = niWidth
+        )
+        t.size.width shouldBe expected
     }
 }

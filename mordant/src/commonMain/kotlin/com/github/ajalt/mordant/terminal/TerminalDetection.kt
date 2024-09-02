@@ -200,11 +200,23 @@ object TerminalDetection {
     }
 }
 
-internal fun TerminalInterface.detectSize(width: Int?, height: Int?): Size {
+private const val DEFAULT_WIDTH = 79
+private const val DEFAULT_HEIGHT = 24
+internal fun TerminalInterface.detectSize(
+    info: TerminalInfo,
+    width: Int?,
+    height: Int?,
+    nonInteractiveWidth: Int?,
+    nonInteractiveHeight: Int?,
+): Size {
     if (width != null && height != null) return Size(width, height)
+    if (!info.outputInteractive) return Size(
+        nonInteractiveWidth ?: width ?: DEFAULT_WIDTH,
+        nonInteractiveHeight ?: height ?: DEFAULT_HEIGHT
+    )
     val detected = getTerminalSize() ?: Size(
-        width = (getEnv("COLUMNS")?.toIntOrNull() ?: 79),
-        height = (getEnv("LINES")?.toIntOrNull() ?: 24)
+        width = (getEnv("COLUMNS")?.toIntOrNull() ?: DEFAULT_WIDTH),
+        height = (getEnv("LINES")?.toIntOrNull() ?: DEFAULT_HEIGHT)
     )
     return Size(width = width ?: detected.width, height = height ?: detected.height)
 }

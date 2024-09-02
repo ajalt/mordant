@@ -19,7 +19,14 @@ abstract class RenderingTest(
         theme: Theme = Theme.Default,
         transformActual: (String) -> String = { it },
     ) {
-        val t = Terminal(AnsiLevel.TRUECOLOR, theme, width, height, hyperlinks, tabWidth)
+        val t = Terminal(
+            ansiLevel = AnsiLevel.TRUECOLOR,
+            theme = theme,
+            width = width,
+            height = height,
+            hyperlinks = hyperlinks,
+            tabWidth = tabWidth
+        )
         val actual = transformActual(t.render(widget))
         actual.shouldMatchRender(expected, trimMargin)
     }
