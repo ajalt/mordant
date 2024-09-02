@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
 import com.github.ajalt.mordant.internal.codepointToString
 import com.github.ajalt.mordant.internal.readBytesAsUtf8
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -36,8 +37,8 @@ internal class PosixEventParser(
         val s = StringBuilder()
         var ch: Char
 
-        fun read(): Char? {
-            ch = readRawByte(timeout)?.toChar() ?: return null
+        fun read(t:TimeMark = timeout): Char? {
+            ch = readRawByte(t)?.toChar() ?: return null
             s.append(ch)
             return ch
         }
@@ -51,7 +52,10 @@ internal class PosixEventParser(
 
         if (ch == ESC) {
             escaped = true
-            read() ?: return KeyboardEvent("Escape")
+            // If there's nothing else in the buffer, return "Escape" immediately. This means that
+            // you can't manually type in escape sequences, but that's a pretty rare use case
+            // compared to just pressing escape.
+            read(TimeSource.Monotonic.markNow() + 5.milliseconds) ?: return KeyboardEvent("Escape")
             if (ch == ESC) {
                 return KeyboardEvent("Escape")
             }

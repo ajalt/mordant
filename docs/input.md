@@ -159,11 +159,7 @@ app and operating system. Some things to keep in mind:
   other than Windows.
 - Some key combinations aren't reported because they're intercepted by the terminal app to perform
   actions like switching tabs or closing the window.
-- On Linux and macOS, the Escape key isn't reported as a key press; instead, it begins a "VTI escape
-  sequence" that the terminal uses to report key presses. For example if you press `Escape`, then `[`,
-  then `d`, the terminal will report that as the left arrow key being pressed. It's up to you whether
-  you consider this a feature or a limitation. 
-- Raw mode is supported on JS or wasmJS targets on Node.js only. You can also use Node.js's
+- For JS or wasmJS targets, raw mode is supported on Node.js only. You can also use Node.js's
   `readline` module to read input with callbacks instead of blocking, or in the browser you can use
   the `keydown` and `mousedown` events.
 
