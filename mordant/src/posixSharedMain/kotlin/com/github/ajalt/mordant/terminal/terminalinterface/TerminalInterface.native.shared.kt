@@ -8,7 +8,7 @@ import platform.posix.*
 // they have different bit widths for some fields, so the compileMetadata task fails if we don't use
 // separate files. Hopefully some day there will be solution that doesn't require copy-pasting.
 
-internal class TerminalInterfaceNativeCopyPasted : TerminalInterfaceNativePosix() {
+internal class TerminalInterfaceNativeShared : TerminalInterfaceNativePosix() {
     override val termiosConstants: TermiosConstants = TermiosConstants(
         VTIME = VTIME,
         VMIN = VMIN,
