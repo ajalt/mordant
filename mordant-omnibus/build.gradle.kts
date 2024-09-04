@@ -1,10 +1,9 @@
 plugins {
-    id("mordant-kotlin-conventions")
+    id("mordant-mpp-conventions")
     id("mordant-publishing-conventions")
 }
 
 kotlin {
-    jvm()
     sourceSets {
         commonMain.dependencies {
             api(project(":mordant"))
