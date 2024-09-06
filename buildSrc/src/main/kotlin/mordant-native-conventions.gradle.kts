@@ -1,5 +1,4 @@
 plugins {
-    kotlin("multiplatform")
     id("mordant-native-core-conventions")
 }
 

@@ -20,7 +20,7 @@ kotlin {
     sourceSets {
         val jsCommonMain by creating { dependsOn(commonMain.get()) }
         jsMain.get().dependsOn(jsCommonMain)
-        getByName("wasmJsMain").dependsOn(jsCommonMain)
+        wasmJsMain.get().dependsOn(jsCommonMain)
     }
 }
 

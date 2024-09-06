@@ -4,6 +4,7 @@ plugins {
 }
 
 kotlin {
+    jvm()
     sourceSets {
         commonMain.dependencies {
             api(project(":mordant"))
