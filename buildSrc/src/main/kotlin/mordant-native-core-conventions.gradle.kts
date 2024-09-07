@@ -3,6 +3,8 @@ plugins {
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
+
     linuxX64()
     linuxArm64()
     macosX64()
@@ -22,7 +24,6 @@ kotlin {
 //    watchosX64()
 //    watchosSimulatorArm64()
 
-    applyDefaultHierarchyTemplate()
 
     // https://kotlinlang.org/docs/multiplatform-hierarchy.html#see-the-full-hierarchy-template
     sourceSets {
