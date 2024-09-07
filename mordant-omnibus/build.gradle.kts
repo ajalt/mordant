@@ -1,5 +1,7 @@
 plugins {
-    id("mordant-mpp-conventions")
+    id("mordant-kotlin-conventions")
+    id("mordant-native-conventions")
+    id("mordant-js-conventions")
     id("mordant-publishing-conventions")
 }
 
