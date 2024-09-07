@@ -167,7 +167,7 @@ class TableColumnWidthTest : RenderingTest() {
             overflowWrap = OverflowWrap.TRUNCATE
             whitespace = Whitespace.NORMAL
             column(0) { width = ColumnWidth.Fixed(3) }
-            column(1) { width = ColumnWidth.Custom(null, null, 4) }
+            column(1) { width = ColumnWidth(4) }
             column(3) { width = ColumnWidth.Expand(2) }
             body {
                 this.cellBorders = borders

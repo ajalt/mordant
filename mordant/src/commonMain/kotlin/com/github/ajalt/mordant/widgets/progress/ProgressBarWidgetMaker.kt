@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.widgets.progress
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.Widget
 import com.github.ajalt.mordant.table.*
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Auto
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 import kotlin.math.max
@@ -100,14 +101,14 @@ object MultiProgressBarWidgetMaker : ProgressBarWidgetMaker {
                     for ((j, row) in rows.withIndex()) {
                         val (d, _) = row
                         if (!d.alignColumns) continue // only aligned rows affect the column
-                        val w1 = width.toCustom()
-                        val w2 = d.cells.getOrNull(i)?.columnWidth?.toCustom() ?: continue
+                        val w1 = width
+                        val w2 = d.cells.getOrNull(i)?.columnWidth ?: continue
                         width = when {
                             w1.isExpand || w2.isExpand -> {
                                 ColumnWidth.Expand(nullMax(w1.expandWeight, w2.expandWeight) ?: 1f)
                             }
                             // If we had a MinWidth type, we'd use it here instead of Auto
-                            (j > 0 && w1.isAuto) || w2.isAuto -> ColumnWidth.Auto
+                            (j > 0 && w1.isAuto) || w2.isAuto -> Auto
                             else -> ColumnWidth.Fixed(nullMax(w1.width, w2.width)!!)
                         }
                     }

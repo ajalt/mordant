@@ -206,10 +206,9 @@ abstract class Animation<T>(
  * @see Animation
  */
 inline fun <T> Terminal.animation(
-    trailingLinebreak: Boolean = true,
     crossinline draw: (T) -> Widget,
 ): Animation<T> {
-    return object : Animation<T>(trailingLinebreak, this) {
+    return object : Animation<T>(this) {
         override fun renderData(data: T): Widget = draw(data)
     }
 }
@@ -224,10 +223,9 @@ inline fun <T> Terminal.textAnimation(
     overflowWrap: OverflowWrap = OverflowWrap.NORMAL,
     width: Int? = null,
     tabWidth: Int? = null,
-    trailingLinebreak: Boolean = true,
     crossinline draw: (T) -> String,
 ): Animation<T> {
-    return object : Animation<T>(trailingLinebreak, this) {
+    return object : Animation<T>(this) {
         override fun renderData(data: T): Widget {
             return Text(draw(data), whitespace, align, overflowWrap, width, tabWidth)
         }

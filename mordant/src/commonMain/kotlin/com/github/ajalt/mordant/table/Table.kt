@@ -74,7 +74,7 @@ internal class TableImpl(
     val borderStyle: TextStyle,
     val headerRowCount: Int,
     val footerRowCount: Int,
-    val columnWidths: List<ColumnWidth.Custom>,
+    val columnWidths: List<ColumnWidth>,
     val tableBorders: Borders?,
     val addPaddingWidthToFixedWidth: Boolean,
 ) : Table() {

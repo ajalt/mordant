@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.table
 
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Auto
 import com.github.ajalt.mordant.widgets.EmptyWidget
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
@@ -43,7 +44,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         val columnCount = rows.maxOf { it.size }
 
         val columnWidths = List(columnCount) { i ->
-            table.columns[i]?.width.toCustom()
+            table.columns[i]?.width ?: Auto
         }
         return TableImpl(
             rows = rows,

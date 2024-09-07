@@ -18,6 +18,7 @@
 - **Breaking Change** Moved `Markdown` widget to separate `mordant-markdown` module, which is not included by default. If you use markdown rendering, you need to add that module to you dependencies.
 - In raw mode on POSIX systems, pressing the escape key once will now immediately return an `Escape` event. [(#193)](https://github.com/ajalt/mordant/issues/193)
 - Renamed `TerminalInfo.crClearsLine` to `supportsAnsiCursor`
+- Combined all `ColumnWidth` subclasses into a single class with factory methods. If you were using `ColumnWidth.Custom`, you should now use the `ColumnWidth` constructor.
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 

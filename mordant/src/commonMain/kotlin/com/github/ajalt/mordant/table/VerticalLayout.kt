@@ -4,6 +4,7 @@ import com.github.ajalt.mordant.internal.DEFAULT_STYLE
 import com.github.ajalt.mordant.internal.EMPTY_LINE
 import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.rendering.TextAlign.NONE
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Auto
 import com.github.ajalt.mordant.terminal.Terminal
 
 private class VerticalLayoutCell(
@@ -55,7 +56,7 @@ internal class VerticalLayout private constructor(
 
     override fun render(t: Terminal, width: Int): Lines {
         val renderWidth = when {
-            columnWidth is ColumnWidth.Expand -> width
+            columnWidth.isExpand -> width
             hasAlignedCells -> measure(t, width).max
             else -> width
         }.coerceAtMost(width)
@@ -68,7 +69,7 @@ internal class VerticalLayout private constructor(
             if (i > 0) repeat(spacing) { lines += spacingLine }
             var rendered = cell.content.render(t, renderWidth).withStyle(cell.style)
 
-            val w = columnWidth.toCustom()
+            val w = columnWidth
             rendered = when {
                 w.expandWeight != null -> rendered.setSize(width, textAlign = cell.textAlign)
                 w.width != null -> rendered.setSize(w.width, textAlign = cell.textAlign)

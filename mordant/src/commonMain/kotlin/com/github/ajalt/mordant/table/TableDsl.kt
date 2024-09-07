@@ -2,6 +2,9 @@ package com.github.ajalt.mordant.table
 
 import com.github.ajalt.colormath.Color
 import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Auto
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Expand
+import com.github.ajalt.mordant.table.ColumnWidth.Companion.Fixed
 import com.github.ajalt.mordant.widgets.Caption
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.withPadding
@@ -70,81 +73,80 @@ interface CellStyleBuilder : CellStyleBuilderBase {
     }
 }
 
-sealed class ColumnWidth {
-    // TODO(3.0): this is a separate class for backwards compatibility; make other ColumnWidth subclasses
-    //  instances of this in 3.0
+/**
+ * Configuration for how a column should be sized in a table.
+ */
+data class ColumnWidth(
     // TODO(3.0): add a `minimumWidth?` field and use it for progress cells like timeRemaining
     /**
-     * A column width with custom behavior.
+     * The priority of the column when allocating available width.
+     *
+     * Available width is allocated to columns in decreasing order of priority.
+     *
+     * - [Fixed] columns have a priority of 3.
+     * - [Auto] columns have a priority of 2.
+     * - [Expand] columns have a priority of 1.
      */
-    data class Custom(
-        /** The fixed width of the column, or `null` if the width should be computed automatically */
-        val width: Int?,
-        /**
-         * The weight of the column when expanding, or `null` if the column should not expand.
-         *
-         * If there are multiple expanding columns with the same [priority], the available width
-         * will be divided among them proportional to their weights.
-         */
-        val expandWeight: Float?,
-        /**
-         * The priority of the column when allocating available width.
-         *
-         * Available width is allocated to columns in decreasing order of priority.
-         *
-         * - [Fixed] columns have a priority of 3.
-         * - [Auto] columns have a priority of 2.
-         * - [Expand] columns have a priority of 1.
-         */
-        val priority: Int,
-    ) : ColumnWidth() {
-        init {
-            require(width == null || width > 0) { "width must be greater than zero" }
-            require(expandWeight == null || expandWeight > 0f) {
-                "expandWeight must be greater than zero"
-            }
-            require(width == null || expandWeight == null) {
-                "Cannot set both width and expandWeight"
-            }
+    val priority: Int,
+    /**
+     * The fixed width of the column, or `null` if the width should be computed automatically
+     */
+    val width: Int? = null,
+    /**
+     * The weight of the column when expanding, or `null` if the column should not expand.
+     *
+     * If there are multiple expanding columns with the same [priority], the available width
+     * will be divided among them proportional to their weights.
+     */
+    val expandWeight: Float? = null,
+) {
+    init {
+        require(width == null || width > 0) { "width must be greater than zero" }
+        require(expandWeight == null || expandWeight > 0f) {
+            "expandWeight must be greater than zero"
         }
-
-        override fun toString(): String {
-            return when {
-                isAuto -> "Auto"
-                isExpand -> "Expand($expandWeight)"
-                isFixed -> "Fixed($width)"
-                else -> "Custom(width=$width, expandWeight=$expandWeight, priority=$priority)"
-            }
+        require(width == null || expandWeight == null) {
+            "Cannot set both width and expandWeight"
         }
     }
 
-    /** The column will fit to the size of its content */
-    data object Auto : ColumnWidth()
+    override fun toString(): String {
+        return when {
+            isAuto -> "Auto"
+            isExpand -> "Expand($expandWeight)"
+            isFixed -> "Fixed($width)"
+            else -> "Custom(width=$width, expandWeight=$expandWeight, priority=$priority)"
+        }
+    }
 
-    /**
-     * The column will have a fixed [width].
-     *
-     * The width includes padding, so increasing horizontal padding of a fixed column will decrease content width rather
-     * than expand the column.
-     */
-    class Fixed(val width: Int) : ColumnWidth() {
-        init {
+    @Suppress("FunctionName")
+    companion object {
+
+        /** The column will fit to the size of its content */
+        val Auto = ColumnWidth(2)
+
+        /**
+         * The column will have a fixed [width].
+         *
+         * The width includes padding, so increasing horizontal padding of a fixed column will decrease content width rather
+         * than expand the column.
+         */
+        fun Fixed(width: Int): ColumnWidth {
             require(width > 0) { "width must be greater than zero" }
-        }
-    }
-
-    /**
-     * The column will expand to fill the available terminal width.
-     *
-     * If there are multiple expanding columns, the available width will be divided among them
-     * proportional to their [weight]s.
-     */
-    class Expand(val weight: Float = 1f) : ColumnWidth() {
-        init {
-            require(weight > 0) { "weight must be greater than zero" }
+            return ColumnWidth(3, width)
         }
 
-        constructor(weight: Number) : this(weight.toFloat())
+        /**
+         * The column will expand to fill the available terminal width.
+         *
+         * If there are multiple expanding columns, the available width will be divided among them
+         * proportional to their [weight]s.
+         */
+        fun Expand(weight: Number = 1f): ColumnWidth {
+            val w = weight.toFloat()
+            require(w > 0) { "weight must be greater than zero" }
+            return ColumnWidth(1, null, w)
+        }
     }
 }
 
@@ -369,27 +371,11 @@ fun verticalLayout(init: VerticalLayoutBuilder.() -> Unit): Widget {
     return VerticalLayoutBuilderInstance().apply(init).build()
 }
 
-internal fun ColumnWidth?.toCustom(): ColumnWidth.Custom {
-    return when (this) {
-        is ColumnWidth.Expand -> ColumnWidth.Custom(null, weight, 1)
-        null, is ColumnWidth.Auto -> ColumnWidth.Custom(null, null, 2)
-        is ColumnWidth.Fixed -> ColumnWidth.Custom(width, null, 3)
-        is ColumnWidth.Custom -> this
-    }
-}
-
 internal val ColumnWidth.isAuto: Boolean
-    get() {
-        return this is ColumnWidth.Auto ||
-                this is ColumnWidth.Custom && this.width == null && this.expandWeight == null
-    }
+    get() = this.width == null && this.expandWeight == null
 
 internal val ColumnWidth.isExpand: Boolean
-    get() {
-        return this is ColumnWidth.Expand || this is ColumnWidth.Custom && this.expandWeight != null
-    }
+    get() = this.expandWeight != null
 
 internal val ColumnWidth.isFixed: Boolean
-    get() {
-        return this is ColumnWidth.Fixed || this is ColumnWidth.Custom && this.width != null
-    }
+    get() = this.width != null
