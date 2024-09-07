@@ -17,9 +17,12 @@
 - **Breaking Change** `TerminalInterface.info` is now a method with parameters instead of a property.
 - **Breaking Change** Moved `Markdown` widget to separate `mordant-markdown` module, which is not included by default. If you use markdown rendering, you need to add that module to you dependencies.
 - In raw mode on POSIX systems, pressing the escape key once will now immediately return an `Escape` event. [(#193)](https://github.com/ajalt/mordant/issues/193)
+- Renamed `TerminalInfo.crClearsLine` to `supportsAnsiCursor`
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
+- Removed `Terminal.colors`. All colors rendered with the terminal are now automatically downsampled.
+- Removed previously deprecated methods.
 
 ### Fixed
 - Fixed ConcurrentModificationException from progress bars when updated under very high concurrency [(#204)](https://github.com/ajalt/mordant/issues/204)

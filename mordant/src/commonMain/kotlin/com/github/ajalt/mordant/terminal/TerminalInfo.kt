@@ -25,7 +25,7 @@ data class TerminalInfo(
      * If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
      * `\r` will only move the cursor
      */
-    val crClearsLine: Boolean,
+    val supportsAnsiCursor: Boolean,
 ) {
     /** Return true if both input and output are interactive */
     val interactive: Boolean get() = inputInteractive && outputInteractive

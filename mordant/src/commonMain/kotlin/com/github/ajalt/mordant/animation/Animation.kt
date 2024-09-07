@@ -30,8 +30,6 @@ import com.github.ajalt.mordant.widgets.progress.progressBarLayout
  * cause garbled output, so usage of this class should be serialized.
  */
 abstract class Animation<T>(
-    @Deprecated("This parameter is ignored; animations never print a trailing linebreak.")
-    private val trailingLinebreak: Boolean = true,
     val terminal: Terminal,
 ) : StoppableAnimation {
     private data class State(
@@ -171,7 +169,7 @@ abstract class Animation<T>(
             startOfLine()
             if (CR_IMPLIES_LF) up(1)
 
-            if (terminal.info.crClearsLine) {
+            if (terminal.info.supportsAnsiCursor) {
                 // IntelliJ doesn't support cursor moves, so this is all we can do
                 return@getMoves
             }

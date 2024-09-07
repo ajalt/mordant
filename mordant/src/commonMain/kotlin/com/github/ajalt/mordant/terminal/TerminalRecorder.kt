@@ -28,14 +28,14 @@ class TerminalRecorder private constructor(
         hyperlinks: Boolean = ansiLevel != AnsiLevel.NONE,
         outputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
         inputInteractive: Boolean = ansiLevel != AnsiLevel.NONE,
-        crClearsLine: Boolean = false, // TODO(3.0): rename this to supportsAnsiCursor
+        supportsAnsiCursor: Boolean = false,
     ) : this(
         TerminalInfo(
             ansiLevel = ansiLevel,
             ansiHyperLinks = hyperlinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
-            crClearsLine = crClearsLine,
+            supportsAnsiCursor = supportsAnsiCursor,
         ),
         Size(width, height),
     )
@@ -96,7 +96,7 @@ class TerminalRecorder private constructor(
             ansiHyperLinks = hyperlinks ?: info.ansiHyperLinks,
             outputInteractive = outputInteractive ?: info.outputInteractive,
             inputInteractive = inputInteractive ?: info.inputInteractive,
-            crClearsLine = info.crClearsLine,
+            supportsAnsiCursor = info.supportsAnsiCursor,
         )
     }
 

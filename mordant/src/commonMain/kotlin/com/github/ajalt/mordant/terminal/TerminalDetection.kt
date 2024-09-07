@@ -39,7 +39,7 @@ object TerminalDetection {
             ansiHyperLinks = ansiHyperLinks,
             outputInteractive = outputInteractive,
             inputInteractive = inputInteractive,
-            crClearsLine = ij // TODO(3.0): rename this to supportsAnsiCursor
+            supportsAnsiCursor = ij
         )
     }
 

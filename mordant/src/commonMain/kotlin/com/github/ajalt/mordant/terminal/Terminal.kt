@@ -113,16 +113,6 @@ class Terminal private constructor(
     }
 
     /**
-     * Colors and styles that are downsampled based on the current terminal [info].
-     *
-     * This can be used if you want to style a string that is going to be printed with
-     * [kotlin.io.print]. If you're using the terminal's [print], you can use [TextColors] and
-     * [TextStyles] directly instead.
-     */
-    @Deprecated("Use TextColors or .theme instead") // TODO(3.0) remove
-    val colors: TerminalColors = TerminalColors(info, theme)
-
-    /**
      * Functions for controlling the terminal's cursor.
      *
      * If the terminal is not interactive, all the cursor functions are no-ops.
