@@ -10,9 +10,9 @@ plugins {
 
 kotlin {
     jvm()
-    js()
+    js { nodejs() } // we don't have any code, but it's an error not to pick aa JS environment
     @OptIn(ExperimentalWasmDsl::class)
-    wasmJs()
+    wasmJs { nodejs() }
     sourceSets {
         commonMain.dependencies {
             api(project(":mordant"))
