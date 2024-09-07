@@ -1,12 +1,18 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+
+// We don't all of the conventions plugins here since applying the mpp=convention results in
+// "IllegalStateException: Configuration already finalized for previous property values"
 plugins {
-    id("mordant-kotlin-conventions")
+    kotlin("multiplatform")
     id("mordant-native-conventions")
-    id("mordant-js-conventions")
     id("mordant-publishing-conventions")
 }
 
 kotlin {
     jvm()
+    js()
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs()
     sourceSets {
         commonMain.dependencies {
             api(project(":mordant"))
