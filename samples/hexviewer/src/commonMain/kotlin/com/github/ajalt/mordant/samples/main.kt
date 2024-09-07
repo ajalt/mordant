@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.danger
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
