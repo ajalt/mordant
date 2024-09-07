@@ -157,15 +157,24 @@ internal actual fun readFileIfExists(filename: String): String? {
     }
 }
 
+private const val DUMB_RAW_MODE_ERROR = """Cannot find terminal interface that supports raw mode.
+
+You need at least one of the `:mordant-jvm-*` modules on your classpath.
+The `:mordant` module includes all of them as transitive dependencies.
+If you're using `:mordant-core` instead, you need to add one or more manually.
+If you're using only `:mordant-jvm-ffm`, make sure you're running with JVM 22+, and are passing
+`--enable-native-access=ALL-UNNAMED` as a JVM argument.
+"""
+
 private object DumbTerminalInterface : StandardTerminalInterface() {
     override fun stdoutInteractive(): Boolean = true
     override fun stdinInteractive(): Boolean = true
     override fun getTerminalSize(): Size? = null
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
-        throw UnsupportedOperationException("Cannot enter raw mode on this system")
+        throw UnsupportedOperationException(DUMB_RAW_MODE_ERROR)
     }
 
     override fun readInputEvent(timeout: TimeMark, mouseTracking: MouseTracking): InputEvent? {
-        throw UnsupportedOperationException("Cannot read input on this system")
+        throw UnsupportedOperationException(DUMB_RAW_MODE_ERROR)
     }
 }
