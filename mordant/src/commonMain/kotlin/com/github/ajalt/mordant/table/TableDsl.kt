@@ -38,9 +38,6 @@ interface CellStyleBuilderBase {
 }
 
 interface CellStyleBuilder : CellStyleBuilderBase {
-    @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
-    var borders: Borders?
-
     /**
      * Borders around each individual cell.
      *
@@ -211,9 +208,6 @@ interface TableBuilder : CellStyleBuilder, ColumnHolderBuilder {
 
     /** Configure the footer section. */
     fun footer(init: SectionBuilder.() -> Unit)
-
-    @Deprecated("`outerBorder=false` has been replaced with `tableBorders=Borders.NONE`")
-    var outerBorder: Boolean
 }
 
 @MordantDsl
@@ -373,26 +367,6 @@ fun horizontalLayout(init: HorizontalLayoutBuilder.() -> Unit): Widget {
  */
 fun verticalLayout(init: VerticalLayoutBuilder.() -> Unit): Widget {
     return VerticalLayoutBuilderInstance().apply(init).build()
-}
-
-@Deprecated(
-    "row is renamed to horizontalLayout",
-    replaceWith = ReplaceWith("horizontalLayout(init)")
-)
-fun row(padding: Int = 0, init: HorizontalLayoutBuilder.() -> Unit): Widget {
-    return horizontalLayout {
-        spacing = padding
-        init()
-    }
-}
-
-@Deprecated(
-    "column is renamed to verticalLayout",
-    replaceWith = ReplaceWith("verticalLayout(init)")
-)
-fun column(padding: Int = 0, init: VerticalLayoutBuilder.() -> Unit): Widget = verticalLayout {
-    init()
-    this.spacing = padding
 }
 
 internal fun ColumnWidth?.toCustom(): ColumnWidth.Custom {

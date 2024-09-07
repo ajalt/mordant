@@ -14,13 +14,6 @@ private class CellStyleBuilderMixin : CellStyleBuilder {
     override var align: TextAlign? = null
     override var verticalAlign: VerticalAlign? = null
     override var overflowWrap: OverflowWrap? = null
-
-    @Deprecated("borders has been renamed to cellBorders", replaceWith = ReplaceWith("cellBorders"))
-    override var borders: Borders?
-        get() = cellBorders
-        set(value) {
-            cellBorders = value
-        }
 }
 
 
@@ -43,13 +36,6 @@ internal class TableBuilderInstance : TableBuilder, CellStyleBuilder by CellStyl
         private set
     var captionBottom: Widget? = null
         private set
-
-    @Deprecated("`outerBorder=false` has been replaced with `tableBorders=Borders.NONE`")
-    override var outerBorder: Boolean
-        get() = tableBorders != Borders.ALL
-        set(value) {
-            tableBorders = if (value) Borders.ALL else Borders.NONE
-        }
 
     override fun captionTop(widget: Widget) {
         captionTop = widget

@@ -53,7 +53,7 @@ class AnimationTest {
 
     @Test
     fun crClearsLine() {
-        val rec = TerminalRecorder(width = 24, crClearsLine = true)
+        val rec = TerminalRecorder(width = 24, supportsAnsiCursor = true)
         val t = Terminal(terminalInterface = rec)
         val a = t.textAnimation<Int> { "$it" }
         a.update(1)
