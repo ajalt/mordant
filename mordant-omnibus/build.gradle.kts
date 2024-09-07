@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
-// We don't all of the conventions plugins here since applying the mpp=convention results in
+// We don't use all the conventions plugins here since applying the mpp=convention results in
 // "IllegalStateException: Configuration already finalized for previous property values"
 plugins {
     kotlin("multiplatform")
