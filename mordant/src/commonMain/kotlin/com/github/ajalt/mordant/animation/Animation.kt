@@ -148,7 +148,7 @@ abstract class Animation<T>(
                 text = terminal.render(rendered)
             )
         }
-        if (!old.interceptorInstalled && terminal.info.outputInteractive) {
+        if (!old.interceptorInstalled && terminal.terminalInfo.outputInteractive) {
             terminal.addInterceptor(interceptor)
         }
         // Print an empty widget to trigger our interceptor, which will add the rendered text
@@ -169,7 +169,7 @@ abstract class Animation<T>(
             startOfLine()
             if (CR_IMPLIES_LF) up(1)
 
-            if (terminal.info.supportsAnsiCursor) {
+            if (terminal.terminalInfo.supportsAnsiCursor) {
                 // IntelliJ doesn't support cursor moves, so this is all we can do
                 return@getMoves
             }

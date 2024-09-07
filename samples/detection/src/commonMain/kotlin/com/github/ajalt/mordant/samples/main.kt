@@ -11,7 +11,7 @@ fun main() {
     val theme = terminal.theme
     terminal.println(
         Panel(
-            Text(terminal.info.toString(), whitespace = NORMAL).withPadding(1),
+            Text(terminal.terminalInfo.toString(), whitespace = NORMAL).withPadding(1),
             Text(theme.info("Detected Terminal Info"))
         )
     )

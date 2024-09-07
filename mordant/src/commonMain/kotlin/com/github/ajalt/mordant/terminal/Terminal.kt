@@ -29,7 +29,7 @@ class Terminal private constructor(
     private val nonInteractiveWidth: Int?,
     private val nonInteractiveHeight: Int?,
     /** The terminal capabilities that were detected or set in the constructor. */
-    val info: TerminalInfo,
+    val terminalInfo: TerminalInfo,
 ) {
 
     /**
@@ -65,7 +65,7 @@ class Terminal private constructor(
         forceHeight = height,
         nonInteractiveWidth = nonInteractiveWidth,
         nonInteractiveHeight = nonInteractiveHeight,
-        info = terminalInterface.info(
+        terminalInfo = terminalInterface.info(
             ansiLevel = ansiLevel,
             hyperlinks = hyperlinks,
             outputInteractive = interactive,
@@ -79,7 +79,7 @@ class Terminal private constructor(
     private val atomicSize: MppAtomicRef<Size> =
         MppAtomicRef(
             terminalInterface.detectSize(
-                info,
+                terminalInfo,
                 forceWidth,
                 forceHeight,
                 nonInteractiveWidth,
@@ -103,7 +103,7 @@ class Terminal private constructor(
     fun updateSize(): Size {
         return atomicSize.update {
             terminalInterface.detectSize(
-                info,
+                terminalInfo,
                 forceWidth,
                 forceHeight,
                 nonInteractiveWidth,
@@ -118,7 +118,7 @@ class Terminal private constructor(
      * If the terminal is not interactive, all the cursor functions are no-ops.
      */
     val cursor: TerminalCursor = when {
-        info.interactive -> makePrintingTerminalCursor(this)
+        terminalInfo.interactive -> makePrintingTerminalCursor(this)
         else -> DisabledTerminalCursor
     }
 
@@ -126,7 +126,7 @@ class Terminal private constructor(
      * Print a [message] to the terminal.
      *
      * Any contained [TextColors] and [TextStyles] will be automatically downsampled based on the
-     * current terminal's [info].
+     * current terminal's [terminalInfo].
      *
      * @param message The message to print as a string.
      * @param whitespace How to handle whitespace and line wrapping. By default, whitespace is
@@ -152,7 +152,7 @@ class Terminal private constructor(
      * Print a [message] to the terminal, followed by a line break.
      *
      * Any contained [TextColors] and [TextStyles] will be automatically downsampled based on the
-     * current terminal's [info].
+     * current terminal's [terminalInfo].
      *
      * @param message The message to print as a string.
      * @param whitespace How to handle whitespace and line wrapping. By default, whitespace is
@@ -200,7 +200,7 @@ class Terminal private constructor(
      * Render a [message] to a string.
      *
      * Any contained [TextColors] and [TextStyles] will be automatically downsampled based on the
-     * current terminal's [info].
+     * current terminal's [terminalInfo].
      *
      * @param message The message to render as a string.
      * @param whitespace How to handle whitespace and line wrapping. By default, whitespace is
@@ -218,7 +218,7 @@ class Terminal private constructor(
         width: Int? = null,
     ): String {
         return when (message) {
-            is Lines -> renderLinesAnsi(message, info.ansiLevel, info.ansiHyperLinks)
+            is Lines -> renderLinesAnsi(message, terminalInfo.ansiLevel, terminalInfo.ansiHyperLinks)
             is Widget -> render(message)
             else -> render(Text(message.toString(), whitespace, align, overflowWrap, width))
         }
@@ -226,7 +226,7 @@ class Terminal private constructor(
 
     /** Render a [widget] as a string */
     fun render(widget: Widget): String {
-        return renderLinesAnsi(widget.render(this), info.ansiLevel, info.ansiHyperLinks)
+        return renderLinesAnsi(widget.render(this), terminalInfo.ansiLevel, terminalInfo.ansiHyperLinks)
     }
 
     /**

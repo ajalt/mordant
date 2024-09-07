@@ -22,7 +22,7 @@ class Markdown(
     private var document: Widget? = null
     private fun document(t: Terminal): Widget {
         if (document == null) {
-            document = MarkdownRenderer(markdown, t.theme, showHtml, hyperlinks ?: t.info.ansiHyperLinks).render()
+            document = MarkdownRenderer(markdown, t.theme, showHtml, hyperlinks ?: t.terminalInfo.ansiHyperLinks).render()
         }
         return document!!
     }

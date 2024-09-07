@@ -40,7 +40,7 @@ fun main(args: Array<String>) {
     }
 
     // 4 chars per octet, -20 for borders + address
-    val w = (terminal.info.width - 20) / 4
+    val w = (terminal.size.width - 20) / 4
     // round down to nearest multiple of 8
     val octetsPerRow = (w - w % 8).coerceAtLeast(1)
 

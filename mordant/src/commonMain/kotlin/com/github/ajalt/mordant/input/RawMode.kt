@@ -13,7 +13,7 @@ import kotlin.time.TimeSource
  * @throws RuntimeException if the terminal is not interactive or raw mode cannot be entered.
  */
 fun Terminal.enterRawMode(mouseTracking: MouseTracking = MouseTracking.Off): RawModeScope {
-    if (!info.inputInteractive) {
+    if (!terminalInfo.inputInteractive) {
         throw IllegalStateException("Cannot enter raw mode on a non-interactive terminal")
     }
     return RawModeScope(this, terminalInterface.enterRawMode(mouseTracking), mouseTracking)

@@ -42,7 +42,7 @@ class PromptTest {
 
     @[Test JsName("custom_Prompt")]
     fun `custom Prompt`() {
-        t.info.ansiLevel = AnsiLevel.NONE
+        t.terminalInfo.ansiLevel = AnsiLevel.NONE
         class IntPrompt : Prompt<Int>("pr", t) {
             override fun convert(input: String): ConversionResult<Int> {
                 return input.toIntOrNull()
