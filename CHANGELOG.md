@@ -20,6 +20,7 @@
 - Renamed `TerminalInfo.crClearsLine` to `supportsAnsiCursor`
 - Combined all `ColumnWidth` subclasses into a single class with factory methods. If you were using `ColumnWidth.Custom`, you should now use the `ColumnWidth` constructor.
 - The following `Terminal` methods are now extensions: `prompt()`, `info()`, `danger()`, `warning()`, `success()`, `muted()`
+- Renamed `Terminal.info` property to `Terminal.terminalInfo`
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
