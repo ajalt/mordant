@@ -3,6 +3,8 @@ package com.github.ajalt.mordant.samples
 import com.github.ajalt.mordant.input.interactiveMultiSelectList
 import com.github.ajalt.mordant.input.interactiveSelectList
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.danger
+import com.github.ajalt.mordant.terminal.success
 
 
 fun main() {
