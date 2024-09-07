@@ -1,4 +1,4 @@
 package com.github.ajalt.mordant.internal
 
-// This file is a workaround for KT-52344, which files to publish a target with no source files
-private val INTERNAL = true
+// This intentionally empty file is a workaround for KT-52344, which fails to publish a target with
+// no source files
