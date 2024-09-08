@@ -323,7 +323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
+      <a href="../api/index.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -395,11 +395,11 @@
 <h1 id="progress-bars">Progress Bars<a class="headerlink" href="#progress-bars" title="Permanent link">&para;</a></h1>
 <p>Mordant provides a simple way to create animated progress bars in your terminal.</p>
 <h1 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h1>
-<p>You can use the <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-layout.html">progressBarLayout</a> DSL to define the layout of your progress bar. Then you
-can start the animation either on a thread with <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a>, or
-using coroutines with <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html">animateOnCoroutine</a>.<code>animateOnThread</code> is JVM-only, but <code>animateOnCoroutine</code>
+<p>You can use the <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-layout.html">progressBarLayout</a> DSL to define the layout of your progress bar. Then you
+can start the animation either on a thread with <a href="api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a>, or
+using coroutines with <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html">animateOnCoroutine</a>.<code>animateOnThread</code> is JVM-only, but <code>animateOnCoroutine</code>
 is available on all platforms using the <code>mordant-coroutines</code> module.</p>
-<p>Once the animation is started, you can update the progress bar by calling <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/update.html">update</a> and <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/advance.html">advance</a>.</p>
+<p>Once the animation is started, you can update the progress bar by calling <a href="api/mordant/com.github.ajalt.mordant.animation.progress/update.html">update</a> and <a href="api/mordant/com.github.ajalt.mordant.animation.progress/advance.html">advance</a>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example with Coroutines</label><label for="__tabbed_1_2">Example with Threads</label><label for="__tabbed_1_3">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -452,8 +452,8 @@ is available on all platforms using the <code>mordant-coroutines</code> module.<
 </div>
 </div>
 <h1 id="changing-text-while-animation-is-running">Changing Text While Animation is Running<a class="headerlink" href="#changing-text-while-animation-is-running" title="Permanent link">&para;</a></h1>
-<p>You can pass data to the progress bar by using <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-context-layout.html">progressBarContextLayout</a>, which allows you to
-set a <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task-update-scope/context.html">context</a> value that your progress bar can use to render
+<p>You can pass data to the progress bar by using <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-context-layout.html">progressBarContextLayout</a>, which allows you to
+set a <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task-update-scope/context.html">context</a> value that your progress bar can use to render
 dynamic text.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Example with Context</label><label for="__tabbed_2_2">Output</label></div>
 <div class="tabbed-content">
@@ -483,13 +483,13 @@ dynamic text.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>If you want a builder instead of a DSL, you can use the <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-builder/">ProgressLayoutBuilder</a></p>
+<p>If you want a builder instead of a DSL, you can use the <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-builder/index.html">ProgressLayoutBuilder</a></p>
 </div>
 <h1 id="multiple-progress-bars">Multiple Progress Bars<a class="headerlink" href="#multiple-progress-bars" title="Permanent link">&para;</a></h1>
-<p>You can create multiple progress bars running at the same time using <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/">MultiProgressBarAnimation</a>.
-Call <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html">addTask</a> for each progress bar you want, passing in the layout for that bar. You can 
+<p>You can create multiple progress bars running at the same time using <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/index.html">MultiProgressBarAnimation</a>.
+Call <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html">addTask</a> for each progress bar you want, passing in the layout for that bar. You can 
 use the same layout for multiple tasks, or different layouts for some of them.</p>
-<p>You can call <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/advance.html">advance</a> and <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/update.html">update</a> on each task to update them separately.</p>
+<p>You can call <a href="api/mordant/com.github.ajalt.mordant.animation.progress/advance.html">advance</a> and <a href="api/mordant/com.github.ajalt.mordant.animation.progress/update.html">update</a> on each task to update them separately.</p>
 <p>The columns of the progress bars will have their widths aligned to the same size by default,
 but you can change this by setting the <code>alignColumns</code> parameter in the layout.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Example with Multiple Progress Bars</label><label for="__tabbed_3_2">Output</label></div>
@@ -524,13 +524,13 @@ but you can change this by setting the <code>alignColumns</code> parameter in th
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>The progress animation will keep running until all tasks are <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/finished.html">finished</a>. If you want to stop sooner,
+<p>The progress animation will keep running until all tasks are <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/finished.html">finished</a>. If you want to stop sooner,
 you can set all the tasks&rsquo; <code>completed</code> equal to their <code>total</code>, or cancel the coroutine scope or
 future that the animation is running in.</p>
 </div>
 <h1 id="available-progress-bar-cell-types">Available Progress Bar Cell Types<a class="headerlink" href="#available-progress-bar-cell-types" title="Permanent link">&para;</a></h1>
 <p>Mordant provides several cell types that you can use to build your progress bar layouts, or you can
-make your own with <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html">cell</a> or <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/text.html">text</a>.</p>
+make your own with <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html">cell</a> or <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/text.html">text</a>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Output</label><label for="__tabbed_4_2">Code</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -581,43 +581,43 @@ make your own with <a href="../api/mordant/com.github.ajalt.mordant.widgets.prog
 </thead>
 <tbody>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/text.html">text</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/text.html">text</a></td>
 <td>You can make a static text cell with <code>text("")</code>, or a dynamic one with <code>text {""}</code></td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/marquee.html">marquee</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/marquee.html">marquee</a></td>
 <td>A fixed-width text cell that scrolls its contents when they&rsquo;re larger than the cell. You can make the content always scroll by setting <code>scrollWhenContentFits=true</code></td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html">completed</a></td>
-<td>A cell that shows the <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html">completed</a> count and optionally the <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/total.html">total</a>. It uses SI units for amounts larger than 1000</td>
+<td><a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html">completed</a></td>
+<td>A cell that shows the <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html">completed</a> count and optionally the <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/total.html">total</a>. It uses SI units for amounts larger than 1000</td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/speed.html">speed</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/speed.html">speed</a></td>
 <td>A cell that shows the speed of the progress, in bytes per second.</td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/percentage.html">percentage</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/percentage.html">percentage</a></td>
 <td>A cell that shows the completed percentage.</td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/time-remaining.html">timeRemaining</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/time-remaining.html">timeRemaining</a></td>
 <td>A cell that shows the estimated time remaining, or optionally the elapsed time once a task finishes. If you want a different time format, you can do <code>text { myFormat(calculateTimeRemaining()) }</code></td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/time-elapsed.html">timeElapsed</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/time-elapsed.html">timeElapsed</a></td>
 <td>A cell that shows the elapsed time. If you want a different time format, you can do <code>text { myFormat(calculateTimeElapsed()) }</code></td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html">spinner</a></td>
-<td>A cell that shows an animated <a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html">Spinner</a>.</td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html">spinner</a></td>
+<td>A cell that shows an animated <a href="api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html">Spinner</a>.</td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar.html">progressBar</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar.html">progressBar</a></td>
 <td>A cell that shows a progress bar.</td>
 </tr>
 <tr>
-<td><a href="../api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html">cell</a></td>
+<td><a href="api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html">cell</a></td>
 <td>A custom cell that can show any Widget</td>
 </tr>
 </tbody>
@@ -626,8 +626,8 @@ make your own with <a href="../api/mordant/com.github.ajalt.mordant.widgets.prog
 <p>If you want to run an animation on your own threading infrastructure instead of a Java Executor, there 
 are a couple of ways to do it.</p>
 <h2 id="with-runblocking">With <code>runBlocking</code><a class="headerlink" href="#with-runblocking" title="Permanent link">&para;</a></h2>
-<p>If you are on JVM, you can still use <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a>, but call <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-blocking-animator/run-blocking.html">BlockingAnimator.runBlocking</a> on
-you own thread instead of using <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/execute.html">execute</a>.</p>
+<p>If you are on JVM, you can still use <a href="api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a>, but call <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-blocking-animator/run-blocking.html">BlockingAnimator.runBlocking</a> on
+you own thread instead of using <a href="api/mordant/com.github.ajalt.mordant.animation.progress/execute.html">execute</a>.</p>
 <p>For example, to run an animation with RxJava:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">progress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">progressBarLayout</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}.</span><span class="na">animateOnThread</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
 <span class="n">Completable</span><span class="p">.</span><span class="na">create</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">progress</span><span class="p">.</span><span class="na">runBlocking</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
@@ -635,8 +635,8 @@ you own thread instead of using <a href="../api/mordant/com.github.ajalt.mordant
 <span class="w">    </span><span class="p">.</span><span class="na">subscribe</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="calling-refresh-manually">Calling <code>refresh</code> manually<a class="headerlink" href="#calling-refresh-manually" title="Permanent link">&para;</a></h2>
-<p>If you aren&rsquo;t on JVM or want even more control, you can create a <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/">MultiProgressBarAnimation</a> and
-call <a href="../api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/refresh.html">refresh</a> manually each time you want a new frame to be rendered.</p>
+<p>If you aren&rsquo;t on JVM or want even more control, you can create a <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-multi-progress-bar-animation/index.html">MultiProgressBarAnimation</a> and
+call <a href="api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/refresh.html">refresh</a> manually each time you want a new frame to be rendered.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">layout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">progressBarLayout</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">animation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MultiProgressBarAnimation</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">task</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">animation</span><span class="p">.</span><span class="na">addTask</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span>

@@ -311,7 +311,7 @@
   
   
     <li class="md-nav__item">
-      <a href="api/" class="md-nav__link">
+      <a href="api/index.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -437,12 +437,17 @@ add color and style to text, create tables, draw animations, and more.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <p>Mordant is distributed through Maven Central.</p>
 <div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant:2.7.2&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant:3.0.0&quot;</span><span class="o">)</span>
 
 <span class="w">    </span><span class="c1">// optional extensions for running animations with coroutines</span>
-<span class="w">    </span><span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant-coroutines:2.7.2&quot;</span><span class="o">)</span>
+<span class="w">    </span><span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant-coroutines:3.0.0&quot;</span><span class="o">)</span>
+
+<span class="w">    </span><span class="c1">// optional widget for rendering Markdown</span>
+<span class="w">    </span><span class="n">implementation</span><span class="o">(</span><span class="s2">&quot;com.github.ajalt.mordant:mordant-markdown:3.0.0&quot;</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
+<p>On JVM, there are more granular dependencies available. 
+<a href="/guide/">See the docs for details</a>.</p>
 <h6 id="if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid">If you&rsquo;re using Maven instead of Gradle, use <code>&lt;artifactId&gt;mordant-jvm&lt;/artifactId&gt;</code><a class="headerlink" href="#if-youre-using-maven-instead-of-gradle-use-artifactidmordant-jvmartifactid" title="Permanent link">&para;</a></h6>
 <h4 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h4>
 <details>

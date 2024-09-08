@@ -16,7 +16,7 @@
         <link rel="prev" href="../progress/">
       
       
-        <link rel="next" href="../api/">
+        <link rel="next" href="../changelog/">
       
       
       <link rel="icon" href="../img/favicon.ico">
@@ -446,7 +446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/" class="md-nav__link">
+      <a href="../api/index.html" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -617,7 +617,7 @@
 
 
 <h1 id="keyboard-and-mouse-input-with-raw-mode">Keyboard and Mouse Input With Raw Mode<a class="headerlink" href="#keyboard-and-mouse-input-with-raw-mode" title="Permanent link">&para;</a></h1>
-<p>Normally when reading input from the user with functions like <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html">readLineOrNull</a>, the terminal
+<p>Normally when reading input from the user with functions like <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html">readLineOrNull</a>, the terminal
 will wait for the user to press enter before sending the input. But if you want to read keys as
 soon as they are pressed, you can use &ldquo;raw mode&rdquo;, which disables line buffering and echo.</p>
 <h2 id="reading-events">Reading Events<a class="headerlink" href="#reading-events" title="Permanent link">&para;</a></h2>
@@ -629,7 +629,7 @@ events like <code>ctrl-c</code> manually if you want your users to be able to ex
 </div>
 <h3 id="reading-events-with-coroutine-flows">Reading Events with Coroutine Flows<a class="headerlink" href="#reading-events-with-coroutine-flows" title="Permanent link">&para;</a></h3>
 <p>The simplest way to read events is to include the <code>mordant-coroutines</code> module,
-and use <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, or <a href="../api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
+and use <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, or <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
 events as a <a href="https://kotlinlang.org/docs/reference/coroutines/flow.html">Flow</a>. These functions will handle setting up raw mode and restoring the terminal to
 its original state when they are done.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example of receiveEventsFlow</label><label for="__tabbed_1_2">Example of receiveMouseEventsFlow</label><label for="__tabbed_1_3">Example of receiveEventsFlow</label></div>
@@ -665,8 +665,8 @@ its original state when they are done.</p>
 </div>
 </div>
 <h3 id="reading-events-with-callbacks">Reading Events with Callbacks<a class="headerlink" href="#reading-events-with-callbacks" title="Permanent link">&para;</a></h3>
-<p>If you don&rsquo;t want to use coroutines, you can use a callback lambda with one of <a href="../api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>,
-<a href="../api/mordant/com.github.ajalt.mordant.input/receive-key-events.html">receiveKeyEvents</a>, or <a href="../api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a>, depending on which type of events you want to read.</p>
+<p>If you don&rsquo;t want to use coroutines, you can use a callback lambda with one of <a href="api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>,
+<a href="api/mordant/com.github.ajalt.mordant.input/receive-key-events.html">receiveKeyEvents</a>, or <a href="api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a>, depending on which type of events you want to read.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Example of receiveKeyEvents</label><label for="__tabbed_2_2">Example of receiveMouseEvents</label><label for="__tabbed_2_3">Example of receiveEvents</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -713,16 +713,16 @@ its original state when they are done.</p>
 </div>
 </div>
 </div>
-<p>See the API docs on <a href="../api/mordant/com.github.ajalt.mordant.input/-keyboard-event/">KeyboardEvent</a> and <a href="../api/mordant/com.github.ajalt.mordant.input/-mouse-event/">MouseEvent</a> for more details on the properties of these
+<p>See the API docs on <a href="api/mordant/com.github.ajalt.mordant.input/-keyboard-event/index.html">KeyboardEvent</a> and <a href="api/mordant/com.github.ajalt.mordant.input/-mouse-event/index.html">MouseEvent</a> for more details on the properties of these
 events.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>For mouse events, only button presses are reported. If you want mouse movement or drag events, 
-you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-mouse-tracking/">MouseTracking</a> values to <a href="../api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a> and <a href="../api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>.</p>
+you can pass one of the <a href="api/mordant/com.github.ajalt.mordant.input/-mouse-tracking/index.html">MouseTracking</a> values to <a href="api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html">receiveMouseEvents</a> and <a href="api/mordant/com.github.ajalt.mordant.input/receive-events.html">receiveEvents</a>.</p>
 </div>
 <h3 id="reading-events-with-a-class">Reading Events With a Class<a class="headerlink" href="#reading-events-with-a-class" title="Permanent link">&para;</a></h3>
 <p>If you have a class that you want to use to handle input events, you can use implement
-<a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/">InputReceiver</a> and call <a href="../api/mordant/com.github.ajalt.mordant.input/-input-receiver/receive-event.html">InputReceiver.receiveEvent</a>.</p>
+<a href="api/mordant/com.github.ajalt.mordant.input/-input-receiver/index.html">InputReceiver</a> and call <a href="api/mordant/com.github.ajalt.mordant.input/-input-receiver/receive-event.html">InputReceiver.receiveEvent</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MyReceiver</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">InputReceiver</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">receiveEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span><span class="w"> </span><span class="n">InputEvent</span><span class="p">):</span><span class="w"> </span><span class="n">InputReceiver</span><span class="p">.</span><span class="na">Status</span><span class="o">&lt;</span><span class="kt">Unit</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">KeyboardEvent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -738,8 +738,8 @@ you can pass one of the <a href="../api/mordant/com.github.ajalt.mordant.input/-
 <span class="n">MyReceiver</span><span class="p">().</span><span class="na">receiveEvents</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="reading-events-manually">Reading Events Manually<a class="headerlink" href="#reading-events-manually" title="Permanent link">&para;</a></h3>
-<p>If you need maximum control, you can enter raw mode manually with <a href="../api/mordant/com.github.ajalt.mordant.input/enter-raw-mode.html">enterRawMode</a> and read events one
-at a time with <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-key.html">readKey</a>, <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html">readMouse</a>, or <a href="../api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-event.html">readEvent</a>. The object returned by <code>enterRawMode</code> will
+<p>If you need maximum control, you can enter raw mode manually with <a href="api/mordant/com.github.ajalt.mordant.input/enter-raw-mode.html">enterRawMode</a> and read events one
+at a time with <a href="api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-key.html">readKey</a>, <a href="api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html">readMouse</a>, or <a href="api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-event.html">readEvent</a>. The object returned by <code>enterRawMode</code> will
 restore the terminal to its original state when closed.</p>
 <div class="highlight"><pre><span></span><code><span class="n">terminal</span><span class="p">.</span><span class="na">enterRawMode</span><span class="p">().</span><span class="na">use</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">rawMode</span><span class="w"> </span><span class="o">-&gt;</span>
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -757,20 +757,23 @@ app and operating system. Some things to keep in mind:</p>
   other than Windows.</li>
 <li>Some key combinations aren&rsquo;t reported because they&rsquo;re intercepted by the terminal app to perform
   actions like switching tabs or closing the window.</li>
-<li>On Linux and macOS, the Escape key isn&rsquo;t reported as a key press; instead, it begins a &ldquo;VTI escape
-  sequence&rdquo; that the terminal uses to report key presses. For example if you press <code>Escape</code>, then <code>[</code>,
-  then <code>d</code>, the terminal will report that as the left arrow key being pressed. It&rsquo;s up to you whether
-  you consider this a feature or a limitation.</li>
-<li>Raw mode isn&rsquo;t supported on JS or wasmJS targets. You can use Node.js&rsquo;s <code>readline</code> module to read
-  input in a similar way, or in the browser you can use the <code>keydown</code> and <code>mousedown</code> events.</li>
+<li>For JS or wasmJS targets, raw mode is supported on Node.js only. You can also use Node.js&rsquo;s
+  <code>readline</code> module to read input with callbacks instead of blocking, or in the browser you can use
+  the <code>keydown</code> and <code>mousedown</code> events.</li>
 </ul>
+<p>!! danger</p>
+<div class="codehilite"><pre><span></span><code>Reading events in raw mode on Node.js is not fully supported on Windows due to limitations in
+Node.js. When reading events, timeouts are ignored and the call will block until a key is pressed.
+Keys like the arrow keys, function keys, and some modifier keys may not be reported at all.
+</code></pre></div>
+
 <h2 id="interactive-list-selection">Interactive List Selection<a class="headerlink" href="#interactive-list-selection" title="Permanent link">&para;</a></h2>
 <p>Mordant includes a SelectList widget that you can use to create a list of items that the user can
 select from with the arrow keys and enter.</p>
 <p><img alt="" src="../img/select_list.gif" /></p>
 <h3 id="selecting-a-single-item">Selecting a single item<a class="headerlink" href="#selecting-a-single-item" title="Permanent link">&para;</a></h3>
-<p>If you want to select one item from a list, you can use the <a href="../api/mordant/com.github.ajalt.mordant.input/interactive-select-list.html">interactiveSelectList</a> function or 
-the <a href="../api/mordant/com.github.ajalt.mordant.input/-interactive-select-list-builder/">InteractiveSelectListBuilder</a> class.</p>
+<p>If you want to select one item from a list, you can use the <a href="api/mordant/com.github.ajalt.mordant.input/interactive-select-list.html">interactiveSelectList</a> function or 
+the <a href="api/mordant/com.github.ajalt.mordant.input/-interactive-select-list-builder/index.html">InteractiveSelectListBuilder</a> class.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Example with interactiveSelectList</label><label for="__tabbed_3_2">Example with interactiveSelectList DSL</label><label for="__tabbed_3_3">Example with InteractiveSelectListBuilder</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -815,7 +818,7 @@ the <a href="../api/mordant/com.github.ajalt.mordant.input/-interactive-select-l
 </div>
 </div>
 <h3 id="selecting-multiple-items">Selecting multiple items<a class="headerlink" href="#selecting-multiple-items" title="Permanent link">&para;</a></h3>
-<p>If you want to select multiple items from a list, you can use the <a href="../api/mordant/com.github.ajalt.mordant.input/interactive-multi-select-list.html">interactiveMultiSelectList</a>
+<p>If you want to select multiple items from a list, you can use the <a href="api/mordant/com.github.ajalt.mordant.input/interactive-multi-select-list.html">interactiveMultiSelectList</a>
 function.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Example with interactiveMultiSelectList</label><label for="__tabbed_4_2">Example with interactiveMultiSelectList DSL</label><label for="__tabbed_4_3">Example with InteractiveSelectListBuilder</label></div>
 <div class="tabbed-content">
