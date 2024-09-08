@@ -87,6 +87,8 @@ class Terminal private constructor(
             )
         )
 
+    @Deprecated("This property was renamed to terminalInfo", ReplaceWith("terminalInfo"))
+    val info: TerminalInfo get() = terminalInfo
 
     /**
      * The current size of the terminal.

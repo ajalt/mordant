@@ -167,8 +167,7 @@ If you're using only `:mordant-jvm-ffm`, make sure you're running with JVM 22+, 
 """
 
 private object DumbTerminalInterface : StandardTerminalInterface() {
-    override fun stdoutInteractive(): Boolean = true
-    override fun stdinInteractive(): Boolean = true
+    override fun shouldAutoUpdateSize(): Boolean = false
     override fun getTerminalSize(): Size? = null
     override fun enterRawMode(mouseTracking: MouseTracking): AutoCloseable {
         throw UnsupportedOperationException(DUMB_RAW_MODE_ERROR)

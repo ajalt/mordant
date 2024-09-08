@@ -22,12 +22,18 @@ Mordant is distributed through Maven Central.
 
 ```groovy
 dependencies {
-    implementation("com.github.ajalt.mordant:mordant:2.7.2")
+    implementation("com.github.ajalt.mordant:mordant:3.0.0")
 
     // optional extensions for running animations with coroutines
-    implementation("com.github.ajalt.mordant:mordant-coroutines:2.7.2")
+    implementation("com.github.ajalt.mordant:mordant-coroutines:3.0.0")
+
+    // optional widget for rendering Markdown
+    implementation("com.github.ajalt.mordant:mordant-markdown:3.0.0")
 }
 ```
+
+On JVM, there are more granular dependencies available. 
+[See the docs for details](https://ajalt.github.io/mordant/guide/).
 
 ###### If you're using Maven instead of Gradle, use `<artifactId>mordant-jvm</artifactId>`
 

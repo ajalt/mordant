@@ -77,7 +77,6 @@ interface CellStyleBuilder : CellStyleBuilderBase {
  * Configuration for how a column should be sized in a table.
  */
 data class ColumnWidth(
-    // TODO(3.0): add a `minimumWidth?` field and use it for progress cells like timeRemaining
     /**
      * The priority of the column when allocating available width.
      *

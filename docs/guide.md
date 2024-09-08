@@ -17,8 +17,9 @@ there are several modules that implement `TerminalInterface` using different dep
 
 === "Individual JVM gradle dependencies"
     ```kotlin
-    // This modules doesn't include any JVM interface modules, so you'll need one or more if you're 
-    // targeting JVM
+    // The `:mordant-core` module doesn't include any JVM interface modules, so you'll need one or
+    // more if you're targeting JVM. If you don't include any, features like raw mode and size
+    // detection won't work, but colors and styles still will.
     implementation("com.github.ajalt.mordant:mordant-core:$mordantVersion")
     
     // This module uses the Java Foreign Function and Memory API. It requires JDK 22+, and you must 

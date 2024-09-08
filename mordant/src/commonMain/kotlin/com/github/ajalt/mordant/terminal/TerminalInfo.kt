@@ -22,8 +22,7 @@ data class TerminalInfo(
      */
     val inputInteractive: Boolean,
     /**
-     * If true, `\r` will clear the entire line it's printed on in the current terminal, if false,
-     * `\r` will only move the cursor
+     * If false using ANSI cursor movement codes may not work.
      */
     val supportsAnsiCursor: Boolean,
 ) {

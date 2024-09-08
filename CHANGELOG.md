@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 3.0.0
 ## Added
 - New `TerminalDetection` object that can be used to detect terminal capabilities without creating a terminal instance.
 - Added new optional methods to `TerminalInterface` to control raw mode: `getTerminalSize`, `readInputEvent`, `enterRawMode`, and `shouldAutoUpdateSize`.
@@ -16,11 +18,11 @@
 - **Breaking Change** Moved `Terminal.info.width` and `height` to `Terminal.size.width` and `height`.
 - **Breaking Change** `TerminalInterface.info` is now a method with parameters instead of a property.
 - **Breaking Change** Moved `Markdown` widget to separate `mordant-markdown` module, which is not included by default. If you use markdown rendering, you need to add that module to you dependencies.
+- **Breaking Change** Combined all `ColumnWidth` subclasses into a single class with factory methods. If you were using `ColumnWidth.Custom`, you should now use the `ColumnWidth` constructor.
+- **Breaking Change** The following `Terminal` methods are now extensions: `prompt()`, `info()`, `danger()`, `warning()`, `success()`, `muted()`
+- **Breaking Change** Renamed `TerminalInfo.crClearsLine` to `supportsAnsiCursor`
 - In raw mode on POSIX systems, pressing the escape key once will now immediately return an `Escape` event. [(#193)](https://github.com/ajalt/mordant/issues/193)
-- Renamed `TerminalInfo.crClearsLine` to `supportsAnsiCursor`
-- Combined all `ColumnWidth` subclasses into a single class with factory methods. If you were using `ColumnWidth.Custom`, you should now use the `ColumnWidth` constructor.
-- The following `Terminal` methods are now extensions: `prompt()`, `info()`, `danger()`, `warning()`, `success()`, `muted()`
-- Renamed `Terminal.info` property to `Terminal.terminalInfo`
+- Renamed `Terminal.info` property to `Terminal.terminalInfo`. The old name is deprecated.
 
 ### Removed
 - Removed constructor overloads for `Terminal`. There is now one constructor with all default parameters. 
