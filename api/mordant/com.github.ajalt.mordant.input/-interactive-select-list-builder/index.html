@@ -1,0 +1,569 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>InteractiveSelectListBuilder</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            mordant
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mordant::com.github.ajalt.mordant.input/InteractiveSelectListBuilder///PointingToDeclaration//-900256462">
+  <div class="breadcrumbs"><a href="../../index.html">mordant</a><span class="delimiter">/</span><a href="../index.html">com.github.ajalt.mordant.input</a><span class="delimiter">/</span><span class="current">InteractiveSelectListBuilder</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Interactive</span><wbr><span>Select</span><wbr><span>List</span><wbr><span><span>Builder</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">InteractiveSelectListBuilder</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">terminal<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Configure an interactive selection list.</p><p class="paragraph">Run the selection with <code class="lang-kotlin">runSingleSelect</code> or <code class="lang-kotlin">runMultiSelect</code>. On JS and Wasm, where those methods aren't available, you can use <a href="create-single-select-input-animation.html">createSingleSelectInputAnimation</a> and <a href="create-multi-select-input-animation.html">createMultiSelectInputAnimation</a> and feed them keyboard events manually.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="2088581427%2FConstructors%2F-900256462" anchor-label="InteractiveSelectListBuilder" id="2088581427%2FConstructors%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-interactive-select-list-builder.html"><span>Interactive</span><wbr><span>Select</span><wbr><span>List</span><wbr><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2088581427%2FConstructors%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">terminal<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1734878562%2FFunctions%2F-900256462" anchor-label="addEntry" id="1734878562%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-entry.html"><span>add</span><wbr><span><span>Entry</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1734878562%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-entry.html"><span class="token function">addEntry</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entry<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.widgets/-select-list/-entry/index.html">SelectList.Entry</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-entry.html"><span class="token function">addEntry</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entry<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-entry.html"><span class="token function">addEntry</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">description<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">selected<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="add-entry.html"><span class="token function">addEntry</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">description<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">selected<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Add an item to the list of items to select from</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1739623300%2FFunctions%2F-900256462" anchor-label="clearOnExit" id="-1739623300%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="clear-on-exit.html"><span>clear</span><wbr><span>On</span><wbr><span><span>Exit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1739623300%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="clear-on-exit.html"><span class="token function">clearOnExit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">clearOnExit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">If true, clear the list when the user submits the selections. If false, leave it on screen</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1409897554%2FFunctions%2F-900256462" anchor-label="createMultiSelectInputAnimation" id="-1409897554%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-multi-select-input-animation.html"><span>create</span><wbr><span>Multi</span><wbr><span>Select</span><wbr><span>Input</span><wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1409897554%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-multi-select-input-animation.html"><span class="token function">createMultiSelectInputAnimation</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-input-receiver-animation/index.html">InputReceiverAnimation</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Run the select list in multi select mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-330432705%2FFunctions%2F-900256462" anchor-label="createSingleSelectInputAnimation" id="-330432705%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="create-single-select-input-animation.html"><span>create</span><wbr><span>Single</span><wbr><span>Select</span><wbr><span>Input</span><wbr><span><span>Animation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-330432705%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-single-select-input-animation.html"><span class="token function">createSingleSelectInputAnimation</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-input-receiver-animation/index.html">InputReceiverAnimation</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Run the select list in single select mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1703755941%2FFunctions%2F-900256462" anchor-label="cursorMarker" id="-1703755941%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="cursor-marker.html"><span>cursor</span><wbr><span><span>Marker</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1703755941%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="cursor-marker.html"><span class="token function">cursorMarker</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cursorMarker<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the marker to display where the cursor is located. Defaults to the theme string <code class="lang-kotlin">select.cursor</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1339156584%2FFunctions%2F-900256462" anchor-label="descApplyFilter" id="-1339156584%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-apply-filter.html"><span>desc</span><wbr><span>Apply</span><wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1339156584%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-apply-filter.html"><span class="token function">descApplyFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descApplyFilter<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to apply the filter when filtering in multi select mode</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1281122258%2FFunctions%2F-900256462" anchor-label="descConfirm" id="1281122258%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-confirm.html"><span>desc</span><wbr><span><span>Confirm</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1281122258%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-confirm.html"><span class="token function">descConfirm</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descConfirm<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to submit the selection in multi select mode</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1188941202%2FFunctions%2F-900256462" anchor-label="descExitFilter" id="1188941202%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-exit-filter.html"><span>desc</span><wbr><span>Exit</span><wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1188941202%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-exit-filter.html"><span class="token function">descExitFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descExitFilter<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to stop filtering the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2001729492%2FFunctions%2F-900256462" anchor-label="descFilter" id="2001729492%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-filter.html"><span>desc</span><wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2001729492%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-filter.html"><span class="token function">descFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descFilter<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to filter the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2028158031%2FFunctions%2F-900256462" anchor-label="descNext" id="2028158031%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-next.html"><span>desc</span><wbr><span><span>Next</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2028158031%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-next.html"><span class="token function">descNext</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descNext<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to move the cursor down</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-963058801%2FFunctions%2F-900256462" anchor-label="descPrev" id="-963058801%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-prev.html"><span>desc</span><wbr><span><span>Prev</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-963058801%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-prev.html"><span class="token function">descPrev</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descPrev<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to move the cursor up</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-393808780%2FFunctions%2F-900256462" anchor-label="descSubmit" id="-393808780%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-submit.html"><span>desc</span><wbr><span><span>Submit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-393808780%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-submit.html"><span class="token function">descSubmit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descSubmit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to submit the selection in single select mode</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1668227760%2FFunctions%2F-900256462" anchor-label="descToggle" id="1668227760%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="desc-toggle.html"><span>desc</span><wbr><span><span>Toggle</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1668227760%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="desc-toggle.html"><span class="token function">descToggle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">descToggle<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the description of the key to toggle the selection of an item in multi select mode</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1400299186%2FFunctions%2F-900256462" anchor-label="entries" id="1400299186%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="entries.html"><span><span>entries</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1400299186%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="entries.html"><span class="token function">entries</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>entries<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.widgets/-select-list/-entry/index.html">SelectList.Entry</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="entries.html"><span class="token function">entries</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">vararg </span>entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"entriesEntry"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">fun </span><a href="entries.html"><span class="token function">entries</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="../../com.github.ajalt.mordant.widgets/-select-list/-entry/index.html">SelectList.Entry</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-name/index.html"><span class="token annotation builtin">JvmName</span></a><span class="token punctuation">(</span><span>name<span class="token operator"> = </span><span class="breakable-word"><span class="token string">"entriesString"</span></span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">fun </span><a href="entries.html"><span class="token function">entries</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the list of items to select from</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1807853292%2FFunctions%2F-900256462" anchor-label="filterable" id="1807853292%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="filterable.html"><span><span>filterable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1807853292%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="filterable.html"><span class="token function">filterable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">filterable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set whether the list should be filterable</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1204586980%2FFunctions%2F-900256462" anchor-label="keyExitFilter" id="1204586980%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-exit-filter.html"><span>key</span><wbr><span>Exit</span><wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1204586980%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-exit-filter.html"><span class="token function">keyExitFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keyExitFilter<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to stop filtering the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2044028002%2FFunctions%2F-900256462" anchor-label="keyFilter" id="2044028002%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-filter.html"><span>key</span><wbr><span><span>Filter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2044028002%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-filter.html"><span class="token function">keyFilter</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keyFilter<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to filter the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2085247225%2FFunctions%2F-900256462" anchor-label="keyNext" id="-2085247225%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-next.html"><span>key</span><wbr><span><span>Next</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2085247225%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-next.html"><span class="token function">keyNext</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keyNext<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to move the cursor down</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1159403463%2FFunctions%2F-900256462" anchor-label="keyPrev" id="1159403463%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-prev.html"><span>key</span><wbr><span><span>Prev</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1159403463%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-prev.html"><span class="token function">keyPrev</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keyPrev<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to move the cursor up</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-18426942%2FFunctions%2F-900256462" anchor-label="keySubmit" id="-18426942%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-submit.html"><span>key</span><wbr><span><span>Submit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-18426942%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-submit.html"><span class="token function">keySubmit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keySubmit<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to submit the selection</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1110974970%2FFunctions%2F-900256462" anchor-label="keyToggle" id="-1110974970%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key-toggle.html"><span>key</span><wbr><span><span>Toggle</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1110974970%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="key-toggle.html"><span class="token function">keyToggle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">keyToggle<span class="token operator">: </span><a href="../-keyboard-event/index.html">KeyboardEvent</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the key to toggle the selection of an item in multi select mode</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1138148284%2FFunctions%2F-900256462" anchor-label="limit" id="-1138148284%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="limit.html"><span><span>limit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1138148284%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="limit.html"><span class="token function">limit</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">limit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the maximum number of items that can be selected</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1032153369%2FFunctions%2F-900256462" anchor-label="onlyShowActiveDescription" id="1032153369%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="only-show-active-description.html"><span>only</span><wbr><span>Show</span><wbr><span>Active</span><wbr><span><span>Description</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1032153369%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="only-show-active-description.html"><span class="token function">onlyShowActiveDescription</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlyShowActiveDescription<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">If true, only show the description of the highlighted item</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="521382432%2FFunctions%2F-900256462" anchor-label="selectedMarker" id="521382432%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="selected-marker.html"><span>selected</span><wbr><span><span>Marker</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="521382432%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="selected-marker.html"><span class="token function">selectedMarker</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">selectedMarker<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the marker to display for selected items. Defaults to the theme string <code class="lang-kotlin">select.selected</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="689065840%2FFunctions%2F-900256462" anchor-label="selectedStyle" id="689065840%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="selected-style.html"><span>selected</span><wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="689065840%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="selected-style.html"><span class="token function">selectedStyle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">selectedStyle<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the style to use to highlight the currently selected item. Defaults to the theme style <code class="lang-kotlin">select.selected</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="975269756%2FFunctions%2F-900256462" anchor-label="showInstructions" id="975269756%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="show-instructions.html"><span>show</span><wbr><span><span>Instructions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="975269756%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="show-instructions.html"><span class="token function">showInstructions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">showInstructions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Whether to show instructions at the bottom of the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1372795229%2FFunctions%2F-900256462" anchor-label="startingCursorIndex" id="-1372795229%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="starting-cursor-index.html"><span>starting</span><wbr><span>Cursor</span><wbr><span><span>Index</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1372795229%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="starting-cursor-index.html"><span class="token function">startingCursorIndex</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">startingCursorIndex<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the index of the item to start the cursor on</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1023903035%2FFunctions%2F-900256462" anchor-label="title" id="1023903035%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="title.html"><span><span>title</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1023903035%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="title.html"><span class="token function">title</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">title<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-widget/index.html">Widget</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="title.html"><span class="token function">title</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the title to display above the list</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1635766983%2FFunctions%2F-900256462" anchor-label="unselectedMarker" id="-1635766983%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unselected-marker.html"><span>unselected</span><wbr><span><span>Marker</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1635766983%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="unselected-marker.html"><span class="token function">unselectedMarker</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">unselectedMarker<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the marker to display for unselected items. Defaults to the theme string <code class="lang-kotlin">select.unselected</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1320504995%2FFunctions%2F-900256462" anchor-label="unselectedMarkerStyle" id="1320504995%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unselected-marker-style.html"><span>unselected</span><wbr><span>Marker</span><wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1320504995%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="unselected-marker-style.html"><span class="token function">unselectedMarkerStyle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">unselectedMarkerStyle<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the style to use for the marker of unselected items. Defaults to the theme style <code class="lang-kotlin">select.unselected-marker</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2115142639%2FFunctions%2F-900256462" anchor-label="unselectedTitleStyle" id="-2115142639%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="unselected-title-style.html"><span>unselected</span><wbr><span>Title</span><wbr><span><span>Style</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2115142639%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="unselected-title-style.html"><span class="token function">unselectedTitleStyle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">unselectedTitleStyle<span class="token operator">: </span><a href="../../com.github.ajalt.mordant.rendering/-text-style/index.html">TextStyle</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InteractiveSelectListBuilder</a></div><div class="brief "><p class="paragraph">Set the style to use for the title of unselected items. Defaults to the theme style <code class="lang-kotlin">select.unselected-title</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

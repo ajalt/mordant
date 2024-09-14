@@ -1,0 +1,418 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.github.ajalt.mordant.terminal</title>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../index.html">
+                            mordant
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mordant:dokkaHtmlPartial/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageids="mordant::com.github.ajalt.mordant.terminal////PointingToDeclaration//-900256462">
+  <div class="breadcrumbs"><a href="../index.html">mordant</a><span class="delimiter">/</span><span class="current">com.github.ajalt.mordant.terminal</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1575160876%2FClasslikes%2F-900256462" anchor-label="ConfirmationPrompt" id="1575160876%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-confirmation-prompt/index.html"><span>Confirmation</span><wbr><span><span>Prompt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1575160876%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-confirmation-prompt/index.html">ConfirmationPrompt</a><span class="token operator">&lt;</span><a href="-confirmation-prompt/index.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">firstPrompt<span class="token operator">: </span><a href="-prompt/index.html">Prompt</a><span class="token operator">&lt;</span><a href="-confirmation-prompt/index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">secondPrompt<span class="token operator">: </span><a href="-prompt/index.html">Prompt</a><span class="token operator">&lt;</span><a href="-confirmation-prompt/index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">valueMismatchMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Values do not match, try again"</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">A prompt that requires the user to enter the same value twice.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="241975186%2FClasslikes%2F-900256462" anchor-label="ConversionResult" id="241975186%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-conversion-result/index.html"><span>Conversion</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="241975186%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">sealed </span><span class="token keyword">class </span><a href="-conversion-result/index.html">ConversionResult</a><span class="token operator">&lt;</span><span class="token keyword">out </span><a href="-conversion-result/index.html">T</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-454133329%2FClasslikes%2F-900256462" anchor-label="CursorMovements" id="-454133329%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-cursor-movements/index.html"><span>Cursor</span><wbr><span><span>Movements</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-454133329%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-cursor-movements/index.html">CursorMovements</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1997990365%2FClasslikes%2F-900256462" anchor-label="PrintRequest" id="-1997990365%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-print-request/index.html"><span>Print</span><wbr><span><span>Request</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1997990365%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-print-request/index.html">PrintRequest</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>text<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>trailingLinebreak<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1029962463%2FClasslikes%2F-900256462" anchor-label="Prompt" id="-1029962463%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-prompt/index.html"><span><span>Prompt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1029962463%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-prompt/index.html">Prompt</a><span class="token operator">&lt;</span><a href="-prompt/index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>terminal<span class="token operator">: </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">, </span></span><span class="parameter ">default<span class="token operator">: </span><a href="-prompt/index.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">showDefault<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">showChoices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">hideInput<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">choices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="-prompt/index.html">T</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter ">promptSuffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">": "</span><span class="token punctuation">, </span></span><span class="parameter ">invalidChoiceMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid value, choose from "</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">The base class for prompts.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1009979139%2FClasslikes%2F-900256462" anchor-label="StandardTerminalInterface" id="-1009979139%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-standard-terminal-interface/index.html"><span>Standard</span><wbr><span>Terminal</span><wbr><span><span>Interface</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1009979139%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">class </span><a href="-standard-terminal-interface/index.html">StandardTerminalInterface</a> : <a href="-terminal-interface/index.html">TerminalInterface</a></div><div class="brief "><p class="paragraph">A base class for terminal interfaces that prints using standard <code class="lang-kotlin">kotlin.io</code> functions.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2106567632%2FClasslikes%2F-900256462" anchor-label="StringPrompt" id="2106567632%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-string-prompt/index.html"><span>String</span><wbr><span><span>Prompt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2106567632%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-string-prompt/index.html">StringPrompt</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">terminal<span class="token operator">: </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">, </span></span><span class="parameter ">default<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">showDefault<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">showChoices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">hideInput<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">choices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter ">promptSuffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">": "</span><span class="token punctuation">, </span></span><span class="parameter ">invalidChoiceMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid value, choose from "</span><span class="token punctuation">, </span></span><span class="parameter ">allowBlank<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></span></span><span class="token punctuation">)</span> : <a href="-prompt/index.html">Prompt</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A <a href="-prompt/index.html">Prompt</a> that returns the user input unchanged.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1642271241%2FClasslikes%2F-900256462" anchor-label="Terminal" id="1642271241%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal/index.html"><span><span>Terminal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1642271241%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-terminal/index.html">Terminal</a></div><div class="brief "><p class="paragraph">Functions for printing styled text to the terminal.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1605042515%2FClasslikes%2F-900256462" anchor-label="TerminalCursor" id="1605042515%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-cursor/index.html"><span>Terminal</span><wbr><span><span>Cursor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1605042515%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-terminal-cursor/index.html">TerminalCursor</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2064289428%2FClasslikes%2F-900256462" anchor-label="TerminalDetection" id="2064289428%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-detection/index.html"><span>Terminal</span><wbr><span><span>Detection</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2064289428%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-terminal-detection/index.html">TerminalDetection</a></div><div class="brief "><p class="paragraph">Detect information about the current terminal.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-502107909%2FClasslikes%2F-900256462" anchor-label="TerminalInfo" id="-502107909%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-info/index.html"><span>Terminal</span><wbr><span><span>Info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-502107909%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-terminal-info/index.html">TerminalInfo</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">var </span>ansiLevel<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-ansi-level/index.html">AnsiLevel</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>ansiHyperLinks<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>outputInteractive<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>inputInteractive<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>supportsAnsiCursor<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Information about the current terminal</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1710907808%2FClasslikes%2F-900256462" anchor-label="TerminalInterface" id="-1710907808%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-interface/index.html"><span>Terminal</span><wbr><span><span>Interface</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1710907808%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-terminal-interface/index.html">TerminalInterface</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1821812113%2FClasslikes%2F-900256462" anchor-label="TerminalInterfaceProvider" id="-1821812113%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-interface-provider/index.html"><span>Terminal</span><wbr><span>Interface</span><wbr><span><span>Provider</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1821812113%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-terminal-interface-provider/index.html">TerminalInterfaceProvider</a></div><div class="brief "><p class="paragraph">A provider for a <a href="-terminal-interface/index.html">TerminalInterface</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1387938539%2FClasslikes%2F-900256462" anchor-label="TerminalRecorder" id="1387938539%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-terminal-recorder/index.html"><span>Terminal</span><wbr><span><span>Recorder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1387938539%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-terminal-recorder/index.html">TerminalRecorder</a> : <a href="-terminal-interface/index.html">TerminalInterface</a></div><div class="brief "><p class="paragraph">A <a href="-terminal-interface/index.html">TerminalInterface</a> that records all output and allows you to provide input.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1312538159%2FClasslikes%2F-900256462" anchor-label="YesNoPrompt" id="-1312538159%2FClasslikes%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-yes-no-prompt/index.html"><span>Yes</span><wbr><span>No</span><wbr><span><span>Prompt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1312538159%2FClasslikes%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-yes-no-prompt/index.html">YesNoPrompt</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">terminal<span class="token operator">: </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">, </span></span><span class="parameter ">default<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">uppercaseDefault<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">showChoices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">choiceStrings<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>listOf("y", "n")<span class="token punctuation">, </span></span><span class="parameter ">promptSuffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">": "</span><span class="token punctuation">, </span></span><span class="parameter ">invalidChoiceMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid value, choose from "</span></span></span><span class="token punctuation">)</span> : <a href="-prompt/index.html">Prompt</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">A boolean prompt that asks for a yes or no response.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1624262433%2FFunctions%2F-900256462" anchor-label="danger" id="1624262433%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="danger.html"><span><span>danger</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1624262433%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="danger.html"><span class="token function">danger</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">whitespace<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a><span class="token operator"> = </span>Whitespace.PRE<span class="token punctuation">, </span></span><span class="parameter ">align<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a><span class="token operator"> = </span>TextAlign.NONE<span class="token punctuation">, </span></span><span class="parameter ">overflowWrap<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a><span class="token operator"> = </span>OverflowWrap.NORMAL<span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Print a line styled with the theme's Theme.danger style.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-994612500%2FFunctions%2F-900256462" anchor-label="info" id="-994612500%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="info.html"><span><span>info</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-994612500%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="info.html"><span class="token function">info</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">whitespace<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a><span class="token operator"> = </span>Whitespace.PRE<span class="token punctuation">, </span></span><span class="parameter ">align<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a><span class="token operator"> = </span>TextAlign.NONE<span class="token punctuation">, </span></span><span class="parameter ">overflowWrap<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a><span class="token operator"> = </span>OverflowWrap.NORMAL<span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Print a line styled with the theme's Theme.info style.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="339440451%2FFunctions%2F-900256462" anchor-label="muted" id="339440451%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="muted.html"><span><span>muted</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="339440451%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="muted.html"><span class="token function">muted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">whitespace<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a><span class="token operator"> = </span>Whitespace.PRE<span class="token punctuation">, </span></span><span class="parameter ">align<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a><span class="token operator"> = </span>TextAlign.NONE<span class="token punctuation">, </span></span><span class="parameter ">overflowWrap<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a><span class="token operator"> = </span>OverflowWrap.NORMAL<span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Print a line styled with the theme's Theme.muted style.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-509763434%2FFunctions%2F-900256462" anchor-label="outputAsHtml" id="-509763434%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="output-as-html.html"><span>output</span><wbr><span>As</span><wbr><span><span>Html</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-509763434%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal-recorder/index.html">TerminalRecorder</a><span class="token punctuation">.</span><a href="output-as-html.html"><span class="token function">outputAsHtml</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">includeBodyTag<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">includeCodeTag<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">backgroundColor<span class="token operator">: </span><span data-unresolved-link="com.github.ajalt.colormath/Color///PointingToDeclaration/">Color</span><span class="token operator">?</span><span class="token operator"> = </span>SRGB("#0c0c0c")</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Render the contents of this <a href="-terminal-recorder/index.html">TerminalRecorder</a> as an HTML document.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1029814709%2FFunctions%2F-900256462" anchor-label="prompt" id="-1029814709%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="prompt.html"><span><span>prompt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1029814709%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="prompt.html"><span class="token function">prompt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">default<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">showDefault<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">showChoices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">hideInput<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">choices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter ">promptSuffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">": "</span><span class="token punctuation">, </span></span><span class="parameter ">invalidChoiceMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid value, choose from "</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Print a <a href="prompt.html">prompt</a> to the user and return the value they enter.</p></div><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="prompt.html">T</a><span class="token operator">&gt; </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="prompt.html"><span class="token function">prompt</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">prompt<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">default<span class="token operator">: </span><a href="prompt.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">showDefault<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">showChoices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">hideInput<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span><span class="token punctuation">, </span></span><span class="parameter ">choices<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html">Collection</a><span class="token operator">&lt;</span><a href="prompt.html">T</a><span class="token operator">&gt;</span><span class="token operator"> = </span>emptyList()<span class="token punctuation">, </span></span><span class="parameter ">promptSuffix<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">": "</span><span class="token punctuation">, </span></span><span class="parameter ">invalidChoiceMessage<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Invalid value, choose from "</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>convert<span class="token operator">: </span><span class="token punctuation">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="-conversion-result/index.html">ConversionResult</a><span class="token operator">&lt;</span><a href="prompt.html">T</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="prompt.html">T</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-409908581%2FFunctions%2F-900256462" anchor-label="success" id="-409908581%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="success.html"><span><span>success</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-409908581%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="success.html"><span class="token function">success</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">whitespace<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a><span class="token operator"> = </span>Whitespace.PRE<span class="token punctuation">, </span></span><span class="parameter ">align<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a><span class="token operator"> = </span>TextAlign.NONE<span class="token punctuation">, </span></span><span class="parameter ">overflowWrap<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a><span class="token operator"> = </span>OverflowWrap.NORMAL<span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Print a line styled with the theme's Theme.success style.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-825460812%2FFunctions%2F-900256462" anchor-label="warning" id="-825460812%2FFunctions%2F-900256462" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mordant:dokkaHtmlPartial/commonMain" data-filterable-set=":mordant:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="warning.html"><span><span>warning</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-825460812%2FFunctions%2F-900256462"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mordant:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-terminal/index.html">Terminal</a><span class="token punctuation">.</span><a href="warning.html"><span class="token function">warning</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">whitespace<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a><span class="token operator"> = </span>Whitespace.PRE<span class="token punctuation">, </span></span><span class="parameter ">align<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a><span class="token operator"> = </span>TextAlign.NONE<span class="token punctuation">, </span></span><span class="parameter ">overflowWrap<span class="token operator">: </span><a href="../com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a><span class="token operator"> = </span>OverflowWrap.NORMAL<span class="token punctuation">, </span></span><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">stderr<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">false</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Print a line styled with the theme's Theme.warning style.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

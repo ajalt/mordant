@@ -456,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/index.html" class="md-nav__link">
+      <a href="../api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -681,10 +681,10 @@ there are several modules that implement <code>TerminalInterface</code> using di
 </div>
 </div>
 <h2 id="text-colors-and-styles">Text Colors and Styles<a class="headerlink" href="#text-colors-and-styles" title="Permanent link">&para;</a></h2>
-<p>Create a <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a> instance, and import any enum entries you want from <a href="api/mordant/com.github.ajalt.mordant.rendering/-text-colors/index.html">TextColors</a> and
-<a href="api/mordant/com.github.ajalt.mordant.rendering/-text-styles/index.html">TextStyles</a>. The <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/println.html">println</a> function on your <code>Terminal</code> will detect your current terminal
+<p>Create a <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/">Terminal</a> instance, and import any enum entries you want from <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-colors/">TextColors</a> and
+<a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-styles/">TextStyles</a>. The <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/println.html">println</a> function on your <code>Terminal</code> will detect your current terminal
 capabilities and automatically downsample colors if necessary.</p>
-<p>Use <a href="api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html"><code>color.bg</code></a> to create a background color, or <a href="api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html"><code>color1 on color2</code></a> to
+<p>Use <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html"><code>color.bg</code></a> to create a background color, or <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html"><code>color1 on color2</code></a> to
 combine a foreground and background.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Code</label><label for="__tabbed_2_2">Output</label></div>
 <div class="tabbed-content">
@@ -719,17 +719,17 @@ combine a foreground and background.</p>
 </div>
 <h2 id="terminal-color-support-detection">Terminal color support detection<a class="headerlink" href="#terminal-color-support-detection" title="Permanent link">&para;</a></h2>
 <p>By default, <code>Terminal()</code> will try to detect ANSI support in the current stdout stream. If you&rsquo;d
-like to override the detection, you can pass a specific value to the <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/index.html">Terminal</a> constructor.</p>
+like to override the detection, you can pass a specific value to the <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/">Terminal</a> constructor.</p>
 <p>For example, to always output ANSI RGB color codes, even if stdout is currently directed to a file,
 you can do this:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Terminal</span><span class="p">(</span><span class="n">AnsiLevel</span><span class="p">.</span><span class="na">TRUECOLOR</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="text-wrapping-and-alignment">Text Wrapping and Alignment<a class="headerlink" href="#text-wrapping-and-alignment" title="Permanent link">&para;</a></h2>
-<p><code>Terminal.println</code> will preserve whitespace by default, but you can use the <a href="api/mordant/com.github.ajalt.mordant.widgets/-text/index.html"><code>Text</code></a> widget
-for more advanced formatting. You can use the <a href="api/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a>, <a href="api/mordant/com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a>, and <a href="api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a> enums to
+<p><code>Terminal.println</code> will preserve whitespace by default, but you can use the <a href="../api/mordant/com.github.ajalt.mordant.widgets/-text/"><code>Text</code></a> widget
+for more advanced formatting. You can use the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-whitespace/">Whitespace</a>, <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-align/">TextAlign</a>, and <a href="../api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/">OverflowWrap</a> enums to
 format text. They behave similar to the CSS properties of the same names.</p>
 <h3 id="text-wrapping">Text Wrapping<a class="headerlink" href="#text-wrapping" title="Permanent link">&para;</a></h3>
-<p>Pass one of the <a href="api/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html">Whitespace</a> values to the <code>Text</code> constructor to control how whitespace is handled.
+<p>Pass one of the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-whitespace/">Whitespace</a> values to the <code>Text</code> constructor to control how whitespace is handled.
 You can also set a <code>width</code> to wrap the text to a specific width rather than the terminal width.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Code</label><label for="__tabbed_3_2">Output</label></div>
 <div class="tabbed-content">
@@ -793,7 +793,7 @@ You can also set a <code>width</code> to wrap the text to a specific width rathe
 </code></pre></div>
 </div>
 <h3 id="text-alignment">Text Alignment<a class="headerlink" href="#text-alignment" title="Permanent link">&para;</a></h3>
-<p>You can use the <a href="api/mordant/com.github.ajalt.mordant.rendering/-text-align/index.html">TextAlign</a> values to align or justify text.</p>
+<p>You can use the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-text-align/">TextAlign</a> values to align or justify text.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Code</label><label for="__tabbed_4_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -823,7 +823,7 @@ You can also set a <code>width</code> to wrap the text to a specific width rathe
 </div>
 <h3 id="text-overflow">Text Overflow<a class="headerlink" href="#text-overflow" title="Permanent link">&para;</a></h3>
 <p>If you are wrapping text that has long words that exceed the line length by themselves, you can use
-the <a href="api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index.html">OverflowWrap</a> enum to control how they are handled.</p>
+the <a href="../api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/">OverflowWrap</a> enum to control how they are handled.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Code</label><label for="__tabbed_5_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -869,7 +869,7 @@ the <a href="api/mordant/com.github.ajalt.mordant.rendering/-overflow-wrap/index
 <p><code>OverflowWrap</code> has no effect when used with <code>Whitespace.PRE</code> or <code>Whitespace.NOWRAP</code>.</p>
 </div>
 <h2 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h2>
-<p>Use the <a href="api/mordant/com.github.ajalt.mordant.table/table.html">table</a> DSL to define table widgets.</p>
+<p>Use the <a href="../api/mordant/com.github.ajalt.mordant.table/table.html">table</a> DSL to define table widgets.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Code</label><label for="__tabbed_6_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -984,7 +984,7 @@ column spans, and different border styles.</p>
 </div>
 </div>
 <h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h2>
-<p>If you need to lay out multiple widgets or strings, you can use the <a href="api/mordant/com.github.ajalt.mordant.table/grid.html">grid</a> builder, which has an API
+<p>If you need to lay out multiple widgets or strings, you can use the <a href="../api/mordant/com.github.ajalt.mordant.table/grid.html">grid</a> builder, which has an API
 similar to <code>table</code>, but doesn&rsquo;t apply styling by default</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Code</label><label for="__tabbed_8_2">Output</label></div>
 <div class="tabbed-content">
@@ -1010,7 +1010,7 @@ similar to <code>table</code>, but doesn&rsquo;t apply styling by default</p>
 </div>
 </div>
 </div>
-<p>There are also the <a href="api/mordant/com.github.ajalt.mordant.table/horizontal-layout.html">horizontalLayout</a> and <a href="api/mordant/com.github.ajalt.mordant.table/vertical-layout.html">verticalLayout</a> builders if you don&rsquo;t need a full grid.</p>
+<p>There are also the <a href="../api/mordant/com.github.ajalt.mordant.table/horizontal-layout.html">horizontalLayout</a> and <a href="../api/mordant/com.github.ajalt.mordant.table/vertical-layout.html">verticalLayout</a> builders if you don&rsquo;t need a full grid.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Code</label><label for="__tabbed_9_2">Output</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -1031,7 +1031,7 @@ similar to <code>table</code>, but doesn&rsquo;t apply styling by default</p>
 </div>
 </div>
 <h2 id="controlling-the-cursor">Controlling the cursor<a class="headerlink" href="#controlling-the-cursor" title="Permanent link">&para;</a></h2>
-<p>You can show and hide the cursor, move it around, and clear parts of the screen with the <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/cursor.html">cursor</a>
+<p>You can show and hide the cursor, move it around, and clear parts of the screen with the <a href="../api/mordant/com.github.ajalt.mordant.terminal/-terminal/cursor.html">cursor</a>
 property on <code>Terminal</code>. If your terminal doesn&rsquo;t support cursor movements (like when output is
 redirected to a file) these commands are no-ops.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Terminal</span><span class="p">()</span>
@@ -1043,8 +1043,8 @@ redirected to a file) these commands are no-ops.</p>
 <span class="n">t</span><span class="p">.</span><span class="na">cursor</span><span class="p">.</span><span class="na">hide</span><span class="p">(</span><span class="n">showOnExit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="animations">Animations<a class="headerlink" href="#animations" title="Permanent link">&para;</a></h2>
-<p>You can animate any widget like a table with <a href="api/mordant/com.github.ajalt.mordant.animation/animation.html">Terminal.animation</a>, or any regular
-string with <a href="api/mordant/com.github.ajalt.mordant.animation/text-animation.html">Terminal.textAnimation</a>. For progress bar animations, see <a href="../progress/">the docs on progress
+<p>You can animate any widget like a table with <a href="../api/mordant/com.github.ajalt.mordant.animation/animation.html">Terminal.animation</a>, or any regular
+string with <a href="../api/mordant/com.github.ajalt.mordant.animation/text-animation.html">Terminal.textAnimation</a>. For progress bar animations, see <a href="../progress/">the docs on progress
 bars</a>.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Code</label><label for="__tabbed_10_2">Output</label></div>
 <div class="tabbed-content">
@@ -1072,7 +1072,7 @@ bars</a>.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If you have an <code>animation&lt;Unit&gt;</code> or <code>textAnimation&lt;Unit&gt;</code>, you can refresh them automatically with
-<a href="api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a> or <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html">animateOnCoroutine</a>.</p>
+<a href="../api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html">animateOnThread</a> or <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html">animateOnCoroutine</a>.</p>
 </div>
 <h2 id="prompting-for-input">Prompting for input<a class="headerlink" href="#prompting-for-input" title="Permanent link">&para;</a></h2>
 <p>You can ask the user to enter text and wait for a response with <a href="api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html">Terminal.prompt</a>:</p>
@@ -1093,8 +1093,8 @@ You chose: small
 </div>
 </div>
 <p>You can customize the prompt behavior further or convert the response to other types
-creating a subclass of the <a href="api/mordant/com.github.ajalt.mordant.terminal/-prompt/index.html">Prompt</a> class. Mordant includes <a href="api/mordant/com.github.ajalt.mordant.terminal/-string-prompt/index.html">StringPrompt</a>, <a href="api/mordant/com.github.ajalt.mordant.terminal/-yes-no-prompt/index.html">YesNoPrompt</a>, and
-<a href="api/mordant/com.github.ajalt.mordant.terminal/-confirmation-prompt/index.html">ConfirmationPrompt</a> classes for common use cases.</p>
+creating a subclass of the <a href="../api/mordant/com.github.ajalt.mordant.terminal/-prompt/">Prompt</a> class. Mordant includes <a href="../api/mordant/com.github.ajalt.mordant.terminal/-string-prompt/">StringPrompt</a>, <a href="../api/mordant/com.github.ajalt.mordant.terminal/-yes-no-prompt/">YesNoPrompt</a>, and
+<a href="../api/mordant/com.github.ajalt.mordant.terminal/-confirmation-prompt/">ConfirmationPrompt</a> classes for common use cases.</p>
 
 
 
