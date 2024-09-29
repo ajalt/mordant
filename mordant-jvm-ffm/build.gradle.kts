@@ -5,6 +5,7 @@ plugins {
 
 kotlin {
     jvm()
+    jvmToolchain(22)
     sourceSets {
         commonMain.dependencies {
             implementation(project(":mordant"))
