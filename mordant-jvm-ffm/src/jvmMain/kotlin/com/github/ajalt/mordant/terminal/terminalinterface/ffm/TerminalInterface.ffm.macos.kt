@@ -69,7 +69,10 @@ internal class TerminalInterfaceFfmMacos : TerminalInterfaceJvmPosix() {
     override val termiosConstants: TermiosConstants get() = MacosTermiosConstants
 
     private companion object {
-        const val TIOCGWINSZ = 0x00005413
+        val TIOCGWINSZ = when (System.getProperty("os.arch")) {
+            "x86", "amd64" -> 0x00005413
+            else -> 0x40087468
+        }
         const val TCSADRAIN: Int = 0x1
     }
 
