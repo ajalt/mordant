@@ -3,6 +3,7 @@ package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 import com.github.ajalt.mordant.rendering.Size
 import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceJvmPosix
 import java.lang.foreign.Arena
+import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 
 @Suppress("ClassName", "PropertyName", "SpellCheckingInspection")
@@ -51,9 +52,13 @@ private class LinuxCLibrary {
 
     object MethodHandles : MethodHandlesHolder() {
         val isatty by handle(Layouts.INT, Layouts.INT)
-        val ioctl by handle(Layouts.INT, Layouts.INT, Layouts.LONG, Layouts.POINTER)
         val tcgetattr by handle(Layouts.INT, Layouts.INT, Layouts.POINTER)
         val tcsetattr by handle(Layouts.INT, Layouts.INT, Layouts.INT, Layouts.POINTER)
+        val ioctl by handle(
+            Layouts.INT, Layouts.INT, Layouts.LONG, Layouts.POINTER, linkerOptions = arrayOf(
+                Linker.Option.firstVariadicArg(2)
+            )
+        )
     }
 
     fun isatty(fd: Int): Boolean {

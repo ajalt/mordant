@@ -152,6 +152,7 @@ internal abstract class MethodHandlesHolder(
     protected fun handle(
         resLayout: MemoryLayout,
         vararg argLayouts: MemoryLayout,
+        linkerOptions: Array<Linker.Option> = emptyArray(),
     ) =
         PropertyDelegateProvider<MethodHandlesHolder, ReadOnlyProperty<Any?, MethodHandle>> { _, property ->
             val name = property.name
@@ -160,7 +161,8 @@ internal abstract class MethodHandlesHolder(
                     .map {
                         linker.downcallHandle(
                             it,
-                            FunctionDescriptor.of(resLayout, *argLayouts)
+                            FunctionDescriptor.of(resLayout, *argLayouts),
+                            *linkerOptions
                         )
                     }
                     .orElseThrow()
