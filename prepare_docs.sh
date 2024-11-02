@@ -29,6 +29,5 @@ EOM
 cat README.md \
   | sed '/## License/Q' \
   | sed -z 's/## Documentation[a-zA-z .\n()/:]*//g' \
-  | sed 's!https://ajalt.github.io/mordant/!/!g' \
   | sed 's!docs/img!img!g' \
   >> docs/index.md
