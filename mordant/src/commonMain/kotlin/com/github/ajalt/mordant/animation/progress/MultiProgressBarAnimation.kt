@@ -180,7 +180,7 @@ private class ProgressTaskImpl<T>(
             )
             val total = scope.total
 
-            val startTime = status.pauseTime ?: now
+            val startTime = status.startTime ?: now
             val finishTime = status.finishTime ?: now
             val pauseTime = status.pauseTime ?: now
 
