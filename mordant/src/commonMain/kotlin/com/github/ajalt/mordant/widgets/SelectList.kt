@@ -3,7 +3,13 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
-import com.github.ajalt.mordant.rendering.*
+import com.github.ajalt.mordant.rendering.BorderType
+import com.github.ajalt.mordant.rendering.Lines
+import com.github.ajalt.mordant.rendering.Span
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.Whitespace
+import com.github.ajalt.mordant.rendering.Widget
+import com.github.ajalt.mordant.rendering.WidthRange
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.table.verticalLayout
@@ -63,12 +69,29 @@ class SelectList private constructor(
         val description: Widget? = null,
         /** Whether this entry is marked as selected. */
         val selected: Boolean = false,
+        /** Return this value instead of title if not null. */
+        val value: String? = null,
     ) {
         constructor(title: String, description: String?, selected: Boolean = false)
                 : this(
             title = title,
             description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
-            selected = selected
+            selected = selected,
+            value = null
+        )
+        constructor(title: String, description: Widget?, selected: Boolean = false)
+                : this(
+            title = title,
+            description = description,
+            selected = selected,
+            value = null
+        )
+        constructor(title: String, description: String?, selected: Boolean = false, value: String? = null)
+                : this(
+            title = title,
+            description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
+            selected = selected,
+            value = value
         )
     }
 
