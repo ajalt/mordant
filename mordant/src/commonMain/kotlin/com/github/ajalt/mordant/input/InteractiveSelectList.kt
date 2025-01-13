@@ -7,7 +7,7 @@ import kotlin.jvm.JvmName
 /**
  * Display a list of items and allow the user to select one with the arrow keys and enter.
  *
- * @return the selected item value, or title of value is not specified, or null if the user canceled the selection
+ * @return the selected item value, or title if value is not specified, or null if the user canceled the selection
  */
 inline fun Terminal.interactiveSelectList(
     block: InteractiveSelectListBuilder.() -> Unit,
@@ -41,7 +41,7 @@ fun Terminal.interactiveSelectList(
  *
  * @param entries The list of items to select from
  * @param title The title to display above the list
- * @return the selected item value, or title of value is not specified, or null if the user canceled the selection
+ * @return the selected item value, or title if value is not specified, or null if the user canceled the selection
  */
 @JvmName("interactiveSelectListEntry")
 fun Terminal.interactiveSelectList(
@@ -73,7 +73,7 @@ inline fun Terminal.interactiveMultiSelectList(
  *
  * @param entries The list of items to select from
  * @param title The title to display above the list
- * @return the selected item value, or title of value is not specified, or null if the user canceled the selection
+ * @return the selected item value, or title if value is not specified, or null if the user canceled the selection
  */
 @JvmName("interactiveMultiSelectListEntry")
 fun Terminal.interactiveMultiSelectList(
