@@ -3,13 +3,7 @@ package com.github.ajalt.mordant.widgets
 import com.github.ajalt.mordant.internal.MppAtomicRef
 import com.github.ajalt.mordant.internal.ThemeString
 import com.github.ajalt.mordant.internal.ThemeStyle
-import com.github.ajalt.mordant.rendering.BorderType
-import com.github.ajalt.mordant.rendering.Lines
-import com.github.ajalt.mordant.rendering.Span
-import com.github.ajalt.mordant.rendering.TextStyle
-import com.github.ajalt.mordant.rendering.Whitespace
-import com.github.ajalt.mordant.rendering.Widget
-import com.github.ajalt.mordant.rendering.WidthRange
+import com.github.ajalt.mordant.rendering.*
 import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.table.verticalLayout
