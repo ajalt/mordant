@@ -82,7 +82,26 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         description: String,
         selected: Boolean = false,
     ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected)
+        config.entries += SelectList.Entry(title, description, selected, null)
+    }
+
+    /** Add an item to the list of items to select from */
+    fun addEntry(
+        title: String,
+        description: String,
+        selected: Boolean = false,
+        value: String? = null,
+    ): InteractiveSelectListBuilder = apply {
+        config.entries += SelectList.Entry(title, description, selected, value)
+    }
+
+    /** Add an item to the list of items to select from */
+    fun addEntry(
+        title: String,
+        description: Widget? = null,
+        selected: Boolean = false
+    ): InteractiveSelectListBuilder = apply {
+        config.entries += SelectList.Entry(title, description, selected, null)
     }
 
     /** Add an item to the list of items to select from */
@@ -90,8 +109,9 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
         title: String,
         description: Widget? = null,
         selected: Boolean = false,
+        value: String? = null
     ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected)
+        config.entries += SelectList.Entry(title, description, selected, value)
     }
 
     /** Add an item to the list of items to select from */
@@ -386,10 +406,10 @@ private class SelectInputAnimation(
                     }
 
                     key == keySubmit -> {
-                        if (singleSelect) copy(finished = true, result = listOf(entry.title))
+                        if (singleSelect) copy(finished = true, result = listOf(entry.value ?: entry.title))
                         else copy(
                             finished = true,
-                            result = items.filter { it.selected }.map { it.title })
+                            result = items.filter { it.selected }.map { it.value ?: it.title })
                     }
 
                     filtering && !key.alt && !key.ctrl -> {

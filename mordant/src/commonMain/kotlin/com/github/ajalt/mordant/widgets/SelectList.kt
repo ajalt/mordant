@@ -63,12 +63,29 @@ class SelectList private constructor(
         val description: Widget? = null,
         /** Whether this entry is marked as selected. */
         val selected: Boolean = false,
+        /** Return this value instead of title if not null. */
+        val value: String? = null,
     ) {
         constructor(title: String, description: String?, selected: Boolean = false)
                 : this(
             title = title,
             description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
-            selected = selected
+            selected = selected,
+            value = null
+        )
+        constructor(title: String, description: Widget?, selected: Boolean = false)
+                : this(
+            title = title,
+            description = description,
+            selected = selected,
+            value = null
+        )
+        constructor(title: String, description: String?, selected: Boolean = false, value: String? = null)
+                : this(
+            title = title,
+            description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
+            selected = selected,
+            value = value
         )
     }
 
