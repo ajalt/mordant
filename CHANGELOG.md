@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Possibility to specify hidden return value in `Terminal.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder`.
 ## 3.0.1
 ### Fixed
 - Fixed terminal size detection in the `mordant-jvm-ffm` module on macOS [(#238)](https://github.com/ajalt/mordant/issues/238)

@@ -8,6 +8,7 @@ import com.github.ajalt.mordant.table.Borders
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.table.verticalLayout
 import com.github.ajalt.mordant.terminal.Terminal
+import kotlin.jvm.JvmOverloads
 
 /**
  * A list widget with selectable items.
@@ -56,19 +57,23 @@ class SelectList private constructor(
         unselectedMarkerStyle = ThemeStyle.of("select.unselected-marker", unselectedMarkerStyle),
     )
 
-    data class Entry(
+    data class Entry @JvmOverloads constructor(
         /** The title of the entry. */
         val title: String,
         /** An optional description of the entry. */
         val description: Widget? = null,
         /** Whether this entry is marked as selected. */
         val selected: Boolean = false,
+        /** Return this value instead of title if not null. */
+        val value: String? = null,
     ) {
-        constructor(title: String, description: String?, selected: Boolean = false)
+        @JvmOverloads
+        constructor(title: String, description: String?, selected: Boolean = false, value: String? = null)
                 : this(
             title = title,
             description = description?.let { Text(it, whitespace = Whitespace.PRE_WRAP) },
-            selected = selected
+            selected = selected,
+            value = value
         )
     }
 
