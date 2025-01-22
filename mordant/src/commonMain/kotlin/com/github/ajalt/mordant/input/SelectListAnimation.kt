@@ -89,15 +89,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     }
 
     /** Add an item to the list of items to select from */
-    fun addEntry(
-        title: String,
-        description: Widget? = null,
-        selected: Boolean = false
-    ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected, null)
-    }
-
-    /** Add an item to the list of items to select from */
+    @JvmOverloads
     fun addEntry(
         title: String,
         description: Widget? = null,
@@ -110,11 +102,6 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     /** Add an item to the list of items to select from */
     fun addEntry(entry: SelectList.Entry): InteractiveSelectListBuilder = apply {
         config.entries += entry
-    }
-
-    /** Add an item to the list of items to select from */
-    fun addEntry(entry: String): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(entry)
     }
 
     /** Set the title to display above the list */
