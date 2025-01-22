@@ -12,6 +12,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.SelectList
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmOverloads
 
 private class SelectConfig(
     var entries: MutableList<SelectList.Entry> = mutableListOf(),
@@ -77,15 +78,7 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     }
 
     /** Add an item to the list of items to select from */
-    fun addEntry(
-        title: String,
-        description: String,
-        selected: Boolean = false,
-    ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected, null)
-    }
-
-    /** Add an item to the list of items to select from */
+    @JvmOverloads
     fun addEntry(
         title: String,
         description: String,
