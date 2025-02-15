@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+## Changed
+- `Terminal.rawPrint` now takes a `CharSequence` instead of a `String`
+
 ## 3.0.1
 ### Fixed
 - Fixed terminal size detection in the `mordant-jvm-ffm` module on macOS [(#238)](https://github.com/ajalt/mordant/issues/238)

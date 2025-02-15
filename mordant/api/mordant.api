@@ -1157,7 +1157,9 @@ public final class com/github/ajalt/mordant/terminal/Terminal {
 	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)V
 	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Object;Lcom/github/ajalt/mordant/rendering/Whitespace;Lcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/OverflowWrap;Ljava/lang/Integer;ZILjava/lang/Object;)V
 	public static synthetic fun println$default (Lcom/github/ajalt/mordant/terminal/Terminal;ZILjava/lang/Object;)V
-	public final fun rawPrint (Ljava/lang/String;Z)V
+	public final fun rawPrint (Ljava/lang/CharSequence;Z)V
+	public final synthetic fun rawPrint (Ljava/lang/String;Z)V
+	public static synthetic fun rawPrint$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/CharSequence;ZILjava/lang/Object;)V
 	public static synthetic fun rawPrint$default (Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/String;ZILjava/lang/Object;)V
 	public final fun readLineOrNull (Z)Ljava/lang/String;
 	public final fun render (Lcom/github/ajalt/mordant/rendering/Widget;)Ljava/lang/String;
