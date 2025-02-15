@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.input
 
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.TimeoutException
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
@@ -102,11 +103,13 @@ class RawModeScope internal constructor(
         timeout: Duration, skip: (InputEvent) -> Boolean,
     ): InputEvent? {
         val t = TimeSource.Monotonic.markNow() + timeout
-        do {
-            val event = terminal.terminalInterface.readInputEvent(t, mouseTracking) ?: continue
-            if (event is MouseEvent && mouseTracking == MouseTracking.Off || skip(event)) continue
-            return event
-        } while (t.hasNotPassedNow())
+        try {
+            do {
+                val event = terminal.terminalInterface.readInputEvent(t, mouseTracking) ?: continue
+                if (event is MouseEvent && mouseTracking == MouseTracking.Off || skip(event)) continue
+                return event
+            } while (t.hasNotPassedNow())
+        } catch (_: TimeoutException) {}
         return null
     }
 
