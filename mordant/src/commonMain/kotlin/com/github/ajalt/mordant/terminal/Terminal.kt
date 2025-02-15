@@ -246,8 +246,13 @@ class Terminal private constructor(
      *
      * This is useful if you want to print ANSI escape codes manually.
      */
+    fun rawPrint(message: CharSequence, stderr: Boolean = false) {
+        sendPrintRequest(PrintRequest(message.toString(), false, stderr))
+    }
+
+    @Deprecated("", level=DeprecationLevel.HIDDEN)
     fun rawPrint(message: String, stderr: Boolean = false) {
-        sendPrintRequest(PrintRequest(message, false, stderr))
+        rawPrint(message as CharSequence, stderr)
     }
 
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
