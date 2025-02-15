@@ -1260,6 +1260,10 @@ public final class com/github/ajalt/mordant/terminal/TerminalRecorder : com/gith
 	public final fun stdout ()Ljava/lang/String;
 }
 
+public final class com/github/ajalt/mordant/terminal/TimeoutException : java/lang/RuntimeException {
+	public fun <init> ()V
+}
+
 public final class com/github/ajalt/mordant/terminal/YesNoPrompt : com/github/ajalt/mordant/terminal/Prompt {
 	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/terminal/Terminal;Ljava/lang/Boolean;ZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
