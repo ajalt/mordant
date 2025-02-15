@@ -1,8 +1,11 @@
 # Changelog
 
 ## Unreleased
-## Changed
-- `Terminal.rawPrint` now takes a `CharSequence` instead of a `String`
+### Changed
+- `Terminal.rawPrint` now takes a `CharSequence` instead of a `String` [(#255)](https://github.com/ajalt/mordant/issues/255)
+
+### Fixed
+- Fixed `Terminal.read*OrNull` throwing an exception on timeout on Windows. [(#256)](https://github.com/ajalt/mordant/issues/256)
 
 ## 3.0.1
 ### Fixed

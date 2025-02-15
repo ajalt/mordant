@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 
 import com.github.ajalt.mordant.rendering.Size
+import com.github.ajalt.mordant.terminal.TimeoutException
 import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceWindows
 import java.lang.foreign.*
 
@@ -279,7 +280,7 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
         val stdin = stdinHandle
         val waitResult = kernel.WaitForSingleObject(stdin, dwMilliseconds)
         if (waitResult != 0) {
-            throw RuntimeException("Timeout reading from console input")
+            throw TimeoutException()
         }
         val inputEvents = arena.allocate(WinKernel32Library.INPUT_RECORD.Layout.layout, 1)
         val eventsReadSeg = arena.allocateInt()
