@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 3.0.2
 ### Changed
 - `Terminal.rawPrint` now takes a `CharSequence` instead of a `String` [(#255)](https://github.com/ajalt/mordant/issues/255)
 
