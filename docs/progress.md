@@ -249,7 +249,7 @@ animation.refresh(refreshAll = true)
 [Spinner]:                         api/mordant/com.github.ajalt.mordant.widgets/-spinner/index.html
 [addTask]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/add-task.html
 [advance]:                         api/mordant/com.github.ajalt.mordant.animation.progress/advance.html
-[animateOnCoroutine]:              api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
+[animateOnCoroutine]:              api/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
 [animateOnThread]:                 api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html
 [cell]:                            api/mordant/com.github.ajalt.mordant.widgets.progress/-progress-layout-scope/cell.html
 [completed]:                       api/mordant/com.github.ajalt.mordant.animation.progress/-progress-task/completed.html
@@ -260,7 +260,7 @@ animation.refresh(refreshAll = true)
 [progressBarContextLayout]:        api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-context-layout.html
 [progressBarLayout]:               api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar-layout.html
 [progressBar]:                     api/mordant/com.github.ajalt.mordant.widgets.progress/progress-bar.html
-[refresh]:                         api/mordant/com.github.ajalt.mordant.animation.progress/-progress-bar-animation/refresh.html
+[refresh]:                         api/mordant/com.github.ajalt.mordant.animation/-refreshable/refresh.html
 [speed]:                           api/mordant/com.github.ajalt.mordant.widgets.progress/speed.html
 [spinner]:                         api/mordant/com.github.ajalt.mordant.widgets.progress/spinner.html
 [text]:                            api/mordant/com.github.ajalt.mordant.widgets.progress/text.html

@@ -468,7 +468,7 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [README]:                   https://github.com/ajalt/mordant
 [StringPrompt]:             api/mordant/com.github.ajalt.mordant.terminal/-string-prompt/index.html
 [Terminal.animation]:       api/mordant/com.github.ajalt.mordant.animation/animation.html
-[Terminal.prompt]:          api/mordant/com.github.ajalt.mordant.terminal/-terminal/prompt.html
+[Terminal.prompt]:          api/mordant/com.github.ajalt.mordant.terminal/prompt.html
 [Terminal.textAnimation]:   api/mordant/com.github.ajalt.mordant.animation/text-animation.html
 [Terminal]:                 api/mordant/com.github.ajalt.mordant.terminal/-terminal/index.html
 [TextAlign]:                api/mordant/com.github.ajalt.mordant.rendering/-text-align/index.html
@@ -477,7 +477,7 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [Text]:                     api/mordant/com.github.ajalt.mordant.widgets/-text/index.html
 [Whitespace]:               api/mordant/com.github.ajalt.mordant.rendering/-whitespace/index.html
 [YesNoPrompt]:              api/mordant/com.github.ajalt.mordant.terminal/-yes-no-prompt/index.html
-[animateOnCoroutine]:       api/extensions/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
+[animateOnCoroutine]:       api/mordant-coroutines/com.github.ajalt.mordant.animation.coroutines/animate-in-coroutine.html
 [animateOnThread]:          api/mordant/com.github.ajalt.mordant.animation.progress/animate-on-thread.html
 [color.bg]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/bg.html
 [color.on]:                 api/mordant/com.github.ajalt.mordant.rendering/-text-style/on.html
@@ -485,10 +485,5 @@ creating a subclass of the [Prompt] class. Mordant includes [StringPrompt], [Yes
 [grid]:                     api/mordant/com.github.ajalt.mordant.table/grid.html
 [horizontalLayout]:         api/mordant/com.github.ajalt.mordant.table/horizontal-layout.html
 [println]:                  api/mordant/com.github.ajalt.mordant.terminal/-terminal/println.html
-[progress.advance]:         api/mordant/com.github.ajalt.mordant.animation/-progress-animation/advance.html
-[progress.build]:           api/mordant/com.github.ajalt.mordant.widgets/-progress-layout/build.html
-[progress.start]:           api/mordant/com.github.ajalt.mordant.animation/-progress-animation/start.html
-[progress.update]:          api/mordant/com.github.ajalt.mordant.animation/-progress-animation/update.html
-[progressAnimation]:        api/mordant/com.github.ajalt.mordant.animation/progress-animation.html
 [table]:                    api/mordant/com.github.ajalt.mordant.table/table.html
 [verticalLayout]:           api/mordant/com.github.ajalt.mordant.table/vertical-layout.html

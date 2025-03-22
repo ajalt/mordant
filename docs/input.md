@@ -291,8 +291,8 @@ function.
 [readLineOrNull]:               api/mordant/com.github.ajalt.mordant.terminal/-terminal/read-line-or-null.html
 [readMouse]:                    api/mordant/com.github.ajalt.mordant.input/-raw-mode-scope/read-mouse.html
 [receiveEvents]:                api/mordant/com.github.ajalt.mordant.input/receive-events.html
-[receiveEventsFlow]:            api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html
-[receiveKeyEventsFlow]:         api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html
+[receiveEventsFlow]:            api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html
+[receiveKeyEventsFlow]:         api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html
 [receiveKeyEvents]:             api/mordant/com.github.ajalt.mordant.input/receive-key-events.html
-[receiveMouseEventsFlow]:       api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html
+[receiveMouseEventsFlow]:       api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html
 [receiveMouseEvents]:           api/mordant/com.github.ajalt.mordant.input/receive-mouse-events.html
