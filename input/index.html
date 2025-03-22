@@ -629,7 +629,7 @@ events like <code>ctrl-c</code> manually if you want your users to be able to ex
 </div>
 <h3 id="reading-events-with-coroutine-flows">Reading Events with Coroutine Flows<a class="headerlink" href="#reading-events-with-coroutine-flows" title="Permanent link">&para;</a></h3>
 <p>The simplest way to read events is to include the <code>mordant-coroutines</code> module,
-and use <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, or <a href="api/extensions/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
+and use <a href="../api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-events-flow.html">receiveEventsFlow</a>, <a href="../api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-key-events-flow.html">receiveKeyEventsFlow</a>, or <a href="../api/mordant-coroutines/com.github.ajalt.mordant.input.coroutines/receive-mouse-events-flow.html">receiveMouseEventsFlow</a> to receive
 events as a <a href="https://kotlinlang.org/docs/reference/coroutines/flow.html">Flow</a>. These functions will handle setting up raw mode and restoring the terminal to
 its original state when they are done.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example of receiveEventsFlow</label><label for="__tabbed_1_2">Example of receiveMouseEventsFlow</label><label for="__tabbed_1_3">Example of receiveEventsFlow</label></div>
@@ -761,12 +761,12 @@ app and operating system. Some things to keep in mind:</p>
   <code>readline</code> module to read input with callbacks instead of blocking, or in the browser you can use
   the <code>keydown</code> and <code>mousedown</code> events.</li>
 </ul>
-<p>!! danger</p>
-<div class="codehilite"><pre><span></span><code>Reading events in raw mode on Node.js is not fully supported on Windows due to limitations in
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Reading events in raw mode on Node.js is not fully supported on Windows due to limitations in
 Node.js. When reading events, timeouts are ignored and the call will block until a key is pressed.
-Keys like the arrow keys, function keys, and some modifier keys may not be reported at all.
-</code></pre></div>
-
+Keys like the arrow keys, function keys, and some modifier keys may not be reported at all.</p>
+</div>
 <h2 id="interactive-list-selection">Interactive List Selection<a class="headerlink" href="#interactive-list-selection" title="Permanent link">&para;</a></h2>
 <p>Mordant includes a SelectList widget that you can use to create a list of items that the user can
 select from with the arrow keys and enter.</p>
