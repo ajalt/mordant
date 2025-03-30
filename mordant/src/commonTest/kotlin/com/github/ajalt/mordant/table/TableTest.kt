@@ -11,8 +11,10 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.test.RenderingTest
 import com.github.ajalt.mordant.widgets.Padding
 import com.github.ajalt.mordant.widgets.Text
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.data.blocking.forAll
 import io.kotest.data.row
+import io.kotest.matchers.string.shouldContain
 import kotlin.js.JsName
 import kotlin.test.Test
 
@@ -314,8 +316,8 @@ class TableTest : RenderingTest() {
         row(3, 4, 5)
     }
 
-    @[Test JsName("row_and_column_span")]
-    fun `row and column span`() = doBodyTest(
+    @[Test JsName("row_and_column_span_text_align")]
+    fun `row and column span text align`() = doBodyTest(
         """
     ░┌───────────┬───┐
     ░│           │ 1 │
