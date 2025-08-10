@@ -439,6 +439,7 @@ private class SelectInputAnimation(
             "ArrowDown" -> "↓"
             "ArrowLeft" -> "←"
             "ArrowRight" -> "→"
+            " " -> "space"
             else -> key.key
         }
         if (key.alt) k = "alt+$k"
