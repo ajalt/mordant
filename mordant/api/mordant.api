@@ -212,10 +212,14 @@ public final class com/github/ajalt/mordant/input/InteractiveSelectListBuilder {
 	public fun <init> (Lcom/github/ajalt/mordant/terminal/Terminal;)V
 	public final fun addEntry (Lcom/github/ajalt/mordant/widgets/SelectList$Entry;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun addEntry (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun addEntry (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun addEntry (Ljava/lang/String;Ljava/lang/String;Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
-	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
-	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun addEntry (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public static synthetic fun addEntry$default (Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun clearOnExit (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun createMultiSelectInputAnimation ()Lcom/github/ajalt/mordant/input/InputReceiverAnimation;
 	public final fun createSingleSelectInputAnimation ()Lcom/github/ajalt/mordant/input/InputReceiverAnimation;
@@ -1579,19 +1583,26 @@ public final class com/github/ajalt/mordant/widgets/SelectList : com/github/ajal
 }
 
 public final class com/github/ajalt/mordant/widgets/SelectList$Entry {
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;)V
 	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/github/ajalt/mordant/rendering/Widget;
 	public final fun component3 ()Z
-	public final fun copy (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;Z)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
-	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/SelectList$Entry;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
+	public static synthetic fun copy$default (Lcom/github/ajalt/mordant/widgets/SelectList$Entry;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/Widget;ZLjava/lang/String;ILjava/lang/Object;)Lcom/github/ajalt/mordant/widgets/SelectList$Entry;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDescription ()Lcom/github/ajalt/mordant/rendering/Widget;
 	public final fun getSelected ()Z
 	public final fun getTitle ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

@@ -16,28 +16,38 @@ class InteractiveSelectListTest {
     private val t = Terminal(terminalInterface = rec)
 
     @[Test JsName("single_select_strings")]
-    fun `single select strings`() = doSingleSelectTest {
+    fun `single select strings`() = doSingleSelectTest({
         t.interactiveSelectList(listOf("a", "b", "c"))
-    }
+    }, "b")
 
     @[Test JsName("single_select_entries")]
-    fun `single select entries`() = doSingleSelectTest {
+    fun `single select entries`() = doSingleSelectTest({
         t.interactiveSelectList(listOf(Entry("a"), Entry("b"), Entry("c")))
-    }
+    }, "b")
+
+    @[Test JsName("single_select_entries_with_value")]
+    fun `single select entries with value`() = doSingleSelectTest({
+        t.interactiveSelectList(listOf(Entry("a", value = "AA"), Entry("b", value = "BB"), Entry("c", value = "CC")))
+    }, "BB")
 
     @[Test JsName("multi_select_strings")]
-    fun `multi select strings`() = doMultiSelectTest {
+    fun `multi select strings`() = doMultiSelectTest({
         t.interactiveMultiSelectList(listOf("a", "b", "c"))
-    }
+    }, listOf("b", "c"))
 
     @[Test JsName("multi_select_entries")]
-    fun `multi select entries`() = doMultiSelectTest {
+    fun `multi select entries`() = doMultiSelectTest({
         t.interactiveMultiSelectList(listOf(Entry("a"), Entry("b"), Entry("c")))
-    }
+    }, listOf("b", "c"))
 
-    private fun doSingleSelectTest(runList: () -> String?) {
+    @[Test JsName("multi_select_entries_with_values")]
+    fun `multi select entries with values`() = doMultiSelectTest({
+        t.interactiveMultiSelectList(listOf(Entry("a", value = "AA"), Entry("b", value = "BB"), Entry("c", value = "CC")))
+    }, listOf("BB", "CC"))
+
+    private fun doSingleSelectTest(runList: () -> String?, expected: String) {
         rec.inputEvents = mutableListOf(KeyboardEvent("ArrowDown"), KeyboardEvent("Enter"))
-        runList() shouldBe "b"
+        runList() shouldBe expected
         rec.stdout() shouldContain  """
         ░❯ a
         ░  b
@@ -45,7 +55,7 @@ class InteractiveSelectListTest {
         """.trimMargin("░")
     }
 
-    private fun doMultiSelectTest(runList: () -> List<String>?) {
+    private fun doMultiSelectTest(runList: () -> List<String>?, expected: List<String>) {
         rec.inputEvents = mutableListOf(
             KeyboardEvent("ArrowDown"),
             KeyboardEvent("x"),
@@ -53,7 +63,7 @@ class InteractiveSelectListTest {
             KeyboardEvent("x"),
             KeyboardEvent("Enter"),
         )
-        runList() shouldBe listOf("b", "c")
+        runList() shouldBe expected
         rec.stdout() shouldContain  """
         ░❯ • a
         ░  • b

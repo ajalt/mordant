@@ -12,6 +12,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.SelectList
 import com.github.ajalt.mordant.widgets.Text
 import kotlin.jvm.JvmName
+import kotlin.jvm.JvmOverloads
 
 private class SelectConfig(
     var entries: MutableList<SelectList.Entry> = mutableListOf(),
@@ -77,31 +78,30 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     }
 
     /** Add an item to the list of items to select from */
+    @JvmOverloads
     fun addEntry(
         title: String,
         description: String,
         selected: Boolean = false,
+        value: String? = null,
     ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected)
+        config.entries += SelectList.Entry(title, description, selected, value)
     }
 
     /** Add an item to the list of items to select from */
+    @JvmOverloads
     fun addEntry(
         title: String,
         description: Widget? = null,
         selected: Boolean = false,
+        value: String? = null
     ): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(title, description, selected)
+        config.entries += SelectList.Entry(title, description, selected, value)
     }
 
     /** Add an item to the list of items to select from */
     fun addEntry(entry: SelectList.Entry): InteractiveSelectListBuilder = apply {
         config.entries += entry
-    }
-
-    /** Add an item to the list of items to select from */
-    fun addEntry(entry: String): InteractiveSelectListBuilder = apply {
-        config.entries += SelectList.Entry(entry)
     }
 
     /** Set the title to display above the list */
@@ -386,10 +386,10 @@ private class SelectInputAnimation(
                     }
 
                     key == keySubmit -> {
-                        if (singleSelect) copy(finished = true, result = listOf(entry.title))
+                        if (singleSelect) copy(finished = true, result = listOf(entry.value ?: entry.title))
                         else copy(
                             finished = true,
-                            result = items.filter { it.selected }.map { it.title })
+                            result = items.filter { it.selected }.map { it.value ?: it.title })
                     }
 
                     filtering && !key.alt && !key.ctrl -> {

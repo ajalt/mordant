@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Added
+- Possibility to specify hidden return value in `Terminal.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder`.
 
 ## 3.0.2
 ### Changed
