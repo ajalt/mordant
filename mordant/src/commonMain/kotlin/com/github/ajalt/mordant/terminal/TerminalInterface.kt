@@ -88,3 +88,5 @@ data class PrintRequest(
      */
     val stderr: Boolean,
 )
+
+class TimeoutException : RuntimeException("Timeout waiting for input")

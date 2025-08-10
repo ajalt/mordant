@@ -3,6 +3,14 @@
 ## Unreleased
 ### Added
 - Possibility to specify hidden return value in `Terminal.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder`.
+
+## 3.0.2
+### Changed
+- `Terminal.rawPrint` now takes a `CharSequence` instead of a `String` [(#255)](https://github.com/ajalt/mordant/issues/255)
+
+### Fixed
+- Fixed `Terminal.read*OrNull` throwing an exception on timeout on Windows. [(#256)](https://github.com/ajalt/mordant/issues/256)
+
 ## 3.0.1
 ### Fixed
 - Fixed terminal size detection in the `mordant-jvm-ffm` module on macOS [(#238)](https://github.com/ajalt/mordant/issues/238)
