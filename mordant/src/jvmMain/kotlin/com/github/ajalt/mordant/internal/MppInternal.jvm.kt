@@ -74,7 +74,7 @@ internal actual fun readLineOrNullMpp(hideInput: Boolean): String? {
     if (hideInput) {
         val console = System.console()
         if (console != null) {
-            return console.readPassword().concatToString()
+            return console.readPassword()?.concatToString()
         }
     }
     return readlnOrNull()
