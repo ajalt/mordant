@@ -51,6 +51,11 @@ val r8JarProvider by tasks.register<JavaExec>("r8Jar") {
     inputs.files(fatJarFile, rulesFile)
     outputs.file(r8File)
 
+    javaLauncher = javaToolchains.launcherFor { 
+        languageVersion.set(JavaLanguageVersion.of(22))
+        vendor = JvmVendorSpec.AZUL // Zulu
+    }
+
     classpath(r8)
     mainClass.set("com.android.tools.r8.R8")
     args = listOf(
