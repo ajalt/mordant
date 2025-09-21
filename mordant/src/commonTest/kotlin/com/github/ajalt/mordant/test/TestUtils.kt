@@ -33,13 +33,20 @@ fun TerminalRecorder.latestOutput(): String {
 
 infix fun String.shouldMatchRender(expected: String) = shouldMatchRender(expected, true)
 
-fun String.shouldMatchRender(expected: String, trimMargin: Boolean) {
+fun String.shouldMatchRender(
+    expected: String, trimMargin: Boolean,
+    printWithIndent: String = "",
+) {
     try {
         val trimmed = if (trimMargin) expected.trimMargin("░") else expected
         this shouldBe trimmed.replace("░", "")
     } catch (e: Throwable) {
         println()
-        println(this)
+        if (printWithIndent.isEmpty()) {
+            println(this)
+        } else {
+            println(prependIndent(printWithIndent))
+        }
         throw e
     }
 }

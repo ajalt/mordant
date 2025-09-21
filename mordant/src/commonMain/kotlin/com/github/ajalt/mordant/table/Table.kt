@@ -340,10 +340,10 @@ private class TableRenderer(
         }
 
         val char = if (
-            borderTop || y == 0 && tableBorders.t || y == rowCount && tableBorders.b || cellAt(
-                x,
-                y - 1
-            ).b
+            borderTop ||
+            y == 0 && tableBorders.t ||
+            y == rowCount && tableBorders.b ||
+            cellAt(x, y - 1).b
         ) {
             sectionOfRow(y).ew
         } else " "
@@ -395,11 +395,13 @@ private class TableRenderer(
             }
 
             is Cell.Content -> {
-                val cellWidth = ((x..<x + cell.columnSpan).sumOf { columnWidths[it] } +
-                        ((x + 1)..<(x + cell.columnSpan)).count { columnBorders[it + 1] }
-                        ).coerceAtLeast(0)
-                val cellHeight = (y..<y + cell.rowSpan).sumOf { rowHeights[it] } +
-                        ((y + 1)..<(y + cell.rowSpan)).count { rowBorders[it + 1] }
+                val contentWidth = (x..<x + cell.columnSpan).sumOf { columnWidths[it] }
+                val borderWidth = ((x + 1)..<(x + cell.columnSpan)).count { columnBorders[it] }
+                val cellWidth = (contentWidth + borderWidth).coerceAtLeast(0)
+
+                val contentHeight = (y..<y + cell.rowSpan).sumOf { rowHeights[it] }
+                val borderHeight = ((y + 1)..<(y + cell.rowSpan)).count { rowBorders[it] }
+                val cellHeight = contentHeight + borderHeight
                 cell.content.render(t, cellWidth)
                     .withStyle(cell.style)
                     .setSize(cellWidth, cellHeight, cell.verticalAlign, cell.textAlign)

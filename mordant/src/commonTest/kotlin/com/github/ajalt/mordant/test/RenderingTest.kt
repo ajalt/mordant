@@ -17,6 +17,7 @@ abstract class RenderingTest(
         tabWidth: Int = 8,
         hyperlinks: Boolean = true,
         theme: Theme = Theme.Default,
+        printWithIndent: String = "",
         transformActual: (String) -> String = { it },
     ) {
         val t = Terminal(
@@ -28,6 +29,6 @@ abstract class RenderingTest(
             tabWidth = tabWidth
         )
         val actual = transformActual(t.render(widget))
-        actual.shouldMatchRender(expected, trimMargin)
+        actual.shouldMatchRender(expected, trimMargin, printWithIndent)
     }
 }
