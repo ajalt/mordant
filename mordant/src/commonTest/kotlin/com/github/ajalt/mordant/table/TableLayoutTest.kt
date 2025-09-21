@@ -416,6 +416,9 @@ class TableLayoutTest : RenderingTest() {
         ░├───┬───┼───┤
         ░│ C │ D │ E │
         ░└───┴───┴───┘
+
+        This issue is caused because the table width is calculated as 4 because B's
+        columnSpan is left at 2 instead of being truncated in insertCell.
          */
         """
     ░┌───────┬─────┐░
@@ -492,11 +495,11 @@ class TableLayoutTest : RenderingTest() {
     ░┌───┬───┐    ░
     ░│ A │ B │    ░
     ░│   │   │    ░
-    ░├   ───┤   │    ░
+    ░├───┤   │    ░
     ░│ C │   │    ░
     ░├───┤   ├───┐░
     ░│ D │   │ E │░
-    ░   └───┴───┴───┘░
+    ░└───┴───┴───┘░
     """
     ) {
         row {
@@ -571,6 +574,31 @@ class TableLayoutTest : RenderingTest() {
         row("C")
         row("D", "E", "F", "G", "H", "I", "J", "K")
     }
+
+    @[Test JsName("row_span_custom_borders")]
+    fun `row span custom borders`() = doBodyTest(
+        """
+    ░┌───┬───┐
+    ░│ 1 │ 2 │
+    ░│   │ 3 │
+    ░├───┼───┤
+    ░│ 4 │ 5 │
+    ░└───┴───┘
+    """
+    ) {
+        cellBorders = LEFT_RIGHT
+        row {
+            cellBorders = LEFT_TOP_RIGHT
+            cell("1") { rowSpan = 2 }
+            cell(2)
+        }
+        row(3)
+        row {
+            cellBorders = ALL
+            cells(4, 5)
+        }
+    }
+
 
     @[Test JsName("overlapping_spans")]
     fun `overlapping spans`() {

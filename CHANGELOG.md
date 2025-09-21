@@ -3,8 +3,12 @@
 ## Unreleased
 ### Added
 - Possibility to specify hidden return value in `Terminal.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder`.
+
 ### Changed
 - The space key is now printed as "space" in the interactive select list.  [(#268)](https://github.com/ajalt/mordant/issues/268)
+
+### Fixed
+- Fixed table border being drawn incorrectly in some tables that use rowspan. [(#272)](https://github.com/ajalt/mordant/issues/272)
 
 ## 3.0.2
 ### Changed

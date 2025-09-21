@@ -80,7 +80,7 @@ operator fun Padding.plus(other: Padding): Padding {
     )
 }
 
-internal class Padded private constructor(
+internal data class Padded(
     internal val content: Widget,
     private val padding: Padding,
     private val padEmptyLines: Boolean,
