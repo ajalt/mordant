@@ -13,6 +13,8 @@ on:
       - 'docs/**'
       - 'samples/**'
       - '*.md'
+  workflow_dispatch:
+
 jobs:
   test:
     strategy:
