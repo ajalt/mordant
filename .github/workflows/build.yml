@@ -53,15 +53,54 @@ jobs:
             :mordant-markdown:check
             :test:graalvm:nativeTest
             --stacktrace
-      - name: Run R8 Jar
+
+      - name: Upload R8 Jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: java -jar test/proguard/build/libs/main-r8.jar
+        uses: actions/upload-artifact@v5
+        with:
+          name: main-r8-jar
+          path: 'test/proguard/build/libs/main-r8.jar'
+          retention-days: 1
+
       - name: Upload the build report
         if: failure()
         uses: actions/upload-artifact@master
         with:
           name: build-report-${{ matrix.os }}
           path: '**/build/reports'
+
+  test-jvm-compatibility:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [17, 21, 25]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Download R8 Jar
+        uses: actions/download-artifact@v6
+        with:
+          name: main-r8-jar
+          path: artifacts
+
+      - name: Run R8 Jar without a tty without enable-native-access all-unnamed
+        run: java -jar artifacts/main-r8.jar
+
+      - name: Run R8 Jar without a tty with enable-native-access all-unnamed
+        run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
+
+      - name: Run R8 Jar with a tty without enable-native-access all-unnamed
+        shell: 'script -q -e -c "bash {0}"'
+        run: java -jar artifacts/main-r8.jar
+
+      - name: Run R8 Jar with a tty with enable-native-access all-unnamed
+        shell: 'script -q -e -c "bash {0}"'
+        run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
+
   publish-snapshot:
     needs: test
     runs-on: macos-latest

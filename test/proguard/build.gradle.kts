@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     kotlin("jvm")
 }
@@ -16,6 +19,15 @@ dependencies {
     r8(libs.r8)
 }
 
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JVM_17)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(17)
+}
 
 val fatJar by tasks.register<Jar>("fatJar") {
     archiveClassifier = "fat"
