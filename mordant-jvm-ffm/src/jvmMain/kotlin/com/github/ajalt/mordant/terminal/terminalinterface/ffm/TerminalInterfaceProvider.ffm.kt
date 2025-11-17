@@ -7,13 +7,8 @@ import com.oracle.svm.core.annotate.TargetClass
 
 class TerminalInterfaceProviderFfm : TerminalInterfaceProvider {
     override fun load(): TerminalInterface? {
-        try {
-            if (!TerminalInterfaceProviderFfm::class.java.module.isNativeAccessEnabled()) {
-                return null
-            }
-        } catch (e: NoSuchMethodError) {
-           // isNativeAccessEnabled doesn't exist on old JDKs
-           return null
+        if (Runtime.version().feature() < 22 || !TerminalInterfaceProviderFfm::class.java.module.isNativeAccessEnabled()) {
+            return null
         }
         val os = System.getProperty("os.name")
         return when {

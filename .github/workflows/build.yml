@@ -102,7 +102,7 @@ jobs:
         run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
 
   publish-snapshot:
-    needs: test
+    needs: test-jvm-compatibility
     runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
     steps:
