@@ -74,8 +74,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
         java-version: [17, 21, 25]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-java@v5
         with:
@@ -93,6 +94,24 @@ jobs:
       - name: Run R8 Jar without a tty with enable-native-access all-unnamed
         run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
 
+  test-jvm-compatibility-interactive-linux:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [17, 21, 25]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Download R8 Jar
+        uses: actions/download-artifact@v6
+        with:
+          name: main-r8-jar
+          path: artifacts
+
       - name: Run R8 Jar with a tty without enable-native-access all-unnamed
         shell: 'script -q -e -c "bash {0}"'
         run: java -jar artifacts/main-r8.jar
@@ -101,8 +120,37 @@ jobs:
         shell: 'script -q -e -c "bash {0}"'
         run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
 
+  test-jvm-compatibility-interactive-macos:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        java-version: [17, 21, 25]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Download R8 Jar
+        uses: actions/download-artifact@v6
+        with:
+          name: main-r8-jar
+          path: artifacts
+
+      - name: Run R8 Jar with a tty without enable-native-access all-unnamed
+        shell: 'script -q /dev/null bash -c "bash {0}"'
+        run: java -jar artifacts/main-r8.jar
+
+      - name: Run R8 Jar with a tty with enable-native-access all-unnamed
+        shell: 'script -q /dev/null bash -c "bash {0}"'
+        run: java --enable-native-access=ALL-UNNAMED -jar artifacts/main-r8.jar
+
   publish-snapshot:
-    needs: test-jvm-compatibility
+    needs:
+      - test-jvm-compatibility
+      - test-jvm-compatibility-interactive-linux
+      - test-jvm-compatibility-interactive-macos
     runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
     steps:
