@@ -92,7 +92,10 @@ internal class PosixEventParser(
                     read() ?: return null
                 } else if (ch == 'M') {
                     // mouse event
-                    return processMouseEvent(timeout)
+                    return processMouseEventX10(timeout)
+                } else if (ch == '<') {
+                    // SGR mouse event
+                    return processMouseEventSgr(timeout)
                 }
 
                 val cmdStart = s.length - 1
@@ -351,7 +354,7 @@ internal class PosixEventParser(
         )
     }
 
-    private fun processMouseEvent(timeout: TimeMark): InputEvent? {
+    private fun processMouseEventX10(timeout: TimeMark): InputEvent? {
         // Mouse event coordinates are raw values, not decimal text, and they're sometimes utf-8
         // encoded to fit larger values.
         val cb = readUtf8Int(timeout) ?: return null
@@ -362,19 +365,43 @@ internal class PosixEventParser(
         val cy = readUtf8Int(TimeSource.Monotonic.markNow() + 1.milliseconds).let {
             if (it == null) 0 else it - 33
         }
+        val release = (cb and 3) == 3 && (cb and 64) == 0
+        return buildMouseEvent(cb = cb, cx = cx, cy = cy, release = release)
+    }
+
+    private fun processMouseEventSgr(timeout: TimeMark): InputEvent? {
+        val params = StringBuilder()
+        var suffix: Char
+        while (true) {
+            suffix = readRawByte(timeout)?.toChar() ?: return null
+            if (suffix == 'M' || suffix == 'm') break
+            params.append(suffix)
+        }
+
+        val parts = params.split(';')
+        if (parts.size != 3) return null
+
+        val cb = parts[0].toIntOrNull() ?: return null
+        val cx = (parts[1].toIntOrNull() ?: return null) - 1
+        val cy = (parts[2].toIntOrNull() ?: return null) - 1
+        val release = suffix == 'm'
+        return buildMouseEvent(cb = cb, cx = cx, cy = cy, release = release)
+    }
+
+    private fun buildMouseEvent(cb: Int, cx: Int, cy: Int, release: Boolean): MouseEvent {
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
-        // cb == 3 means "a button was released", but there's no way to know which one -_-
+        val isWheel = (cb and 64) != 0
+        val button = cb and 3
         return MouseEvent(
             x = cx,
             y = cy,
-            // On button-motion events, xterm adds 32 to cb
-            left = cb and 3 == 0,
-            right = cb and 3 == 1,
-            middle = cb and 3 == 2,
-            wheelUp = cb == 64,
-            wheelDown = cb == 65,
+            left = !release && !isWheel && button == 0,
+            middle = !release && !isWheel && button == 1,
+            right = !release && !isWheel && button == 2,
+            wheelUp = isWheel && button == 0,
+            wheelDown = isWheel && button == 1,
             ctrl = ctrl,
             alt = alt,
             shift = shift,

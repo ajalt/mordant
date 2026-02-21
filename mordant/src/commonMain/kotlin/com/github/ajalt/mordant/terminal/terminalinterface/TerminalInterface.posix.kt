@@ -122,12 +122,17 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
         setStdinTermios(new)
         when (mouseTracking) {
             MouseTracking.Off -> {}
-            MouseTracking.Normal -> print("${CSI}?1005h${CSI}?1000h")
-            MouseTracking.Button -> print("${CSI}?1005h${CSI}?1002h")
-            MouseTracking.Any -> print("${CSI}?1005h${CSI}?1003h")
+            MouseTracking.Normal -> print("${CSI}?1006h${CSI}?1000h")
+            MouseTracking.Button -> print("${CSI}?1006h${CSI}?1002h")
+            MouseTracking.Any -> print("${CSI}?1006h${CSI}?1003h")
         }
         return AutoCloseable {
-            if (mouseTracking != MouseTracking.Off) print("${CSI}?1000l")
+            when (mouseTracking) {
+                MouseTracking.Off -> {}
+                MouseTracking.Normal -> print("${CSI}?1000l${CSI}?1006l")
+                MouseTracking.Button -> print("${CSI}?1002l${CSI}?1006l")
+                MouseTracking.Any -> print("${CSI}?1003l${CSI}?1006l")
+            }
             setStdinTermios(orig)
         }
     }
@@ -136,4 +141,3 @@ abstract class TerminalInterfacePosix : StandardTerminalInterface() {
         return PosixEventParser { readRawByte() }.readInputEvent(timeout)
     }
 }
-
