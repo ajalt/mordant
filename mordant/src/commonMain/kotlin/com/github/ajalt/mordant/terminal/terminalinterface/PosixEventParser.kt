@@ -366,7 +366,13 @@ internal class PosixEventParser(
             if (it == null) 0 else it - 33
         }
         val release = (cb and 3) == 3 && (cb and 64) == 0
-        return buildMouseEvent(cb = cb, cx = cx, cy = cy, release = release)
+        return buildMouseEvent(
+            cb = cb,
+            cx = cx,
+            cy = cy,
+            release = release,
+            legacyButtonOrder = true,
+        )
     }
 
     private fun processMouseEventSgr(timeout: TimeMark): InputEvent? {
@@ -385,21 +391,35 @@ internal class PosixEventParser(
         val cx = (parts[1].toIntOrNull() ?: return null) - 1
         val cy = (parts[2].toIntOrNull() ?: return null) - 1
         val release = suffix == 'm'
-        return buildMouseEvent(cb = cb, cx = cx, cy = cy, release = release)
+        return buildMouseEvent(
+            cb = cb,
+            cx = cx,
+            cy = cy,
+            release = release,
+            legacyButtonOrder = false,
+        )
     }
 
-    private fun buildMouseEvent(cb: Int, cx: Int, cy: Int, release: Boolean): MouseEvent {
+    private fun buildMouseEvent(
+        cb: Int,
+        cx: Int,
+        cy: Int,
+        release: Boolean,
+        legacyButtonOrder: Boolean,
+    ): MouseEvent {
         val shift = (cb and 4) != 0
         val alt = (cb and 8) != 0
         val ctrl = (cb and 16) != 0
         val isWheel = (cb and 64) != 0
         val button = cb and 3
+        val middleButtonCode = if (legacyButtonOrder) 2 else 1
+        val rightButtonCode = if (legacyButtonOrder) 1 else 2
         return MouseEvent(
             x = cx,
             y = cy,
             left = !release && !isWheel && button == 0,
-            middle = !release && !isWheel && button == 1,
-            right = !release && !isWheel && button == 2,
+            middle = !release && !isWheel && button == middleButtonCode,
+            right = !release && !isWheel && button == rightButtonCode,
             wheelUp = isWheel && button == 0,
             wheelDown = isWheel && button == 1,
             ctrl = ctrl,

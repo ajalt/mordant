@@ -2,6 +2,7 @@ package com.github.ajalt.mordant.terminal.terminalinterface
 
 import com.github.ajalt.mordant.input.MouseEvent
 import io.kotest.matchers.shouldBe
+import kotlin.test.assertIs
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -53,6 +54,34 @@ class PosixEventParserTest {
         val event = readEvent(x10(cb = 96, cx = 33, cy = 33)) as MouseEvent
         event.wheelUp shouldBe true
         event.wheelDown shouldBe false
+    }
+
+    @Test
+    fun `legacy X10 keeps original middle and right mapping`() {
+        val right = readEvent(x10(cb = 1 + 32, cx = 40, cy = 40)) as MouseEvent
+        right.right shouldBe true
+        right.middle shouldBe false
+
+        val middle = readEvent(x10(cb = 2 + 32, cx = 40, cy = 40)) as MouseEvent
+        middle.middle shouldBe true
+        middle.right shouldBe false
+    }
+
+    @Test
+    fun `parser handles SGR and then X10 sequence`() {
+        val bytes = ("\u001b[<0;5;3M" + x10(cb = 0 + 32, cx = 35, cy = 36)).encodeToByteArray().map { it.toInt() and 0xff }
+        var i = 0
+        val parser = PosixEventParser { if (i < bytes.size) bytes[i++] else null }
+
+        val first = assertIs<MouseEvent>(parser.readInputEvent(TimeSource.Monotonic.markNow() + 1.seconds))
+        first.left shouldBe true
+        first.x shouldBe 4
+        first.y shouldBe 2
+
+        val second = assertIs<MouseEvent>(parser.readInputEvent(TimeSource.Monotonic.markNow() + 1.seconds))
+        second.left shouldBe true
+        second.x shouldBe 2
+        second.y shouldBe 3
     }
 
     private fun readEvent(input: String): Any {
