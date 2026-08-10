@@ -180,10 +180,10 @@ object TerminalDetection {
 
     private fun vsCodeVersionSupportsHyperlinks(): Boolean {
         val ver = getEnv("TERM_PROGRAM_VERSION")?.split(".")?.mapNotNull { it.toIntOrNull() }
-        if (ver?.size < 2) return false
+        if (ver == null || ver.size < 2) return false
 
         // https://code.visualstudio.com/updates/v1_72#_hyperlink-support
-        return ver[0] > 0 && ver[1] >= 72
+        return ver[0] > 1 || (ver[0] == 1 && ver[1] >= 72)
     }
 
     private fun isCI(): Boolean {
