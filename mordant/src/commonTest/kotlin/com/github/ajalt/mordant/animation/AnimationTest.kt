@@ -88,6 +88,23 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "<4>\n==="
     }
 
+    @[Test JsName("println_during_animation")]
+    fun `println during animation`() {
+        val a = t.textAnimation<Int> { "<$it>" }
+        a.update(1)
+        rec.clearOutput()
+
+        // println with no message should still print its line break
+        t.println()
+        val moves = t.cursor.getMoves { startOfLine(); clearScreenAfterCursor() }
+        rec.normalizedOutput() shouldBe "${moves}\n<1>"
+
+        // a trailing line break in the message should be preserved
+        rec.clearOutput()
+        t.println("x\n")
+        rec.normalizedOutput() shouldBe "${moves}x\n\n<1>"
+    }
+
     @[Test JsName("two_animations")]
     fun `two animations`() {
         val a = t.textAnimation<Int> { "<a$it>" }
@@ -110,7 +127,7 @@ class AnimationTest {
 
         rec.clearOutput()
         a.stop()
-        rec.normalizedOutput().visibleCrLf() shouldBe "\r<b3>".visibleCrLf()
+        rec.normalizedOutput().visibleCrLf() shouldBe ""
 
         rec.clearOutput()
         b.stop()

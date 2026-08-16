@@ -263,6 +263,8 @@ class Terminal private constructor(
         interceptors.update { filter { it != interceptor } }
     }
 
+    internal fun hasInterceptors(): Boolean = interceptors.value.isNotEmpty()
+
     private fun rawPrintln(message: String, stderr: Boolean) {
         sendPrintRequest(PrintRequest(message, true, stderr))
     }
