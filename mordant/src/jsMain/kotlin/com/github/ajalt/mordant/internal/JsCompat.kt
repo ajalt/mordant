@@ -29,9 +29,16 @@ internal fun nodeRequire(mod: String): dynamic {
     // So since we never call `require` at runtime on browsers anyway, we hide our `require`
     // calls from webpack by loading the method dynamically. This prevents any warnings, and
     // doesn't require users to add anything to their webpack config.
+    //
+    // When running as an ES module there's no `module` object at all, so we use
+    // `process.getBuiltinModule` instead, which node added for exactly this situation.
 
     val imported = try {
-        js("module['' + 'require']")(mod)
+        js(
+            """typeof module !== 'undefined' && module['' + 'require']
+                ? module['' + 'require'](mod)
+                : process.getBuiltinModule(mod)"""
+        )
     } catch (e: dynamic) {
         throw IllegalArgumentException("Module not available: $mod", e as? Throwable)
     }
