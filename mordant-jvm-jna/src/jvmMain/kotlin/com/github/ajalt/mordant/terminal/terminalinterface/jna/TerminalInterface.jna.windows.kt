@@ -236,6 +236,10 @@ private interface WinKernel32Lib : Library {
 
 
 internal class TerminalInterfaceJnaWindows : TerminalInterfaceWindows() {
+    private companion object {
+        const val WAIT_TIMEOUT = 0x102
+    }
+
     private val kernel = Native.load(
         "kernel32", WinKernel32Lib::class.java, W32APIOptions.DEFAULT_OPTIONS
     )
@@ -274,8 +278,9 @@ internal class TerminalInterfaceJnaWindows : TerminalInterfaceWindows() {
 
     override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
         val waitResult = kernel.WaitForSingleObject(stdinHandle.pointer, dwMilliseconds)
+        if (waitResult == WAIT_TIMEOUT) return null
         if (waitResult != 0) {
-            throw RuntimeException("Timeout reading from console input")
+            throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
         val inputEvents = arrayOfNulls<WinKernel32Lib.INPUT_RECORD>(1)
         val eventsRead = IntByReference()

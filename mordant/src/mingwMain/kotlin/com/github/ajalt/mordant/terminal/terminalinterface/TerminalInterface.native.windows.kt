@@ -31,8 +31,9 @@ internal object TerminalInterfaceNativeWindows : TerminalInterfaceWindows() {
     override fun readRawEvent(dwMilliseconds: Int): EventRecord? = memScoped {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
         val waitResult = WaitForSingleObject(stdinHandle, dwMilliseconds.toUInt())
+        if (waitResult == WAIT_TIMEOUT.toUInt()) return null
         if (waitResult != 0u) {
-            throw RuntimeException("Timeout reading from console input")
+            throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
         val inputEvents = allocArray<INPUT_RECORD>(1)
         val eventsRead = alloc<UIntVar>()
