@@ -1,6 +1,6 @@
 [
   {
-    "name" : "com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceProviderFfm",
+    "name" : "com.github.ajalt.mordant.terminal.terminalinterface.ffm.TerminalInterfaceProviderFfm",
     "allDeclaredConstructors" : true,
     "allPublicConstructors" : true,
     "allDeclaredMethods" : false,
