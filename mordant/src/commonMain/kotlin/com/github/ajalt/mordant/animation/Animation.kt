@@ -55,21 +55,22 @@ abstract class Animation<T>(
             )
         }
         val animationText = st.text ?: return@TerminalInterceptor req
+        val reqText = if (req.trailingLinebreak) req.text + "\n" else req.text
         val newText = buildString {
             // move the cursor to the start of the widget, then append the request (which might
             // start with moves if it's an animation), then our text
             getCursorMoves(
                 firstDraw = st.firstDraw,
-                clearScreen = req.text.isNotEmpty(),
+                clearScreen = reqText.isNotEmpty(),
                 lastSize = st.lastSize,
                 size = st.size,
                 terminalSize = terminalSize,
                 lastTerminalSize = st.lastTerminalSize,
-                extraUp = if (req.text.startsWith("\r")) 1 else 0, // it's another animation
+                extraUp = if (reqText.startsWith("\r")) 1 else 0, // it's another animation
             )?.let { append(it) }
             when {
-                req.text.endsWith("\n") -> append(req.text)
-                req.text.isNotEmpty() -> appendLine(req.text)
+                reqText.endsWith("\n") -> append(reqText)
+                reqText.isNotEmpty() -> appendLine(reqText)
             }
             append(animationText)
         }
@@ -125,7 +126,8 @@ abstract class Animation<T>(
         }
         if (old.interceptorInstalled) {
             terminal.removeInterceptor(interceptor)
-            if (newline) terminal.println()
+            // If another animation is still active, it will draw below this frame on its own
+            if (newline && !terminal.hasInterceptors()) terminal.println()
         }
         return old to new
     }

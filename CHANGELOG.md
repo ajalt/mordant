@@ -14,6 +14,7 @@
 - Fixed mouse tracking and console mode restoration in raw mode on native Windows targets. [(#293)](https://github.com/ajalt/mordant/issues/293)
 - Fixed native-image builds failing on Windows with GraalVM 25. [(#286)](https://github.com/ajalt/mordant/issues/286)
 - Fixed `readEventOrNull` throwing an exception instead of returning null on timeout on Windows. [(#276)](https://github.com/ajalt/mordant/issues/276)
+- Fixed line breaks being dropped when printing during an animation. [(#264)](https://github.com/ajalt/mordant/issues/264)
 
 ## 3.0.2
 ### Changed
