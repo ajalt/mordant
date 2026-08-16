@@ -1,7 +1,6 @@
 package com.github.ajalt.mordant.terminal.terminalinterface.ffm
 
 import com.github.ajalt.mordant.rendering.Size
-import com.github.ajalt.mordant.terminal.TimeoutException
 import com.github.ajalt.mordant.terminal.terminalinterface.TerminalInterfaceWindows
 import java.lang.foreign.*
 
@@ -242,6 +241,7 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
         const val STD_INPUT_HANDLE: Int = -10
         const val STD_OUTPUT_HANDLE: Int = -11
         const val STD_ERROR_HANDLE: Int = -12
+        const val WAIT_TIMEOUT: Int = 0x102
     }
 
     private val kernel = WinKernel32Library()
@@ -279,8 +279,9 @@ internal class TerminalInterfaceFfmWindows : TerminalInterfaceWindows() {
     override fun readRawEvent(dwMilliseconds: Int): EventRecord? = Arena.ofConfined().use { arena ->
         val stdin = stdinHandle
         val waitResult = kernel.WaitForSingleObject(stdin, dwMilliseconds)
+        if (waitResult == WAIT_TIMEOUT) return null
         if (waitResult != 0) {
-            throw TimeoutException()
+            throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
         val inputEvents = arena.allocate(WinKernel32Library.INPUT_RECORD.Layout.layout, 1)
         val eventsReadSeg = arena.allocateInt()

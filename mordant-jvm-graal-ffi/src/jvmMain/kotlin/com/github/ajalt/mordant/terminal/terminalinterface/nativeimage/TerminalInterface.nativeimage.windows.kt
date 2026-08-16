@@ -79,6 +79,7 @@ internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() 
         const val INPUT_RECORD_BYTE_SIZE = 20
         const val KEY_EVENT: Short = 0x0001
         const val MOUSE_EVENT: Short = 0x0002
+        const val WAIT_TIMEOUT = 0x102
     }
 
     override fun stdoutInteractive(): Boolean {
@@ -120,6 +121,7 @@ internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() 
     override fun readRawEvent(dwMilliseconds: Int): EventRecord? {
         val stdinHandle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_INPUT_HANDLE())
         val waitResult = WinKernel32Lib.WaitForSingleObject(stdinHandle, dwMilliseconds)
+        if (waitResult == WAIT_TIMEOUT) return null
         if (waitResult != 0) {
             throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
