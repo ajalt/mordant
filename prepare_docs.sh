@@ -4,7 +4,7 @@
 # https://squidfunk.github.io/mkdocs-material/
 # Mkdocs requires Python to run.
 # Install the packages: `pip install mkdocs-material`
-# Build the api docs: `./gradlew dokkaHtmlMultiModule`
+# Build the api docs: `./gradlew dokkaGenerate`
 # Then run this script to prepare the docs for the website.
 # Finally, run `mkdocs serve` to preview the site locally or `mkdocs build` to build the site.
 

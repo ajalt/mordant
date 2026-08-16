@@ -33,17 +33,17 @@ jobs:
               :mordant:compileTvosMainKotlinMetadata
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: 22
+          java-version: 25
           distribution: 'graalvm-community'
           set-java-home: false
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: 22
-      - uses: gradle/actions/setup-gradle@v3
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
       - name: Run tests
         run: >-
             ./gradlew
@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload R8 Jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: main-r8-jar
           path: 'test/proguard/build/libs/main-r8.jar'
@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload the build report
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v7
         with:
           name: build-report-${{ matrix.os }}
           path: '**/build/reports'
@@ -82,7 +82,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - name: Download R8 Jar
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: main-r8-jar
           path: artifacts
@@ -106,12 +106,12 @@ jobs:
     runs-on: macos-latest
     if: ${{ github.ref == 'refs/heads/master' && github.repository == 'ajalt/mordant' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: 22
-      - uses: gradle/actions/setup-gradle@v3
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
       - name: Deploy to sonatype
         # disable configuration cache due to https://github.com/gradle/gradle/issues/22779
         run: ./gradlew publishToMavenCentral -PsnapshotVersion=true --no-configuration-cache

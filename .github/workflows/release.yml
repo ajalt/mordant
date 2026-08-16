@@ -10,15 +10,15 @@ jobs:
     runs-on: macos-latest
     if: ${{ github.repository == 'ajalt/mordant' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
-          java-version: 22
-      - uses: actions/setup-python@v5
+          java-version: 25
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew publishToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralPassword }}
@@ -33,9 +33,7 @@ jobs:
 #        with:
 #          body: ${{ steps.extract-release-notes.outputs.release_notes }}
 #      - name: Dokka
-#        uses: gradle/actions/setup-gradle@v3
-#        with:
-#          arguments: dokkaHtmlMultiModule
+#        run: ./gradlew dokkaGenerate
 #      - run : ./prepare_docs.sh
 #      - name: Build mkdocs
 #        run: |
