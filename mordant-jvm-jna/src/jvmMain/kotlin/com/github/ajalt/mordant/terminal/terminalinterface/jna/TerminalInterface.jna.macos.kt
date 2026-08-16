@@ -89,7 +89,11 @@ internal class TerminalInterfaceJnaMacos : TerminalInterfaceJvmPosix() {
 
     override fun getStdinTermios(): Termios {
         val termios = MacosLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, termios)
+        try {
+            libC.tcgetattr(STDIN_FILENO, termios)
+        } catch (e: LastErrorException) {
+            throw RuntimeException("Error reading terminal attributes", e)
+        }
         return Termios(
             iflag = termios.c_iflag.toInt().toUInt(),
             oflag = termios.c_oflag.toInt().toUInt(),
@@ -100,14 +104,18 @@ internal class TerminalInterfaceJnaMacos : TerminalInterfaceJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios) {
-        val nativeTermios = MacosLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, nativeTermios)
-        nativeTermios.c_iflag.setValue(termios.iflag.toLong())
-        nativeTermios.c_oflag.setValue(termios.oflag.toLong())
-        nativeTermios.c_cflag.setValue(termios.cflag.toLong())
-        nativeTermios.c_lflag.setValue(termios.lflag.toLong())
-        termios.cc.copyInto(nativeTermios.c_cc)
-        libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
+        try {
+            val nativeTermios = MacosLibC.termios()
+            libC.tcgetattr(STDIN_FILENO, nativeTermios)
+            nativeTermios.c_iflag.setValue(termios.iflag.toLong())
+            nativeTermios.c_oflag.setValue(termios.oflag.toLong())
+            nativeTermios.c_cflag.setValue(termios.cflag.toLong())
+            nativeTermios.c_lflag.setValue(termios.lflag.toLong())
+            termios.cc.copyInto(nativeTermios.c_cc)
+            libC.tcsetattr(STDIN_FILENO, TCSANOW, nativeTermios)
+        } catch (e: LastErrorException) {
+            throw RuntimeException("Error setting terminal attributes", e)
+        }
     }
 
     override fun shouldAutoUpdateSize(): Boolean {

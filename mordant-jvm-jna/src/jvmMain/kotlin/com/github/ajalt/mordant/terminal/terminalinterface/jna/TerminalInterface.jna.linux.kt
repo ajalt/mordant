@@ -81,7 +81,11 @@ internal class TerminalInterfaceJnaLinux : TerminalInterfaceJvmPosix() {
 
     override fun getStdinTermios(): Termios {
         val termios = PosixLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, termios)
+        try {
+            libC.tcgetattr(STDIN_FILENO, termios)
+        } catch (e: LastErrorException) {
+            throw RuntimeException("Error reading terminal attributes", e)
+        }
         return Termios(
             iflag = termios.c_iflag.toUInt(),
             oflag = termios.c_oflag.toUInt(),
@@ -92,13 +96,17 @@ internal class TerminalInterfaceJnaLinux : TerminalInterfaceJvmPosix() {
     }
 
     override fun setStdinTermios(termios: Termios) {
-        val nativeTermios = PosixLibC.termios()
-        libC.tcgetattr(STDIN_FILENO, nativeTermios)
-        nativeTermios.c_iflag = termios.iflag.toInt()
-        nativeTermios.c_oflag = termios.oflag.toInt()
-        nativeTermios.c_cflag = termios.cflag.toInt()
-        nativeTermios.c_lflag = termios.lflag.toInt()
-        termios.cc.copyInto(nativeTermios.c_cc)
-        libC.tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios)
+        try {
+            val nativeTermios = PosixLibC.termios()
+            libC.tcgetattr(STDIN_FILENO, nativeTermios)
+            nativeTermios.c_iflag = termios.iflag.toInt()
+            nativeTermios.c_oflag = termios.oflag.toInt()
+            nativeTermios.c_cflag = termios.cflag.toInt()
+            nativeTermios.c_lflag = termios.lflag.toInt()
+            termios.cc.copyInto(nativeTermios.c_cc)
+            libC.tcsetattr(STDIN_FILENO, TCSADRAIN, nativeTermios)
+        } catch (e: LastErrorException) {
+            throw RuntimeException("Error setting terminal attributes", e)
+        }
     }
 }
