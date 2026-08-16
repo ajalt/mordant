@@ -16,6 +16,7 @@
 - Fixed native-image builds failing on Windows with GraalVM 25. [(#286)](https://github.com/ajalt/mordant/issues/286)
 - Fixed `readEventOrNull` throwing an exception instead of returning null on timeout on Windows. [(#276)](https://github.com/ajalt/mordant/issues/276)
 - Fixed line breaks being dropped when printing during an animation. [(#264)](https://github.com/ajalt/mordant/issues/264)
+- Fixed crash in native-image binaries running in an interactive terminal on macOS. [(#291)](https://github.com/ajalt/mordant/issues/291)
 
 ## 3.0.2
 ### Changed

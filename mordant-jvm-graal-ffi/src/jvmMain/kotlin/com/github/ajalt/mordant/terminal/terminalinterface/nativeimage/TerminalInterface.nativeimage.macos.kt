@@ -24,7 +24,7 @@ private object MacosLibC {
     }
 
     @CConstant("TIOCGWINSZ")
-    external fun TIOCGWINSZ(): Int
+    external fun TIOCGWINSZ(): Long
 
     @CConstant("TCSADRAIN")
     external fun TCSADRAIN(): Int
@@ -75,8 +75,10 @@ private object MacosLibC {
     @CFunction("isatty")
     external fun isatty(fd: Int): Boolean
 
-    @CFunction("ioctl")
-    external fun ioctl(fd: Int, cmd: Int, winSize: winsize?): Int
+    // the public ioctl is variadic, which @CFunction can't call correctly on aarch64, so call the
+    // fixed-arg syscall stub that libsystem's ioctl wrapper forwards to
+    @CFunction("__ioctl")
+    external fun ioctl(fd: Int, cmd: Long, winSize: winsize?): Int
 
     @CFunction("tcgetattr")
     external fun tcgetattr(fd: Int, termios: termios?): Int
@@ -92,7 +94,7 @@ internal class TerminalInterfaceNativeImageMacos : TerminalInterfaceJvmPosix() {
 
     override fun getTerminalSize(): Size? {
         val size = StackValue.get(MacosLibC.winsize::class.java)
-        return if (MacosLibC.ioctl(0, MacosLibC.TIOCGWINSZ(), size) < 0) {
+        return if (MacosLibC.ioctl(STDIN_FILENO, MacosLibC.TIOCGWINSZ(), size) < 0) {
             null
         } else {
             Size(width = size.ws_col.toInt(), height = size.ws_row.toInt())

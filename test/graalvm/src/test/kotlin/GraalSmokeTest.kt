@@ -43,6 +43,18 @@ class GraalSmokeTest {
     }
 
     @Test
+    fun `terminal size gc stress test`() {
+        // https://github.com/ajalt/mordant/issues/291
+        val t = Terminal()
+        var sink = listOf<ByteArray>()
+        repeat(2000) {
+            t.updateSize()
+            sink = sink + ByteArray(64 * 1024)
+        }
+        assertEquals(2000, sink.size)
+    }
+
+    @Test
     fun `markdown test`() {
         val vt = TerminalRecorder()
         val t = Terminal(terminalInterface = vt)
