@@ -74,7 +74,7 @@ internal object TerminalInterfaceNativeWindows : TerminalInterfaceWindows() {
 
     override fun setStdinConsoleMode(dwMode: UInt) {
         val stdinHandle = GetStdHandle(STD_INPUT_HANDLE)
-        if (SetConsoleMode(stdinHandle, 0u) == 0) {
+        if (SetConsoleMode(stdinHandle, dwMode) == 0) {
             throw RuntimeException("Error setting console mode")
         }
     }
