@@ -9,6 +9,7 @@
 
 ### Fixed
 - Fixed table border being drawn incorrectly in some tables that use rowspan. [(#272)](https://github.com/ajalt/mordant/issues/272)
+- Fixed GraalVM reflection configs listing the wrong class names for the terminal interface providers. [(#292)](https://github.com/ajalt/mordant/issues/292)
 
 ## 3.0.2
 ### Changed
