@@ -12,6 +12,7 @@
 - Fixed GraalVM reflection configs listing the wrong class names for the terminal interface providers. [(#292)](https://github.com/ajalt/mordant/issues/292)
 - Fixed `ClassCastException` when creating a `Terminal` with the `mordant-jvm-ffm` module on Java 20 and 21. [(#278)](https://github.com/ajalt/mordant/issues/278)
 - Fixed mouse tracking and console mode restoration in raw mode on native Windows targets. [(#293)](https://github.com/ajalt/mordant/issues/293)
+- Fixed native-image builds failing on Windows with GraalVM 25. [(#286)](https://github.com/ajalt/mordant/issues/286)
 
 ## 3.0.2
 ### Changed

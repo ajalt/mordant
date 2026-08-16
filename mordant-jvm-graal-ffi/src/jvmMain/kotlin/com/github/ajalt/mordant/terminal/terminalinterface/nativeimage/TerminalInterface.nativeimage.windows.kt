@@ -46,49 +46,6 @@ private object WinKernel32Lib {
 
     }
 
-    class COORD(private val pointer: Pointer) {
-        val X: Short get() = pointer.readShort(0)
-        val Y: Short get() = pointer.readShort(2)
-    }
-
-    sealed class EventUnion {
-        class KeyEvent(private val pointer: Pointer) : EventUnion() {
-            val bKeyDown: Boolean get() = pointer.readInt(0) != 0
-            val wVirtualKeyCode: Short get() = pointer.readShort(6)
-            val uChar: Char get() = pointer.readChar(10)
-            val dwControlKeyState: Int get() = pointer.readInt(12)
-        }
-
-        class MouseEvent(private val pointer: Pointer) : EventUnion() {
-            val dwMousePosition: COORD get() = COORD(pointer)
-            val dwButtonState: Int get() = pointer.readInt(4)
-            val dwControlKeyState: Int get() = pointer.readInt(8)
-            val dwEventFlags: Int get() = pointer.readInt(12)
-        }
-    }
-
-    class InputRecord(private val pointer: Pointer) {
-        companion object {
-            const val BYTE_SIZE = 20
-            const val KEY_EVENT: Short = 0x0001
-            const val MOUSE_EVENT: Short = 0x0002
-            const val WINDOW_BUFFER_SIZE_EVENT: Short = 0x0004
-            const val MENU_EVENT: Short = 0x0008
-            const val FOCUS_EVENT: Short = 0x0010
-        }
-
-        val EventType: Short
-            get() = pointer.readShort(0)
-
-        val Event: EventUnion?
-            get() = when (EventType) {
-                KEY_EVENT -> EventUnion.KeyEvent(pointer.add(4))
-                MOUSE_EVENT -> EventUnion.MouseEvent(pointer.add(4))
-                else -> null
-            }
-    }
-
-
     @CFunction("GetStdHandle")
     external fun GetStdHandle(nStdHandle: Int): PointerBase?
 
@@ -118,6 +75,11 @@ private object WinKernel32Lib {
 
 @Platforms(Platform.WINDOWS::class)
 internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() {
+    private companion object {
+        const val INPUT_RECORD_BYTE_SIZE = 20
+        const val KEY_EVENT: Short = 0x0001
+        const val MOUSE_EVENT: Short = 0x0002
+    }
 
     override fun stdoutInteractive(): Boolean {
         val handle = WinKernel32Lib.GetStdHandle(WinKernel32Lib.STD_OUTPUT_HANDLE())
@@ -161,34 +123,30 @@ internal class TerminalInterfaceNativeImageWindows : TerminalInterfaceWindows() 
         if (waitResult != 0) {
             throw RuntimeException("Error reading from console input: waitResult=$waitResult")
         }
-        val inputEvents = StackValue.get<Pointer>(WinKernel32Lib.InputRecord.BYTE_SIZE)
+        val inputRecord = StackValue.get<Pointer>(INPUT_RECORD_BYTE_SIZE)
         val eventsRead = StackValue.get(CIntPointer::class.java)
-        WinKernel32Lib.ReadConsoleInputW(stdinHandle, inputEvents, 1, eventsRead)
+        WinKernel32Lib.ReadConsoleInputW(stdinHandle, inputRecord, 1, eventsRead)
         if (eventsRead.read() == 0) {
             throw RuntimeException("Error reading from console input")
         }
 
-        val inputRecord = WinKernel32Lib.InputRecord(inputEvents)
+        // native-image can't store word values like Pointer in object fields
+        val event = inputRecord.add(4)
+        return when (inputRecord.readShort(0)) {
+            KEY_EVENT -> EventRecord.Key(
+                bKeyDown = event.readInt(0) != 0,
+                wVirtualKeyCode = event.readShort(6).toUShort(),
+                uChar = event.readChar(10),
+                dwControlKeyState = event.readInt(12).toUInt(),
+            )
 
-        return when (val event = inputRecord.Event) {
-            is WinKernel32Lib.EventUnion.KeyEvent -> {
-                EventRecord.Key(
-                    bKeyDown = event.bKeyDown,
-                    wVirtualKeyCode = event.wVirtualKeyCode.toUShort(),
-                    uChar = event.uChar,
-                    dwControlKeyState = event.dwControlKeyState.toUInt(),
-                )
-            }
-
-            is WinKernel32Lib.EventUnion.MouseEvent -> {
-                EventRecord.Mouse(
-                    dwMousePositionX = event.dwMousePosition.X,
-                    dwMousePositionY = event.dwMousePosition.Y,
-                    dwButtonState = event.dwButtonState.toUInt(),
-                    dwControlKeyState = event.dwControlKeyState.toUInt(),
-                    dwEventFlags = event.dwEventFlags.toUInt(),
-                )
-            }
+            MOUSE_EVENT -> EventRecord.Mouse(
+                dwMousePositionX = event.readShort(0),
+                dwMousePositionY = event.readShort(2),
+                dwButtonState = event.readInt(4).toUInt(),
+                dwControlKeyState = event.readInt(8).toUInt(),
+                dwEventFlags = event.readInt(12).toUInt(),
+            )
 
             else -> null // Ignore other event types like FOCUS_EVENT that we can't opt out of
         }
