@@ -2,8 +2,6 @@
 
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     id("com.vanniktech.maven.publish.base")
@@ -24,13 +22,12 @@ mavenPublishing {
     project.setProperty("VERSION_NAME", getPublishVersion())
     pomFromGradleProperties()
     configure(KotlinMultiplatform(JavadocJar.Empty()))
-    publishToMavenCentral(SonatypeHost.DEFAULT)
+    publishToMavenCentral()
     signAllPublications()
 }
 
-tasks.withType<DokkaTaskPartial>().configureEach {
+dokka {
     dokkaSourceSets.configureEach {
         skipDeprecated.set(true)
     }
 }
-

@@ -1,29 +1,32 @@
 [versions]
-kotlin = "2.0.10"
-coroutines = "1.8.1"
+kotlin = "2.4.10"
+coroutines = "1.11.0"
+kotest = "6.2.4"
 
 [libraries]
-colormath = "com.github.ajalt.colormath:colormath:3.6.0"
-markdown = "org.jetbrains:markdown:0.7.3"
-jna-core = "net.java.dev.jna:jna:5.14.0"
+colormath = "com.github.ajalt.colormath:colormath:3.6.1"
+markdown = "org.jetbrains:markdown:0.7.8"
+jna-core = "net.java.dev.jna:jna:5.19.1"
 
 # compileOnly
-graalvm-svm = "org.graalvm.nativeimage:svm:23.1.0"
+graalvm-svm = "org.graalvm.nativeimage:svm:25.0.4"
 
 # used in extensions
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 # used in tests
-kotest = "io.kotest:kotest-assertions-core:5.9.1"
+junit-bom = "org.junit:junit-bom:5.13.4"
+kotest = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-table = { module = "io.kotest:kotest-assertions-table", version.ref = "kotest" }
 systemrules = "com.github.stefanbirkner:system-rules:1.19.0"
-r8 = "com.android.tools:r8:8.3.37"
+r8 = "com.android.tools:r8:9.4.14"
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 # build logic
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "1.9.20" }
-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.28.0" }
+dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version = "2.2.0" }
+publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version = "0.37.0" }
 
 [plugins]
-graalvm-nativeimage = "org.graalvm.buildtools.native:0.9.28"
-kotlinBinaryCompatibilityValidator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.14.0"
+graalvm-nativeimage = "org.graalvm.buildtools.native:1.1.9"
+kotlinBinaryCompatibilityValidator = "org.jetbrains.kotlinx.binary-compatibility-validator:0.18.1"

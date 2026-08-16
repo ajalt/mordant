@@ -10,7 +10,7 @@ repositories {
     mavenCentral()
 }
 
-val r8: Configuration by configurations.creating
+val r8: Configuration = configurations.create("r8")
 
 dependencies {
     implementation(project(":mordant-omnibus"))
@@ -29,7 +29,7 @@ tasks.withType<JavaCompile>().configureEach {
     options.release.set(17)
 }
 
-val fatJar by tasks.register<Jar>("fatJar") {
+val fatJar = tasks.register<Jar>("fatJar") {
     archiveClassifier = "fat"
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
@@ -52,13 +52,13 @@ val fatJar by tasks.register<Jar>("fatJar") {
 }
 
 
-val r8JarProvider by tasks.register<JavaExec>("r8Jar") {
+tasks.register<JavaExec>("r8Jar") {
     dependsOn(fatJar)
 
     val r8File = layout.buildDirectory.file("libs/main-r8.jar")
     val rulesFile =  project.file("src/main/rules.pro")
 
-    val fatJarFile = fatJar.archiveFile
+    val fatJarFile = fatJar.flatMap { it.archiveFile }
 
     inputs.files(fatJarFile, rulesFile)
     outputs.file(r8File)

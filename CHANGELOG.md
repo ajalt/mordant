@@ -6,6 +6,7 @@
 
 ### Changed
 - The space key is now printed as "space" in the interactive select list.  [(#268)](https://github.com/ajalt/mordant/issues/268)
+- Updated Kotlin to 2.4.10, and all other dependencies to their latest versions.
 
 ### Fixed
 - Fixed table border being drawn incorrectly in some tables that use rowspan. [(#272)](https://github.com/ajalt/mordant/issues/272)

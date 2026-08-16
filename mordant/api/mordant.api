@@ -16,6 +16,7 @@ public final class com/github/ajalt/mordant/animation/AnimationKt {
 public abstract interface class com/github/ajalt/mordant/animation/Refreshable {
 	public abstract fun getFinished ()Z
 	public abstract fun refresh (Z)V
+	public static synthetic fun refresh$default (Lcom/github/ajalt/mordant/animation/Refreshable;ZILjava/lang/Object;)V
 }
 
 public final class com/github/ajalt/mordant/animation/Refreshable$DefaultImpls {
@@ -24,7 +25,7 @@ public final class com/github/ajalt/mordant/animation/Refreshable$DefaultImpls {
 
 public abstract interface class com/github/ajalt/mordant/animation/RefreshableAnimation : com/github/ajalt/mordant/animation/Refreshable, com/github/ajalt/mordant/animation/StoppableAnimation {
 	public abstract fun clear ()V
-	public abstract fun getFps ()I
+	public fun getFps ()I
 	public abstract fun stop ()V
 }
 
@@ -89,6 +90,7 @@ public final class com/github/ajalt/mordant/animation/progress/MultiProgressBarA
 
 public abstract interface class com/github/ajalt/mordant/animation/progress/ProgressBarAnimation : com/github/ajalt/mordant/animation/Refreshable {
 	public abstract fun addTask (Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JZZ)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
+	public static synthetic fun addTask$default (Lcom/github/ajalt/mordant/animation/progress/ProgressBarAnimation;Lcom/github/ajalt/mordant/widgets/progress/ProgressBarDefinition;Ljava/lang/Object;Ljava/lang/Long;JZZILjava/lang/Object;)Lcom/github/ajalt/mordant/animation/progress/ProgressTask;
 	public abstract fun removeTask (Lcom/github/ajalt/mordant/widgets/progress/TaskId;)Z
 }
 
@@ -118,6 +120,7 @@ public abstract interface class com/github/ajalt/mordant/animation/progress/Prog
 	public abstract fun getVisible ()Z
 	public abstract fun makeState ()Lcom/github/ajalt/mordant/widgets/progress/ProgressState;
 	public abstract fun reset (ZLkotlin/jvm/functions/Function1;)V
+	public static synthetic fun reset$default (Lcom/github/ajalt/mordant/animation/progress/ProgressTask;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun update (Lkotlin/jvm/functions/Function1;)V
 }
 
@@ -635,10 +638,10 @@ public abstract interface class com/github/ajalt/mordant/rendering/TextStyle {
 	public abstract fun getItalic ()Ljava/lang/Boolean;
 	public abstract fun getStrikethrough ()Ljava/lang/Boolean;
 	public abstract fun getUnderline ()Ljava/lang/Boolean;
-	public abstract fun invoke (Ljava/lang/String;)Ljava/lang/String;
+	public fun invoke (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun on (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
-	public abstract fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
-	public abstract fun plus (Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun plus (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun plus (Lcom/github/ajalt/mordant/rendering/TextStyles;)Lcom/github/ajalt/mordant/rendering/TextStyle;
 }
 
 public final class com/github/ajalt/mordant/rendering/TextStyle$DefaultImpls {
@@ -748,7 +751,9 @@ public final class com/github/ajalt/mordant/rendering/Whitespace : java/lang/Enu
 
 public abstract interface class com/github/ajalt/mordant/rendering/Widget {
 	public abstract fun measure (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/WidthRange;
+	public static synthetic fun measure$default (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/terminal/Terminal;IILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/WidthRange;
 	public abstract fun render (Lcom/github/ajalt/mordant/terminal/Terminal;I)Lcom/github/ajalt/mordant/rendering/Lines;
+	public static synthetic fun render$default (Lcom/github/ajalt/mordant/rendering/Widget;Lcom/github/ajalt/mordant/terminal/Terminal;IILjava/lang/Object;)Lcom/github/ajalt/mordant/rendering/Lines;
 }
 
 public final class com/github/ajalt/mordant/rendering/Widget$DefaultImpls {
@@ -815,8 +820,8 @@ public abstract interface class com/github/ajalt/mordant/table/CellStyleBuilder 
 	public abstract fun getCellBorders ()Lcom/github/ajalt/mordant/table/Borders;
 	public abstract fun getPadding ()Lcom/github/ajalt/mordant/widgets/Padding;
 	public abstract fun getVerticalAlign ()Lcom/github/ajalt/mordant/rendering/VerticalAlign;
-	public abstract fun padding (I)V
-	public abstract fun padding (Lkotlin/jvm/functions/Function1;)V
+	public fun padding (I)V
+	public fun padding (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun setCellBorders (Lcom/github/ajalt/mordant/table/Borders;)V
 	public abstract fun setPadding (Lcom/github/ajalt/mordant/widgets/Padding;)V
 	public abstract fun setVerticalAlign (Lcom/github/ajalt/mordant/rendering/VerticalAlign;)V
@@ -837,7 +842,8 @@ public abstract interface class com/github/ajalt/mordant/table/CellStyleBuilderB
 	public abstract fun setOverflowWrap (Lcom/github/ajalt/mordant/rendering/OverflowWrap;)V
 	public abstract fun setStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)V
 	public abstract fun setWhitespace (Lcom/github/ajalt/mordant/rendering/Whitespace;)V
-	public abstract fun style (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+	public fun style (Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;)V
+	public static synthetic fun style$default (Lcom/github/ajalt/mordant/table/CellStyleBuilderBase;Lcom/github/ajalt/colormath/Color;Lcom/github/ajalt/colormath/Color;ZZZZZZLjava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class com/github/ajalt/mordant/table/CellStyleBuilderBase$DefaultImpls {
@@ -916,8 +922,11 @@ public final class com/github/ajalt/mordant/table/HorizontalLayoutBuilder$Defaul
 
 public abstract interface class com/github/ajalt/mordant/table/LinearLayoutBuilder : com/github/ajalt/mordant/table/CellStyleBuilderBase {
 	public abstract fun cell (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun cells (Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cells$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun cellsFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cellsFrom$default (Lcom/github/ajalt/mordant/table/LinearLayoutBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun getSpacing ()I
 	public abstract fun setSpacing (I)V
 }
@@ -934,8 +943,11 @@ public abstract interface annotation class com/github/ajalt/mordant/table/Mordan
 
 public abstract interface class com/github/ajalt/mordant/table/RowBuilder : com/github/ajalt/mordant/table/CellStyleBuilder {
 	public abstract fun cell (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun cells (Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cells$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Object;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun cellsFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cellsFrom$default (Lcom/github/ajalt/mordant/table/RowBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class com/github/ajalt/mordant/table/RowBuilder$DefaultImpls {
@@ -950,7 +962,9 @@ public final class com/github/ajalt/mordant/table/RowBuilder$DefaultImpls {
 public abstract interface class com/github/ajalt/mordant/table/RowHolderBuilder {
 	public abstract fun row (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun row ([Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun row$default (Lcom/github/ajalt/mordant/table/RowHolderBuilder;[Ljava/lang/Object;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun rowFrom (Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun rowFrom$default (Lcom/github/ajalt/mordant/table/RowHolderBuilder;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun rowStyles (Lcom/github/ajalt/mordant/rendering/TextStyle;Lcom/github/ajalt/mordant/rendering/TextStyle;[Lcom/github/ajalt/mordant/rendering/TextStyle;)V
 }
 
@@ -976,8 +990,10 @@ public abstract interface class com/github/ajalt/mordant/table/TableBuilder : co
 	public abstract fun body (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun captionBottom (Lcom/github/ajalt/mordant/rendering/Widget;)V
 	public abstract fun captionBottom (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public static synthetic fun captionBottom$default (Lcom/github/ajalt/mordant/table/TableBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;ILjava/lang/Object;)V
 	public abstract fun captionTop (Lcom/github/ajalt/mordant/rendering/Widget;)V
 	public abstract fun captionTop (Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;)V
+	public static synthetic fun captionTop$default (Lcom/github/ajalt/mordant/table/TableBuilder;Ljava/lang/String;Lcom/github/ajalt/mordant/rendering/TextAlign;ILjava/lang/Object;)V
 	public abstract fun footer (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun getBorderStyle ()Lcom/github/ajalt/mordant/rendering/TextStyle;
 	public abstract fun getBorderType ()Lcom/github/ajalt/mordant/rendering/BorderType;
@@ -1175,6 +1191,7 @@ public final class com/github/ajalt/mordant/terminal/Terminal {
 public abstract interface class com/github/ajalt/mordant/terminal/TerminalCursor {
 	public abstract fun getMoves (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
 	public abstract fun hide (Z)V
+	public static synthetic fun hide$default (Lcom/github/ajalt/mordant/terminal/TerminalCursor;ZILjava/lang/Object;)V
 	public abstract fun move (Lkotlin/jvm/functions/Function1;)V
 	public abstract fun show ()V
 }
@@ -1225,12 +1242,12 @@ public final class com/github/ajalt/mordant/terminal/TerminalInfo {
 
 public abstract interface class com/github/ajalt/mordant/terminal/TerminalInterface {
 	public abstract fun completePrintRequest (Lcom/github/ajalt/mordant/terminal/PrintRequest;)V
-	public abstract fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
-	public abstract fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
+	public fun enterRawMode (Lcom/github/ajalt/mordant/input/MouseTracking;)Ljava/lang/AutoCloseable;
+	public fun getTerminalSize ()Lcom/github/ajalt/mordant/rendering/Size;
 	public abstract fun info (Lcom/github/ajalt/mordant/rendering/AnsiLevel;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lcom/github/ajalt/mordant/terminal/TerminalInfo;
-	public abstract fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
+	public fun readInputEvent (Lkotlin/time/TimeMark;Lcom/github/ajalt/mordant/input/MouseTracking;)Lcom/github/ajalt/mordant/input/InputEvent;
 	public abstract fun readLineOrNull (Z)Ljava/lang/String;
-	public abstract fun shouldAutoUpdateSize ()Z
+	public fun shouldAutoUpdateSize ()Z
 }
 
 public final class com/github/ajalt/mordant/terminal/TerminalInterface$DefaultImpls {
@@ -1765,6 +1782,7 @@ public final class com/github/ajalt/mordant/widgets/progress/ProgressLayoutCells
 
 public abstract interface class com/github/ajalt/mordant/widgets/progress/ProgressLayoutScope {
 	public abstract fun cell (Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun cell$default (Lcom/github/ajalt/mordant/widgets/progress/ProgressLayoutScope;Lcom/github/ajalt/mordant/table/ColumnWidth;ILcom/github/ajalt/mordant/rendering/TextAlign;Lcom/github/ajalt/mordant/rendering/VerticalAlign;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public abstract fun getAlign ()Lcom/github/ajalt/mordant/rendering/TextAlign;
 	public abstract fun getAnimationFps ()I
 	public abstract fun getTextFps ()I

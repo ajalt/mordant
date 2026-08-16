@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 // We don't use all the conventions plugins here since applying the mpp=convention results in
 // "IllegalStateException: Configuration already finalized for previous property values"

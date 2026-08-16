@@ -10,6 +10,9 @@ tasks.test {
 dependencies {
     implementation(project(":mordant-omnibus"))
     implementation(project(":mordant-markdown"))
+    // The junit version that comes with kotlin-test is too old to track tests skipped on the JVM,
+    // which the native-image junit feature requires
+    testImplementation(platform(libs.junit.bom))
     testImplementation(kotlin("test"))
 }
 

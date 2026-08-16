@@ -19,6 +19,6 @@ set ARGS=%*
 set ARGS=!ARGS:*%1=!
 if "!ARGS:~0,1!"==" " set ARGS=!ARGS:~1!
 
-call gradlew --quiet ":samples:%TASK%:installDist" && call "samples\%TASK%\build\install\%TASK%\bin\%TASK%" %ARGS%
+call gradlew --quiet ":samples:%TASK%:installJvmDist" && call "samples\%TASK%\build\install\%TASK%-jvm\bin\%TASK%" %ARGS%
 
 if "%OS%"=="Windows_NT" endlocal
