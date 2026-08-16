@@ -10,6 +10,7 @@
 
 ### Fixed
 - Added ProGuard rules to `mordant-jvm-ffm` so that R8 builds targeting JDKs older than 22 don't warn about missing `java.lang.foreign` classes. [(#233)](https://github.com/ajalt/mordant/issues/233)
+- Fixed hyperlink detection for gnome-terminal and other VTE based terminals. [(#132)](https://github.com/ajalt/mordant/issues/132)
 - Fixed table border being drawn incorrectly in some tables that use rowspan. [(#272)](https://github.com/ajalt/mordant/issues/272)
 - Fixed GraalVM reflection configs listing the wrong class names for the terminal interface providers. [(#292)](https://github.com/ajalt/mordant/issues/292)
 - Fixed `ClassCastException` when creating a `Terminal` with the `mordant-jvm-ffm` module on Java 20 and 21. [(#278)](https://github.com/ajalt/mordant/issues/278)

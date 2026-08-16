@@ -55,7 +55,7 @@ object TerminalDetection {
         when (getTerm()) {
             "xterm-kitty", "alacritty" -> return true
         }
-        return false
+        return vteVersionSupportsHyperlinks()
     }
 
     private fun ansiLevel(interactive: Boolean): AnsiLevel {
@@ -175,6 +175,11 @@ object TerminalDetection {
         return (ver[0] > 2) ||
                 (ver[0] == 2 && ver[1] > 9) ||
                 (ver[0] == 2 && ver[1] == 9 && ver[2] > 6)
+    }
+
+    // VTE based terminals like gnome-terminal support hyperlinks since 0.50
+    private fun vteVersionSupportsHyperlinks(): Boolean {
+        return (getEnv("VTE_VERSION")?.toIntOrNull() ?: 0) >= 5000
     }
 
     private fun isCI(): Boolean {
