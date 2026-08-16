@@ -18,6 +18,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
@@ -53,6 +54,21 @@ jobs:
             :mordant-markdown:check
             :test:graalvm:nativeTest
             --stacktrace
+
+      - name: Run native tests with a tty (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: >-
+          script -qec
+          "./test/graalvm/build/native/nativeTestCompile/graalvm-tests
+          -Djunit.platform.listeners.uid.tracking.output.dir=test/graalvm/build/test-results/test/testlist"
+          /dev/null
+
+      - name: Run native tests with a tty (macOS)
+        if: ${{ matrix.os == 'macos-latest' }}
+        # script doesn't propagate the exit code on macOS, so pass it through a file
+        run: |
+          script -q /dev/null sh -c './test/graalvm/build/native/nativeTestCompile/graalvm-tests -Djunit.platform.listeners.uid.tracking.output.dir=test/graalvm/build/test-results/test/testlist; echo $? > /tmp/exit_code'
+          exit "$(cat /tmp/exit_code)"
 
       - name: Upload R8 Jar
         if: ${{ matrix.os == 'ubuntu-latest' }}
