@@ -42,15 +42,15 @@ On JVM, there are more granular dependencies available.
 <details>
 <summary>Snapshot builds are also available</summary>
 
-<a href="https://oss.sonatype.org/content/repositories/snapshots/com/github/ajalt/mordant/mordant/"><img src="https://img.shields.io/nexus/s/com.github.ajalt.mordant/mordant?color=blue&label=latest%20shapshot&server=https%3A%2F%2Foss.sonatype.org"/></a>
+<a href="https://central.sonatype.com/repository/maven-snapshots/com/github/ajalt/mordant/mordant/"><img src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fcom%2Fgithub%2Fajalt%2Fmordant%2Fmordant%2Fmaven-metadata.xml&color=blue&label=latest%20snapshot"/></a>
 
 <p>
-You'll need to add the Sonatype snapshots repository:
+You'll need to add the Central Portal snapshots repository:
 
 ```kotlin
 repositories {
     maven {
-        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        url = uri("https://central.sonatype.com/repository/maven-snapshots/")
     }
 }
 ```
