@@ -16,6 +16,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotest)
+            implementation(libs.kotest.table)
         }
         jvmTest.dependencies {
             api(libs.systemrules)
@@ -26,10 +27,10 @@ kotlin {
         // widths". So we copy the shared sources to each target manually.
         sourceSets {
             // https://kotlinlang.org/docs/multiplatform-hierarchy.html#see-the-full-hierarchy-template
-            val posixMain by creating { dependsOn(nativeMain.get()) }
+            val posixMain = create("posixMain") { dependsOn(nativeMain.get()) }
             linuxMain.get().dependsOn(posixMain)
             appleMain.get().dependsOn(posixMain)
-            val appleNonDesktopMain by creating { dependsOn(appleMain.get()) }
+            val appleNonDesktopMain = create("appleNonDesktopMain") { dependsOn(appleMain.get()) }
             for (target in listOf(iosMain, tvosMain, watchosMain)) {
                 target.get().dependsOn(appleNonDesktopMain)
             }
