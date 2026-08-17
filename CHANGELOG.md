@@ -3,12 +3,14 @@
 ## Unreleased
 ### Added
 - Possibility to specify hidden return value in `Terminal.interactiveSelectList`, `Terminal.interactiveMultiSelectList`, and `InteractiveSelectListBuilder`.
+- Mouse events on POSIX systems now use the SGR protocol when the terminal supports it, which fixes coordinates in windows larger than 223 cells and adds horizontal wheel and extra button reporting. [(#289)](https://github.com/ajalt/mordant/issues/289)
 
 ### Changed
 - The space key is now printed as "space" in the interactive select list.  [(#268)](https://github.com/ajalt/mordant/issues/268)
 - Updated Kotlin to 2.4.10, and all other dependencies to their latest versions.
 
 ### Fixed
+- Fixed mouse wheel events never being reported on POSIX systems, and the middle and right buttons being swapped.
 - Added ProGuard rules to `mordant-jvm-ffm` so that R8 builds targeting JDKs older than 22 don't warn about missing `java.lang.foreign` classes. [(#233)](https://github.com/ajalt/mordant/issues/233)
 - Fixed hyperlink detection for gnome-terminal and other VTE based terminals. [(#132)](https://github.com/ajalt/mordant/issues/132)
 - Fixed hyperlink detection in the VS Code terminal. [(#284)](https://github.com/ajalt/mordant/issues/284)

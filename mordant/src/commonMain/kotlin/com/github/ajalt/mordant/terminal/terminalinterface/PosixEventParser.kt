@@ -91,8 +91,11 @@ internal class PosixEventParser(
                     code.append(ch)
                     read() ?: return null
                 } else if (ch == 'M') {
-                    // mouse event
+                    // legacy mouse event
                     return processMouseEvent(timeout)
+                } else if (ch == '<') {
+                    // sgr mouse event
+                    return processSgrMouseEvent(timeout)
                 }
 
                 val cmdStart = s.length - 1
@@ -372,22 +375,53 @@ internal class PosixEventParser(
         val cy = readUtf8Int(TimeSource.Monotonic.markNow() + 1.milliseconds).let {
             if (it == null) 0 else it - 33
         }
-        val shift = (cb and 4) != 0
-        val alt = (cb and 8) != 0
-        val ctrl = (cb and 16) != 0
-        // cb == 3 means "a button was released", but there's no way to know which one -_-
+        // In this encoding, cb == 3 means "a button was released", but there's no way to know
+        // which one -_-
+        return makeMouseEvent(cb = cb - 32, x = cx, y = cy, release = false)
+    }
+
+    // https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-coordinates
+    private fun processSgrMouseEvent(timeout: TimeMark): InputEvent? {
+        val params = StringBuilder()
+        while (true) {
+            val ch = readRawByte(timeout)?.toChar() ?: return null
+            when (ch) {
+                in '0'..'9', ';' -> params.append(ch)
+                'M', 'm' -> {
+                    val fields = params.split(';').map { it.toIntOrNull() ?: return null }
+                    if (fields.size != 3) return null
+                    val (cb, px, py) = fields
+                    return makeMouseEvent(cb = cb, x = px - 1, y = py - 1, release = ch == 'm')
+                }
+
+                else -> return null // malformed sequence
+            }
+        }
+    }
+
+    private fun makeMouseEvent(cb: Int, x: Int, y: Int, release: Boolean): MouseEvent {
+        val button = cb and 3
+        val wheel = cb and 64 != 0
+        val extra = cb and 128 != 0
+        // Button numbers are bit patterns rather than ordinals: buttons 4-7 are the low bits plus
+        // 64, and buttons 8-11 are the low bits plus 128. Motion events add 32, and a value of 3
+        // in the low bits means no button is involved.
+        val pressed = !release && !wheel && !extra && button != 3
         return MouseEvent(
-            x = cx,
-            y = cy,
-            // On button-motion events, xterm adds 32 to cb
-            left = cb and 3 == 0,
-            right = cb and 3 == 1,
-            middle = cb and 3 == 2,
-            wheelUp = cb == 64,
-            wheelDown = cb == 65,
-            ctrl = ctrl,
-            alt = alt,
-            shift = shift,
+            x = x,
+            y = y,
+            left = pressed && button == 0,
+            middle = pressed && button == 1,
+            right = pressed && button == 2,
+            mouse4 = !release && extra && button == 0,
+            mouse5 = !release && extra && button == 1,
+            wheelUp = wheel && button == 0,
+            wheelDown = wheel && button == 1,
+            wheelLeft = wheel && button == 2,
+            wheelRight = wheel && button == 3,
+            ctrl = cb and 16 != 0,
+            alt = cb and 8 != 0,
+            shift = cb and 4 != 0,
         )
     }
 
