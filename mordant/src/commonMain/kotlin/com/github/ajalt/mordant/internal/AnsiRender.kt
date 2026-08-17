@@ -76,7 +76,8 @@ internal fun downsample(style: TextStyle, level: AnsiLevel, hyperlinks: Boolean)
             hyperlinkId = style.hyperlinkId.takeIf { hyperlinks }
         )
 
-        AnsiLevel.TRUECOLOR -> if (hyperlinks || style.hyperlink == null) style else style.copy(
+        AnsiLevel.TRUECOLOR if hyperlinks || style.hyperlink == null -> style
+        AnsiLevel.TRUECOLOR -> style.copy(
             fg = style.color,
             bg = style.bgColor,
             hyperlink = null,

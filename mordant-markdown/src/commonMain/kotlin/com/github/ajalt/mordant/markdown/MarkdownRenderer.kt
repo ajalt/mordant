@@ -117,22 +117,22 @@ internal class MarkdownRenderer(
                 if (theme.flag("markdown.code.block.border")) Panel(content) else content
             }
 
-            MarkdownElementTypes.HTML_BLOCK -> when {
-                showHtml -> Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP)
-                else -> Text("")
+            MarkdownElementTypes.HTML_BLOCK if showHtml -> {
+                Text(innerInlines(node), whitespace = Whitespace.PRE_WRAP)
             }
+
+            MarkdownElementTypes.HTML_BLOCK -> Text("")
 
             MarkdownElementTypes.PARAGRAPH -> {
                 Text(innerInlines(node), whitespace = Whitespace.NORMAL)
             }
 
-            MarkdownElementTypes.LINK_DEFINITION -> {
-                if (hyperlinks) EmptyWidget
-                else Text(
-                    theme.style("markdown.link.destination")(node.nodeText()),
-                    whitespace = Whitespace.NORMAL
-                )
-            }
+            MarkdownElementTypes.LINK_DEFINITION if hyperlinks -> EmptyWidget
+
+            MarkdownElementTypes.LINK_DEFINITION -> Text(
+                theme.style("markdown.link.destination")(node.nodeText()),
+                whitespace = Whitespace.NORMAL
+            )
 
             MarkdownElementTypes.SETEXT_1 -> setext(
                 theme.string("markdown.h1.rule"),
@@ -281,7 +281,8 @@ internal class MarkdownRenderer(
             -> theme.style("markdown.link.text")(node.nodeText())
 
             MarkdownElementTypes.AUTOLINK -> innerInlines(node, drop = 1)
-            MarkdownTokenTypes.HTML_TAG -> if (showHtml) node.nodeText() else ""
+            MarkdownTokenTypes.HTML_TAG if showHtml -> node.nodeText()
+            MarkdownTokenTypes.HTML_TAG -> ""
 
             // TokenTypes
             MarkdownTokenTypes.BLOCK_QUOTE -> "" // don't render '>' delimiters in block quotes
