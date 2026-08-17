@@ -86,7 +86,8 @@ object TerminalDetection {
         when (getTermProgram()) {
             "hyper" -> return TRUECOLOR
             "apple_terminal" -> return ANSI256
-            "iterm.app" -> return if (iTermVersionSupportsTruecolor()) TRUECOLOR else ANSI256
+            "iterm.app" if iTermVersionSupportsTruecolor() -> return TRUECOLOR
+            "iterm.app" -> return ANSI256
             "wezterm" -> return TRUECOLOR
             "mintty" -> return TRUECOLOR
         }

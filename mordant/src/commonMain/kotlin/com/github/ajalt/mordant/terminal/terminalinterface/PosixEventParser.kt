@@ -308,39 +308,49 @@ internal class PosixEventParser(
 
                 else -> name = "Unidentified"
             }
-        } else if (ch == '\r') {
-            name = "Enter"
-            alt = escaped
-        } else if (ch == '\n') {
-            name = "Enter"
-            alt = escaped
-        } else if (ch == '\t') {
-            name = "Tab"
-            alt = escaped
-        } else if (ch == '\b' || ch == '\u007f') {
+        } else when (ch) {
+            '\r', '\n' -> {
+                name = "Enter"
+                alt = escaped
+            }
+
+            '\t' -> {
+                name = "Tab"
+                alt = escaped
+            }
+
             // backspace or ctrl+h
-            name = "Backspace"
-            alt = escaped
-        } else if (ch == ESC) {
-            // escape key
-            name = "Escape"
-            alt = escaped
-        } else if (ch == ' ') {
-            name = " "
-            alt = escaped
-        } else if (!escaped && ch <= '\u001a') {
+            '\b', '\u007f' -> {
+                name = "Backspace"
+                alt = escaped
+            }
+
+            ESC -> {
+                name = "Escape"
+                alt = escaped
+            }
+
+            ' ' -> {
+                name = " "
+                alt = escaped
+            }
+
             // ctrl+letter
-            name = (ch.code + 'a'.code - 1).toChar().toString()
-            ctrl = true
-        } else if (ch.isLetter() || ch.isDigit()) {
-            // Letter, number, shift+letter
-            name = ch.toString()
-            shift = ch in 'A'..'Z'
-            alt = escaped
-        } else if (escaped) {
-            // Escape sequence timeout
-            if (name == null) name = "Escape"
-            alt = true
+            in '\u0000'..'\u001a' if !escaped -> {
+                name = (ch.code + 'a'.code - 1).toChar().toString()
+                ctrl = true
+            }
+
+            else -> if (ch.isLetter() || ch.isDigit()) {
+                // Letter, number, shift+letter
+                name = ch.toString()
+                shift = ch in 'A'..'Z'
+                alt = escaped
+            } else if (escaped) {
+                // Escape sequence timeout
+                if (name == null) name = "Escape"
+                alt = true
+            }
         }
 
         return KeyboardEvent(

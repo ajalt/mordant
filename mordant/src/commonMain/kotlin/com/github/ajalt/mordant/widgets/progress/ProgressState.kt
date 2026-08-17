@@ -101,12 +101,12 @@ val Status.finishTime: ComparableTimeMark?
  * @param elapsedWhenFinished If `true`, return the total elapsed time when the task is finished.
  */
 fun ProgressState<*>.calculateTimeRemaining(elapsedWhenFinished: Boolean = true): Duration? {
-    return when {
-        status is Status.Finished && elapsedWhenFinished -> {
+    return when (status) {
+        is Status.Finished if elapsedWhenFinished -> {
             status.finishTime - status.startTime
         }
 
-        status is Status.Running && speed != null && speed > 0 && total != null -> {
+        is Status.Running if speed != null && speed > 0 && total != null -> {
             ((total - completed) / speed).seconds
         }
 

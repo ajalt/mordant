@@ -87,9 +87,9 @@ internal class TableImpl(
 
     /** Whether any cell in row `i` has a border above it */
     private val rowBorders = List(rows.size + 1) { y ->
-        when {
-            y == 0 && tableBorders != null -> tableBorders.top
-            y == rows.size && tableBorders != null -> tableBorders.bottom
+        when (y) {
+            0 if tableBorders != null -> tableBorders.top
+            rows.size if tableBorders != null -> tableBorders.bottom
             else -> (0..<columnCount).any { x ->
                 getCell(x, y).t || getCell(x, y - 1).b
             }
@@ -98,9 +98,9 @@ internal class TableImpl(
 
     /** Whether any cell in column `i` has a border to its left */
     private val columnBorders = List(columnCount + 1) { x ->
-        when {
-            x == 0 && tableBorders != null -> tableBorders.left
-            x == columnCount && tableBorders != null -> tableBorders.right
+        when (x) {
+            0 if tableBorders != null -> tableBorders.left
+            columnCount if tableBorders != null -> tableBorders.right
             else -> rows.indices.any { y ->
                 getCell(x, y).l || getCell(x - 1, y).r
             }

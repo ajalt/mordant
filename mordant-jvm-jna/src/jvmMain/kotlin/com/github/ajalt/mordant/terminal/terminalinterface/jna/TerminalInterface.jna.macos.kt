@@ -125,10 +125,10 @@ internal class TerminalInterfaceJnaMacos : TerminalInterfaceJvmPosix() {
 
 @Suppress("SameParameterValue")
 private fun getSttySize(timeoutMs: Long): Size? {
-    val process = when {
-        // Try running stty both directly and via env, since neither one works on all systems
-        else -> runCommand("stty", "size") ?: runCommand("/usr/bin/env", "stty", "size")
-    } ?: return null
+    // Try running stty both directly and via env, since neither one works on all systems
+    val process = runCommand("stty", "size")
+        ?: runCommand("/usr/bin/env", "stty", "size")
+        ?: return null
     try {
         if (!process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)) {
             return null
@@ -138,9 +138,7 @@ private fun getSttySize(timeoutMs: Long): Size? {
     }
 
     val output = process.inputStream.bufferedReader().readText().trim()
-    return when {
-        else -> parseSttySize(output)
-    }
+    return parseSttySize(output)
 }
 
 private fun runCommand(vararg args: String): Process? {
