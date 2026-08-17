@@ -62,10 +62,10 @@ class MarkdownTest {
 
    @[Test JsName("math_block")]
     fun `math block`() = doTest(
-        """
-This expression uses `\${'$'}` to display a dollar sign: ${'$'}\sqrt{\${'$'}4}${'$'}
+        $$"""
+This expression uses `\$` to display a dollar sign: $\sqrt{\$4}$
 
-${'$'}${'$'}\sum_{k=1}^n a_k^2${'$'}${'$'}
+$$\sum_{k=1}^n a_k^2$$
 """,
         """
 This expression uses ${code("\\$")} to display a dollar sign: ${code("\\sqrt{\\\$4}")}
@@ -911,8 +911,8 @@ foo {
     // https://github.github.com/gfm/#example-113
    @[Test JsName("fenced_code_block_with_info_string")]
     fun `fenced code block with info string`() = doTest(
-        """
-~~~~    ruby startline=3 ${'$'}%@#${'$'}
+        $$"""
+~~~~    ruby startline=3 $%@#$
 def foo(x)
   return 3
 end
