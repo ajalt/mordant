@@ -48,7 +48,7 @@ object TerminalDetection {
         if (forcedColor() == NONE || isCI()) return false
         if (isWindowsTerminal()) return true
         when (getTermProgram()) {
-            "hyper", "wezterm", "ghostty" -> return true
+            "hyper", "wezterm", "ghostty", "vscode" -> return true
             "iterm.app" -> return iTermVersionSupportsTruecolor()
             "mintty" -> return minttyVersionSupportsHyperlinks()
         }

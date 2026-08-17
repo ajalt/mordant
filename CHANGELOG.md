@@ -11,6 +11,7 @@
 ### Fixed
 - Added ProGuard rules to `mordant-jvm-ffm` so that R8 builds targeting JDKs older than 22 don't warn about missing `java.lang.foreign` classes. [(#233)](https://github.com/ajalt/mordant/issues/233)
 - Fixed hyperlink detection for gnome-terminal and other VTE based terminals. [(#132)](https://github.com/ajalt/mordant/issues/132)
+- Fixed hyperlink detection in the VS Code terminal. [(#284)](https://github.com/ajalt/mordant/issues/284)
 - Fixed environment detection on JS when running as an ES module. [(#253)](https://github.com/ajalt/mordant/issues/253)
 - Fixed `LastErrorException` leaking from the JNA terminal interface when entering raw mode without an attached terminal. [(#195)](https://github.com/ajalt/mordant/issues/195)
 - Fixed table border being drawn incorrectly in some tables that use rowspan. [(#272)](https://github.com/ajalt/mordant/issues/272)
