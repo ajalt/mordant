@@ -35,10 +35,10 @@ jobs:
 #      - name: Dokka
 #        run: ./gradlew dokkaGenerate
 #      - run : ./prepare_docs.sh
-#      - name: Build mkdocs
+#      - name: Build website
 #        run: |
-#          pip install mkdocs-material
-#          mkdocs build
+#          pip install zensical
+#          zensical build
 #      - name: Deploy docs to website
 #        uses: JamesIves/github-pages-deploy-action@v4
 #        with:
