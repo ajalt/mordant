@@ -1,0 +1,55 @@
+[project]
+site_name = "Mordant"
+site_description = "Mordant: Multiplatform text styling for Kotlin command-line applications"
+site_author = "AJ Alt"
+copyright = "Copyright &copy; 2018 AJ Alt"
+repo_url = "https://github.com/ajalt/mordant"
+repo_name = "Mordant"
+
+extra_css = ["css/extra.css"]
+
+nav = [
+  { "Getting Started" = "guide.md" },
+  { "Progress Bars" = "progress.md" },
+  { "Keyboard and Mouse Input" = "input.md" },
+  { "API Reference" = "api/index.html" },
+  { "Releases" = "changelog.md" },
+]
+
+[project.theme]
+logo = "img/gradient_white_24dp.svg"
+favicon = "img/favicon.ico"
+icon.repo = "fontawesome/brands/github"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "indigo"
+accent = "indigo"
+toggle.icon = "material/brightness-7"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "indigo"
+accent = "indigo"
+toggle.icon = "material/brightness-4"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions]
+smarty = {}
+codehilite.guess_lang = false
+footnotes = {}
+meta = {}
+toc.permalink = true
+admonition = {}
+pymdownx.betterem.smart_enable = "all"
+pymdownx.details = {}
+pymdownx.caret = {}
+pymdownx.inlinehilite = {}
+pymdownx.magiclink = {}
+pymdownx.smartsymbols = {}
+pymdownx.superfences = {}
+pymdownx.tabbed.alternate_style = true
+tables = {}
