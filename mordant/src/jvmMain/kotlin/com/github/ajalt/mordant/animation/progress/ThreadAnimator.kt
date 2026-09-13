@@ -4,6 +4,8 @@ import com.github.ajalt.mordant.animation.Animation
 import com.github.ajalt.mordant.animation.RefreshableAnimation
 import com.github.ajalt.mordant.animation.asRefreshable
 import com.github.ajalt.mordant.animation.refreshPeriod
+import com.github.ajalt.mordant.internal.addShutdownHook
+import com.github.ajalt.mordant.internal.removeShutdownHook
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.MultiProgressBarWidgetMaker
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
@@ -261,7 +263,25 @@ fun MultiProgressBarAnimation.animateOnThread(): ThreadProgressAnimator {
 fun BlockingAnimator.execute(
     executor: ExecutorService = Executors.newSingleThreadExecutor(DaemonThreadFactory()),
 ): Future<*> {
-    return executor.submit(::runBlocking)
+    return executor.submit(::runBlockingUntilShutdown)
+}
+
+/**
+ * Run the animation, stopping it if the JVM starts shutting down before it finishes.
+ *
+ * The default executor's threads are daemons, which shutdown doesn't stop, so without this the
+ * animation keeps drawing frames over the cursor that the exit hook has already restored, until
+ * the JVM halts. Hooks run concurrently in an unspecified order, but [BlockingAnimator.stop] and
+ * the cursor's own hook both end by showing the cursor, so only the drawing needs stopping.
+ */
+private fun BlockingAnimator.runBlockingUntilShutdown() {
+    val hook = Thread({ stop() }, "mordant-animator-shutdown")
+    val registered = addShutdownHook(hook)
+    try {
+        runBlocking()
+    } finally {
+        if (registered) removeShutdownHook(hook)
+    }
 }
 
 private class DaemonThreadFactory : ThreadFactory {

@@ -114,9 +114,10 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
 
 /**
  * Register [hook], returning `false` if the JVM is already shutting down, which any thread that
- * outlives the main one can hit. The cursor can't be protected then, but hiding it shouldn't throw.
+ * outlives the main one can hit. There's nothing left to register for at that point, but the caller
+ * shouldn't have to fail because of it.
  */
-private fun addShutdownHook(hook: Thread): Boolean {
+internal fun addShutdownHook(hook: Thread): Boolean {
     return try {
         Runtime.getRuntime().addShutdownHook(hook)
         true
@@ -127,9 +128,9 @@ private fun addShutdownHook(hook: Thread): Boolean {
 
 /**
  * Unregister [hook], returning `false` if the JVM is already shutting down, in which case it has
- * already run or is about to. All it does is show the cursor, so letting it run is harmless.
+ * already run or is about to, and there is no way to withdraw it.
  */
-private fun removeShutdownHook(hook: Thread): Boolean {
+internal fun removeShutdownHook(hook: Thread): Boolean {
     return try {
         Runtime.getRuntime().removeShutdownHook(hook)
     } catch (e: IllegalStateException) {
