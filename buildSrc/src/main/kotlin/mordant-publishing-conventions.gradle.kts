@@ -16,10 +16,12 @@ fun getPublishVersion(): String {
     return "$version.$buildNumber-SNAPSHOT"
 }
 
+version = getPublishVersion()
+
 // Since we want to set the version name dynamically, we have to use the base plugin
 @Suppress("UnstableApiUsage")
 mavenPublishing {
-    project.setProperty("VERSION_NAME", getPublishVersion())
+    project.setProperty("VERSION_NAME", version)
     pomFromGradleProperties()
     configure(KotlinMultiplatform(JavadocJar.Empty()))
     publishToMavenCentral()
