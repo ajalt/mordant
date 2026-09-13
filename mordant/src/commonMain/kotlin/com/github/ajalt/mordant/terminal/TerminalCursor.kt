@@ -182,12 +182,14 @@ internal object DisabledTerminalCursor : TerminalCursor {
 }
 
 internal abstract class PrintTerminalCursor(protected val terminal: Terminal) : TerminalCursor {
+    // Visibility is terminal state rather than output, so it goes around any animation's
+    // interceptor: it occupies no cells, and the animation has nothing to redraw around it.
     override fun show() {
-        terminal.rawPrint("$CSI?25h")
+        terminal.rawPrintUnintercepted("$CSI?25h")
     }
 
     override fun hide(showOnExit: Boolean) {
-        terminal.rawPrint("$CSI?25l")
+        terminal.rawPrintUnintercepted("$CSI?25l")
     }
 
     override fun move(movements: CursorMovements.() -> Unit) {
