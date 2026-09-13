@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Fixed `TerminalCursor.show()` permanently disabling the show-on-exit shutdown hook. Any `hide(showOnExit = true)` after the first `show()` left the cursor unprotected, so a program that exited while a bar was on screen left the cursor hidden. [(#305)](https://github.com/ajalt/mordant/issues/305)
+
 ## 3.1.0
 ### Added
 - Mouse events on POSIX systems now use the SGR protocol when the terminal supports it, which fixes coordinates in windows larger than 223 cells and adds horizontal wheel and extra button reporting. [(#289)](https://github.com/ajalt/mordant/issues/289)

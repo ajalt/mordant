@@ -71,7 +71,11 @@ private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termi
     private var shutdownHook: (() -> Unit)? = null
 
     override fun show() {
-        shutdownHook?.let { process.removeListener("exit", it) }
+        shutdownHook?.let {
+            process.removeListener("exit", it)
+            // Clear the field, or a later `hide` won't register a new listener
+            shutdownHook = null
+        }
         super.show()
     }
 

@@ -85,13 +85,15 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 }
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
+    /** This cursor's own hook, while it's registered */
     private var shutdownHook: Thread? = null
     private val cursorLock = Any()
 
     override fun show() {
         synchronized(cursorLock) {
             shutdownHook?.let { hook ->
-                Runtime.getRuntime().removeShutdownHook(hook)
+                // Clear the field, or a later `hide` won't register a new hook
+                if (removeShutdownHook(hook)) shutdownHook = null
             }
         }
         super.show()
@@ -101,12 +103,37 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
         if (showOnExit) {
             synchronized(cursorLock) {
                 if (shutdownHook == null) {
-                    shutdownHook = Thread { super.show() }
-                    Runtime.getRuntime().addShutdownHook(shutdownHook)
+                    val hook = Thread { super.show() }
+                    if (addShutdownHook(hook)) shutdownHook = hook
                 }
             }
         }
         super.hide(showOnExit)
+    }
+}
+
+/**
+ * Register [hook], returning `false` if the JVM is already shutting down, which any thread that
+ * outlives the main one can hit. The cursor can't be protected then, but hiding it shouldn't throw.
+ */
+private fun addShutdownHook(hook: Thread): Boolean {
+    return try {
+        Runtime.getRuntime().addShutdownHook(hook)
+        true
+    } catch (e: IllegalStateException) {
+        false
+    }
+}
+
+/**
+ * Unregister [hook], returning `false` if the JVM is already shutting down, in which case it has
+ * already run or is about to. All it does is show the cursor, so letting it run is harmless.
+ */
+private fun removeShutdownHook(hook: Thread): Boolean {
+    return try {
+        Runtime.getRuntime().removeShutdownHook(hook)
+    } catch (e: IllegalStateException) {
+        false
     }
 }
 
