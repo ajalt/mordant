@@ -25,7 +25,7 @@ class ThreadAnimatorTest {
         var i = 1
         val a = t.textAnimation<Unit> { "${i++}" }.animateOnThread(fps = 10000) { i > 2 }
         a.runBlocking()
-        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3"
+        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3$SHOW_CURSOR"
         vt.clearOutput()
         a.stop()
         vt.output() shouldBe "\n$SHOW_CURSOR"
@@ -42,6 +42,15 @@ class ThreadAnimatorTest {
         task2.advance(10)
         animation.runBlocking()
         vt.output().shouldContain(" 10/10\n       10/10")
+    }
+
+    @Test
+    fun `runBlocking shows the cursor when the animation finishes on its own`() {
+        val layout = progressBarLayout { completed(fps = 100) }
+        val animation = MultiProgressBarAnimation(t).animateOnThread()
+        animation.addTask(layout, total = 10).advance(10)
+        animation.runBlocking()
+        vt.output() shouldEndWith SHOW_CURSOR
     }
 
     @Test

@@ -5,6 +5,7 @@
 - Fixed `TerminalCursor.show()` permanently disabling the show-on-exit shutdown hook. Any `hide(showOnExit = true)` after the first `show()` left the cursor unprotected, so a program that exited while a bar was on screen left the cursor hidden. [(#305)](https://github.com/ajalt/mordant/issues/305)
 - Fixed an animation started with `BlockingAnimator.execute` drawing frames over the restored cursor during JVM shutdown. The executor's threads are daemons, which shutdown doesn't stop, so the animation kept painting until the JVM halted. [(#305)](https://github.com/ajalt/mordant/issues/305)
 - Fixed a running animation repainting itself when the cursor is shown or hidden. `TerminalCursor.show()` and `hide()` printed through the animation's interceptor, which treated the sequences as program output and cleared and redrew the animation around them, even though they occupy no cells. [(#305)](https://github.com/ajalt/mordant/issues/305)
+- Fixed an animation that finishes on its own leaving the cursor hidden. `BlockingAnimator.runBlocking` and `CoroutineAnimator.execute` hide the cursor when they start, but only `stop` and `clear` showed it again, so the documented usage that waits for the animation to finish left it to the exit hook. [(#305)](https://github.com/ajalt/mordant/issues/305)
 
 ## 3.1.0
 ### Added
