@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Fixed
+- Fixed a progress bar that finishes while its animator is running leaving a stale frame on the previous line. `MultiProgressBarAnimation.refresh` now redraws the finished frame in place before stopping, rather than stopping on the frame that was drawn before the tasks finished. [(#302)](https://github.com/ajalt/mordant/issues/302)
+
 ## 3.1.0
 ### Added
 - Mouse events on POSIX systems now use the SGR protocol when the terminal supports it, which fixes coordinates in windows larger than 223 cells and adds horizontal wheel and extra button reporting. [(#289)](https://github.com/ajalt/mordant/issues/289)

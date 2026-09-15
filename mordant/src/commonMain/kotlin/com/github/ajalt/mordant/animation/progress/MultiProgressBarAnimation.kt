@@ -39,7 +39,12 @@ class MultiProgressBarAnimation(
      */
     private val timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
 ) : RefreshableAnimation, ProgressBarAnimation {
-    private data class State(val visible: Boolean, val tasks: List<ProgressTaskImpl<*>>)
+    private data class State(
+        val visible: Boolean,
+        val tasks: List<ProgressTaskImpl<*>>,
+        /** `true` if we drew the finished frame and stopped ourselves after it. */
+        val stoppedWhenFinished: Boolean = false,
+    )
 
     private val state = MppAtomicRef(State(true, emptyList()))
     private val animationTime = timeSource.markNow()
@@ -77,9 +82,30 @@ class MultiProgressBarAnimation(
     override fun refresh(refreshAll: Boolean) {
         val s = state.value
         if (!s.visible) return
-        if (refreshAll) invalidateAllCaches()
-        animation.update(s.tasks.filter { it.visible }.map { it.makeRow() })
-        if (finished) {
+
+        fun tasksFinished() = s.tasks.all { it.finished }
+        fun draw() = animation.update(s.tasks.filter { it.visible }.map { it.makeRow() })
+
+        var isFinished = tasksFinished()
+        if (s.stoppedWhenFinished) {
+            // Drawing again would start a new animation below the frame we stopped on
+            if (isFinished) return
+            state.update { copy(stoppedWhenFinished = false) }
+        }
+
+        // The finished frame is the last one drawn, so it can't leave throttled cells stale
+        if (refreshAll || isFinished) invalidateAllCaches()
+        draw()
+
+        if (!isFinished && tasksFinished()) {
+            // The tasks finished while we were drawing, so that frame is already stale
+            isFinished = true
+            invalidateAllCaches()
+            draw()
+        }
+
+        if (isFinished) {
+            state.update { copy(stoppedWhenFinished = true) }
             if (clearWhenFinished) animation.clear() else animation.stop()
         }
     }
