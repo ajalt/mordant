@@ -11,6 +11,7 @@ import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldEndWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
@@ -83,6 +84,19 @@ class CoroutinesAnimatorTest {
         advanceTimeBy(1.0.seconds)
         job.isActive shouldBe false
         vt.fullNormalizedOutput() shouldBe "$HIDE_CURSOR        0/10\r${CSI}0J$SHOW_CURSOR"
+    }
+
+   @[Test JsName("execute_shows_the_cursor_when_the_animation_finishes")]
+    fun `execute shows the cursor when the animation finishes`() = runTest {
+        val a = progressBarLayout(spacing = 0, textFps = 1) {
+            completed()
+        }.animateInCoroutine(t, total = 10, timeSource = testTimeSource)
+        val job = backgroundScope.launch { a.execute() }
+        advanceTimeBy(0.1.seconds)
+        a.advance(10)
+        advanceTimeBy(1.0.seconds)
+        job.isActive shouldBe false
+        vt.fullNormalizedOutput() shouldEndWith SHOW_CURSOR
     }
 
    @[Test JsName("unit_animation")]

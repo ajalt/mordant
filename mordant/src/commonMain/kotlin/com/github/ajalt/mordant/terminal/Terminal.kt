@@ -255,6 +255,23 @@ class Terminal private constructor(
         rawPrint(message as CharSequence, stderr)
     }
 
+    /**
+     * Send [message] to the terminal without running the interceptor chain, under the same lock
+     * that [rawPrint] uses.
+     *
+     * This is only for control sequences that change terminal state and print nothing, like hiding
+     * the cursor. An [Animation][com.github.ajalt.mordant.animation.Animation]'s interceptor treats
+     * whatever it is given as program output that belongs above the animation, so it would clear
+     * and repaint the animation around a sequence that occupies no cells.
+     */
+    internal fun rawPrintUnintercepted(message: String) {
+        sendInterceptedPrintRequest(
+            PrintRequest(message, trailingLinebreak = false, stderr = false),
+            terminalInterface,
+            emptyList(),
+        )
+    }
+
     internal fun addInterceptor(interceptor: TerminalInterceptor) {
         interceptors.update { this + interceptor }
     }

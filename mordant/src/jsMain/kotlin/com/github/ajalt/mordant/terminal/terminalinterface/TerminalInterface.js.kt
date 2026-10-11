@@ -68,17 +68,13 @@ internal class TerminalInterfaceJsNode(private val fs: dynamic) : TerminalInterf
 }
 
 private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: (() -> Unit)? = null
-
-    override fun show() {
-        shutdownHook?.let { process.removeListener("exit", it) }
-        super.show()
-    }
+    // The listener is never removed: showing a cursor that's already visible is harmless
+    private var exitListenerAdded = false
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit && shutdownHook == null) {
-            shutdownHook = { show() }
-            process.on("exit", shutdownHook)
+        if (showOnExit && !exitListenerAdded) {
+            process.on("exit") { show() }
+            exitListenerAdded = true
         }
         super.hide(showOnExit)
     }

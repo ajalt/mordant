@@ -64,7 +64,12 @@ class BaseCoroutineAnimator(
         }
         mutex.withLock {
             // final refresh to show finished state
-            if (!stopped) animation.refresh(refreshAll = true)
+            if (!stopped) {
+                animation.refresh(refreshAll = true)
+                // `stop` and `clear` are the only other places that show the cursor, and neither
+                // is called when the tasks finish on their own
+                terminal.cursor.show()
+            }
         }
     }
 

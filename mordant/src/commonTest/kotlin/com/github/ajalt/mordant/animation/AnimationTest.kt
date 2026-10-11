@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.normalizedOutput
@@ -132,5 +133,17 @@ class AnimationTest {
         rec.clearOutput()
         b.stop()
         rec.normalizedOutput().visibleCrLf() shouldBe "\n".visibleCrLf()
+    }
+
+    @[Test JsName("cursor_visibility_does_not_redraw_the_animation")]
+    fun `cursor visibility does not redraw the animation`() {
+        // The sequences occupy no cells, so the interceptor has nothing to draw around them
+        val a = t.textAnimation<String> { it }
+        a.update("1")
+        rec.clearOutput()
+
+        t.cursor.hide(showOnExit = false)
+        t.cursor.show()
+        rec.output() shouldBe "$CSI?25l$CSI?25h"
     }
 }

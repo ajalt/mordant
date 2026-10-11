@@ -85,28 +85,52 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 }
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: Thread? = null
+    // The hook is never removed: showing a cursor that's already visible is harmless, while
+    // removing a hook throws once the JVM has started shutting down
+    private var hookRegistered = false
+    private var hookRan = false
     private val cursorLock = Any()
 
-    override fun show() {
-        synchronized(cursorLock) {
-            shutdownHook?.let { hook ->
-                Runtime.getRuntime().removeShutdownHook(hook)
-            }
-        }
-        super.show()
-    }
-
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit) {
-            synchronized(cursorLock) {
-                if (shutdownHook == null) {
-                    shutdownHook = Thread { super.show() }
-                    Runtime.getRuntime().addShutdownHook(shutdownHook)
-                }
+        synchronized(cursorLock) {
+            if (showOnExit && !hookRegistered) {
+                hookRegistered = addShutdownHook(Thread {
+                    synchronized(cursorLock) {
+                        hookRan = true
+                        super.show()
+                    }
+                })
             }
+            // Once the JVM is shutting down, nothing would show the cursor again
+            if (showOnExit && !hookRegistered || hookRan) return
+            super.hide(showOnExit)
         }
-        super.hide(showOnExit)
+    }
+}
+
+/**
+ * Register [hook], returning `false` if the JVM is already shutting down, which any thread that
+ * outlives the main one can hit. There's nothing left to register for at that point, but the caller
+ * shouldn't have to fail because of it.
+ */
+internal fun addShutdownHook(hook: Thread): Boolean {
+    return try {
+        Runtime.getRuntime().addShutdownHook(hook)
+        true
+    } catch (e: IllegalStateException) {
+        false
+    }
+}
+
+/**
+ * Unregister [hook], returning `false` if the JVM is already shutting down, in which case it has
+ * already run or is about to, and there is no way to withdraw it.
+ */
+internal fun removeShutdownHook(hook: Thread): Boolean {
+    return try {
+        Runtime.getRuntime().removeShutdownHook(hook)
+    } catch (e: IllegalStateException) {
+        false
     }
 }
 
