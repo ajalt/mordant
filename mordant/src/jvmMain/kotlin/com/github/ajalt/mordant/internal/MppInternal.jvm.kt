@@ -85,27 +85,15 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 }
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    /** This cursor's own hook, while it's registered */
-    private var shutdownHook: Thread? = null
+    // The hook is never removed: showing a cursor that's already visible is harmless, while
+    // removing a hook throws once the JVM has started shutting down
+    private var hookRegistered = false
     private val cursorLock = Any()
-
-    override fun show() {
-        synchronized(cursorLock) {
-            shutdownHook?.let { hook ->
-                // Clear the field, or a later `hide` won't register a new hook
-                if (removeShutdownHook(hook)) shutdownHook = null
-            }
-        }
-        super.show()
-    }
 
     override fun hide(showOnExit: Boolean) {
         if (showOnExit) {
             synchronized(cursorLock) {
-                if (shutdownHook == null) {
-                    val hook = Thread { super.show() }
-                    if (addShutdownHook(hook)) shutdownHook = hook
-                }
+                if (!hookRegistered) hookRegistered = addShutdownHook(Thread { super.show() })
             }
         }
         super.hide(showOnExit)

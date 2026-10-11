@@ -21,7 +21,6 @@ private external object process {
     val stderr: Stream
 
     fun on(event: String, listener: () -> Unit)
-    fun removeListener(event: String, listener: () -> Unit)
     fun exit(status: Int)
 }
 
@@ -106,22 +105,13 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 }
 
 private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: (() -> Unit)? = null
-
-    override fun show() {
-        shutdownHook?.let {
-            process.removeListener("exit", it)
-            // Clear the field, or a later `hide` won't register a new listener
-            shutdownHook = null
-        }
-        super.show()
-    }
+    // The listener is never removed: showing a cursor that's already visible is harmless
+    private var exitListenerAdded = false
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit && shutdownHook == null) {
-            val function = { show() }
-            shutdownHook = function
-            process.on("exit", function)
+        if (showOnExit && !exitListenerAdded) {
+            process.on("exit") { show() }
+            exitListenerAdded = true
         }
         super.hide(showOnExit)
     }
