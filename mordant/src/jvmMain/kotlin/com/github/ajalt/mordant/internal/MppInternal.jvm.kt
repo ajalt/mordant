@@ -88,15 +88,23 @@ private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(termin
     // The hook is never removed: showing a cursor that's already visible is harmless, while
     // removing a hook throws once the JVM has started shutting down
     private var hookRegistered = false
+    private var hookRan = false
     private val cursorLock = Any()
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit) {
-            synchronized(cursorLock) {
-                if (!hookRegistered) hookRegistered = addShutdownHook(Thread { super.show() })
+        synchronized(cursorLock) {
+            if (showOnExit && !hookRegistered) {
+                hookRegistered = addShutdownHook(Thread {
+                    synchronized(cursorLock) {
+                        hookRan = true
+                        super.show()
+                    }
+                })
             }
+            // Once the JVM is shutting down, nothing would show the cursor again
+            if (showOnExit && !hookRegistered || hookRan) return
+            super.hide(showOnExit)
         }
-        super.hide(showOnExit)
     }
 }
 
