@@ -100,39 +100,42 @@ internal class PosixEventParser(
 
                 val cmdStart = s.length - 1
 
-                // leading digits
-                repeat(3) {
-                    if (ch in '0'..'9') {
-                        read() ?: return null
-                    }
-                }
-
-                // modifier
-                if (ch == ';') {
+                // Consume all parameter, intermediate, and final bytes of the CSI sequence.
+                // Final bytes are in the range 0x40..0x7E ('@' to '~'), plus '$' for rxvt.
+                while (ch.code !in 0x40..0x7E && ch != '$') {
+                    if (ch.code < 0x20) break
                     read() ?: return null
-
-                    if (ch in '0'..'9') {
-                        read() ?: return null
-                    }
                 }
 
                 // We buffered enough data, now extract code and modifier from it
                 val cmd = s.substring(cmdStart)
-                var match = Regex("""(\d\d?)(?:;(\d))?([~^$])|(\d{3}~)""").matchEntire(cmd)
+                var match = Regex("""27;(\d+);(\d+)~""").matchEntire(cmd)
                 if (match != null) {
-                    if (match.groupValues[4].isNotEmpty()) {
-                        code.append(match.groupValues[4])
-                    } else {
-                        code.append(match.groupValues[1] + match.groupValues[3])
-                        modifier = (match.groupValues[2].toIntOrNull() ?: 1) - 1
-                    }
+                    modifier = (match.groupValues[1].toIntOrNull() ?: 1) - 1
+                    name = keycodeToName(match.groupValues[2].toIntOrNull() ?: 0)
                 } else {
-                    match = Regex("""((\d;)?(\d))?([A-Za-z])""").matchEntire(cmd)
+                    match = Regex("""(\d+)(?:;(\d+))?u""").matchEntire(cmd)
                     if (match != null) {
-                        code.append(match.groupValues[4])
-                        modifier = (match.groupValues[3].toIntOrNull() ?: 1) - 1
+                        modifier = (match.groupValues[2].toIntOrNull() ?: 1) - 1
+                        name = keycodeToName(match.groupValues[1].toIntOrNull() ?: 0)
                     } else {
-                        code.append(cmd)
+                        match = Regex("""(\d\d?)(?:;(\d+))?([~^$])|(\d{3}~)""").matchEntire(cmd)
+                        if (match != null) {
+                            if (match.groupValues[4].isNotEmpty()) {
+                                code.append(match.groupValues[4])
+                            } else {
+                                code.append(match.groupValues[1] + match.groupValues[3])
+                                modifier = (match.groupValues[2].toIntOrNull() ?: 1) - 1
+                            }
+                        } else {
+                            match = Regex("""((\d+;)?(\d+))?([A-Za-z])""").matchEntire(cmd)
+                            if (match != null) {
+                                code.append(match.groupValues[4])
+                                modifier = (match.groupValues[3].toIntOrNull() ?: 1) - 1
+                            } else {
+                                code.append(cmd)
+                            }
+                        }
                     }
                 }
             }
@@ -142,7 +145,7 @@ internal class PosixEventParser(
             alt = (modifier and 10) != 0
             shift = (modifier and 1) != 0
 
-            when (code.toString()) {
+            if (name == null) when (code.toString()) {
                 "[P" -> name = "F1"
                 "[Q" -> name = "F2"
                 "[R" -> name = "F3"
@@ -428,5 +431,17 @@ internal class PosixEventParser(
     /** Read one utf-8 encoded codepoint from the input stream. */
     private fun readUtf8Int(timeout: TimeMark): Int? {
         return readBytesAsUtf8 { readRawByte(timeout) }
+    }
+}
+
+private fun keycodeToName(keycode: Int): String {
+    return when (keycode) {
+        13 -> "Enter"
+        9 -> "Tab"
+        8, 127 -> "Backspace"
+        27 -> "Escape"
+        32 -> " "
+        in 33..126 -> keycode.toChar().toString()
+        else -> "Unidentified"
     }
 }
