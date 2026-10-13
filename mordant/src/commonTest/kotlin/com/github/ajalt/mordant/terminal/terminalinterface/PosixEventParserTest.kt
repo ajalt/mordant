@@ -79,6 +79,39 @@ class PosixEventParserTest {
         readEvent(parser) shouldBe KeyboardEvent("ArrowUp")
     }
 
+    @[Test JsName("ghostty_shift_enter")]
+    fun `ghostty shift enter`() {
+        parse("$esc[27;2;13~") shouldBe KeyboardEvent("Enter", shift = true)
+    }
+
+    @[Test JsName("kitty_shift_enter")]
+    fun `kitty shift enter`() {
+        parse("$esc[13;2u") shouldBe KeyboardEvent("Enter", shift = true)
+    }
+
+    @[Test JsName("sequential_extended_csi_without_byte_leak")]
+    fun `sequential extended csi without byte leak`() {
+        val parser = parserFor("$esc[27;2;13~a")
+        readEvent(parser) shouldBe KeyboardEvent("Enter", shift = true)
+        readEvent(parser) shouldBe KeyboardEvent("a")
+    }
+
+    @[Test JsName("unsupported_csi_sequence_consumed_atomically")]
+    fun `unsupported csi sequence consumed atomically`() {
+        val parser = parserFor("$esc[?2004ha")
+        readEvent(parser) shouldBe KeyboardEvent("Unidentified")
+        readEvent(parser) shouldBe KeyboardEvent("a")
+    }
+
+    @[Test JsName("modify_other_keys_modifiers")]
+    fun `modify other keys modifiers`() = forAll(
+        row("ctrl+enter", "27;5;13~", KeyboardEvent("Enter", ctrl = true)),
+        row("alt+enter", "27;3;13~", KeyboardEvent("Enter", alt = true)),
+        row("shift+tab", "27;2;9~", KeyboardEvent("Tab", shift = true)),
+    ) { _, seq, expected ->
+        parse("$esc[$seq") shouldBe expected
+    }
+
     private fun parse(input: String): Any? = readEvent(parserFor(input))
 
     private fun parserFor(input: String): PosixEventParser {
