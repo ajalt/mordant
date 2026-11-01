@@ -8,6 +8,7 @@ import java.io.IOException
 import java.lang.management.ManagementFactory
 import java.nio.file.Path
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.io.path.readText
@@ -85,28 +86,29 @@ internal actual fun makePrintingTerminalCursor(terminal: Terminal): TerminalCurs
 }
 
 private class JvmTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: Thread? = null
-    private val cursorLock = Any()
-
-    override fun show() {
-        synchronized(cursorLock) {
-            shutdownHook?.let { hook ->
-                Runtime.getRuntime().removeShutdownHook(hook)
-            }
-        }
-        super.show()
-    }
+    private val showOnExitRegistered = AtomicBoolean(false)
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit) {
-            synchronized(cursorLock) {
-                if (shutdownHook == null) {
-                    shutdownHook = Thread { super.show() }
-                    Runtime.getRuntime().addShutdownHook(shutdownHook)
-                }
-            }
+        if (showOnExit && showOnExitRegistered.compareAndSet(false, true)) {
+            addShutdownHook(Thread(::show))
         }
         super.hide(showOnExit)
+    }
+}
+
+/** Register [hook] to run at shutdown, returning false if shutdown has already begun. */
+internal fun addShutdownHook(hook: Thread): Boolean = try {
+    Runtime.getRuntime().addShutdownHook(hook)
+    true
+} catch (e: IllegalStateException) {
+    false
+}
+
+/** Unregister [hook], doing nothing if shutdown has already begun. */
+internal fun removeShutdownHook(hook: Thread) {
+    try {
+        Runtime.getRuntime().removeShutdownHook(hook)
+    } catch (e: IllegalStateException) {
     }
 }
 

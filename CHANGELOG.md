@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - Fixed published JVM jars being named without a version in the Gradle cache and in `installDist` output. [(#301)](https://github.com/ajalt/mordant/issues/301)
+- Fixed edge cases in animations when they're cancelled or the program exits. [(#305)](https://github.com/ajalt/mordant/issues/305)
 
 ## 3.1.0
 ### Added

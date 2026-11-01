@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlin.test.Test
@@ -22,11 +23,19 @@ class ThreadAnimatorTest {
         var i = 1
         val a = t.textAnimation<Unit> { "${i++}" }.animateOnThread(fps = 10000) { i > 2 }
         a.runBlocking()
-        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3"
+        vt.output() shouldBe "${HIDE_CURSOR}1\r2\r3$SHOW_CURSOR"
         vt.clearOutput()
         a.stop()
         vt.output() shouldBe "\n$SHOW_CURSOR"
         vt.clearOutput()
+    }
+
+    @Test
+    fun `interrupted animator shows cursor`() {
+        val a = t.textAnimation<Unit> { "1" }.animateOnThread(fps = 1)
+        Thread.currentThread().interrupt()
+        shouldThrow<InterruptedException> { a.runBlocking() }
+        vt.output() shouldBe "${HIDE_CURSOR}1$SHOW_CURSOR"
     }
 
     @Test

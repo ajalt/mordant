@@ -21,7 +21,6 @@ private external object process {
     val stderr: Stream
 
     fun on(event: String, listener: () -> Unit)
-    fun removeListener(event: String, listener: () -> Unit)
     fun exit(status: Int)
 }
 
@@ -106,18 +105,12 @@ internal class TerminalInterfaceWasm : TerminalInterfaceNode<JsAny>() {
 }
 
 private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: (() -> Unit)? = null
-
-    override fun show() {
-        shutdownHook?.let { process.removeListener("exit", it) }
-        super.show()
-    }
+    private var showOnExitRegistered = false
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit && shutdownHook == null) {
-            val function = { show() }
-            shutdownHook = function
-            process.on("exit", function)
+        if (showOnExit && !showOnExitRegistered) {
+            showOnExitRegistered = true
+            process.on("exit") { show() }
         }
         super.hide(showOnExit)
     }

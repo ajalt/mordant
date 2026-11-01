@@ -11,7 +11,9 @@ import com.github.ajalt.mordant.widgets.progress.completed
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldEndWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
@@ -107,6 +109,16 @@ class CoroutinesAnimatorTest {
 
         advanceTimeBy(1.seconds)
         job.isActive shouldBe false
+        vt.output() shouldEndWith SHOW_CURSOR
+    }
+
+    @[Test JsName("cancelled_animation_shows_cursor")]
+    fun `cancelled animation shows cursor`() = runTest {
+        val a = t.textAnimation<Unit> { "1" }.animateInCoroutine(fps = 1)
+        val job = backgroundScope.launch { a.execute() }
+        advanceTimeBy(0.1.seconds)
+        job.cancelAndJoin()
+        vt.output() shouldBe "${HIDE_CURSOR}1$SHOW_CURSOR"
     }
 
    @[Test JsName("multi_progress_animation")]
