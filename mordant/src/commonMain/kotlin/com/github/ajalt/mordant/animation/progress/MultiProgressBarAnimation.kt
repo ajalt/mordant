@@ -39,7 +39,13 @@ class MultiProgressBarAnimation(
      */
     private val timeSource: TimeSource.WithComparableMarks = TimeSource.Monotonic,
 ) : RefreshableAnimation, ProgressBarAnimation {
-    private data class State(val visible: Boolean, val tasks: List<ProgressTaskImpl<*>>)
+    private data class State(
+        val visible: Boolean,
+        val tasks: List<ProgressTaskImpl<*>>,
+        val finishedFrameDrawn: Boolean = false,
+    ) {
+        val finished: Boolean get() = tasks.all { it.finished }
+    }
 
     private val state = MppAtomicRef(State(true, emptyList()))
     private val animationTime = timeSource.markNow()
@@ -77,30 +83,31 @@ class MultiProgressBarAnimation(
     override fun refresh(refreshAll: Boolean) {
         val s = state.value
         if (!s.visible) return
-        if (refreshAll) invalidateAllCaches()
+        val finished = s.finished
+        if (finished && s.finishedFrameDrawn) return
+        if (refreshAll || finished) s.tasks.forEach { it.definition.invalidateCache() }
         animation.update(s.tasks.filter { it.visible }.map { it.makeRow() })
+        state.update { copy(finishedFrameDrawn = finished) }
         if (finished) {
             if (clearWhenFinished) animation.clear() else animation.stop()
         }
     }
 
     override fun stop() {
+        state.update { copy(finishedFrameDrawn = false) }
         animation.stop()
     }
 
     override fun clear() {
+        state.update { copy(finishedFrameDrawn = false) }
         animation.clear()
     }
 
     override val finished: Boolean
-        get() = state.value.tasks.all { it.finished }
+        get() = state.value.finished
 
     override val fps: Int
         get() = state.value.tasks.maxOf { it.definition.fps }
-
-    private fun invalidateAllCaches() {
-        state.value.tasks.forEach { it.definition.invalidateCache() }
-    }
 }
 
 private data class HistoryEntry(

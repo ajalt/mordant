@@ -2,6 +2,7 @@
 
 ## Unreleased
 ### Fixed
+- Fixed progress bar animations leaving a stale frame when a task completes during a refresh. [(#302)](https://github.com/ajalt/mordant/issues/302)
 - Fixed published JVM jars being named without a version in the Gradle cache and in `installDist` output. [(#301)](https://github.com/ajalt/mordant/issues/301)
 - Fixed edge cases in animations when they're cancelled or the program exits. [(#305)](https://github.com/ajalt/mordant/issues/305)
 
