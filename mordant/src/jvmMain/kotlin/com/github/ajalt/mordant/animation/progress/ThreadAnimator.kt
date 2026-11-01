@@ -4,6 +4,8 @@ import com.github.ajalt.mordant.animation.Animation
 import com.github.ajalt.mordant.animation.RefreshableAnimation
 import com.github.ajalt.mordant.animation.asRefreshable
 import com.github.ajalt.mordant.animation.refreshPeriod
+import com.github.ajalt.mordant.internal.addShutdownHook
+import com.github.ajalt.mordant.internal.removeShutdownHook
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.MultiProgressBarWidgetMaker
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
@@ -23,6 +25,9 @@ interface BlockingAnimator : RefreshableAnimation {
      *
      * This calls [Thread.sleep] between each frame, so it should usually be run in a separate
      * thread so that you can update the state concurrently.
+     *
+     * If the JVM shuts down while the animation is running, it is [stopped][stop]. If shutdown has
+     * already begun, this returns without drawing anything.
      *
      * @see execute
      */
@@ -47,17 +52,24 @@ class BaseBlockingAnimator(
     private val lock = Any()
 
     override fun runBlocking() {
-        synchronized(lock) {
-            stopped = false
-            terminal.cursor.hide(showOnExit = true)
-        }
-        while (synchronized(lock) { !stopped && !animation.finished }) {
-            synchronized(lock) { animation.refresh(refreshAll = false) }
-            Thread.sleep(animation.refreshPeriod.inWholeMilliseconds)
-        }
-        synchronized(lock) {
-            // final refresh to show finished state
-            if (!stopped) animation.refresh(refreshAll = true)
+        val shutdownHook = Thread(::stop)
+        if (!addShutdownHook(shutdownHook)) return
+        try {
+            synchronized(lock) {
+                stopped = false
+                terminal.cursor.hide(showOnExit = true)
+            }
+            while (synchronized(lock) { !stopped && !animation.finished }) {
+                synchronized(lock) { animation.refresh(refreshAll = false) }
+                Thread.sleep(animation.refreshPeriod.inWholeMilliseconds)
+            }
+            synchronized(lock) {
+                // final refresh to show finished state
+                if (!stopped) animation.refresh(refreshAll = true)
+            }
+        } finally {
+            synchronized(lock) { if (!stopped) terminal.cursor.show() }
+            removeShutdownHook(shutdownHook)
         }
     }
 

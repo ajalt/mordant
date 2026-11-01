@@ -11,9 +11,11 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.progress.MultiProgressBarWidgetMaker
 import com.github.ajalt.mordant.widgets.progress.ProgressBarDefinition
 import com.github.ajalt.mordant.widgets.progress.ProgressBarWidgetMaker
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -54,17 +56,23 @@ class BaseCoroutineAnimator(
     private val mutex = Mutex()
 
     override suspend fun execute() {
-        mutex.withLock {
-            stopped = false
-            terminal.cursor.hide(showOnExit = true)
-        }
-        while (mutex.withLock { !stopped && !animation.finished }) {
-            mutex.withLock { animation.refresh(refreshAll = false) }
-            delay(animation.refreshPeriod.inWholeMilliseconds)
-        }
-        mutex.withLock {
-            // final refresh to show finished state
-            if (!stopped) animation.refresh(refreshAll = true)
+        try {
+            mutex.withLock {
+                stopped = false
+                terminal.cursor.hide(showOnExit = true)
+            }
+            while (mutex.withLock { !stopped && !animation.finished }) {
+                mutex.withLock { animation.refresh(refreshAll = false) }
+                delay(animation.refreshPeriod.inWholeMilliseconds)
+            }
+            mutex.withLock {
+                // final refresh to show finished state
+                if (!stopped) animation.refresh(refreshAll = true)
+            }
+        } finally {
+            withContext(NonCancellable) {
+                mutex.withLock { if (!stopped) terminal.cursor.show() }
+            }
         }
     }
 

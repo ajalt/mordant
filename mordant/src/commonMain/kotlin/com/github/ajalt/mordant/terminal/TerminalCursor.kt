@@ -1,6 +1,7 @@
 package com.github.ajalt.mordant.terminal
 
 import com.github.ajalt.mordant.internal.CSI
+import com.github.ajalt.mordant.internal.sendInterceptedPrintRequest
 
 interface TerminalCursor {
     /**
@@ -182,13 +183,15 @@ internal object DisabledTerminalCursor : TerminalCursor {
 }
 
 internal abstract class PrintTerminalCursor(protected val terminal: Terminal) : TerminalCursor {
-    override fun show() {
-        terminal.rawPrint("$CSI?25h")
-    }
+    override fun show() = printWithoutInterceptors("$CSI?25h")
 
-    override fun hide(showOnExit: Boolean) {
-        terminal.rawPrint("$CSI?25l")
-    }
+    override fun hide(showOnExit: Boolean) = printWithoutInterceptors("$CSI?25l")
+
+    private fun printWithoutInterceptors(text: String) = sendInterceptedPrintRequest(
+        request = PrintRequest(text, trailingLinebreak = false, stderr = false),
+        terminalInterface = terminal.terminalInterface,
+        interceptors = emptyList(),
+    )
 
     override fun move(movements: CursorMovements.() -> Unit) {
         terminal.rawPrint(getMoves(movements))

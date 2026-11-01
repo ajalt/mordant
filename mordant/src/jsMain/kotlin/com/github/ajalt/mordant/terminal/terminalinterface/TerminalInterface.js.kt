@@ -68,17 +68,12 @@ internal class TerminalInterfaceJsNode(private val fs: dynamic) : TerminalInterf
 }
 
 private class NodeTerminalCursor(terminal: Terminal) : PrintTerminalCursor(terminal) {
-    private var shutdownHook: (() -> Unit)? = null
-
-    override fun show() {
-        shutdownHook?.let { process.removeListener("exit", it) }
-        super.show()
-    }
+    private var showOnExitRegistered = false
 
     override fun hide(showOnExit: Boolean) {
-        if (showOnExit && shutdownHook == null) {
-            shutdownHook = { show() }
-            process.on("exit", shutdownHook)
+        if (showOnExit && !showOnExitRegistered) {
+            showOnExitRegistered = true
+            process.on("exit", { show() })
         }
         super.hide(showOnExit)
     }

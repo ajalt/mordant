@@ -1,5 +1,6 @@
 package com.github.ajalt.mordant.animation
 
+import com.github.ajalt.mordant.internal.CSI
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.terminal.TerminalRecorder
 import com.github.ajalt.mordant.test.normalizedOutput
@@ -36,6 +37,16 @@ class AnimationTest {
         rec.normalizedOutput() shouldBe "1\r2"
         a.stop()
         rec.normalizedOutput() shouldBe "1\r2\n"
+    }
+
+    @[Test JsName("cursor_visibility_during_animation")]
+    fun `cursor visibility during animation`() {
+        val a = t.textAnimation<Int> { "$it" }
+        a.update(1)
+        rec.clearOutput()
+        t.cursor.hide(showOnExit = false)
+        t.cursor.show()
+        rec.output() shouldBe "$CSI?25l$CSI?25h"
     }
 
     @[Test JsName("print_during_animation")]
