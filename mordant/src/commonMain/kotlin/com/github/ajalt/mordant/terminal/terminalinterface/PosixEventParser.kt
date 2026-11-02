@@ -5,13 +5,71 @@ import com.github.ajalt.mordant.input.KeyboardEvent
 import com.github.ajalt.mordant.input.MouseEvent
 import com.github.ajalt.mordant.internal.codepointToString
 import com.github.ajalt.mordant.internal.readBytesAsUtf8
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
 private const val ESC = '\u001b'
 
+/*
+  Escape sequences for keys without modifier parameters, derived from combos seen
+  at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
+*/
+private val namedKeys: Map<String, KeyboardEvent> = buildMap {
+    fun add(key: String, vararg sequences: String, ctrl: Boolean = false, shift: Boolean = false) {
+        for (sequence in sequences) put(sequence, KeyboardEvent(key, ctrl = ctrl, shift = shift))
+    }
+    add("F1", "[P", "OP", "[11~", "[[A")
+    add("F2", "[Q", "OQ", "[12~", "[[B")
+    add("F3", "[R", "OR", "[13~", "[[C")
+    add("F4", "[S", "OS", "[14~", "[[D")
+    add("F5", "[15~", "[[E")
+    add("F6", "[17~")
+    add("F7", "[18~")
+    add("F8", "[19~")
+    add("F9", "[20~")
+    add("F10", "[21~")
+    add("F11", "[23~")
+    add("F12", "[24~")
+    add("PasteStart", "[200~")
+    add("PasteEnd", "[201~")
+    add("ArrowUp", "[A", "OA")
+    add("ArrowDown", "[B", "OB")
+    add("ArrowRight", "[C", "OC")
+    add("ArrowLeft", "[D", "OD")
+    add("Clear", "[E", "OE")
+    add("End", "[F", "OF", "[4~", "[8~")
+    add("Home", "[H", "OH", "[1~", "[7~")
+    add("Insert", "[2~")
+    add("Delete", "[3~")
+    add("PageUp", "[5~", "[[5~")
+    add("PageDown", "[6~", "[[6~")
+    add("Tab", "[Z", shift = true)
+
+    add("ArrowUp", "[a", shift = true)
+    add("ArrowDown", "[b", shift = true)
+    add("ArrowRight", "[c", shift = true)
+    add("ArrowLeft", "[d", shift = true)
+    add("Clear", "[e", shift = true)
+    add("Insert", "[2$", shift = true)
+    add("Delete", "[3$", shift = true)
+    add("PageUp", "[5$", shift = true)
+    add("PageDown", "[6$", shift = true)
+    add("Home", "[7$", shift = true)
+    add("End", "[8$", shift = true)
+
+    add("ArrowUp", "Oa", ctrl = true)
+    add("ArrowDown", "Ob", ctrl = true)
+    add("ArrowRight", "Oc", ctrl = true)
+    add("ArrowLeft", "Od", ctrl = true)
+    add("Clear", "Oe", ctrl = true)
+    add("Insert", "[2^", ctrl = true)
+    add("Delete", "[3^", ctrl = true)
+    add("PageUp", "[5^", ctrl = true)
+    add("PageDown", "[6^", ctrl = true)
+    add("Home", "[7^", ctrl = true)
+    add("End", "[8^", ctrl = true)
+}
 
 internal class PosixEventParser(
     private val readRawByte: () -> Int?,
@@ -24,343 +82,99 @@ internal class PosixEventParser(
         return null
     }
 
-    /*
-      Some patterns seen in terminal key escape codes, derived from combos seen
-      at https://github.com/nodejs/node/blob/main/lib/internal/readline/utils.js
-    */
     fun readInputEvent(timeout: TimeMark): InputEvent? {
-        var ctrl = false
-        var alt = false
-        var shift = false
-        var escaped = false
-        var name: String? = null
-        val s = StringBuilder()
-        var ch: Char
-
-        fun read(t:TimeMark = timeout): Char? {
-            ch = readRawByte(t)?.toChar() ?: return null
-            s.append(ch)
-            return ch
-        }
-
         val first = codepointToString(readUtf8Int(timeout) ?: return null)
-        if (first.length > 1) {
-            return KeyboardEvent(first) // Got a utf8 char like an emoji
-        } else {
-            ch = first[0]
+        if (first.length > 1) return KeyboardEvent(first) // Got a utf8 char like an emoji
+        if (first[0] != ESC) return charEvent(first[0], escaped = false)
+
+        // If there's nothing else in the buffer, return "Escape" immediately. This means that
+        // you can't manually type in escape sequences, but that's a pretty rare use case
+        // compared to just pressing escape.
+        val next = readChar(TimeSource.Monotonic.markNow() + 5.milliseconds)
+            ?: return KeyboardEvent("Escape")
+        return when (next) {
+            ESC -> KeyboardEvent("Escape")
+            '[', 'O' -> readSequence(introducer = next, timeout = timeout)
+            else -> charEvent(next, escaped = true)
+        }
+    }
+
+    private fun charEvent(ch: Char, escaped: Boolean): KeyboardEvent = when (ch) {
+        '\r', '\n' -> KeyboardEvent("Enter", alt = escaped)
+        '\t' -> KeyboardEvent("Tab", alt = escaped)
+        '\b', '\u007f' -> KeyboardEvent("Backspace", alt = escaped)
+        ' ' -> KeyboardEvent(" ", alt = escaped)
+        in '\u0000'..'\u001a' if !escaped -> {
+            KeyboardEvent(('a' + ch.code - 1).toString(), ctrl = true)
         }
 
-        if (ch == ESC) {
-            escaped = true
-            // If there's nothing else in the buffer, return "Escape" immediately. This means that
-            // you can't manually type in escape sequences, but that's a pretty rare use case
-            // compared to just pressing escape.
-            read(TimeSource.Monotonic.markNow() + 5.milliseconds) ?: return KeyboardEvent("Escape")
-            if (ch == ESC) {
-                return KeyboardEvent("Escape")
-            }
+        else if ch.isLetterOrDigit() -> {
+            KeyboardEvent(ch.toString(), alt = escaped, shift = ch in 'A'..'Z')
         }
 
-        if (escaped && (ch == 'O' || ch == '[')) {
-            // ANSI escape sequence
-            val code = StringBuilder(ch.toString())
-            var modifier = 0
+        else if escaped -> KeyboardEvent("Escape", alt = true)
+        else -> KeyboardEvent(ch.toString())
+    }
 
-            if (ch == 'O') {
-                // ESC O letter
-                // ESC O modifier letter
-                read() ?: return null
-
-                if (ch in '0'..'9') {
-                    modifier = ch.code - 1
-                    read() ?: return null
-                }
-
-                code.append(ch)
-            } else if (ch == '[') {
-                // ESC [ letter
-                // ESC [ modifier letter
-                // ESC [ [ modifier letter
-                // ESC [ [ num char
-                // For mouse events:
-                // ESC [ M byte byte byte
-                read() ?: return null
-
-                if (ch == '[') {
-                    // escape codes might have a second bracket
-                    code.append(ch)
-                    read() ?: return null
-                } else if (ch == 'M') {
-                    // legacy mouse event
-                    return processMouseEvent(timeout)
-                } else if (ch == '<') {
-                    // sgr mouse event
-                    return processSgrMouseEvent(timeout)
-                }
-
-                val cmdStart = s.length - 1
-
-                // leading digits
-                repeat(3) {
-                    if (ch in '0'..'9') {
-                        read() ?: return null
-                    }
-                }
-
-                // modifier
-                if (ch == ';') {
-                    read() ?: return null
-
-                    if (ch in '0'..'9') {
-                        read() ?: return null
-                    }
-                }
-
-                // We buffered enough data, now extract code and modifier from it
-                val cmd = s.substring(cmdStart)
-                var match = Regex("""(\d\d?)(?:;(\d))?([~^$])|(\d{3}~)""").matchEntire(cmd)
-                if (match != null) {
-                    if (match.groupValues[4].isNotEmpty()) {
-                        code.append(match.groupValues[4])
-                    } else {
-                        code.append(match.groupValues[1] + match.groupValues[3])
-                        modifier = (match.groupValues[2].toIntOrNull() ?: 1) - 1
-                    }
-                } else {
-                    match = Regex("""((\d;)?(\d))?([A-Za-z])""").matchEntire(cmd)
-                    if (match != null) {
-                        code.append(match.groupValues[4])
-                        modifier = (match.groupValues[3].toIntOrNull() ?: 1) - 1
-                    } else {
-                        code.append(cmd)
-                    }
-                }
-            }
-
-            // Parse the key modifier
-            ctrl = (modifier and 4) != 0
-            alt = (modifier and 10) != 0
-            shift = (modifier and 1) != 0
-
-            when (code.toString()) {
-                "[P" -> name = "F1"
-                "[Q" -> name = "F2"
-                "[R" -> name = "F3"
-                "[S" -> name = "F4"
-                "OP" -> name = "F1"
-                "OQ" -> name = "F2"
-                "OR" -> name = "F3"
-                "OS" -> name = "F4"
-                "[11~" -> name = "F1"
-                "[12~" -> name = "F2"
-                "[13~" -> name = "F3"
-                "[14~" -> name = "F4"
-                "[200~" -> name = "PasteStart"
-                "[201~" -> name = "PasteEnd"
-                "[[A" -> name = "F1"
-                "[[B" -> name = "F2"
-                "[[C" -> name = "F3"
-                "[[D" -> name = "F4"
-                "[[E" -> name = "F5"
-                "[15~" -> name = "F5"
-                "[17~" -> name = "F6"
-                "[18~" -> name = "F7"
-                "[19~" -> name = "F8"
-                "[20~" -> name = "F9"
-                "[21~" -> name = "F10"
-                "[23~" -> name = "F11"
-                "[24~" -> name = "F12"
-                "[A" -> name = "ArrowUp"
-                "[B" -> name = "ArrowDown"
-                "[C" -> name = "ArrowRight"
-                "[D" -> name = "ArrowLeft"
-                "[E" -> name = "Clear"
-                "[F" -> name = "End"
-                "[H" -> name = "Home"
-                "OA" -> name = "ArrowUp"
-                "OB" -> name = "ArrowDown"
-                "OC" -> name = "ArrowRight"
-                "OD" -> name = "ArrowLeft"
-                "OE" -> name = "Clear"
-                "OF" -> name = "End"
-                "OH" -> name = "Home"
-                "[1~" -> name = "Home"
-                "[2~" -> name = "Insert"
-                "[3~" -> name = "Delete"
-                "[4~" -> name = "End"
-                "[5~" -> name = "PageUp"
-                "[6~" -> name = "PageDown"
-                "[[5~" -> name = "PageUp"
-                "[[6~" -> name = "PageDown"
-                "[7~" -> name = "Home"
-                "[8~" -> name = "End"
-                "[a" -> {
-                    name = "ArrowUp"
-                    shift = true
-                }
-
-                "[b" -> {
-                    name = "ArrowDown"
-                    shift = true
-                }
-
-                "[c" -> {
-                    name = "ArrowRight"
-                    shift = true
-                }
-
-                "[d" -> {
-                    name = "ArrowLeft"
-                    shift = true
-                }
-
-                "[e" -> {
-                    name = "Clear"
-                    shift = true
-                }
-
-                "[2$" -> {
-                    name = "Insert"
-                    shift = true
-                }
-
-                "[3$" -> {
-                    name = "Delete"
-                    shift = true
-                }
-
-                "[5$" -> {
-                    name = "PageUp"
-                    shift = true
-                }
-
-                "[6$" -> {
-                    name = "PageDown"
-                    shift = true
-                }
-
-                "[7$" -> {
-                    name = "Home"
-                    shift = true
-                }
-
-                "[8$" -> {
-                    name = "End"
-                    shift = true
-                }
-
-                "Oa" -> {
-                    name = "ArrowUp"
-                    ctrl = true
-                }
-
-                "Ob" -> {
-                    name = "ArrowDown"
-                    ctrl = true
-                }
-
-                "Oc" -> {
-                    name = "ArrowRight"
-                    ctrl = true
-                }
-
-                "Od" -> {
-                    name = "ArrowLeft"
-                    ctrl = true
-                }
-
-                "Oe" -> {
-                    name = "Clear"
-                    ctrl = true
-                }
-
-                "[2^" -> {
-                    name = "Insert"
-                    ctrl = true
-                }
-
-                "[3^" -> {
-                    name = "Delete"
-                    ctrl = true
-                }
-
-                "[5^" -> {
-                    name = "PageUp"
-                    ctrl = true
-                }
-
-                "[6^" -> {
-                    name = "PageDown"
-                    ctrl = true
-                }
-
-                "[7^" -> {
-                    name = "Home"
-                    ctrl = true
-                }
-
-                "[8^" -> {
-                    name = "End"
-                    ctrl = true
-                }
-
-                "[Z" -> {
-                    name = "Tab"
-                    shift = true
-                }
-
-                else -> name = "Unidentified"
-            }
-        } else when (ch) {
-            '\r', '\n' -> {
-                name = "Enter"
-                alt = escaped
-            }
-
-            '\t' -> {
-                name = "Tab"
-                alt = escaped
-            }
-
-            // backspace or ctrl+h
-            '\b', '\u007f' -> {
-                name = "Backspace"
-                alt = escaped
-            }
-
-            ESC -> {
-                name = "Escape"
-                alt = escaped
-            }
-
-            ' ' -> {
-                name = " "
-                alt = escaped
-            }
-
-            // ctrl+letter
-            in '\u0000'..'\u001a' if !escaped -> {
-                name = (ch.code + 'a'.code - 1).toChar().toString()
-                ctrl = true
-            }
-
-            else -> if (ch.isLetter() || ch.isDigit()) {
-                // Letter, number, shift+letter
-                name = ch.toString()
-                shift = ch in 'A'..'Z'
-                alt = escaped
-            } else if (escaped) {
-                // Escape sequence timeout
-                if (name == null) name = "Escape"
-                alt = true
-            }
+    private fun readSequence(introducer: Char, timeout: TimeMark): InputEvent? {
+        var prefix = introducer.toString()
+        var ch = readChar(timeout) ?: return null
+        if (introducer == '[' && ch == '[') {
+            prefix = "[["
+            ch = readChar(timeout) ?: return null
         }
+        // rxvt ends some sequences with `$`, which ECMA-48 defines as an intermediate byte, so
+        // the first byte that isn't a parameter is always treated as the final byte.
+        val params = StringBuilder()
+        while (ch in '0'..'?') {
+            params.append(ch)
+            ch = readChar(timeout) ?: return null
+        }
+        return when {
+            prefix == "[" && params.isEmpty() && ch == 'M' -> processMouseEvent(timeout)
+            prefix == "[" && params.startsWith('<') -> sgrMouseEvent(params.substring(1), ch)
+            else -> keyEvent(prefix, params.toString(), ch)
+        }
+    }
 
-        return KeyboardEvent(
-            key = name ?: ch.toString(),
-            ctrl = ctrl,
-            alt = alt,
-            shift = shift,
+    private fun keyEvent(prefix: String, params: String, final: Char): KeyboardEvent {
+        val fields = params.split(';').map { it.substringBefore(':').toIntOrNull() ?: 0 }
+        fun field(i: Int) = fields.getOrElse(i) { 0 }
+        return when {
+            // https://sw.kovidgoyal.net/kitty/keyboard-protocol/
+            prefix == "[" && final == 'u' -> codepointEvent(fields[0], modifier = field(1))
+            // https://invisible-island.net/xterm/modified-keys.html
+            prefix == "[" && final == '~' && fields[0] == 27 -> {
+                codepointEvent(field(2), modifier = field(1))
+            }
+
+            final in "~^$" -> namedEvent("$prefix${fields[0]}$final", modifier = field(1))
+            else -> namedEvent("$prefix$final", modifier = fields.last())
+        }
+    }
+
+    private fun namedEvent(sequence: String, modifier: Int): KeyboardEvent {
+        return (namedKeys[sequence] ?: KeyboardEvent("Unidentified")).withModifier(modifier)
+    }
+
+    private fun codepointEvent(codepoint: Int, modifier: Int): KeyboardEvent {
+        val key = when (codepoint) {
+            8, 127 -> "Backspace"
+            9 -> "Tab"
+            13 -> "Enter"
+            27 -> "Escape"
+            in 32..0x10ffff -> codepointToString(codepoint)
+            else -> "Unidentified"
+        }
+        return KeyboardEvent(key).withModifier(modifier)
+    }
+
+    private fun KeyboardEvent.withModifier(modifier: Int): KeyboardEvent {
+        val bits = (modifier - 1).coerceAtLeast(0)
+        return copy(
+            ctrl = ctrl || bits and 4 != 0,
+            alt = alt || bits and 10 != 0,
+            shift = shift || bits and 1 != 0,
         )
     }
 
@@ -381,22 +195,12 @@ internal class PosixEventParser(
     }
 
     // https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-coordinates
-    private fun processSgrMouseEvent(timeout: TimeMark): InputEvent? {
-        val params = StringBuilder()
-        while (true) {
-            val ch = readRawByte(timeout)?.toChar() ?: return null
-            when (ch) {
-                in '0'..'9', ';' -> params.append(ch)
-                'M', 'm' -> {
-                    val fields = params.split(';').map { it.toIntOrNull() ?: return null }
-                    if (fields.size != 3) return null
-                    val (cb, px, py) = fields
-                    return makeMouseEvent(cb = cb, x = px - 1, y = py - 1, release = ch == 'm')
-                }
-
-                else -> return null // malformed sequence
-            }
-        }
+    private fun sgrMouseEvent(params: String, final: Char): MouseEvent? {
+        if (final != 'M' && final != 'm') return null
+        val fields = params.split(';').map { it.toIntOrNull() ?: return null }
+        if (fields.size != 3) return null
+        val (cb, px, py) = fields
+        return makeMouseEvent(cb = cb, x = px - 1, y = py - 1, release = final == 'm')
     }
 
     private fun makeMouseEvent(cb: Int, x: Int, y: Int, release: Boolean): MouseEvent {
@@ -424,6 +228,8 @@ internal class PosixEventParser(
             shift = cb and 4 != 0,
         )
     }
+
+    private fun readChar(timeout: TimeMark): Char? = readRawByte(timeout)?.toChar()
 
     /** Read one utf-8 encoded codepoint from the input stream. */
     private fun readUtf8Int(timeout: TimeMark): Int? {

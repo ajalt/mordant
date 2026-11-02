@@ -18,6 +18,85 @@ class PosixEventParserTest {
         parse("$esc[A") shouldBe KeyboardEvent("ArrowUp")
     }
 
+    @[Test JsName("single_byte_keys")]
+    fun `single byte keys`() = forAll(
+        row("a", KeyboardEvent("a")),
+        row("A", KeyboardEvent("A", shift = true)),
+        row("\r", KeyboardEvent("Enter")),
+        row("\u0003", KeyboardEvent("c", ctrl = true)),
+        row("\u007f", KeyboardEvent("Backspace")),
+        row("${esc}x", KeyboardEvent("x", alt = true)),
+        row("$esc", KeyboardEvent("Escape")),
+        row("$esc$esc", KeyboardEvent("Escape")),
+    ) { input, expected ->
+        parse(input) shouldBe expected
+    }
+
+    @[Test JsName("named_key_sequences")]
+    fun `named key sequences`() = forAll(
+        row("[A", KeyboardEvent("ArrowUp")),
+        row("OP", KeyboardEvent("F1")),
+        row("[[A", KeyboardEvent("F1")),
+        row("[15~", KeyboardEvent("F5")),
+        row("[[5~", KeyboardEvent("PageUp")),
+        row("[200~", KeyboardEvent("PasteStart")),
+        row("[Z", KeyboardEvent("Tab", shift = true)),
+        row("[a", KeyboardEvent("ArrowUp", shift = true)),
+        row("Oa", KeyboardEvent("ArrowUp", ctrl = true)),
+        row("[3$", KeyboardEvent("Delete", shift = true)),
+        row("[3^", KeyboardEvent("Delete", ctrl = true)),
+        row("[25~", KeyboardEvent("Unidentified")),
+    ) { sequence, expected ->
+        parse("$esc$sequence") shouldBe expected
+    }
+
+    @[Test JsName("modified_named_key_sequences")]
+    fun `modified named key sequences`() = forAll(
+        row("[1;5A", KeyboardEvent("ArrowUp", ctrl = true)),
+        row("[5A", KeyboardEvent("ArrowUp", ctrl = true)),
+        row("O5A", KeyboardEvent("ArrowUp", ctrl = true)),
+        row("O1;2P", KeyboardEvent("F1", shift = true)),
+        row("[1;10D", KeyboardEvent("ArrowLeft", alt = true, shift = true)),
+        row("[1;5:1A", KeyboardEvent("ArrowUp", ctrl = true)),
+        row("[3;5~", KeyboardEvent("Delete", ctrl = true)),
+        row("[15;10~", KeyboardEvent("F5", alt = true, shift = true)),
+        row("[1;5X", KeyboardEvent("Unidentified", ctrl = true)),
+    ) { sequence, expected ->
+        parse("$esc$sequence") shouldBe expected
+    }
+
+    @[Test JsName("modified_character_key_sequences")]
+    fun `modified character key sequences`() = forAll(
+        row("[27;2;13~", KeyboardEvent("Enter", shift = true)),
+        row("[27;5;9~", KeyboardEvent("Tab", ctrl = true)),
+        row("[27;3;127~", KeyboardEvent("Backspace", alt = true)),
+        row("[27;6;97~", KeyboardEvent("a", ctrl = true, shift = true)),
+        row("[13;2u", KeyboardEvent("Enter", shift = true)),
+        row("[27u", KeyboardEvent("Escape")),
+        row("[97;5u", KeyboardEvent("a", ctrl = true)),
+        row("[97:65;2u", KeyboardEvent("a", shift = true)),
+        row("[233;3u", KeyboardEvent("é", alt = true)),
+        row("[1114112u", KeyboardEvent("Unidentified")),
+    ) { sequence, expected ->
+        parse("$esc$sequence") shouldBe expected
+    }
+
+    @[Test JsName("sequences_are_consumed_through_final_byte")]
+    fun `sequences are consumed through their final byte`() = forAll(
+        row("[27;2;13~"),
+        row("[1;10A"),
+        row("[15;10~"),
+        row("[[5;5~"),
+        row("O1;5P"),
+        row("[97:65;6u"),
+        row("[?1;2c"),
+        row("[1;2;3;4;5X"),
+    ) { sequence ->
+        val parser = parserFor("$esc${sequence}x")
+        readEvent(parser)
+        readEvent(parser) shouldBe KeyboardEvent("x")
+    }
+
     @[Test JsName("legacy_mouse_events")]
     fun `legacy mouse events`() = forAll(
         // cb is the raw byte, so button codes are offset by 32
