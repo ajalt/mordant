@@ -6,6 +6,7 @@
 - Fixed published JVM jars being named without a version in the Gradle cache and in `installDist` output. [(#301)](https://github.com/ajalt/mordant/issues/301)
 - Fixed edge cases in animations when they're cancelled or the program exits. [(#305)](https://github.com/ajalt/mordant/issues/305)
 - Fixed POSIX input parsing leaving part of an escape sequence unread when it has more parameters than expected. [(#307)](https://github.com/ajalt/mordant/issues/307)
+- Fixed memory corruption that could crash the JVM when entering raw mode with the `mordant-jvm-ffm` module on macOS. [(#309)](https://github.com/ajalt/mordant/issues/309)
 
 ## 3.1.0
 ### Added

@@ -30,7 +30,11 @@ private class MacosCLibrary {
             val c_oflag by longField()
             val c_cflag by longField()
             val c_lflag by longField()
-            val c_cc by arrayField(32)
+            val c_cc by arrayField(20)
+            @Suppress("unused")
+            val padding by paddingField(4)
+            val c_ispeed by longField()
+            val c_ospeed by longField()
         }
 
         constructor(arena: Arena) : this(arena.allocate(Layout.layout))
@@ -40,6 +44,8 @@ private class MacosCLibrary {
         var c_cflag by Layout.c_cflag
         var c_lflag by Layout.c_lflag
         val c_cc by Layout.c_cc
+        var c_ispeed by Layout.c_ispeed
+        var c_ospeed by Layout.c_ospeed
     }
 
     object MethodHandles : MethodHandlesHolder() {
