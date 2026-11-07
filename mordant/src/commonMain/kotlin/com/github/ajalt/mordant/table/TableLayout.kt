@@ -17,13 +17,30 @@ internal typealias MutableRow = MutableList<Cell>
  */
 internal class TableLayout(private val table: TableBuilderInstance) {
     fun buildTable(): TableImpl {
-        val builderWidth =
-            listOf(table.headerSection, table.bodySection, table.footerSection).maxOf {
-                it.rows.maxOfOrNull { r -> r.cells.size } ?: 0
+        val sections = listOf(table.headerSection, table.bodySection, table.footerSection)
+        val widestExplicitRow = sections.maxOf { section ->
+            section.rows.maxOfOrNull { it.cells.size } ?: 0
+        }
+        val occupied = sections.map { occupiedColumns(it) }
+        val tableWidth = occupied.maxOf { it.maxOrNull() ?: 0 }
+        val (header, body, footer) = sections.map { section ->
+            // Keep the room supplied by explicit rows. A row span can establish additional
+            // columns, but a continuing cell already occupies its slot in the current row.
+            val explicit = IntArray(section.rows.size) { y -> widestExplicitRow - section.rows[y].cells.size }
+            val baseline = requireNotNull(buildSection(section, explicit)) {
+                "Invalid table: cell spans cannot overlap"
             }
-        val header = buildSection(table.headerSection, builderWidth)
-        val body = buildSection(table.bodySection, builderWidth)
-        val footer = buildSection(table.footerSection, builderWidth)
+            // Reserve every baseline span, including those belonging to later cells.
+            // Only the remaining real columns can be spent on additional width.
+            val available = IntArray(section.rows.size) { y ->
+                (tableWidth - baseline[y].count { it !== Cell.Empty }).coerceAtLeast(0)
+            }
+            // Widening a cell in a sparse row may collide with an earlier row span.
+            // Retain the narrower layout when those cells fit with the original truncation.
+            val hasExtra = available.any { it > 0 }
+            val rows = if (hasExtra) buildSection(section, explicit, available) else null
+            rows ?: baseline
+        }
         val rows = listOf(header, body, footer).flatten().ifEmpty {
             val b = table.tableBorders ?: Borders.ALL
             val cell = Cell.Content(
@@ -58,10 +75,29 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         )
     }
 
+    private fun occupiedColumns(section: SectionBuilderInstance): IntArray {
+        // Each row needs room for its own cells and cells continued from earlier rows.
+        val ending = IntArray(section.rows.size + 1)
+        var carried = 0
+        val widths = IntArray(section.rows.size)
+        for ((y, row) in section.rows.withIndex()) {
+            carried -= ending[y]
+            widths[y] = carried + row.cells.size
+            for (cell in row.cells) {
+                if (cell.rowSpan > 1) {
+                    carried++
+                    ending[y + minOf(cell.rowSpan, section.rows.size - y)]++
+                }
+            }
+        }
+        return widths
+    }
+
     private fun buildSection(
         section: SectionBuilderInstance,
-        builderWidth: Int,
-    ): MutableList<MutableRow> {
+        explicit: IntArray,
+        available: IntArray? = null,
+    ): MutableList<MutableRow>? {
         val rows: MutableList<MutableRow> =
             MutableList(section.rows.size) { ArrayList(section.rows.size) }
 
@@ -69,7 +105,7 @@ internal class TableLayout(private val table: TableBuilderInstance) {
             var x = 0
             for (cellBuilder in row.cells) {
                 x = rows.findEmptyColumn(x, y)
-                insertCell(cellBuilder, section, rows, x, y, builderWidth)
+                if (!insertCell(cellBuilder, section, rows, x, y, explicit, available)) return null
                 x += 1
             }
         }
@@ -83,17 +119,19 @@ internal class TableLayout(private val table: TableBuilderInstance) {
         rows: MutableList<MutableRow>,
         startingX: Int,
         startingY: Int,
-        builderWidth: Int,
-    ) {
+        explicit: IntArray,
+        available: IntArray?,
+    ): Boolean {
         val tableCol = table.columns[startingX]
         val sectionCol = section.columns[startingX]
         val row = section.rows[startingY]
 
         // The W3 standard says that spans are truncated rather than increasing the size of the table
-        val maxRowSize = (startingY..<startingY + cell.rowSpan)
-            .maxOfOrNull { section.rows.getOrNull(it)?.cells?.size ?: 0 } ?: 0
-        val columnSpan = cell.columnSpan.coerceAtMost(builderWidth - maxRowSize + 1)
         val rowSpan = cell.rowSpan.coerceAtMost(rows.size - startingY)
+        val coveredRows = startingY..<startingY + rowSpan
+        val baselineSpan = cell.columnSpan.coerceAtMost(1 + (coveredRows.minOfOrNull { explicit[it] } ?: 0))
+        val extra = coveredRows.minOfOrNull { available?.get(it) ?: 0 } ?: 0
+        val columnSpan = cell.columnSpan.coerceAtMost(baselineSpan + extra)
 
         fun <T : Any> getStyle(default: T, getter: (CellStyleBuilder) -> T?): T {
             return getter(cell) ?: getter(row) ?: sectionCol?.let(getter)
@@ -164,12 +202,14 @@ internal class TableLayout(private val table: TableBuilderInstance) {
                 // The W3 standard calls tables with overlap invalid, and dictates that user agents
                 // either show the visual overlap, or shift the overlapping cells. We aren't bound
                 // by their laws, and instead take the gentleman's approach and throw an exception.
-                require(existing === Cell.Empty) {
-                    "Invalid table: cell spans cannot overlap"
-                }
+                if (existing !== Cell.Empty) return false
                 tableRow[x] = c
             }
         }
+        if (available != null && columnSpan > baselineSpan) {
+            for (y in coveredRows) available[y] -= columnSpan - baselineSpan
+        }
+        return true
     }
 
 }
