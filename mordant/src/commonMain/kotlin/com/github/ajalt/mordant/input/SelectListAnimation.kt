@@ -17,6 +17,7 @@ private class SelectConfig(
     var entries: MutableList<SelectList.Entry> = mutableListOf(),
     var title: Widget? = null,
     var limit: Int = Int.MAX_VALUE,
+    var minimumSelections: Int = 0,
     var startingCursorIndex: Int = 0,
     var onlyShowActiveDescription: Boolean = false,
     var clearOnExit: Boolean = true,
@@ -120,6 +121,12 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
     /** Set the maximum number of items that can be selected */
     fun limit(limit: Int): InteractiveSelectListBuilder = apply {
         config.limit = limit
+    }
+
+    /** Set how many items must be selected to confirm a multi-select list. Defaults to zero. */
+    fun minimumSelections(minimum: Int): InteractiveSelectListBuilder = apply {
+        require(minimum >= 0) { "Minimum selection count must be non-negative" }
+        config.minimumSelections = minimum
     }
 
     /** Set the index of the item to start the cursor on */
@@ -284,6 +291,11 @@ class InteractiveSelectListBuilder(private val terminal: Terminal) {
      */
     fun createMultiSelectInputAnimation(): InputReceiverAnimation<List<String>?> {
         require(config.entries.isNotEmpty()) { "Select list must have at least one entry" }
+        if (config.minimumSelections > 0) {
+            require(config.minimumSelections <= minOf(config.limit, config.entries.size)) {
+                "Minimum selection count exceeds the selection limit or number of entries"
+            }
+        }
         return SelectInputAnimation(terminal, config, false)
     }
 }
@@ -309,6 +321,8 @@ private class SelectInputAnimation(
     }
 
     private val state = MppAtomicRef(State(config.entries, config.startingCursorIndex))
+    private val requiredSelections = config.minimumSelections
+    private val maximumSelections = config.limit
 
     private val animation = terminal.animation<State> { s ->
         with(config) {
@@ -386,10 +400,13 @@ private class SelectInputAnimation(
                     }
 
                     key == keySubmit -> {
-                        if (singleSelect) copy(finished = true, result = listOf(entry.title))
-                        else copy(
-                            finished = true,
-                            result = items.filter { it.selected }.map { it.title })
+                        if (singleSelect) {
+                            copy(finished = true, result = listOf(entry.title))
+                        } else {
+                            val selected = items.filter { it.selected }.map { it.title }
+                            if (selected.size < requiredSelections) this@update
+                            else copy(finished = true, result = selected)
+                        }
                     }
 
                     filtering && !key.alt && !key.ctrl -> {
@@ -404,7 +421,7 @@ private class SelectInputAnimation(
                     }
 
                     !singleSelect && key == keyToggle -> {
-                        if (entry.selected || items.count { it.selected } < limit) {
+                        if (entry.selected || items.count { it.selected } < maximumSelections) {
                             copy(
                                 items = items.toMutableList().also {
                                     it[entryIndex] = entry.copy(selected = !entry.selected)

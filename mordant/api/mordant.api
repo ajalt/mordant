@@ -243,6 +243,7 @@ public final class com/github/ajalt/mordant/input/InteractiveSelectListBuilder {
 	public final fun keySubmit (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun keyToggle (Lcom/github/ajalt/mordant/input/KeyboardEvent;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun limit (I)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
+	public final fun minimumSelections (I)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun onlyShowActiveDescription (Z)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun selectedMarker (Ljava/lang/String;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;
 	public final fun selectedStyle (Lcom/github/ajalt/mordant/rendering/TextStyle;)Lcom/github/ajalt/mordant/input/InteractiveSelectListBuilder;

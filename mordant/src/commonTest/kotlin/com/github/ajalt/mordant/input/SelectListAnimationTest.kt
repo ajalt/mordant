@@ -10,6 +10,7 @@ import com.github.ajalt.mordant.widgets.Text
 import io.kotest.matchers.shouldBe
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class SelectListAnimationTest {
     private val rec = TerminalRecorder(
@@ -23,6 +24,69 @@ class SelectListAnimationTest {
     private val enter = KeyboardEvent("Enter")
     private val esc = KeyboardEvent("Escape")
     private val x = KeyboardEvent("x")
+
+    @[Test JsName("multi_select_minimum")]
+    fun `multi select minimum`() {
+        val a = b.minimumSelections(2).limit(2)
+            .addEntry("a", selected = true).addEntry("b").createMultiSelectInputAnimation()
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Continue
+        a.receiveEvent(down)
+        a.receiveEvent(x)
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Finished(listOf("a", "b"))
+    }
+
+    @[Test JsName("minimum_counts_selections_hidden_by_filter")]
+    fun `minimum counts selections hidden by filter`() {
+        val a = b.entries("a", "b").minimumSelections(2).filterable(true)
+            .createMultiSelectInputAnimation()
+        a.receiveEvent(x)
+        a.receiveEvent(slash)
+        a.receiveEvent(KeyboardEvent("b"))
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Continue
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Continue
+        a.receiveEvent(x)
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Finished(listOf("a", "b"))
+    }
+
+    @[Test JsName("reusing_builder_preserves_each_lists_bounds")]
+    fun `reusing builder preserves each lists bounds`() {
+        val first = b.entries("a", "b").minimumSelections(2).limit(2)
+            .createMultiSelectInputAnimation()
+        val second = b.entries("c").minimumSelections(1).limit(1)
+            .createMultiSelectInputAnimation()
+        first.receiveEvent(x)
+        first.receiveEvent(enter) shouldBe InputReceiver.Status.Continue
+        first.receiveEvent(down)
+        first.receiveEvent(x)
+        first.receiveEvent(enter) shouldBe InputReceiver.Status.Finished(listOf("a", "b"))
+        b.minimumSelections(2).limit(2).entries("d", "e")
+        second.receiveEvent(x)
+        second.receiveEvent(enter) shouldBe InputReceiver.Status.Finished(listOf("c"))
+    }
+
+    @[Test JsName("multi_select_defaults_to_no_minimum")]
+    fun `multi select defaults to no minimum`() {
+        val a = b.entries("a").createMultiSelectInputAnimation()
+        a.receiveEvent(enter) shouldBe InputReceiver.Status.Finished(emptyList<String>())
+    }
+
+    @[Test JsName("minimum_allows_cancellation_and_ignores_single_select")]
+    fun `minimum allows cancellation and ignores single select`() {
+        b.entries("a", "b").minimumSelections(2)
+        b.createMultiSelectInputAnimation().receiveEvent(KeyboardEvent("c", ctrl = true)) shouldBe
+                InputReceiver.Status.Finished(null)
+        b.createSingleSelectInputAnimation().receiveEvent(enter) shouldBe
+                InputReceiver.Status.Finished("a")
+    }
+
+    @[Test JsName("unreachable_multi_select_minimum")]
+    fun `unreachable multi select minimum`() {
+        assertFailsWith<IllegalArgumentException> { b.minimumSelections(-1) }
+        b.entries("a", "b").minimumSelections(3)
+        assertFailsWith<IllegalArgumentException> { b.createMultiSelectInputAnimation() }
+        b.minimumSelections(2).limit(1)
+        assertFailsWith<IllegalArgumentException> { b.createMultiSelectInputAnimation() }
+    }
 
     @[Test JsName("single_select_instructions")]
     fun `single select instructions`() {
