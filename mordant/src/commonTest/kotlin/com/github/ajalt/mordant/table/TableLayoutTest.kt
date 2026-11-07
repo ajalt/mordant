@@ -17,8 +17,130 @@ import io.kotest.data.row
 import io.kotest.matchers.string.shouldContain
 import kotlin.js.JsName
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TableLayoutTest : RenderingTest() {
+    @[Test JsName("extra_width_must_fit_every_covered_row")]
+    fun `extra width must fit every covered row`() {
+        val result = table {
+            header {
+                row {
+                    cell("A") { rowSpan = 2 }
+                    cell("B")
+                    cell("C")
+                }
+                row("D", "E", "F")
+            }
+            body {
+                row {
+                    cell("X") { rowSpan = 2; columnSpan = 3 }
+                    cell("Y")
+                }
+                row {
+                    cell("Z") { columnSpan = 2 }
+                    cell("W")
+                }
+            }
+        } as TableImpl
+        assertEquals(listOf(2, 1), result.rows[2].filterIsInstance<Cell.Content>().map { it.columnSpan })
+        assertEquals(listOf(2, 1), result.rows[3].filterIsInstance<Cell.Content>().map { it.columnSpan })
+        assertEquals(5, result.rows[3].size)
+    }
+
+    @[Test JsName("inferred_width_preserves_later_baseline_spans")]
+    fun `inferred width preserves later baseline spans`() {
+        val result = table {
+            header {
+                row {
+                    cell("A") { rowSpan = 2 }
+                    cell("B")
+                    cell("C")
+                }
+                row("D", "E", "F")
+            }
+            body {
+                row {
+                    cell("X") { columnSpan = 3 }
+                    cell("Y") { columnSpan = 2 }
+                }
+            }
+        } as TableImpl
+        assertEquals(4, result.rows.last().size)
+        assertEquals(listOf(2, 2), result.rows.last().filterIsInstance<Cell.Content>().map { it.columnSpan })
+    }
+
+    @[Test JsName("two_cells_share_one_inferred_column")]
+    fun `two cells share one inferred column`() {
+        val result = table {
+            header {
+                row {
+                    cell("A") { rowSpan = 2 }
+                    cell("B")
+                }
+                row("C", "D")
+            }
+            body {
+                row {
+                    cell("E") { columnSpan = 2 }
+                    cell("F") { columnSpan = 2 }
+                }
+            }
+        } as TableImpl
+        val body = result.rows.last()
+        assertEquals(3, body.size)
+        assertEquals(listOf(2, 1), body.filterIsInstance<Cell.Content>().map { it.columnSpan })
+    }
+
+    @[Test JsName("retain_truncated_spans_when_expansion_would_overlap")]
+    fun `retain truncated spans when expansion would overlap`() {
+        val result = table {
+            body {
+                row {
+                    cell("A") { columnSpan = 3 }
+                    cell("B") { rowSpan = 2; columnSpan = 2 }
+                    cell("C") { rowSpan = 2; columnSpan = 2 }
+                }
+                row {
+                    cell("D")
+                    cell("E") { columnSpan = 2 }
+                }
+            }
+        } as TableImpl
+        assertEquals(listOf(1, 1, 1), result.rows.first().map { it.columnSpan })
+        assertEquals(2, result.rows.last().filterIsInstance<Cell.Content>().last().columnSpan)
+    }
+
+    @[Test JsName("carried_header_cells_establish_width_for_body")]
+    fun `carried header cells establish width for body`() = doTest(
+        """
+        ░┌───┬───┬───────┬───┐
+        ░│ A │ B │ C     │ D │
+        ░│   │   ├───┬───┤   │
+        ░│   │   │ E │ F │   │
+        ░├───┼───┼───┴───┼───┤
+        ░│ 1 │ 2 │ 3     │ 4 │
+        ░└───┴───┴───────┴───┘
+        """
+    ) {
+        header {
+            row {
+                cell("A") { rowSpan = 2 }
+                cell("B") { rowSpan = 2 }
+                cell("C") { columnSpan = 2 }
+                cell("D") { rowSpan = 2 }
+            }
+            row("E", "F")
+        }
+        body {
+            row {
+                cell("1")
+                cell("2")
+                cell("3") { columnSpan = 2 }
+                cell("4")
+            }
+        }
+    }
+
     @[Test JsName("single_cell_with_spans")]
     fun `single cell with spans`() = doBodyTest(
         """
@@ -141,19 +263,12 @@ class TableLayoutTest : RenderingTest() {
 
     @[Test JsName("column_span_with_adjacent_row_span")]
     fun `column span with adjacent row span`() = doBodyTest(
-        /* XXX HTML renders like this:
-            ░┌───────┬───┐
-            ░│ A     │ B │
-            ░├───┬───┤   │
-            ░│ C │ D │   │
-            ░└───┴───┴───┘
-         */
         """
-    ░┌───┬───┐    ░
-    ░│ A │ B │    ░
-    ░├───┤   ├───┐░
-    ░│ C │   │ D │░
-    ░└───┴───┴───┘░
+    ░┌───────┬───┐
+    ░│ A     │ B │
+    ░├───┬───┤   │
+    ░│ C │ D │   │
+    ░└───┴───┴───┘
     """
     ) {
         row {
@@ -276,18 +391,11 @@ class TableLayoutTest : RenderingTest() {
 
     @[Test JsName("colspan_before_and_after_cells")]
     fun `colspan before and after cells`() = doBodyTest(
-        /* XXX: Html renders like this:
-        ░┌───┬───────┬───┐
-        ░│ A │ B     │ C │
-        ░│   ├───┬───┤   │
-        ░│   │ D │ E │   │
-        ░└───┴───┴───┴───┘
-         */
         """
-    ░┌───┬───┬───┐    
-    ░│ A │ B │ C │    
-    ░│   ├───┤   ├───┐
-    ░│   │ D │   │ E │
+    ░┌───┬───────┬───┐
+    ░│ A │ B     │ C │
+    ░│   ├───┬───┤   │
+    ░│   │ D │ E │   │
     ░└───┴───┴───┴───┘
     """
     ) {
