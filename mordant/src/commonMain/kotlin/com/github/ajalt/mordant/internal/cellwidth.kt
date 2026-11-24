@@ -2,7 +2,6 @@ package com.github.ajalt.mordant.internal
 
 import com.github.ajalt.mordant.internal.gen.CELL_WIDTH_TABLE
 import com.github.ajalt.mordant.internal.gen.EMOJI_SEQUENCES
-import com.github.ajalt.mordant.internal.gen.IntTrie
 import com.github.ajalt.mordant.internal.gen.couldStartEmojiSeq
 
 
@@ -45,38 +44,34 @@ internal fun cellWidth(codepoint: Int): Int {
 
 /** Return the width, in terminal cells, of the given [string]*/
 internal fun stringCellWidth(string: String): Int {
+    val input = codepointSequence(string).iterator()
+    val pending = ArrayDeque<Int>()
     var sum = 0
-    var sumSinceZwj = 0
-    var zwjSeq: IntTrie? = null
-    for (codepoint in codepointSequence(string)) {
-        val width = cellWidth(codepoint)
-        if (zwjSeq != null) {
-            sumSinceZwj += width
-            if (codepoint in zwjSeq.values) {
-                sumSinceZwj = 0
-            }
-            zwjSeq = zwjSeq.children[codepoint]
-            if (zwjSeq == null) {
-                // all ZWJ sequences combine to one glyph, which is always an emoji, so add 2 for the width of the
-                // emoji, plus the width of any codepoints since the end of the last complete sequence. Unfortunately,
-                // some of these emoji are wider than two cells, but given that their size is font-dependant and usually
-                // not cell-aligned anyway, there's no perfect solution here. Thanks, unicode.
-                sum += sumSinceZwj + 2
-                sumSinceZwj = 0
-            } else {
-                sumSinceZwj += width
-            }
-        } else {
-            // We do a fast range check to skip ZWJ sequence processing for most codepoints
-            if (couldStartEmojiSeq(codepoint)) {
-                zwjSeq = EMOJI_SEQUENCES.children[codepoint]
-            }
-            if (zwjSeq == null) {
-                sum += width
-            }
-        }
-    }
-    // If we were in a zwj sequence at the end of the string, add whatever was left to the sum
-    return sum + sumSinceZwj
 
+    while (pending.isNotEmpty() || input.hasNext()) {
+        val first = if (pending.isEmpty()) input.next() else pending.removeFirst()
+        var node = if (couldStartEmojiSeq(first)) EMOJI_SEQUENCES.children[first] else null
+        if (node == null) {
+            sum += cellWidth(first)
+            continue
+        }
+
+        // A complete sequence can also be the prefix of a longer one. Keep the lookahead
+        // after the longest match so that it can start another sequence.
+        var length = 0
+        var matched = 0
+        while (node != null) {
+            if (length == pending.size) {
+                if (!input.hasNext()) break
+                pending.addLast(input.next())
+            }
+            val next = pending[length++]
+            if (next in node.values || (length == 1 && next == 0xfe0f)) matched = length
+            node = node.children[next]
+        }
+
+        repeat(matched) { pending.removeFirst() }
+        sum += if (matched > 0) 2 else cellWidth(first)
+    }
+    return sum
 }
