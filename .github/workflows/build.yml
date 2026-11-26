@@ -23,7 +23,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            EXTRA_GRADLE_ARGS: apiCheck :test:proguard:r8jar
+            EXTRA_GRADLE_ARGS: apiCheck :test:proguard:r8jar :test:ffm:installDist
           - os: macos-latest
             EXTRA_GRADLE_ARGS: >-
               :mordant:compileNativeMainKotlinMetadata
@@ -77,6 +77,21 @@ jobs:
           name: main-r8-jar
           path: 'test/proguard/build/libs/main-r8.jar'
           retention-days: 1
+
+      - name: Check FFM selection on the build JDK
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          test/ffm/build/install/ffm/bin/ffm
+          JAVA_OPTS=--enable-native-access=ALL-UNNAMED test/ffm/build/install/ffm/bin/ffm --expect-ffm
+
+      - uses: actions/setup-java@v5
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          distribution: 'temurin'
+          java-version: 8
+      - name: Check FFM fallback on Java 8
+        if: matrix.os == 'ubuntu-latest'
+        run: test/ffm/build/install/ffm/bin/ffm
 
       - name: Upload the build report
         if: failure()
