@@ -7,8 +7,9 @@ import com.oracle.svm.core.annotate.TargetClass
 
 class TerminalInterfaceProviderFfm : TerminalInterfaceProvider {
     override fun load(): TerminalInterface? {
-        // The preview FFM API on JDKs older than 22 is incompatible
-        if (Runtime.version().feature() < 22
+        // Java 8 reports "1.8"; the preview FFM API before Java 22 is incompatible.
+        val version = System.getProperty("java.specification.version")?.toIntOrNull() ?: return null
+        if (version < 22
             || !TerminalInterfaceProviderFfm::class.java.module.isNativeAccessEnabled()
         ) {
             return null

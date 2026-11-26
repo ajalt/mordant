@@ -16,6 +16,7 @@ include(
     "samples:select",
     "samples:table",
     "samples:tour",
+    "test:ffm",
     "test:graalvm",
     "test:proguard",
 )
